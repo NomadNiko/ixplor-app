@@ -11,24 +11,23 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
     () =>
       createTheme({
         palette: {
-          // Your custom colors
           primary: {
-            main: '#2b1346', // your $purple
-            dark: '#14111b', // your $purple-dark
-            light: '#bd4de9', // your $purple-light
+            main: "#2b1346",    // Double quotes instead of single
+            dark: "#14111b",
+            light: "#bd4de9",
           },
           secondary: {
-            main: '#2196f3', // your $blue
-            dark: '#090a6e', // your $blue-dark
-            light: 'rgb(105, 201, 233)', // your $blue-light
+            main: "#2196f3",
+            dark: "#090a6e",
+            light: "rgb(105, 201, 233)",
           },
           error: {
-            main: '#ff0000', // your $red
-            light: '#e5a6a6', // your $red-light
+            main: "#ff0000",
+            light: "#e5a6a6",
           },
           success: {
-            main: '#009688', // your $green
-            light: '#00ff40', // your $green-light
+            main: "#009688",
+            light: "#00ff40",
           },
         },
         typography: {
@@ -38,23 +37,23 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           MuiCssBaseline: {
             styleOverrides: {
               body: {
-                backgroundColor: '#14111b', // your $purple-dark
-                scrollbarWidth: 'auto',
-                scrollbarColor: '#2b1346 #14111b',
-                '&::-webkit-scrollbar': {
-                  width: '12px',
+                backgroundColor: "#14111b",
+                scrollbarWidth: "auto",
+                scrollbarColor: "#2b1346 #14111b",
+                "&::-webkit-scrollbar": {
+                  width: "12px",
                 },
-                '&::-webkit-scrollbar-track': {
-                  background: '#14111b',
+                "&::-webkit-scrollbar-track": {
+                  background: "#14111b",
                 },
-                '&::-webkit-scrollbar-thumb': {
-                  backgroundColor: '#2b1346',
-                  border: '3px solid #14111b',
-                  borderRadius: '20px',
-                  backgroundClip: 'padding-box',
-                  '&:hover': {
-                    backgroundColor: '#3b1960',
-                    border: '2px solid #14111b',
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "#2b1346",
+                  border: "3px solid #14111b",
+                  borderRadius: "20px",
+                  backgroundClip: "padding-box",
+                  "&:hover": {
+                    backgroundColor: "#3b1960",
+                    border: "2px solid #14111b",
                   },
                 },
               },
