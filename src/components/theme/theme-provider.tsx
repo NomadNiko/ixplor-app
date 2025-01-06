@@ -12,7 +12,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
       createTheme({
         palette: {
           primary: {
-            main: "#2b1346",    // Double quotes instead of single
+            main: "#2b1346",
             dark: "#14111b",
             light: "#bd4de9",
           },
