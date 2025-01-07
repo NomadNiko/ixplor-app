@@ -8,6 +8,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
     () =>
       createTheme({
         palette: {
+          mode: 'dark',
           primary: {
             main: "rgb(69, 42, 87)",
             dark: "rgb(20, 17, 27)",
@@ -26,6 +27,10 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             main: "rgb(0, 150, 136)",
             light: "rgb(0, 255, 64)",
           },
+          background: {
+            default: "rgb(20, 17, 27)",
+            paper: "rgb(30, 27, 37)",    // Used for cards, dialogs, etc
+          },
           text: {
             primary: "rgb(255, 255, 255)",
             secondary: "rgb(255, 255, 255)",
@@ -34,18 +39,163 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
         },
         typography: {
           fontFamily: '"Exo 2", sans-serif',
+          h1: {
+            fontSize: '2.5rem',
+            fontWeight: 600,
+          },
+          h2: {
+            fontSize: '2rem',
+            fontWeight: 600,
+          },
+          h3: {
+            fontSize: '1.75rem',
+            fontWeight: 600,
+          },
+          h4: {
+            fontSize: '1.5rem',
+            fontWeight: 500,
+          },
+          h5: {
+            fontSize: '1.25rem',
+            fontWeight: 500,
+          },
+          h6: {
+            fontSize: '1rem',
+            fontWeight: 500,
+          },
+          body1: {
+            fontSize: '1rem',
+            lineHeight: 1.5,
+          },
+          body2: {
+            fontSize: '0.875rem',
+            lineHeight: 1.43,
+          },
         },
         components: {
+          // Links
           MuiLink: {
             styleOverrides: {
               root: {
-                color: "rgb(105, 201, 233)", // Your desired link color
+                color: "rgb(105, 201, 233)",
                 "&:hover": {
-                  color: "rgb(130, 99, 240)", // Hover color
+                  color: "rgb(130, 99, 240)",
+                },
+                textDecoration: 'none',
+              },
+            },
+          },
+          // Tables
+          MuiTableHead: {
+            styleOverrides: {
+              root: {
+                backgroundColor: "rgb(43, 19, 70)",
+                '& .MuiTableCell-head': {
+                  color: "rgb(255, 255, 255)",
+                  fontWeight: 600,
                 },
               },
             },
           },
+          MuiTableBody: {
+            styleOverrides: {
+              root: {
+                '& .MuiTableRow-root': {
+                  '&:nth-of-type(odd)': {
+                    backgroundColor: "rgba(43, 19, 70, 0.05)",
+                  },
+                  '&:hover': {
+                    backgroundColor: "rgba(43, 19, 70, 0.1)",
+                  },
+                },
+              },
+            },
+          },
+          MuiTableCell: {
+            styleOverrides: {
+              root: {
+                borderBottom: '1px solid rgba(43, 19, 70, 0.2)',
+              },
+            },
+          },
+          // Buttons
+          MuiButton: {
+            styleOverrides: {
+              root: {
+                textTransform: 'none',
+                borderRadius: '8px',
+              },
+              contained: {
+                boxShadow: 'none',
+                '&:hover': {
+                  boxShadow: 'none',
+                },
+              },
+            },
+          },
+          // Input Fields
+          MuiTextField: {
+            styleOverrides: {
+              root: {
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: 'rgba(255, 255, 255, 0.23)',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: 'rgba(255, 255, 255, 0.4)',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: "rgb(105, 201, 233)",
+                  },
+                },
+              },
+            },
+          },
+          // Cards
+          MuiCard: {
+            styleOverrides: {
+              root: {
+                backgroundColor: "rgb(30, 27, 37)",
+                borderRadius: '12px',
+              },
+            },
+          },
+          // Dialogs
+          MuiDialog: {
+            styleOverrides: {
+              paper: {
+                backgroundColor: "rgb(30, 27, 37)",
+                borderRadius: '12px',
+              },
+            },
+          },
+          // Select Dropdowns
+          MuiSelect: {
+            styleOverrides: {
+              root: {
+                '&.MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: 'rgba(255, 255, 255, 0.23)',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: 'rgba(255, 255, 255, 0.4)',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: "rgb(105, 201, 233)",
+                  },
+                },
+              },
+            },
+          },
+          // Checkboxes
+          MuiCheckbox: {
+            styleOverrides: {
+              root: {
+                color: "rgba(255, 255, 255, 0.7)",
+              },
+            },
+          },
+          // Base CSS
           MuiCssBaseline: {
             styleOverrides: {
               body: {
