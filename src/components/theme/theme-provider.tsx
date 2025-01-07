@@ -9,7 +9,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
       createTheme({
         palette: {
           primary: {
-            main: "rgb(43, 19, 70)",
+            main: "rgb(168, 108, 236)",
             dark: "rgb(20, 17, 27)",
             light: "rgb(189, 77, 233)",
           },
