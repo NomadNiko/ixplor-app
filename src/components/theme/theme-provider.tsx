@@ -15,7 +15,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             light: "rgb(189, 77, 233)",
           },
           secondary: {
-            main: "rgb(33, 150, 243)",
+            main: "rgb(2, 95, 172)",
             dark: "rgb(9, 10, 110)",
             light: "rgb(105, 201, 233)",
           },
@@ -86,12 +86,19 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             },
           },
           // Tables
+          MuiTableContainer: {
+            styleOverrides: {
+              root: {
+                backgroundColor: 'rgb(0, 0, 0)',
+              },
+            },
+          },
           MuiTableHead: {
             styleOverrides: {
               root: {
-                backgroundColor: "rgb(43, 19, 70)",
+                backgroundColor: 'rgb(0, 0, 0)',
                 '& .MuiTableCell-head': {
-                  color: "rgb(255, 255, 255)",
+                  color: 'rgb(255, 255, 255)',
                   fontWeight: 600,
                 },
               },
@@ -100,12 +107,16 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           MuiTableBody: {
             styleOverrides: {
               root: {
+                backgroundColor: 'rgb(0, 0, 0)',
                 '& .MuiTableRow-root': {
+                  '& .MuiTableCell-body': {
+                    color: 'rgb(255, 255, 255)',
+                  },
                   '&:nth-of-type(odd)': {
-                    backgroundColor: "rgba(43, 19, 70, 0.05)",
+                    backgroundColor: 'rgb(20, 20, 20)',
                   },
                   '&:hover': {
-                    backgroundColor: "rgba(43, 19, 70, 0.1)",
+                    backgroundColor: 'rgb(40, 40, 40)',
                   },
                 },
               },
@@ -114,7 +125,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           MuiTableCell: {
             styleOverrides: {
               root: {
-                borderBottom: '1px solid rgba(43, 19, 70, 0.2)',
+                borderBottom: '1px solid rgb(40, 40, 40)',
               },
             },
           },
