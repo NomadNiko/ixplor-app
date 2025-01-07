@@ -9,7 +9,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
       createTheme({
         palette: {
           primary: {
-            main: "rgb(168, 108, 236)",
+            main: "rgb(69, 42, 87)",
             dark: "rgb(20, 17, 27)",
             light: "rgb(189, 77, 233)",
           },
@@ -36,6 +36,16 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           fontFamily: '"Exo 2", sans-serif',
         },
         components: {
+          MuiLink: {
+            styleOverrides: {
+              root: {
+                color: "rgb(105, 201, 233)", // Your desired link color
+                "&:hover": {
+                  color: "rgb(130, 99, 240)", // Hover color
+                },
+              },
+            },
+          },
           MuiCssBaseline: {
             styleOverrides: {
               body: {
