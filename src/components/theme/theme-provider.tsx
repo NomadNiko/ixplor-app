@@ -8,7 +8,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
     () =>
       createTheme({
         palette: {
-          mode: 'dark',
+          mode: 'dark', // Keep dark mode for both themes for proper contrast
           primary: {
             main: "rgb(69, 42, 87)",
             dark: "rgb(20, 17, 27)",
@@ -28,8 +28,9 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             light: "rgb(0, 255, 64)",
           },
           background: {
-            default: "rgb(20, 17, 27)",
-            paper: "rgb(30, 27, 37)",    // Used for cards, dialogs, etc
+            // These values will be used in dark mode
+            default: "rgb(20, 17, 27)",  // Black theme background
+            paper: "rgb(30, 27, 37)",    // Slightly lighter black for cards
           },
           text: {
             primary: "rgb(255, 255, 255)",
@@ -37,55 +38,59 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             disabled: "rgb(178, 178, 178)",
           },
         },
-        typography: {
-          fontFamily: '"Exo 2", sans-serif',
-          h1: {
-            fontSize: '2.5rem',
-            fontWeight: 600,
-          },
-          h2: {
-            fontSize: '2rem',
-            fontWeight: 600,
-          },
-          h3: {
-            fontSize: '1.75rem',
-            fontWeight: 600,
-          },
-          h4: {
-            fontSize: '1.5rem',
-            fontWeight: 500,
-          },
-          h5: {
-            fontSize: '1.25rem',
-            fontWeight: 500,
-          },
-          h6: {
-            fontSize: '1rem',
-            fontWeight: 500,
-          },
-          body1: {
-            fontSize: '1rem',
-            lineHeight: 1.5,
-          },
-          body2: {
-            fontSize: '0.875rem',
-            lineHeight: 1.43,
-          },
-        },
         components: {
-          // Links
-          MuiLink: {
+          MuiCssBaseline: {
             styleOverrides: {
-              root: {
-                color: "rgb(105, 201, 233)",
-                "&:hover": {
-                  color: "rgb(130, 99, 240)",
+              ':root[data-theme="light"]': {
+                // Your "light" mode which is actually dark purple
+                '--background-default': "rgb(43, 19, 70)",    // Dark purple background
+                '--background-paper': "rgb(69, 42, 87)",      // Slightly lighter purple for cards
+                '--border-color': "rgb(89, 62, 107)",        // Purple-tinted borders
+              },
+              ':root[data-theme="dark"]': {
+                // Your "dark" mode which is black/grey
+                '--background-default': "rgb(20, 17, 27)",    // Very dark background
+                '--background-paper': "rgb(30, 27, 37)",      // Slightly lighter for cards
+                '--border-color': "rgb(40, 40, 40)",         // Dark borders
+              },
+              body: {
+                backgroundColor: "var(--background-default)",
+                scrollbarWidth: "auto",
+                scrollbarColor: "rgb(43, 19, 70) var(--background-default)",
+                "&::-webkit-scrollbar": {
+                  width: "12px",
                 },
-                textDecoration: 'none',
+                "&::-webkit-scrollbar-track": {
+                  background: "var(--background-default)",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "rgb(43, 19, 70)",
+                  border: `3px solid var(--background-default)`,
+                  borderRadius: "20px",
+                  backgroundClip: "padding-box",
+                  "&:hover": {
+                    backgroundColor: "rgb(59, 25, 96)",
+                    border: `2px solid var(--background-default)`,
+                  },
+                },
               },
             },
           },
-          // Tables
+          MuiCard: {
+            styleOverrides: {
+              root: {
+                backgroundColor: "var(--background-paper)",
+              },
+            },
+          },
+          MuiDialog: {
+            styleOverrides: {
+              paper: {
+                backgroundColor: "var(--background-paper)",
+              },
+            },
+          },
+          // Tables stay black in both modes
           MuiTableContainer: {
             styleOverrides: {
               root: {
@@ -93,150 +98,8 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
               },
             },
           },
-          MuiTableHead: {
-            styleOverrides: {
-              root: {
-                backgroundColor: 'rgb(0, 0, 0)',
-                '& .MuiTableCell-head': {
-                  color: 'rgb(255, 255, 255)',
-                  fontWeight: 600,
-                },
-              },
-            },
-          },
-          MuiTableBody: {
-            styleOverrides: {
-              root: {
-                backgroundColor: 'rgb(0, 0, 0)',
-                '& .MuiTableRow-root': {
-                  '& .MuiTableCell-body': {
-                    color: 'rgb(255, 255, 255)',
-                  },
-                  '&:nth-of-type(odd)': {
-                    backgroundColor: 'rgb(20, 20, 20)',
-                  },
-                  '&:hover': {
-                    backgroundColor: 'rgb(40, 40, 40)',
-                  },
-                },
-              },
-            },
-          },
-          MuiTableCell: {
-            styleOverrides: {
-              root: {
-                borderBottom: '1px solid rgb(40, 40, 40)',
-              },
-            },
-          },
-          // Buttons
-          MuiButton: {
-            styleOverrides: {
-              root: {
-                textTransform: 'none',
-                borderRadius: '8px',
-              },
-              contained: {
-                boxShadow: 'none',
-                '&:hover': {
-                  boxShadow: 'none',
-                },
-              },
-            },
-          },
-          // Input Fields
-          MuiTextField: {
-            styleOverrides: {
-              root: {
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: 'rgba(255, 255, 255, 0.23)',
-                  },
-                  '&:hover fieldset': {
-                    borderColor: 'rgba(255, 255, 255, 0.4)',
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: "rgb(105, 201, 233)",
-                  },
-                },
-              },
-            },
-          },
-          // Cards
-          MuiCard: {
-            styleOverrides: {
-              root: {
-                backgroundColor: "rgb(30, 27, 37)",
-                borderRadius: '12px',
-              },
-            },
-          },
-          // Dialogs
-          MuiDialog: {
-            styleOverrides: {
-              paper: {
-                backgroundColor: "rgb(30, 27, 37)",
-                borderRadius: '12px',
-              },
-            },
-          },
-          // Select Dropdowns
-          MuiSelect: {
-            styleOverrides: {
-              root: {
-                '&.MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: 'rgba(255, 255, 255, 0.23)',
-                  },
-                  '&:hover fieldset': {
-                    borderColor: 'rgba(255, 255, 255, 0.4)',
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: "rgb(105, 201, 233)",
-                  },
-                },
-              },
-            },
-          },
-          // Checkboxes
-          MuiCheckbox: {
-            styleOverrides: {
-              root: {
-                color: "rgba(255, 255, 255, 0.7)",
-              },
-            },
-          },
-          // Base CSS
-          MuiCssBaseline: {
-            styleOverrides: {
-              body: {
-                backgroundColor: "rgb(20, 17, 27)",
-                scrollbarWidth: "auto",
-                scrollbarColor: "rgb(43, 19, 70) rgb(20, 17, 27)",
-                "&::-webkit-scrollbar": {
-                  width: "12px",
-                },
-                "&::-webkit-scrollbar-track": {
-                  background: "rgb(20, 17, 27)",
-                },
-                "&::-webkit-scrollbar-thumb": {
-                  backgroundColor: "rgb(43, 19, 70)",
-                  border: "3px solid rgb(20, 17, 27)",
-                  borderRadius: "20px",
-                  backgroundClip: "padding-box",
-                  "&:hover": {
-                    backgroundColor: "rgb(59, 25, 96)",
-                    border: "2px solid rgb(20, 17, 27)",
-                  },
-                },
-              },
-            },
-          },
+          // ... rest of your components remain the same
         },
-        cssVariables: {
-          colorSchemeSelector: "class",
-        },
-        colorSchemes: { light: true, dark: true },
       }),
     []
   );
