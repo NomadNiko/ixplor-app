@@ -211,6 +211,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             styleOverrides: {
               body: {
                 backgroundColor: "rgb(20, 17, 27)",
+                color: "rgb(255, 255, 255)",
                 scrollbarWidth: "auto",
                 scrollbarColor: "rgb(43, 19, 70) rgb(20, 17, 27)",
                 "&::-webkit-scrollbar": {
