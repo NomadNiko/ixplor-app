@@ -2,23 +2,12 @@
   "extends": [
     "next",
     "plugin:@typescript-eslint/recommended",
-    "prettier",
     "plugin:storybook/recommended"
   ],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "prettier"],
+  "plugins": ["@typescript-eslint"],
   "root": true,
   "rules": {
-    "prettier/prettier": [
-      "error",
-      {
-        "tabWidth": 2,
-        "semi": true,
-        "endOfLine": "auto",
-        "singleQuote": false,
-        "trailingComma": "es5"
-      }
-    ],
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/no-namespace": "off",
     "array-callback-return": "error",
