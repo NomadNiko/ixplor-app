@@ -29,7 +29,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           },
           background: {
             default: "rgb(20, 17, 27)",
-            paper: "rgb(30, 27, 37)",
+            paper: "rgb(30, 27, 37)",    // Used for cards, dialogs, etc
           },
           text: {
             primary: "rgb(255, 255, 255)",
@@ -73,41 +73,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           },
         },
         components: {
-          MuiCssBaseline: {
-            styleOverrides: {
-              ':root[data-theme="light"]': {
-                '--background-default': "rgb(43, 19, 70)",
-                '--background-paper': "rgb(69, 42, 87)",
-                '--border-color': "rgb(89, 62, 107)",
-              },
-              ':root[data-theme="dark"]': {
-                '--background-default': "rgb(20, 17, 27)",
-                '--background-paper': "rgb(30, 27, 37)",
-                '--border-color': "rgb(40, 40, 40)",
-              },
-              body: {
-                backgroundColor: "var(--background-default)",
-                scrollbarWidth: "auto",
-                scrollbarColor: "rgb(43, 19, 70) var(--background-default)",
-                "&::-webkit-scrollbar": {
-                  width: "12px",
-                },
-                "&::-webkit-scrollbar-track": {
-                  background: "var(--background-default)",
-                },
-                "&::-webkit-scrollbar-thumb": {
-                  backgroundColor: "rgb(43, 19, 70)",
-                  border: `3px solid var(--background-default)`,
-                  borderRadius: "20px",
-                  backgroundClip: "padding-box",
-                  "&:hover": {
-                    backgroundColor: "rgb(59, 25, 96)",
-                    border: `2px solid var(--background-default)`,
-                  },
-                },
-              },
-            },
-          },
+          // Links
           MuiLink: {
             styleOverrides: {
               root: {
@@ -119,6 +85,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
               },
             },
           },
+          // Tables
           MuiTableContainer: {
             styleOverrides: {
               root: {
@@ -162,6 +129,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
               },
             },
           },
+          // Buttons
           MuiButton: {
             styleOverrides: {
               root: {
@@ -176,6 +144,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
               },
             },
           },
+          // Input Fields
           MuiTextField: {
             styleOverrides: {
               root: {
@@ -193,22 +162,25 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
               },
             },
           },
+          // Cards
           MuiCard: {
             styleOverrides: {
               root: {
-                backgroundColor: "var(--background-paper)",
+                backgroundColor: "rgb(30, 27, 37)",
                 borderRadius: '12px',
               },
             },
           },
+          // Dialogs
           MuiDialog: {
             styleOverrides: {
               paper: {
-                backgroundColor: "var(--background-paper)",
+                backgroundColor: "rgb(30, 27, 37)",
                 borderRadius: '12px',
               },
             },
           },
+          // Select Dropdowns
           MuiSelect: {
             styleOverrides: {
               root: {
@@ -226,10 +198,37 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
               },
             },
           },
+          // Checkboxes
           MuiCheckbox: {
             styleOverrides: {
               root: {
                 color: "rgba(255, 255, 255, 0.7)",
+              },
+            },
+          },
+          // Base CSS
+          MuiCssBaseline: {
+            styleOverrides: {
+              body: {
+                backgroundColor: "rgb(20, 17, 27)",
+                scrollbarWidth: "auto",
+                scrollbarColor: "rgb(43, 19, 70) rgb(20, 17, 27)",
+                "&::-webkit-scrollbar": {
+                  width: "12px",
+                },
+                "&::-webkit-scrollbar-track": {
+                  background: "rgb(20, 17, 27)",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "rgb(43, 19, 70)",
+                  border: "3px solid rgb(20, 17, 27)",
+                  borderRadius: "20px",
+                  backgroundClip: "padding-box",
+                  "&:hover": {
+                    backgroundColor: "rgb(59, 25, 96)",
+                    border: "2px solid rgb(20, 17, 27)",
+                  },
+                },
               },
             },
           },
