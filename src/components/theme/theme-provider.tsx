@@ -98,7 +98,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
               root: {
                 backgroundColor: 'rgb(0, 0, 0)',
                 '& .MuiTableCell-head': {
-                  color: 'rgb(255, 255, 255)',
+                  color: 'rgb(0, 0, 0)',
                   fontWeight: 600,
                 },
               },
