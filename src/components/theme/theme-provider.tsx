@@ -58,7 +58,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
               },
               background: {
                 default: "rgb(18, 0, 39)",
-                paper: "rgb(118, 101, 139)",
+                paper: "rgb(60, 35, 90)",
               },
               text: {
                 primary: "rgb(229, 206, 255)",
@@ -69,37 +69,39 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           },
         },
         typography: {
-          fontFamily: '"Exo 2", sans-serif',
+          // Apply 75% scaling to all typography variants
+          htmlFontSize: 12, // Default is 16
+          fontSize: 12, // Default is 14
           h1: {
-            fontSize: '2.5rem',
+            fontSize: '1.875rem',  // 75% of 2.5rem
             fontWeight: 600,
           },
           h2: {
-            fontSize: '2rem',
+            fontSize: '1.5rem',    // 75% of 2rem
             fontWeight: 600,
           },
           h3: {
-            fontSize: '1.75rem',
+            fontSize: '1.31rem',   // 75% of 1.75rem
             fontWeight: 600,
           },
           h4: {
-            fontSize: '1.5rem',
+            fontSize: '1.125rem',  // 75% of 1.5rem
             fontWeight: 500,
           },
           h5: {
-            fontSize: '1.25rem',
+            fontSize: '0.94rem',   // 75% of 1.25rem
             fontWeight: 500,
           },
           h6: {
-            fontSize: '1rem',
+            fontSize: '0.75rem',   // 75% of 1rem
             fontWeight: 500,
           },
           body1: {
-            fontSize: '1rem',
+            fontSize: '0.75rem',   // 75% of 1rem
             lineHeight: 1.5,
           },
           body2: {
-            fontSize: '0.875rem',
+            fontSize: '0.66rem',   // 75% of 0.875rem
             lineHeight: 1.43,
           },
         },
@@ -171,11 +173,11 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
                     borderColor: theme.palette.mode === 'dark' ? 
-                      'rgba(255, 255, 255, 0.23)' : 'rgba(138, 105, 175, 0.42)',
+                      'rgba(255, 255, 255, 0.23)' : 'rgba(96, 72, 122, 0.42)',
                   },
                   '&:hover fieldset': {
                     borderColor: theme.palette.mode === 'dark' ? 
-                      'rgba(255, 255, 255, 0.4)' : 'rgba(138, 105, 175, 0.69)',
+                      'rgba(255, 255, 255, 0.4)' : 'rgba(63, 46, 83, 0.69)',
                   },
                   '&.Mui-focused fieldset': {
                     borderColor: "rgb(105, 201, 233)",
@@ -206,9 +208,9 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             styleOverrides: {
               body: ({ theme }: { theme: Theme }) => ({
                 backgroundColor: theme.palette.mode === 'dark' ? 
-                  "rgb(20, 17, 27)" : "rgb(102, 0, 0)" ,
+                  "rgb(20, 17, 27)" : "rgb(0, 8, 77)" ,
                 color: theme.palette.mode === 'dark' ? 
-                  "rgb(255, 191, 191)" : "rgb(206, 168, 250)",
+                  "rgb(255, 191, 191)" : "rgb(157, 162, 184)",
                 scrollbarWidth: "auto",
                 scrollbarColor: theme.palette.mode === 'dark' ?
                   "rgb(43, 19, 70) rgb(20, 17, 27)" : "rgb(43, 19, 70) rgb(20, 17, 27)",
@@ -222,13 +224,13 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
                 "&::-webkit-scrollbar-thumb": {
                   backgroundColor: "rgb(43, 19, 70)",
                   border: theme.palette.mode === 'dark' ?
-                    "3px solid rgb(47, 39, 65)" : "3px solid rgb(88, 24, 24)",
+                    "3px solid rgb(47, 39, 65)" : "3px solid rgb(143, 77, 77)",
                   borderRadius: "20px",
                   backgroundClip: "padding-box",
                   "&:hover": {
-                    backgroundColor: "rgb(59, 25, 96)",
+                    backgroundColor: "rgb(53, 36, 71)",
                     border: theme.palette.mode === 'dark' ?
-                      "2px solid rgb(50, 42, 68)" : "2px solid rgb(109, 29, 29)",
+                      "2px solid rgb(50, 42, 68)" : "2px solid rgb(173, 73, 73)",
                   },
                 },
               }),
