@@ -39,17 +39,17 @@ const VendorCard = styled(Card)(({ theme }) => ({
 }));
 
 export default function VendorList({ onVendorSelect }: VendorListProps) {
-  const { t } = useTranslation("vendor-panel");
+  const { t } = useTranslation("vendor");
 
   return (
     <Container maxWidth="md">
       <Grid container spacing={3} pt={3}>
         <Grid size={{ xs: 12 }} mb={4}>
           <Typography variant="h3" gutterBottom>
-            {t("title")}
+            {t("vendorList.title")}
           </Typography>
           <Typography variant="body1" color="textSecondary">
-            {t("description")}
+            {t("vendorList.description")}
           </Typography>
         </Grid>
 
@@ -91,7 +91,7 @@ export default function VendorList({ onVendorSelect }: VendorListProps) {
                       </Typography>
                     )}
                     <Typography variant="caption" color="textSecondary">
-                      {t("labels.lastUpdated")}: {profile.lastUpdated}
+                      {t("vendorList.labels.lastUpdated")}: {profile.lastUpdated}
                     </Typography>
                   </Box>
                 </Box>

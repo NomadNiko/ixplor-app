@@ -21,6 +21,8 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 
+
+
 interface VendorEditProps {
   vendorId: string;
   onBackClick: () => void;
@@ -60,7 +62,7 @@ interface BaseForm {
 type TabValue = "details" | "calendar" | "inventory";
 
 export default function VendorEdit({ vendorId, onBackClick }: VendorEditProps) {
-  const { t } = useTranslation("vendor-panel");
+  const { t } = useTranslation("vendor");
   const { enqueueSnackbar } = useSnackbar();
   const vendor = mockVendorDetails.find((v) => v.id === vendorId);
   const [activeTab, setActiveTab] = useState<TabValue>("details");
@@ -286,14 +288,14 @@ export default function VendorEdit({ vendorId, onBackClick }: VendorEditProps) {
             justifyContent="space-between"
           >
             <Button startIcon={<ArrowBackIcon />} onClick={onBackClick}>
-              {t("actions.back")}
+              {t("vendorEdit.actions.back")}
             </Button>
             <Button
               variant="contained"
               color="primary"
               onClick={methods.handleSubmit(handleSave)}
             >
-              {t("actions.save")}
+              {t("vendorEdit.actions.save")}
             </Button>
           </Grid>
 

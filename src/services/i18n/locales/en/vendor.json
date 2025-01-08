@@ -1,18 +1,58 @@
 {
-  "title": "Your Vendor Profiles",
-  "description": "Manage your business profiles and track their status across our platform.",
-  "labels": {
-    "status": "Status",
-    "actionRequired": "Action Required",
-    "lastUpdated": "Last Updated",
-    "type": "Type"
+  "vendorList": {
+    "title": "Your Vendor Profiles",
+    "description": "Manage your business profiles and track their status across our platform.",
+    "labels": {
+      "status": "Status",
+      "actionRequired": "Action Required",
+      "lastUpdated": "Last Updated",
+      "type": "Type"
+    },
+    "actions": {
+      "add": "Add New Vendor Profile",
+      "edit": "Edit vendor profile",
+      "view": "View Details"
+    },
+    "status": {
+      "pending": "Pending",
+      "published": "Published",
+      "rejected": "Rejected"
+    }
   },
-  "actions": {
-    "edit": "Edit vendor profile"
+  "vendorView": {
+    "title": "Vendor Profile Details",
+    "description": "Comprehensive overview of your business profile",
+    "sections": {
+      "businessInfo": "Business Information",
+      "contactDetails": "Contact Details",
+      "operatingHours": "Operating Hours",
+      "services": "Services Offered"
+    },
+    "actions": {
+      "back": "Back to Vendor List",
+      "edit": "Edit Profile",
+      "deactivate": "Deactivate Profile"
+    }
   },
-  "status": {
-    "pending": "Pending",
-    "published": "Published",
-    "rejected": "Rejected"
+  "vendorEdit": {
+    "title": "Edit Vendor Profile",
+    "description": "Update your business details and settings",
+    "sections": {
+      "basicInfo": "Basic Information",
+      "contactInfo": "Contact Information",
+      "businessDetails": "Business Details",
+      "servicesAndPricing": "Services and Pricing"
+    },
+    "actions": {
+      "save": "Save Changes",
+      "cancel": "Cancel",
+      "addService": "Add Service",
+      "addOperatingHour": "Add Operating Hours"
+    },
+    "validation": {
+      "requiredField": "This field is required",
+      "invalidEmail": "Invalid email address",
+      "invalidPhone": "Invalid phone number"
+    }
   }
 }

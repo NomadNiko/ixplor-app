@@ -340,7 +340,7 @@ const renderLessonView = (vendor: typeof mockVendorDetails[0]) => {
 };
 
 export default function VendorView({ vendorId, onBackClick, onEditClick }: VendorViewProps) {
-  const { t } = useTranslation("vendor-panel");
+  const { t } = useTranslation("vendor");
   const vendor = mockVendorDetails.find(v => v.id === vendorId);
 
   if (!vendor) return null;
@@ -369,14 +369,14 @@ export default function VendorView({ vendorId, onBackClick, onEditClick }: Vendo
             startIcon={<ArrowBackIcon />}
             onClick={onBackClick}
           >
-            {t("actions.back")}
+            {t("vendorView.actions.back")}
           </Button>
           <Button
             variant="contained"
             startIcon={<EditIcon />}
             onClick={onEditClick}
           >
-            {t("actions.edit")}
+            {t("vendorView.actions.edit")}
           </Button>
         </Grid>
 
