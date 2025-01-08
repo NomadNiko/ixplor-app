@@ -17,9 +17,8 @@ import { styled } from "@mui/material/styles";
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   width: theme.spacing(20),
-  height: theme.spacing(20)
+  height: theme.spacing(20),
 }));
-
 
 // Types for the form data
 type VendorType = {
@@ -74,12 +73,15 @@ export default function OnboardContent() {
   const onSubmit = handleSubmit(async (formData) => {
     try {
       // Simulate an API call
-      console.log('Form data to be sent:', formData);
-      
+      console.log("Form data to be sent:", formData);
+
       // Show success message
-      enqueueSnackbar("Vendor profile saved successfully! The actual registration will be implemented soon.", {
-        variant: "success",
-      });
+      enqueueSnackbar(
+        "Vendor profile saved successfully! The actual registration will be implemented soon.",
+        {
+          variant: "success",
+        }
+      );
     } catch (error) {
       // Show error message
       enqueueSnackbar("An error occurred while saving the vendor profile.", {
@@ -244,10 +246,10 @@ export default function OnboardContent() {
             </Grid>
           </Grid>
         </form>
-        <Grid sx={{ mx: "auto" }}>
-          <MuiLink href="/privacy-policy">Privacy Policy</MuiLink>
-        </Grid>
       </Container>
+      <Grid sx={{ mx: "auto" }}>
+        <MuiLink href="/privacy-policy">Privacy Policy</MuiLink>
+      </Grid>
     </FormProvider>
   );
 }
