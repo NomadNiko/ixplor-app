@@ -20,6 +20,7 @@ import Tab from "@mui/material/Tab";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import ListAltIcon from "@mui/icons-material/ListAlt";
+import MuiLink from "@mui/material/Link";
 
 
 
@@ -340,6 +341,9 @@ export default function VendorEdit({ vendorId, onBackClick }: VendorEditProps) {
               </CardContent>
             </Card>
           </Grid>
+          <Grid sx={{ mx: "auto" }}>
+          <MuiLink href="/privacy-policy">Privacy Policy</MuiLink>
+        </Grid>
         </Grid>
       </Container>
     </FormProvider>

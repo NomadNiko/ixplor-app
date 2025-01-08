@@ -21,6 +21,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import GroupIcon from "@mui/icons-material/Group";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import MuiLink from "@mui/material/Link";
 
 interface VendorViewProps {
   vendorId: string;
@@ -390,6 +391,9 @@ export default function VendorView({ vendorId, onBackClick, onEditClick }: Vendo
         {/* Type-specific content */}
         <Grid size={{ xs: 12 }}>
           {renderContent()}
+        </Grid>
+        <Grid sx={{ mx: "auto" }}>
+          <MuiLink href="/privacy-policy">Privacy Policy</MuiLink>
         </Grid>
       </Grid>
     </Container>

@@ -11,6 +11,7 @@ import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
 import { mockVendorDetails } from "../mock-data";
 import { VendorStatus } from "@/types/vendor-types";
+import MuiLink from "@mui/material/Link";
 
 interface VendorListProps {
   onVendorSelect: (vendorId: string) => void;
@@ -99,6 +100,9 @@ export default function VendorList({ onVendorSelect }: VendorListProps) {
             </VendorCard>
           </Grid>
         ))}
+        <Grid sx={{ mx: "auto" }}>
+          <MuiLink href="/privacy-policy">Privacy Policy</MuiLink>
+        </Grid>
       </Grid>
     </Container>
   );

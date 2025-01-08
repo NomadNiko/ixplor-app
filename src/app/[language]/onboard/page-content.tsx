@@ -12,6 +12,7 @@ import FormSelectInput from "@/components/form/select/form-select";
 import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
+import MuiLink from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
@@ -243,6 +244,9 @@ export default function OnboardContent() {
             </Grid>
           </Grid>
         </form>
+        <Grid sx={{ mx: "auto" }}>
+          <MuiLink href="/privacy-policy">Privacy Policy</MuiLink>
+        </Grid>
       </Container>
     </FormProvider>
   );
