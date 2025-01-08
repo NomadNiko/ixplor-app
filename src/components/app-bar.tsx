@@ -100,7 +100,7 @@ function ResponsiveAppBar() {
             >
               <MenuItem onClick={handleCloseNavMenu} component={Link} href="/">
                 <Typography textAlign="center">
-                  {t("common:navigation.home")}
+                  {t("common:navigation.basecamp")}
                 </Typography>
               </MenuItem>
 
@@ -171,7 +171,7 @@ function ResponsiveAppBar() {
               component={Link}
               href="/"
             >
-              {t("common:navigation.home")}
+              {t("common:navigation.basecamp")}
             </Button>
 
             {!!user?.role &&
