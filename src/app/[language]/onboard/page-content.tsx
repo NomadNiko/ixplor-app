@@ -1,10 +1,12 @@
+"use client";
 import { useSnackbar } from "@/hooks/use-snackbar";
 import useAuth from "@/services/auth/use-auth";
 import { useTranslation } from "@/services/i18n/client";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid2";
 import Typography from "@mui/material/Typography";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { FormProvider } from "react-hook-form";
 import FormTextInput from "@/components/form/text-input/form-text-input";
 import FormSelectInput from "@/components/form/select/form-select";
 import Button from "@mui/material/Button";
@@ -31,12 +33,12 @@ type OnboardFormData = {
   instagram: string;
 };
 
-// Styled components
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
-  width: theme.spacing(20),
-  height: theme.spacing(20),
-}));
-
+    width: theme.spacing(20),
+    height: theme.spacing(20),
+    marginRight: theme.spacing(2)
+  }));
+  
 // Vendor type options
 const vendorTypes = [
   { id: "tours", name: "Tours" },
