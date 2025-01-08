@@ -1,40 +1,70 @@
 "use client";
 
-import { createTheme, ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
+import { createTheme, ThemeProvider as MuiThemeProvider, Theme } from "@mui/material/styles";
 import { useMemo, PropsWithChildren } from "react";
 
 function ThemeProvider(props: PropsWithChildren<{}>) {
   const theme = useMemo(
     () =>
       createTheme({
-        palette: {
-          mode: 'dark',
-          primary: {
-            main: "rgb(69, 42, 87)",
-            dark: "rgb(20, 17, 27)",
-            light: "rgb(189, 77, 233)",
+        colorSchemes: {
+          // Dark mode configuration
+          dark: {
+            palette: {
+              mode: 'dark',
+              primary: {
+                main: "rgb(69, 42, 87)",
+                dark: "rgb(20, 17, 27)",
+                light: "rgb(189, 77, 233)",
+              },
+              secondary: {
+                main: "rgb(2, 95, 172)",
+                dark: "rgb(9, 10, 110)",
+                light: "rgb(105, 201, 233)",
+              },
+              error: {
+                main: "rgb(255, 0, 0)",
+                light: "rgb(229, 166, 166)",
+              },
+              success: {
+                main: "rgb(0, 150, 136)",
+                light: "rgb(0, 255, 64)",
+              },
+              background: {
+                default: "rgb(20, 17, 27)",
+                paper: "rgb(30, 27, 37)",
+              },
+              text: {
+                primary: "rgb(255, 255, 255)",
+                secondary: "rgb(255, 255, 255)",
+                disabled: "rgb(178, 178, 178)",
+              },
+            },
           },
-          secondary: {
-            main: "rgb(2, 95, 172)",
-            dark: "rgb(9, 10, 110)",
-            light: "rgb(105, 201, 233)",
-          },
-          error: {
-            main: "rgb(255, 0, 0)",
-            light: "rgb(229, 166, 166)",
-          },
-          success: {
-            main: "rgb(0, 150, 136)",
-            light: "rgb(0, 255, 64)",
-          },
-          background: {
-            default: "rgb(20, 17, 27)",
-            paper: "rgb(30, 27, 37)",    // Used for cards, dialogs, etc
-          },
-          text: {
-            primary: "rgb(255, 255, 255)",
-            secondary: "rgb(255, 255, 255)",
-            disabled: "rgb(178, 178, 178)",
+          light: {
+            palette: {
+              mode: 'light',
+              primary: {
+                main: "rgb(43, 19, 70)",
+                light: "rgb(69, 42, 87)",
+                dark: "rgb(20, 17, 27)",
+                contrastText: "#ffffff",
+              },
+              secondary: {
+                main: "rgb(2, 95, 172)",
+                dark: "rgb(9, 10, 110)",
+                light: "rgb(105, 201, 233)",
+              },
+              background: {
+                default: "#ffffff",
+                paper: "#f5f5f5",
+              },
+              text: {
+                primary: "rgb(43, 19, 70)",
+                secondary: "rgb(69, 42, 87)",
+                disabled: "rgb(178, 178, 178)",
+              },
+            },
           },
         },
         typography: {
@@ -73,7 +103,6 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           },
         },
         components: {
-          // Links
           MuiLink: {
             styleOverrides: {
               root: {
@@ -85,51 +114,42 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
               },
             },
           },
-          // Tables
           MuiTableContainer: {
             styleOverrides: {
-              root: {
-                backgroundColor: 'rgb(0, 0, 0)',
-              },
+              root: ({ theme }: { theme: Theme }) => ({
+                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(0, 0, 0)' : '#f5f5f5',
+              }),
             },
           },
           MuiTableHead: {
             styleOverrides: {
-              root: {
-                backgroundColor: 'rgb(0, 0, 0)',
+              root: ({ theme }: { theme: Theme }) => ({
+                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(0, 0, 0)' : '#f5f5f5',
                 '& .MuiTableCell-head': {
-                  color: 'rgb(0, 0, 0)',
+                  color: theme.palette.mode === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(43, 19, 70)',
                   fontWeight: 600,
                 },
-              },
+              }),
             },
           },
           MuiTableBody: {
             styleOverrides: {
-              root: {
-                backgroundColor: 'rgb(0, 0, 0)',
+              root: ({ theme }: { theme: Theme }) => ({
+                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(0, 0, 0)' : '#ffffff',
                 '& .MuiTableRow-root': {
                   '& .MuiTableCell-body': {
-                    color: 'rgb(255, 255, 255)',
+                    color: theme.palette.mode === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(43, 19, 70)',
                   },
                   '&:nth-of-type(odd)': {
-                    backgroundColor: 'rgb(20, 20, 20)',
+                    backgroundColor: theme.palette.mode === 'dark' ? 'rgb(20, 20, 20)' : '#f5f5f5',
                   },
                   '&:hover': {
-                    backgroundColor: 'rgb(40, 40, 40)',
+                    backgroundColor: theme.palette.mode === 'dark' ? 'rgb(40, 40, 40)' : '#e0e0e0',
                   },
                 },
-              },
+              }),
             },
           },
-          MuiTableCell: {
-            styleOverrides: {
-              root: {
-                borderBottom: '1px solid rgb(40, 40, 40)',
-              },
-            },
-          },
-          // Buttons
           MuiButton: {
             styleOverrides: {
               root: {
@@ -144,100 +164,76 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
               },
             },
           },
-          // Input Fields
           MuiTextField: {
             styleOverrides: {
-              root: {
+              root: ({ theme }: { theme: Theme }) => ({
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
-                    borderColor: 'rgba(255, 255, 255, 0.23)',
+                    borderColor: theme.palette.mode === 'dark' ? 
+                      'rgba(255, 255, 255, 0.23)' : 'rgba(43, 19, 70, 0.23)',
                   },
                   '&:hover fieldset': {
-                    borderColor: 'rgba(255, 255, 255, 0.4)',
+                    borderColor: theme.palette.mode === 'dark' ? 
+                      'rgba(255, 255, 255, 0.4)' : 'rgba(43, 19, 70, 0.4)',
                   },
                   '&.Mui-focused fieldset': {
                     borderColor: "rgb(105, 201, 233)",
                   },
                 },
-              },
+              }),
             },
           },
-          // Cards
           MuiCard: {
             styleOverrides: {
-              root: {
-                backgroundColor: "rgb(30, 27, 37)",
+              root: ({ theme }: { theme: Theme }) => ({
+                backgroundColor: theme.palette.mode === 'dark' ? 
+                  "rgb(30, 27, 37)" : "#ffffff",
                 borderRadius: '12px',
-              },
+              }),
             },
           },
-          // Dialogs
           MuiDialog: {
             styleOverrides: {
-              paper: {
-                backgroundColor: "rgb(30, 27, 37)",
+              paper: ({ theme }: { theme: Theme }) => ({
+                backgroundColor: theme.palette.mode === 'dark' ? 
+                  "rgb(30, 27, 37)" : "#ffffff",
                 borderRadius: '12px',
-              },
+              }),
             },
           },
-          // Select Dropdowns
-          MuiSelect: {
-            styleOverrides: {
-              root: {
-                '&.MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: 'rgba(255, 255, 255, 0.23)',
-                  },
-                  '&:hover fieldset': {
-                    borderColor: 'rgba(255, 255, 255, 0.4)',
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: "rgb(105, 201, 233)",
-                  },
-                },
-              },
-            },
-          },
-          // Checkboxes
-          MuiCheckbox: {
-            styleOverrides: {
-              root: {
-                color: "rgba(255, 255, 255, 0.7)",
-              },
-            },
-          },
-          // Base CSS
           MuiCssBaseline: {
             styleOverrides: {
-              body: {
-                backgroundColor: "rgb(20, 17, 27)",
-                color: "rgb(255, 255, 255)",
+              body: ({ theme }: { theme: Theme }) => ({
+                backgroundColor: theme.palette.mode === 'dark' ? 
+                  "rgb(20, 17, 27)" : "#ffffff",
+                color: theme.palette.mode === 'dark' ? 
+                  "rgb(255, 255, 255)" : "rgb(43, 19, 70)",
                 scrollbarWidth: "auto",
-                scrollbarColor: "rgb(43, 19, 70) rgb(20, 17, 27)",
+                scrollbarColor: theme.palette.mode === 'dark' ?
+                  "rgb(43, 19, 70) rgb(20, 17, 27)" : "rgb(43, 19, 70) #ffffff",
                 "&::-webkit-scrollbar": {
                   width: "12px",
                 },
                 "&::-webkit-scrollbar-track": {
-                  background: "rgb(20, 17, 27)",
+                  background: theme.palette.mode === 'dark' ? 
+                    "rgb(20, 17, 27)" : "#ffffff",
                 },
                 "&::-webkit-scrollbar-thumb": {
                   backgroundColor: "rgb(43, 19, 70)",
-                  border: "3px solid rgb(20, 17, 27)",
+                  border: theme.palette.mode === 'dark' ?
+                    "3px solid rgb(20, 17, 27)" : "3px solid #ffffff",
                   borderRadius: "20px",
                   backgroundClip: "padding-box",
                   "&:hover": {
                     backgroundColor: "rgb(59, 25, 96)",
-                    border: "2px solid rgb(20, 17, 27)",
+                    border: theme.palette.mode === 'dark' ?
+                      "2px solid rgb(20, 17, 27)" : "2px solid #ffffff",
                   },
                 },
-              },
+              }),
             },
           },
         },
-        cssVariables: {
-          colorSchemeSelector: "class",
-        },
-        colorSchemes: { light: true, dark: true },
       }),
     []
   );
