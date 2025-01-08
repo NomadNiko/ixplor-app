@@ -4,6 +4,8 @@
   "navigation": {
     "basecamp": "BaseCamp",
     "onboard": "Onboard",
+    "vendor": "Vendor",
+    "finance": "Finance",
     "signIn": "Sign In",
     "signUp": "Sign Up",
     "profile": "Profile",

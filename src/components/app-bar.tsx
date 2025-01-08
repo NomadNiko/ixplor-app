@@ -104,9 +104,21 @@ function ResponsiveAppBar() {
                 </Typography>
               </MenuItem>
 
-              <MenuItem onClick={handleCloseNavMenu} component={Link} href="/">
+              <MenuItem onClick={handleCloseNavMenu} component={Link} href="/onboard">
                 <Typography textAlign="center">
                   {t("common:navigation.onboard")}
+                </Typography>
+              </MenuItem>
+
+              <MenuItem onClick={handleCloseNavMenu} component={Link} href="/vendor">
+                <Typography textAlign="center">
+                  {t("common:navigation.vendor")}
+                </Typography>
+              </MenuItem>
+
+              <MenuItem onClick={handleCloseNavMenu} component={Link} href="/finance">
+                <Typography textAlign="center">
+                  {t("common:navigation.finance")}
                 </Typography>
               </MenuItem>
 
@@ -179,13 +191,32 @@ function ResponsiveAppBar() {
             >
               {t("common:navigation.basecamp")}
             </Button>
+            
             <Button
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: "white", display: "block" }}
               component={Link}
-              href="/"
+              href="/onboard"
             >
               {t("common:navigation.onboard")}
+            </Button>
+
+            <Button
+              onClick={handleCloseNavMenu}
+              sx={{ my: 2, color: "white", display: "block" }}
+              component={Link}
+              href="/vendor"
+            >
+              {t("common:navigation.vendor")}
+            </Button>
+
+            <Button
+              onClick={handleCloseNavMenu}
+              sx={{ my: 2, color: "white", display: "block" }}
+              component={Link}
+              href="/finance"
+            >
+              {t("common:navigation.finance")}
             </Button>
 
             {!!user?.role &&
