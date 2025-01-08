@@ -54,15 +54,16 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
                 main: "rgb(2, 95, 172)",
                 dark: "rgb(9, 10, 110)",
                 light: "rgb(105, 201, 233)",
+                contrastText: "#ffffff",
               },
               background: {
                 default: "#ffffff",
                 paper: "#f5f5f5",
               },
               text: {
-                primary: "rgb(43, 19, 70)",
-                secondary: "rgb(69, 42, 87)",
-                disabled: "rgb(178, 178, 178)",
+                primary: "rgb(229, 206, 255)",
+                secondary: "rgb(197, 145, 231)",
+                disabled: "rgb(194, 105, 105)",
               },
             },
           },
@@ -117,7 +118,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           MuiTableContainer: {
             styleOverrides: {
               root: ({ theme }: { theme: Theme }) => ({
-                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(0, 0, 0)' : '#f5f5f5',
+                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(21, 0, 71)' : 'rgb(53, 0, 0)',
               }),
             },
           },
@@ -126,7 +127,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
               root: ({ theme }: { theme: Theme }) => ({
                 backgroundColor: theme.palette.mode === 'dark' ? 'rgb(0, 0, 0)' : '#f5f5f5',
                 '& .MuiTableCell-head': {
-                  color: theme.palette.mode === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(43, 19, 70)',
+                  color: theme.palette.mode === 'dark' ? 'rgb(193, 202, 255)' : 'rgb(255, 188, 188)',
                   fontWeight: 600,
                 },
               }),
@@ -205,12 +206,12 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             styleOverrides: {
               body: ({ theme }: { theme: Theme }) => ({
                 backgroundColor: theme.palette.mode === 'dark' ? 
-                  "rgb(20, 17, 27)" : "#ffffff",
+                  "rgb(20, 17, 27)" : "rgb(102, 0, 0)" ,
                 color: theme.palette.mode === 'dark' ? 
-                  "rgb(255, 255, 255)" : "rgb(43, 19, 70)",
+                  "rgb(255, 191, 191)" : "rgb(206, 168, 250)",
                 scrollbarWidth: "auto",
                 scrollbarColor: theme.palette.mode === 'dark' ?
-                  "rgb(43, 19, 70) rgb(20, 17, 27)" : "rgb(43, 19, 70) #ffffff",
+                  "rgb(43, 19, 70) rgb(20, 17, 27)" : "rgb(43, 19, 70) rgb(20, 17, 27)",
                 "&::-webkit-scrollbar": {
                   width: "12px",
                 },
@@ -221,13 +222,13 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
                 "&::-webkit-scrollbar-thumb": {
                   backgroundColor: "rgb(43, 19, 70)",
                   border: theme.palette.mode === 'dark' ?
-                    "3px solid rgb(20, 17, 27)" : "3px solid #ffffff",
+                    "3px solid rgb(20, 17, 27)" : "3px solid rgb(82, 0, 0)",
                   borderRadius: "20px",
                   backgroundClip: "padding-box",
                   "&:hover": {
                     backgroundColor: "rgb(59, 25, 96)",
                     border: theme.palette.mode === 'dark' ?
-                      "2px solid rgb(20, 17, 27)" : "2px solid #ffffff",
+                      "2px solid rgb(20, 17, 27)" : "2px solid rgb(105, 0, 0)",
                   },
                 },
               }),
