@@ -12,16 +12,16 @@ type Props = {
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
-  const { t } = await getServerTranslation(params.language, "home");
+  const { t } = await getServerTranslation(params.language, "basecamp");
 
   return {
     title: t("title"),
   };
 }
 
-export default async function Home(props: Props) {
+export default async function BaseCamp(props: Props) {
   const params = await props.params;
-  const { t } = await getServerTranslation(params.language, "home");
+  const { t } = await getServerTranslation(params.language, "basecamp");
 
   return (
     <Container maxWidth="md">
@@ -34,7 +34,7 @@ export default async function Home(props: Props) {
         sx={{ height: "90vh", justifyContent: "space-between" }}
       >
         <Grid size="grow">
-          <Typography variant="h3" data-testid="home-title" gutterBottom>
+          <Typography variant="h3" data-testid="basecamp-title" gutterBottom>
             {t("title")}
           </Typography>
           <Typography>

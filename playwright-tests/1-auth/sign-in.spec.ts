@@ -26,7 +26,7 @@ test.describe("Sign In", () => {
     await page.getByTestId("sign-in-submit").click();
 
     await expect(page.getByTestId("profile-menu-item")).toBeVisible();
-    await expect(page.getByTestId("home-title")).toBeVisible();
+    await expect(page.getByTestId("basecamp-title")).toBeVisible();
   });
 
   test("should be successful with redirect", async ({ page }) => {
