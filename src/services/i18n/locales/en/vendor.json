@@ -1,4 +1,18 @@
 {
-  "title": "Vendor",
-  "description": "This space will show a User all of their Vendor Profiles. They will see the Profile Status (Active, Pending, Denied), and be able to access the Vendor Profile Editor window for each Profile they have Onboarded in order to start adding Products (Tours, Tickets, Rentals, Lessons)."
+  "title": "Your Vendor Profiles",
+  "description": "Manage your business profiles and track their status across our platform.",
+  "labels": {
+    "status": "Status",
+    "actionRequired": "Action Required",
+    "lastUpdated": "Last Updated",
+    "type": "Type"
+  },
+  "actions": {
+    "edit": "Edit vendor profile"
+  },
+  "status": {
+    "pending": "Pending",
+    "published": "Published",
+    "rejected": "Rejected"
+  }
 }
