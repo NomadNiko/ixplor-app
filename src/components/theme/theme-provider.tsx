@@ -171,11 +171,11 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
                     borderColor: theme.palette.mode === 'dark' ? 
-                      'rgba(255, 255, 255, 0.23)' : 'rgba(43, 19, 70, 0.23)',
+                      'rgba(255, 255, 255, 0.23)' : 'rgba(101, 69, 138, 0.63)',
                   },
                   '&:hover fieldset': {
                     borderColor: theme.palette.mode === 'dark' ? 
-                      'rgba(255, 255, 255, 0.4)' : 'rgba(43, 19, 70, 0.4)',
+                      'rgba(255, 255, 255, 0.4)' : 'rgba(105, 61, 155, 0.69)',
                   },
                   '&.Mui-focused fieldset': {
                     borderColor: "rgb(105, 201, 233)",
@@ -222,13 +222,13 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
                 "&::-webkit-scrollbar-thumb": {
                   backgroundColor: "rgb(43, 19, 70)",
                   border: theme.palette.mode === 'dark' ?
-                    "3px solid rgb(20, 17, 27)" : "3px solid rgb(82, 0, 0)",
+                    "3px solid rgb(47, 39, 65)" : "3px solid rgb(88, 24, 24)",
                   borderRadius: "20px",
                   backgroundClip: "padding-box",
                   "&:hover": {
                     backgroundColor: "rgb(59, 25, 96)",
                     border: theme.palette.mode === 'dark' ?
-                      "2px solid rgb(20, 17, 27)" : "2px solid rgb(105, 0, 0)",
+                      "2px solid rgb(50, 42, 68)" : "2px solid rgb(109, 29, 29)",
                   },
                 },
               }),
