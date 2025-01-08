@@ -57,7 +57,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
                 contrastText: "#ffffff",
               },
               background: {
-                default: "#ffffff",
+                default: "rgb(43, 19, 70)",
                 paper: "#f5f5f5",
               },
               text: {
