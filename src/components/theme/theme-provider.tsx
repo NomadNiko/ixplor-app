@@ -136,10 +136,10 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           MuiTableBody: {
             styleOverrides: {
               root: ({ theme }: { theme: Theme }) => ({
-                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(0, 0, 0)' : '#ffffff',
+                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(0, 0, 0)' : "rgb(20, 17, 27)",
                 '& .MuiTableRow-root': {
                   '& .MuiTableCell-body': {
-                    color: theme.palette.mode === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(43, 19, 70)',
+                    color: theme.palette.mode === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(231, 215, 250)',
                   },
                   '&:nth-of-type(odd)': {
                     backgroundColor: theme.palette.mode === 'dark' ? 'rgb(20, 20, 20)' : '#f5f5f5',
@@ -171,11 +171,11 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
                     borderColor: theme.palette.mode === 'dark' ? 
-                      'rgba(255, 255, 255, 0.23)' : 'rgba(101, 69, 138, 0.63)',
+                      'rgba(255, 255, 255, 0.23)' : 'rgba(138, 105, 175, 0.42)',
                   },
                   '&:hover fieldset': {
                     borderColor: theme.palette.mode === 'dark' ? 
-                      'rgba(255, 255, 255, 0.4)' : 'rgba(105, 61, 155, 0.69)',
+                      'rgba(255, 255, 255, 0.4)' : 'rgba(138, 105, 175, 0.69)',
                   },
                   '&.Mui-focused fieldset': {
                     borderColor: "rgb(105, 201, 233)",
@@ -188,7 +188,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             styleOverrides: {
               root: ({ theme }: { theme: Theme }) => ({
                 backgroundColor: theme.palette.mode === 'dark' ? 
-                  "rgb(30, 27, 37)" : "#ffffff",
+                  "rgb(30, 27, 37)" : "rgb(20, 17, 27)",
                 borderRadius: '12px',
               }),
             },
@@ -197,7 +197,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             styleOverrides: {
               paper: ({ theme }: { theme: Theme }) => ({
                 backgroundColor: theme.palette.mode === 'dark' ? 
-                  "rgb(30, 27, 37)" : "#ffffff",
+                  "rgb(30, 27, 37)" : "rgb(20, 17, 27)",
                 borderRadius: '12px',
               }),
             },
@@ -217,7 +217,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
                 },
                 "&::-webkit-scrollbar-track": {
                   background: theme.palette.mode === 'dark' ? 
-                    "rgb(20, 17, 27)" : "#ffffff",
+                    "rgb(20, 17, 27)" : "rgb(20, 17, 27)",
                 },
                 "&::-webkit-scrollbar-thumb": {
                   backgroundColor: "rgb(43, 19, 70)",
