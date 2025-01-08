@@ -288,7 +288,7 @@ export default function VendorEdit({ vendorId, onBackClick }: VendorEditProps) {
             justifyContent="space-between"
           >
             <Button startIcon={<ArrowBackIcon />} onClick={onBackClick}>
-              {t("vendorEdit.actions.back")}
+              {t("vendorEdit.actions.cancel")}
             </Button>
             <Button
               variant="contained"
