@@ -58,7 +58,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
               },
               background: {
                 default: "rgb(18, 0, 39)",
-                paper: "#f5f5f5",
+                paper: "rgb(118, 101, 139)",
               },
               text: {
                 primary: "rgb(229, 206, 255)",
@@ -125,7 +125,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           MuiTableHead: {
             styleOverrides: {
               root: ({ theme }: { theme: Theme }) => ({
-                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(0, 0, 0)' : '#f5f5f5',
+                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(0, 0, 0)' : 'rgb(9, 0, 49)' ,
                 '& .MuiTableCell-head': {
                   color: theme.palette.mode === 'dark' ? 'rgb(193, 202, 255)' : 'rgb(255, 188, 188)',
                   fontWeight: 600,
@@ -142,10 +142,10 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
                     color: theme.palette.mode === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(231, 215, 250)',
                   },
                   '&:nth-of-type(odd)': {
-                    backgroundColor: theme.palette.mode === 'dark' ? 'rgb(20, 20, 20)' : '#f5f5f5',
+                    backgroundColor: theme.palette.mode === 'dark' ? 'rgb(20, 20, 20)' :'rgb(0, 0, 0)',
                   },
                   '&:hover': {
-                    backgroundColor: theme.palette.mode === 'dark' ? 'rgb(40, 40, 40)' : '#e0e0e0',
+                    backgroundColor: theme.palette.mode === 'dark' ? 'rgb(40, 40, 40)' : 'rgb(8, 0, 46)',
                   },
                 },
               }),
