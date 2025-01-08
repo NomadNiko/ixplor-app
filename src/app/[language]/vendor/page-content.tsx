@@ -83,7 +83,7 @@ const getStatusText = (status: VendorStatus) => {
 // Main component
 export default function VendorPanelContent() {
   const { enqueueSnackbar } = useSnackbar();
-  const { t } = useTranslation("vendor-panel");
+  const { t } = useTranslation("vendor");
 
   const handleEdit = (id: string) => {
     enqueueSnackbar("Edit functionality coming soon!" + id, {
