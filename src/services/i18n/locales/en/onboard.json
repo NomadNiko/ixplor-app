@@ -1,4 +1,46 @@
 {
-  "title": "Onboard",
-  "description": "This space will be used for onboarding Vendors to the iXplor App. A User will be able to create a Vendor Profile for each Vendor Type needed."
+  "title": "Vendor Onboarding",
+  "description": "Set up your vendor profile",
+  "sections": {
+    "basicInfo": "Basic Information",
+    "contactInfo": "Contact Information",
+    "location": "Location",
+    "social": "Social Media"
+  },
+  "inputs": {
+    "vendorName": {
+      "label": "Vendor Name"
+    },
+    "vendorDescription": {
+      "label": "Description"
+    },
+    "vendorType": {
+      "label": "Vendor Type"
+    },
+    "vendorEmail": {
+      "label": "Business Email"
+    },
+    "vendorPhone": {
+      "label": "Business Phone"
+    },
+    "vendorWebsite": {
+      "label": "Website"
+    },
+    "address": {
+      "label": "Address",
+      "hint": "Start typing to search for your address"
+    },
+    "facebook": {
+      "label": "Facebook Profile URL"
+    },
+    "twitter": {
+      "label": "X (Twitter) Profile URL"
+    },
+    "instagram": {
+      "label": "Instagram Profile URL"
+    }
+  },
+  "actions": {
+    "submit": "Register Vendor"
+  }
 }
