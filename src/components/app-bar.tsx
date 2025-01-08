@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 "use client";
 import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
@@ -21,6 +22,7 @@ import { RoleEnum } from "@/services/api/types/role";
 import Divider from "@mui/material/Divider";
 import ThemeSwitchButton from "@/components/switch-theme-button";
 import { IS_SIGN_UP_ENABLED } from "@/services/auth/config";
+import Image from "next/image";
 
 function ResponsiveAppBar() {
   const { t } = useTranslation("common");
@@ -51,6 +53,13 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          <Image
+            src="/img/iX_Logo_Dark_256.png"
+            alt="iXplor Logo"
+            width={48}
+            height={48}
+            style={{ marginRight: 16 }}
+          />
           <Typography
             variant="h6"
             noWrap
@@ -104,19 +113,31 @@ function ResponsiveAppBar() {
                 </Typography>
               </MenuItem>
 
-              <MenuItem onClick={handleCloseNavMenu} component={Link} href="/onboard">
+              <MenuItem
+                onClick={handleCloseNavMenu}
+                component={Link}
+                href="/onboard"
+              >
                 <Typography textAlign="center">
                   {t("common:navigation.onboard")}
                 </Typography>
               </MenuItem>
 
-              <MenuItem onClick={handleCloseNavMenu} component={Link} href="/vendor">
+              <MenuItem
+                onClick={handleCloseNavMenu}
+                component={Link}
+                href="/vendor"
+              >
                 <Typography textAlign="center">
                   {t("common:navigation.vendor")}
                 </Typography>
               </MenuItem>
 
-              <MenuItem onClick={handleCloseNavMenu} component={Link} href="/finance">
+              <MenuItem
+                onClick={handleCloseNavMenu}
+                component={Link}
+                href="/finance"
+              >
                 <Typography textAlign="center">
                   {t("common:navigation.finance")}
                 </Typography>
@@ -191,7 +212,7 @@ function ResponsiveAppBar() {
             >
               {t("common:navigation.basecamp")}
             </Button>
-            
+
             <Button
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: "white", display: "block" }}
@@ -257,7 +278,7 @@ function ResponsiveAppBar() {
                   >
                     <Avatar
                       alt={user?.firstName + " " + user?.lastName}
-                      src={user.photo?.path}
+                      src={user.photo?.path || "/img/iX_Logo_Dark_256.png"}
                     />
                   </IconButton>
                 </Tooltip>

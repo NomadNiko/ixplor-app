@@ -9,10 +9,18 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
         palette: {
           mode: 'light',
           primary: {
-            main: '#1976d2', // Medium blue
+            main: '#10104c',
+          },
+          background: {
+            default: '#90caf9',
+            paper: '#e1f5fe',
+          },
+          secondary: {
+            main: '#311b92',
           },
         },
         typography: {
+          fontFamily: 'Love Ya Like A Sister',
           htmlFontSize: 12,
           fontSize: 12,
           h1: { fontSize: "1.875rem", fontWeight: 600, color: "inherit" },
