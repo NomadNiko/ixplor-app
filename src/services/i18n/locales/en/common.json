@@ -3,6 +3,7 @@
   "loading": "Loading ...",
   "navigation": {
     "basecamp": "BaseCamp",
+    "onboard": "Onboard",
     "signIn": "Sign In",
     "signUp": "Sign Up",
     "profile": "Profile",

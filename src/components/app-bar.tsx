@@ -104,6 +104,12 @@ function ResponsiveAppBar() {
                 </Typography>
               </MenuItem>
 
+              <MenuItem onClick={handleCloseNavMenu} component={Link} href="/">
+                <Typography textAlign="center">
+                  {t("common:navigation.onboard")}
+                </Typography>
+              </MenuItem>
+
               {!!user?.role &&
                 [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
                   <MenuItem
@@ -172,6 +178,14 @@ function ResponsiveAppBar() {
               href="/"
             >
               {t("common:navigation.basecamp")}
+            </Button>
+            <Button
+              onClick={handleCloseNavMenu}
+              sx={{ my: 2, color: "white", display: "block" }}
+              component={Link}
+              href="/"
+            >
+              {t("common:navigation.onboard")}
             </Button>
 
             {!!user?.role &&

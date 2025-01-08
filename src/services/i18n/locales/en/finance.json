@@ -1,0 +1,4 @@
+{
+  "title": "Finance",
+  "description": "This space will show a User all of their Finance related information. Account Blanaces, Transactions, Invoices, Payouts, Payments, etc. Depending on the Vender Type, each block of information will be tailered to fit the use case, with charts, tables, and custom exportable reports."
+}
