@@ -8,7 +8,6 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
     () =>
       createTheme({
         colorSchemes: {
-          // Dark mode configuration
           dark: {
             palette: {
               mode: 'dark',
@@ -45,14 +44,14 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             palette: {
               mode: 'light',
               primary: {
-                main: 'rgb(color: #10104c)',
+                main: '#10104c',
                 dark: 'rgb(20, 17, 27)',
-                light: 'rgb(color: #10104c)',
+                light: '#10104c',
               },
               secondary: {
-                main: 'rgb(color: #311b92)',
+                main: '#311b92',
                 dark: 'rgb(9, 10, 110)',
-                light: 'rgb(color: #311b92)',
+                light: '#311b92',
               },
               error: {
                 main: 'rgb(255, 0, 0)',
@@ -63,14 +62,14 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
                 light: 'rgb(0, 255, 64)',
               },
               background: {
-                default: 'rgb(color:rgb(146, 161, 189))',
-                paper: 'rgb(color:rgb(190, 193, 228))',
+                default: 'rgb(146, 161, 189)',
+                paper: 'rgb(190, 193, 228)',
               },
             },
           },
         },
         typography: {
-          fontFamily: "'Love Ya Like A Sister', system-ui",
+          fontFamily: '"Exo 2", "Roboto", "Helvetica", "Arial", sans-serif',
           h1: {
             fontSize: '2.5rem',
             fontWeight: 600,
@@ -137,7 +136,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           MuiTableBody: {
             styleOverrides: {
               root: ({ theme }: { theme: Theme }) => ({
-                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(0, 0, 0)' : 'rgb(color: #ffffff)',
+                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(0, 0, 0)' : '#ffffff',
                 '& .MuiTableRow-root': {
                   '& .MuiTableCell-body': {
                     color: theme.palette.mode === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(43, 19, 70)',
@@ -189,7 +188,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             styleOverrides: {
               root: ({ theme }: { theme: Theme }) => ({
                 backgroundColor: theme.palette.mode === 'dark' ? 
-                  "rgb(30, 27, 37)" : "rgb(color: #ffffff)",
+                  "rgb(30, 27, 37)" : "#ffffff",
                 borderRadius: '12px',
               }),
             },
@@ -198,7 +197,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             styleOverrides: {
               paper: ({ theme }: { theme: Theme }) => ({
                 backgroundColor: theme.palette.mode === 'dark' ? 
-                  "rgb(30, 27, 37)" : "rgb(color: #ffffff)",
+                  "rgb(30, 27, 37)" : "#ffffff",
                 borderRadius: '12px',
               }),
             },
@@ -207,7 +206,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             styleOverrides: {
               body: ({ theme }: { theme: Theme }) => ({
                 backgroundColor: theme.palette.mode === 'dark' ? 
-                  "rgb(20, 17, 27)" : "rgb(102, 0, 0)" ,
+                  "rgb(20, 17, 27)" : "rgb(102, 0, 0)",
                 color: theme.palette.mode === 'dark' ? 
                   "rgb(255, 191, 191)" : "rgb(206, 168, 250)",
                 scrollbarWidth: "auto",
@@ -218,7 +217,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
                 },
                 "&::-webkit-scrollbar-track": {
                   background: theme.palette.mode === 'dark' ? 
-                    "rgb(20, 17, 27)" : "rgb(color: #ffffff)",
+                    "rgb(20, 17, 27)" : "#ffffff",
                 },
                 "&::-webkit-scrollbar-thumb": {
                   backgroundColor: "rgb(43, 19, 70)",
