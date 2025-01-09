@@ -247,7 +247,7 @@ export default function OnboardContent() {
           </Grid>
         </form>
       </Container>
-      <Grid sx={{ mx: "auto" }}>
+      <Grid container sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
         <MuiLink href="/privacy-policy">Privacy Policy</MuiLink>
       </Grid>
     </FormProvider>

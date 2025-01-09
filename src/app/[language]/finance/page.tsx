@@ -41,16 +41,6 @@ export default async function Finance(props: Props) {
             <Trans
               i18nKey={`description`}
               t={t}
-              components={[
-                <MuiLink
-                  key="1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://github.com/brocoders/extensive-react-boilerplate/blob/main/docs/README.md"
-                >
-                  {}
-                </MuiLink>,
-              ]}
             />
           </Typography>
         </Grid>
