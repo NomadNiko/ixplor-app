@@ -7,50 +7,49 @@ import { Facebook, Instagram, MailPlusIcon, Twitter } from "lucide-react";
 import Typography from "@mui/material/Typography";
 
 export default function Footer() {
-  const [isFixed, setIsFixed] = useState(true);
-
-  useEffect(() => {
-    const checkPosition = () => {
-      const pageHeight = document.documentElement.scrollHeight;
-      const viewportHeight = window.innerHeight;
-      setIsFixed(pageHeight <= viewportHeight);
-    };
-
-    checkPosition();
-    window.addEventListener('resize', checkPosition);
-    window.addEventListener('scroll', checkPosition);
-
-    return () => {
-      window.removeEventListener('resize', checkPosition);
-      window.removeEventListener('scroll', checkPosition); 
-    };
-  }, []);
-
-  const currentYear = new Date().getFullYear();
-
-  return (
-    <Box
-      sx={{
-        width: "100%",
-        textAlign: "center",
-        py: 4,
-        mt: 6,
-        position: isFixed ? "fixed" : "relative", 
-        bottom: isFixed ? 0 : "auto",
-        left: 0,
-        bgcolor: "background.default",
-        borderTop: "1px solid",
-        borderColor: "divider",
-        ...(isFixed && {
-          "&:before": {
-            content: '""',
-            display: "block",
-            height: "120px",
-            width: "100%"
-          }
-        })
-      }}
-    >
+    const [isFixed, setIsFixed] = useState(true);
+  
+    useEffect(() => {
+      const checkPosition = () => {
+        const pageHeight = document.documentElement.scrollHeight;
+        const viewportHeight = window.innerHeight;
+        setIsFixed(pageHeight <= viewportHeight);
+      };
+  
+      checkPosition();
+      window.addEventListener('resize', checkPosition);
+      window.addEventListener('scroll', checkPosition);
+  
+      return () => {
+        window.removeEventListener('resize', checkPosition);
+        window.removeEventListener('scroll', checkPosition); 
+      };
+    }, []);
+  
+    const currentYear = new Date().getFullYear();
+  
+    return (
+      <Box
+        sx={{
+          width: "100%",
+          py: 4,
+          mt: 6,
+          position: isFixed ? "fixed" : "relative", 
+          bottom: isFixed ? 0 : "auto",
+          left: 0,
+          bgcolor: "background.default",
+          borderTop: "1px solid",
+          borderColor: "divider",
+          ...(isFixed && {
+            "&:before": {
+              content: '""',
+              display: "block",
+              height: "120px",
+              width: "100%"
+            }
+          })
+        }}
+      >
       {/* Social Icons */}
       <Box 
         sx={{ 
