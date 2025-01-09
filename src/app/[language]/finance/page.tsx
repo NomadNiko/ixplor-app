@@ -15,6 +15,12 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
-export default function Page() {
-  return <FinanceContent />;
+export default function FinanceWrapperPage() {
+  return (
+    <div>
+      {/* You can add any header or other elements here */}
+      <FinanceContent />
+      {/* You can add a footer or other elements here */}
+    </div>
+  );
 }

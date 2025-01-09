@@ -1,19 +1,19 @@
 /* eslint-disable no-restricted-syntax */
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Box from "@mui/material/Box";
 import MuiLink from "@mui/material/Link";
 import { Facebook, Instagram, MailPlusIcon, Twitter } from "lucide-react";
 import Typography from "@mui/material/Typography";
 
 export default function Footer() {
-  const [isFixed, setIsFixed] = useState(true);
+  const isFixed = false;
 
   useEffect(() => {
     const checkPosition = () => {
-      const pageHeight = document.documentElement.scrollHeight;
-      const viewportHeight = window.innerHeight;
-      setIsFixed(pageHeight <= viewportHeight + 200);
+    //   const pageHeight = document.documentElement.scrollHeight;
+    //   const viewportHeight = window.innerHeight;
+      //setIsFixed(pageHeight <= viewportHeight + 200);
     };
 
     checkPosition();
@@ -40,14 +40,14 @@ export default function Footer() {
         bgcolor: "background.default",
         borderTop: "1px solid",
         borderColor: "divider",
-        ...(isFixed && {
-          "&:before": {
-            content: '""',
-            display: "block",
-            height: "50px", // Reduce this value for less gap
-            width: "100%"
-          }
-        })
+        // ...(isFixed && {
+        //   "&:before": {
+        //     content: '""',
+        //     display: "block",
+        //     height: "50px", // Reduce this value for less gap
+        //     width: "100%"
+        //   }
+        // })
       }}
     >
       {/* Social Icons */}
@@ -59,13 +59,13 @@ export default function Footer() {
           mb: 2 // Adjust margin-bottom for spacing below icons
         }}
       >
-        <MuiLink href="https://www.facebook.com/ixplor.app" target="_blank" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
+        <MuiLink href="https://www.facebook.com/real.ixplor" target="_blank" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
           <Facebook size={24} />
         </MuiLink>
-        <MuiLink href="https://www.instagram.com/ixplor.app" target="_blank" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
+        <MuiLink href="https://www.instagram.com/real_iXplor" target="_blank" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
           <Instagram size={24} />
         </MuiLink>
-        <MuiLink href="https://twitter.com/ixplor_app" target="_blank" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
+        <MuiLink href="https://twitter.com/real_iXplor" target="_blank" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
           <Twitter size={24} />
         </MuiLink>
         <MuiLink 
