@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 "use client";
 import { useEffect, useState } from 'react';
 import Box from "@mui/material/Box";
@@ -13,7 +12,7 @@ export default function Footer() {
       const checkPosition = () => {
         const pageHeight = document.documentElement.scrollHeight;
         const viewportHeight = window.innerHeight;
-        setIsFixed(pageHeight <= viewportHeight + 200);
+        setIsFixed(pageHeight <= viewportHeight + 40); // Adjusted to account for smaller footer
       };
   
       checkPosition();
@@ -32,113 +31,116 @@ export default function Footer() {
       <Box
         sx={{
           width: "100%",
-          py: 4,
-          mt: 6,
-          position: isFixed ? "fixed" : "relative", 
+          height: isFixed ? "40px" : "auto",
+          position: isFixed ? "fixed" : "relative",
           bottom: isFixed ? 0 : "auto",
           left: 0,
           bgcolor: "background.default",
           borderTop: "1px solid",
           borderColor: "divider",
-          ...(isFixed && {
-            "&:before": {
-              content: '""',
-              display: "block",
-              height: "120px",
-              width: "100%"
-            }
-          })
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          px: 4
         }}
       >
-      {/* Social Icons */}
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          gap: 4,
-          mb: 2 
-        }}
-      >
-        <MuiLink 
-          href="https://www.facebook.com/real.ixplor/" 
-          target="_blank"
+        {/* Social Icons */}
+        <Box 
           sx={{ 
-            color: 'text.secondary',
-            '&:hover': { color: 'primary.main' }
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2
           }}
         >
-          <Facebook size={24} />
-        </MuiLink>
-        <MuiLink 
-          href="https://x.com/real_iXplor" 
-          target="_blank"
-          sx={{ 
-            color: 'text.secondary',
-            '&:hover': { color: 'primary.main' }
-          }}
-        >
-          <Twitter size={24} />
-        </MuiLink>
-        <MuiLink 
-          href="https://instagram.com" 
-          target="_blank"
-          sx={{ 
-            color: 'text.secondary',
-            '&:hover': { color: 'primary.main' }
-          }}
-        >
-          <Instagram size={24} />
-        </MuiLink>
-        <MuiLink 
-          href="mailto:aloha@ixplor.app" 
-          target="_blank"
-          sx={{ 
-            color: 'text.secondary',
-            '&:hover': { color: 'primary.main' }
-          }}
-        >
-          <MailPlusIcon size={24} />
-        </MuiLink>
-      </Box>
+          <MuiLink 
+            href="https://www.facebook.com/real.ixplor/" 
+            target="_blank"
+            sx={{ 
+              color: 'text.secondary',
+              '&:hover': { color: 'primary.main' },
+              lineHeight: 0 // Removes extra space around icons
+            }}
+          >
+            <Facebook size={20} />
+          </MuiLink>
+          <MuiLink 
+            href="https://x.com/real_iXplor" 
+            target="_blank"
+            sx={{ 
+              color: 'text.secondary',
+              '&:hover': { color: 'primary.main' },
+              lineHeight: 0
+            }}
+          >
+            <Twitter size={20} />
+          </MuiLink>
+          <MuiLink 
+            href="https://instagram.com" 
+            target="_blank"
+            sx={{ 
+              color: 'text.secondary',
+              '&:hover': { color: 'primary.main' },
+              lineHeight: 0
+            }}
+          >
+            <Instagram size={20} />
+          </MuiLink>
+          <MuiLink 
+            href="mailto:aloha@ixplor.app" 
+            target="_blank"
+            sx={{ 
+              color: 'text.secondary',
+              '&:hover': { color: 'primary.main' },
+              lineHeight: 0
+            }}
+          >
+            <MailPlusIcon size={20} />
+          </MuiLink>
+        </Box>
 
-      {/* Copyright and Links */}
-      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, flexWrap: 'wrap' }}>
-        <Typography 
-          variant="body2" 
-          color="text.secondary"
-          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-        >
-          © {currentYear} iXplor Inc.
-          <Box component="span" sx={{ mx: 1 }}>•</Box>
-          <MuiLink
-            href="/privacy-policy"
-            sx={{
-              color: 'text.secondary',
-              textDecoration: 'none',
-              '&:hover': {
-                color: 'primary.main',
-                textDecoration: 'underline'
-              }
+        {/* Copyright and Links */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography 
+            variant="body2" 
+            color="text.secondary"
+            sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 1,
+              fontSize: '0.75rem'
             }}
           >
-            Privacy Policy
-          </MuiLink>
-          <Box component="span" sx={{ mx: 1 }}>•</Box>
-          <MuiLink
-            href="/terms"
-            sx={{
-              color: 'text.secondary',
-              textDecoration: 'none',
-              '&:hover': {
-                color: 'primary.main',
-                textDecoration: 'underline'
-              }
-            }}
-          >
-            Terms
-          </MuiLink>
-        </Typography>
+            © {currentYear} iXplor Inc.
+            <Box component="span" sx={{ mx: 0.5 }}>•</Box>
+            <MuiLink
+              href="/privacy-policy"
+              sx={{
+                color: 'text.secondary',
+                textDecoration: 'none',
+                '&:hover': {
+                  color: 'primary.main',
+                  textDecoration: 'underline'
+                }
+              }}
+            >
+              Privacy Policy
+            </MuiLink>
+            <Box component="span" sx={{ mx: 0.5 }}>•</Box>
+            <MuiLink
+              href="/terms"
+              sx={{
+                color: 'text.secondary',
+                textDecoration: 'none',
+                '&:hover': {
+                  color: 'primary.main',
+                  textDecoration: 'underline'
+                }
+              }}
+            >
+              Terms
+            </MuiLink>
+          </Typography>
+        </Box>
       </Box>
-    </Box>
-  );
+    );
 }
