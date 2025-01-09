@@ -54,7 +54,7 @@ function ResponsiveAppBar() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Image
-            src="/img/iX_Logo_Dark_256.png"
+            src="/img/iX_Logo_white_on_Trans_01.png"
             alt="iXplor Logo"
             width={48}
             height={48}

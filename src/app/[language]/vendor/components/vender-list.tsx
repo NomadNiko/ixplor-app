@@ -11,7 +11,7 @@ import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
 import { mockVendorDetails } from "../mock-data";
 import { VendorStatus } from "@/types/vendor-types";
-import MuiLink from "@mui/material/Link";
+import FooterLink from "@/components/footer-link";
 
 interface VendorListProps {
   onVendorSelect: (vendorId: string) => void;
@@ -92,7 +92,8 @@ export default function VendorList({ onVendorSelect }: VendorListProps) {
                       </Typography>
                     )}
                     <Typography variant="caption" color="textSecondary">
-                      {t("vendorList.labels.lastUpdated")}: {profile.lastUpdated}
+                      {t("vendorList.labels.lastUpdated")}:{" "}
+                      {profile.lastUpdated}
                     </Typography>
                   </Box>
                 </Box>
@@ -100,10 +101,10 @@ export default function VendorList({ onVendorSelect }: VendorListProps) {
             </VendorCard>
           </Grid>
         ))}
-        <Grid sx={{ mx: "auto" }}>
-          <MuiLink href="/privacy-policy">Privacy Policy</MuiLink>
-        </Grid>
       </Grid>
+      <br />
+      <br />
+      <FooterLink />
     </Container>
   );
 }

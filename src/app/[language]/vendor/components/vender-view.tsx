@@ -14,14 +14,14 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
 import { styled } from "@mui/material/styles";
 import { mockVendorDetails } from "../mock-data";
-import Chip  from "@mui/material/Chip"
-import Divider from "@mui/material/Divider"
-import Stack from "@mui/material/Stack"
+import Chip from "@mui/material/Chip";
+import Divider from "@mui/material/Divider";
+import Stack from "@mui/material/Stack";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import GroupIcon from "@mui/icons-material/Group";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import MuiLink from "@mui/material/Link";
+import FooterLink from "@/components/footer-link";
 
 interface VendorViewProps {
   vendorId: string;
@@ -30,21 +30,23 @@ interface VendorViewProps {
 }
 
 const StatusChip = styled(Chip, {
-  shouldForwardProp: (prop) => prop !== 'status'
-})<{ status: 'available' | 'booked' | 'cancelled' }>(({ theme, status }) => ({
-  backgroundColor: 
-    status === 'available' ? theme.palette.success.main :
-    status === 'booked' ? theme.palette.warning.main :
-    theme.palette.error.main,
-  color: theme.palette.common.white
+  shouldForwardProp: (prop) => prop !== "status",
+})<{ status: "available" | "booked" | "cancelled" }>(({ theme, status }) => ({
+  backgroundColor:
+    status === "available"
+      ? theme.palette.success.main
+      : status === "booked"
+      ? theme.palette.warning.main
+      : theme.palette.error.main,
+  color: theme.palette.common.white,
 }));
 
 const StatCard = styled(Card)(({ theme }) => ({
-  height: '100%',
-  backgroundColor: theme.palette.background.default
+  height: "100%",
+  backgroundColor: theme.palette.background.default,
 }));
 
-const renderTourView = (vendor: typeof mockVendorDetails[0]) => {
+const renderTourView = (vendor: (typeof mockVendorDetails)[0]) => {
   const tours = vendor.tours || [];
   return (
     <Grid container spacing={3}>
@@ -56,10 +58,15 @@ const renderTourView = (vendor: typeof mockVendorDetails[0]) => {
               <Box display="flex" alignItems="center" gap={1}>
                 <CalendarMonthIcon color="primary" />
                 <Typography variant="h6">
-                  {tours.reduce((acc, tour) => acc + (tour.schedule?.length || 0), 0)}
+                  {tours.reduce(
+                    (acc, tour) => acc + (tour.schedule?.length || 0),
+                    0
+                  )}
                 </Typography>
               </Box>
-              <Typography variant="body2" color="textSecondary">Scheduled Tours</Typography>
+              <Typography variant="body2" color="textSecondary">
+                Scheduled Tours
+              </Typography>
             </CardContent>
           </StatCard>
         </Grid>
@@ -72,7 +79,9 @@ const renderTourView = (vendor: typeof mockVendorDetails[0]) => {
                   {tours.reduce((acc, tour) => acc + tour.maxParticipants, 0)}
                 </Typography>
               </Box>
-              <Typography variant="body2" color="textSecondary">Total Capacity</Typography>
+              <Typography variant="body2" color="textSecondary">
+                Total Capacity
+              </Typography>
             </CardContent>
           </StatCard>
         </Grid>
@@ -83,7 +92,9 @@ const renderTourView = (vendor: typeof mockVendorDetails[0]) => {
         <Grid key={tour.id} size={{ xs: 12 }}>
           <Card>
             <CardContent>
-              <Typography variant="h6" gutterBottom>{tour.name}</Typography>
+              <Typography variant="h6" gutterBottom>
+                {tour.name}
+              </Typography>
               <Typography variant="body2" color="textSecondary" paragraph>
                 {tour.description}
               </Typography>
@@ -98,13 +109,20 @@ const renderTourView = (vendor: typeof mockVendorDetails[0]) => {
                   ${tour.price}
                 </Typography>
               </Stack>
-              
+
               {tour.schedule && tour.schedule.length > 0 && (
                 <Box mt={2}>
-                  <Typography variant="subtitle2" gutterBottom>Upcoming Schedule</Typography>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Upcoming Schedule
+                  </Typography>
                   <Stack spacing={1}>
                     {tour.schedule.map((event) => (
-                      <Box key={event.id} display="flex" alignItems="center" gap={2}>
+                      <Box
+                        key={event.id}
+                        display="flex"
+                        alignItems="center"
+                        gap={2}
+                      >
                         <Typography variant="body2">{event.date}</Typography>
                         <Typography variant="body2">
                           {event.startTime} - {event.endTime}
@@ -127,9 +145,9 @@ const renderTourView = (vendor: typeof mockVendorDetails[0]) => {
   );
 };
 
-const renderTicketView = (vendor: typeof mockVendorDetails[0]) => {
+const renderTicketView = (vendor: (typeof mockVendorDetails)[0]) => {
   const tickets = vendor.tickets || [];
-  
+
   return (
     <Grid container spacing={3}>
       {/* Stats Overview */}
@@ -140,10 +158,15 @@ const renderTicketView = (vendor: typeof mockVendorDetails[0]) => {
               <Box display="flex" alignItems="center" gap={1}>
                 <InventoryIcon color="primary" />
                 <Typography variant="h6">
-                  {tickets.reduce((acc, ticket) => acc + ticket.availableCount, 0)}
+                  {tickets.reduce(
+                    (acc, ticket) => acc + ticket.availableCount,
+                    0
+                  )}
                 </Typography>
               </Box>
-              <Typography variant="body2" color="textSecondary">Available Tickets</Typography>
+              <Typography variant="body2" color="textSecondary">
+                Available Tickets
+              </Typography>
             </CardContent>
           </StatCard>
         </Grid>
@@ -156,7 +179,9 @@ const renderTicketView = (vendor: typeof mockVendorDetails[0]) => {
                   {tickets.reduce((acc, ticket) => acc + ticket.soldCount, 0)}
                 </Typography>
               </Box>
-              <Typography variant="body2" color="textSecondary">Tickets Sold</Typography>
+              <Typography variant="body2" color="textSecondary">
+                Tickets Sold
+              </Typography>
             </CardContent>
           </StatCard>
         </Grid>
@@ -167,14 +192,16 @@ const renderTicketView = (vendor: typeof mockVendorDetails[0]) => {
         <Grid key={ticket.id} size={{ xs: 12 }}>
           <Card>
             <CardContent>
-              <Typography variant="h6" gutterBottom>{ticket.name}</Typography>
+              <Typography variant="h6" gutterBottom>
+                {ticket.name}
+              </Typography>
               <Stack direction="row" spacing={2} alignItems="center">
                 <Chip label={ticket.type} size="small" />
                 <Typography variant="body2" color="primary">
                   ${ticket.price}
                 </Typography>
               </Stack>
-              
+
               <Box mt={2}>
                 <Stack direction="row" spacing={3}>
                   <Typography variant="body2">
@@ -196,7 +223,7 @@ const renderTicketView = (vendor: typeof mockVendorDetails[0]) => {
   );
 };
 
-const renderRentalView = (vendor: typeof mockVendorDetails[0]) => {
+const renderRentalView = (vendor: (typeof mockVendorDetails)[0]) => {
   const rentals = vendor.rentals || [];
 
   return (
@@ -209,10 +236,15 @@ const renderRentalView = (vendor: typeof mockVendorDetails[0]) => {
               <Box display="flex" alignItems="center" gap={1}>
                 <InventoryIcon color="primary" />
                 <Typography variant="h6">
-                  {rentals.reduce((acc, rental) => acc + rental.availableUnits, 0)}
+                  {rentals.reduce(
+                    (acc, rental) => acc + rental.availableUnits,
+                    0
+                  )}
                 </Typography>
               </Box>
-              <Typography variant="body2" color="textSecondary">Available Units</Typography>
+              <Typography variant="body2" color="textSecondary">
+                Available Units
+              </Typography>
             </CardContent>
           </StatCard>
         </Grid>
@@ -225,7 +257,9 @@ const renderRentalView = (vendor: typeof mockVendorDetails[0]) => {
                   {rentals.reduce((acc, rental) => acc + rental.dueIn, 0)}
                 </Typography>
               </Box>
-              <Typography variant="body2" color="textSecondary">Due Returns Today</Typography>
+              <Typography variant="body2" color="textSecondary">
+                Due Returns Today
+              </Typography>
             </CardContent>
           </StatCard>
         </Grid>
@@ -236,26 +270,40 @@ const renderRentalView = (vendor: typeof mockVendorDetails[0]) => {
         <Grid key={rental.id} size={{ xs: 12 }}>
           <Card>
             <CardContent>
-              <Typography variant="h6" gutterBottom>{rental.name}</Typography>
-              <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+              <Typography variant="h6" gutterBottom>
+                {rental.name}
+              </Typography>
+              <Typography
+                variant="subtitle2"
+                color="textSecondary"
+                gutterBottom
+              >
                 {rental.category}
               </Typography>
-              
+
               <Grid container spacing={2} mt={1}>
                 <Grid size={{ xs: 3 }}>
-                  <Typography variant="body2" color="textSecondary">Available</Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Available
+                  </Typography>
                   <Typography variant="h6">{rental.availableUnits}</Typography>
                 </Grid>
                 <Grid size={{ xs: 3 }}>
-                  <Typography variant="body2" color="textSecondary">Booked</Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Booked
+                  </Typography>
                   <Typography variant="h6">{rental.bookedUnits}</Typography>
                 </Grid>
                 <Grid size={{ xs: 3 }}>
-                  <Typography variant="body2" color="textSecondary">Due Out</Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Due Out
+                  </Typography>
                   <Typography variant="h6">{rental.dueOut}</Typography>
                 </Grid>
                 <Grid size={{ xs: 3 }}>
-                  <Typography variant="body2" color="textSecondary">Due In</Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Due In
+                  </Typography>
                   <Typography variant="h6">{rental.dueIn}</Typography>
                 </Grid>
               </Grid>
@@ -267,7 +315,7 @@ const renderRentalView = (vendor: typeof mockVendorDetails[0]) => {
   );
 };
 
-const renderLessonView = (vendor: typeof mockVendorDetails[0]) => {
+const renderLessonView = (vendor: (typeof mockVendorDetails)[0]) => {
   const lessons = vendor.lessons || [];
 
   return (
@@ -280,10 +328,15 @@ const renderLessonView = (vendor: typeof mockVendorDetails[0]) => {
               <Box display="flex" alignItems="center" gap={1}>
                 <GroupIcon color="primary" />
                 <Typography variant="h6">
-                  {lessons.filter(lesson => lesson.status === 'booked').length}
+                  {
+                    lessons.filter((lesson) => lesson.status === "booked")
+                      .length
+                  }
                 </Typography>
               </Box>
-              <Typography variant="body2" color="textSecondary">Booked Lessons</Typography>
+              <Typography variant="body2" color="textSecondary">
+                Booked Lessons
+              </Typography>
             </CardContent>
           </StatCard>
         </Grid>
@@ -293,10 +346,15 @@ const renderLessonView = (vendor: typeof mockVendorDetails[0]) => {
               <Box display="flex" alignItems="center" gap={1}>
                 <CalendarMonthIcon color="primary" />
                 <Typography variant="h6">
-                  {lessons.filter(lesson => lesson.status === 'requested').length}
+                  {
+                    lessons.filter((lesson) => lesson.status === "requested")
+                      .length
+                  }
                 </Typography>
               </Box>
-              <Typography variant="body2" color="textSecondary">Pending Requests</Typography>
+              <Typography variant="body2" color="textSecondary">
+                Pending Requests
+              </Typography>
             </CardContent>
           </StatCard>
         </Grid>
@@ -307,7 +365,9 @@ const renderLessonView = (vendor: typeof mockVendorDetails[0]) => {
         <Grid key={lesson.id} size={{ xs: 12 }}>
           <Card>
             <CardContent>
-              <Typography variant="h6" gutterBottom>{lesson.name}</Typography>
+              <Typography variant="h6" gutterBottom>
+                {lesson.name}
+              </Typography>
               <Stack direction="row" spacing={2} alignItems="center" mb={2}>
                 <Typography variant="body2">
                   Instructor: {lesson.instructor}
@@ -319,11 +379,11 @@ const renderLessonView = (vendor: typeof mockVendorDetails[0]) => {
                   ${lesson.price}
                 </Typography>
               </Stack>
-              
+
               <Box display="flex" alignItems="center" gap={2}>
                 <StatusChip
                   label={lesson.status}
-                  status={lesson.status as 'available' | 'booked' | 'cancelled'}
+                  status={lesson.status as "available" | "booked" | "cancelled"}
                   size="small"
                 />
                 {lesson.scheduledDate && (
@@ -340,9 +400,13 @@ const renderLessonView = (vendor: typeof mockVendorDetails[0]) => {
   );
 };
 
-export default function VendorView({ vendorId, onBackClick, onEditClick }: VendorViewProps) {
+export default function VendorView({
+  vendorId,
+  onBackClick,
+  onEditClick,
+}: VendorViewProps) {
   const { t } = useTranslation("vendor");
-  const vendor = mockVendorDetails.find(v => v.id === vendorId);
+  const vendor = mockVendorDetails.find((v) => v.id === vendorId);
 
   if (!vendor) return null;
 
@@ -365,11 +429,13 @@ export default function VendorView({ vendorId, onBackClick, onEditClick }: Vendo
     <Container maxWidth="md">
       <Grid container spacing={3} pt={3}>
         {/* Header with navigation */}
-        <Grid size={{ xs: 12 }} display="flex" alignItems="center" justifyContent="space-between">
-          <Button
-            startIcon={<ArrowBackIcon />}
-            onClick={onBackClick}
-          >
+        <Grid
+          size={{ xs: 12 }}
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <Button startIcon={<ArrowBackIcon />} onClick={onBackClick}>
             {t("vendorView.actions.back")}
           </Button>
           <Button
@@ -383,19 +449,21 @@ export default function VendorView({ vendorId, onBackClick, onEditClick }: Vendo
 
         {/* Vendor header information */}
         <Grid size={{ xs: 12 }}>
-          <Typography variant="h4" gutterBottom>{vendor.name}</Typography>
-          <Typography variant="body1" paragraph>{vendor.description}</Typography>
+          <Typography variant="h4" gutterBottom>
+            {vendor.name}
+          </Typography>
+          <Typography variant="body1" paragraph>
+            {vendor.description}
+          </Typography>
           <Divider sx={{ my: 2 }} />
         </Grid>
 
         {/* Type-specific content */}
-        <Grid size={{ xs: 12 }}>
-          {renderContent()}
-        </Grid>
-        <Grid sx={{ mx: "auto" }}>
-          <MuiLink href="/privacy-policy">Privacy Policy</MuiLink>
-        </Grid>
+        <Grid size={{ xs: 12 }}>{renderContent()}</Grid>
       </Grid>
+      <br />
+      <br /> 
+      <FooterLink />
     </Container>
   );
 }
