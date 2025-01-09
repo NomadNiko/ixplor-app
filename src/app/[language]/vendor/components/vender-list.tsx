@@ -102,8 +102,6 @@ export default function VendorList({ onVendorSelect }: VendorListProps) {
           </Grid>
         ))}
       </Grid>
-      <br />
-      <br />
       <FooterLink />
     </Container>
   );

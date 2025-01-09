@@ -5,6 +5,7 @@ import Grid from "@mui/material/Grid2";
 import Typography from "@mui/material/Typography";
 import MuiLink from "@mui/material/Link";
 import { Trans } from "react-i18next/TransWithoutContext";
+import FooterLink from "@/components/footer-link";
 
 type Props = {
   params: Promise<{ language: string }>;
@@ -54,10 +55,8 @@ export default async function BaseCamp(props: Props) {
             />
           </Typography>
         </Grid>
-        <Grid sx={{ mx: "auto" }}>
-          <MuiLink href="/privacy-policy">Privacy Policy</MuiLink>
-        </Grid>
       </Grid>
+      <FooterLink />
     </Container>
   );
 }

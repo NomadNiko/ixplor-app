@@ -3,7 +3,7 @@ import { getServerTranslation } from "@/services/i18n";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid2";
 import Typography from "@mui/material/Typography";
-import MuiLink from "@mui/material/Link";
+import FooterLink from "@/components/footer-link";
 import { Trans } from "react-i18next/TransWithoutContext";
 
 type Props = {
@@ -44,10 +44,8 @@ export default async function Finance(props: Props) {
             />
           </Typography>
         </Grid>
-        <Grid sx={{ mx: "auto" }}>
-          <MuiLink href="/privacy-policy">Privacy Policy</MuiLink>
-        </Grid>
       </Grid>
+      <FooterLink />
     </Container>
   );
 }

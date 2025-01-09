@@ -461,8 +461,6 @@ export default function VendorView({
         {/* Type-specific content */}
         <Grid size={{ xs: 12 }}>{renderContent()}</Grid>
       </Grid>
-      <br />
-      <br /> 
       <FooterLink />
     </Container>
   );

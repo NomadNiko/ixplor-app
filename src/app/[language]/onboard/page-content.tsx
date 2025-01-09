@@ -12,7 +12,7 @@ import FormSelectInput from "@/components/form/select/form-select";
 import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import MuiLink from "@mui/material/Link";
+import FooterLink from "@/components/footer-link";
 import { styled } from "@mui/material/styles";
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
@@ -247,9 +247,7 @@ export default function OnboardContent() {
           </Grid>
         </form>
       </Container>
-      <Grid container sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-        <MuiLink href="/privacy-policy">Privacy Policy</MuiLink>
-      </Grid>
+      <FooterLink />
     </FormProvider>
   );
 }
