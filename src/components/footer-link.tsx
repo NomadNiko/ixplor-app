@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Box from "@mui/material/Box";
 import MuiLink from "@mui/material/Link";
-import { Facebook, Instagram, Twitter } from "lucide-react";
+import { Facebook, Instagram, MailPlusIcon, Twitter } from "lucide-react";
 import Typography from "@mui/material/Typography";
 
 export default function Footer() {
@@ -61,7 +61,7 @@ export default function Footer() {
         }}
       >
         <MuiLink 
-          href="https://facebook.com" 
+          href="https://www.facebook.com/real.ixplor/" 
           target="_blank"
           sx={{ 
             color: 'text.secondary',
@@ -71,7 +71,7 @@ export default function Footer() {
           <Facebook size={24} />
         </MuiLink>
         <MuiLink 
-          href="https://twitter.com" 
+          href="https://x.com/real_iXplor" 
           target="_blank"
           sx={{ 
             color: 'text.secondary',
@@ -89,6 +89,16 @@ export default function Footer() {
           }}
         >
           <Instagram size={24} />
+        </MuiLink>
+        <MuiLink 
+          href="mailto:aloha@ixplor.app" 
+          target="_blank"
+          sx={{ 
+            color: 'text.secondary',
+            '&:hover': { color: 'primary.main' }
+          }}
+        >
+          <MailPlusIcon size={24} />
         </MuiLink>
       </Box>
 

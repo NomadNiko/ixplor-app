@@ -70,7 +70,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           },
         },
         typography: {
-          fontFamily: 'Exo',
+          fontFamily: '"Exo", "sans-sarif"',
           h1: {
             fontSize: '2.5rem',
             fontWeight: 600,
