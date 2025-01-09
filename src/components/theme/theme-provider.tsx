@@ -45,14 +45,14 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             palette: {
               mode: 'light',
               primary: {
-                main: '#10104c',
+                main: 'rgb(color: #10104c)',
                 dark: 'rgb(20, 17, 27)',
-                light: '#10104c',
+                light: 'rgb(color: #10104c)',
               },
               secondary: {
-                main: '#311b92',
+                main: 'rgb(color: #311b92)',
                 dark: 'rgb(9, 10, 110)',
-                light: '#311b92',
+                light: 'rgb(color: #311b92)',
               },
               error: {
                 main: 'rgb(255, 0, 0)',
@@ -63,8 +63,8 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
                 light: 'rgb(0, 255, 64)',
               },
               background: {
-                default: '#90caf9',
-                paper: '#e1f5fe',
+                default: 'rgb(color:rgb(146, 161, 189))',
+                paper: 'rgb(color:rgb(190, 193, 228))',
               },
             },
           },
@@ -137,7 +137,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           MuiTableBody: {
             styleOverrides: {
               root: ({ theme }: { theme: Theme }) => ({
-                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(0, 0, 0)' : '#ffffff',
+                backgroundColor: theme.palette.mode === 'dark' ? 'rgb(0, 0, 0)' : 'rgb(color: #ffffff)',
                 '& .MuiTableRow-root': {
                   '& .MuiTableCell-body': {
                     color: theme.palette.mode === 'dark' ? 'rgb(255, 255, 255)' : 'rgb(43, 19, 70)',
@@ -189,7 +189,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             styleOverrides: {
               root: ({ theme }: { theme: Theme }) => ({
                 backgroundColor: theme.palette.mode === 'dark' ? 
-                  "rgb(30, 27, 37)" : "#ffffff",
+                  "rgb(30, 27, 37)" : "rgb(color: #ffffff)",
                 borderRadius: '12px',
               }),
             },
@@ -198,7 +198,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             styleOverrides: {
               paper: ({ theme }: { theme: Theme }) => ({
                 backgroundColor: theme.palette.mode === 'dark' ? 
-                  "rgb(30, 27, 37)" : "#ffffff",
+                  "rgb(30, 27, 37)" : "rgb(color: #ffffff)",
                 borderRadius: '12px',
               }),
             },
@@ -218,7 +218,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
                 },
                 "&::-webkit-scrollbar-track": {
                   background: theme.palette.mode === 'dark' ? 
-                    "rgb(20, 17, 27)" : "#ffffff",
+                    "rgb(20, 17, 27)" : "rgb(color: #ffffff)",
                 },
                 "&::-webkit-scrollbar-thumb": {
                   backgroundColor: "rgb(43, 19, 70)",
