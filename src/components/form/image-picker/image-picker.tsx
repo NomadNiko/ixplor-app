@@ -20,6 +20,8 @@ import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageList from "@mui/material/ImageList";
 
+import Image from "next/image";
+
 type ImagePickerProps = {
   error?: string;
   onChange: (value: FileEntity | null) => void;
@@ -141,7 +143,14 @@ function ImagePicker(props: ImagePickerProps) {
                   />
                 </IconButton>
               </StyledOverlay>
-              <img src={props.value.path} loading="lazy" />
+              <Image
+                src={props.value.path}
+                alt={`Uploaded image ${props.value.id}`}
+                width={300}
+                height={300}
+                style={{ objectFit: "cover" }}
+                priority={false}
+              />
             </ImageListItem>
           </ImageList>
         </>
@@ -180,7 +189,7 @@ function ImagePicker(props: ImagePickerProps) {
 
 function FormImagePicker<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >(
   props: Pick<ControllerProps<TFieldValues, TName>, "name" | "defaultValue"> & {
     disabled?: boolean;
