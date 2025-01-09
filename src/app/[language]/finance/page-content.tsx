@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-//import { useState } from "react";
+"use client";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -7,12 +7,9 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
-//import IconButton from "@mui/material/IconButton";
-//import Tooltip from "@mui/material/Tooltip";
 import {
   TrendingUp,
   TrendingDown,
-  //Info,
   DollarSign,
   Clock,
   LineChart as ChartIcon,
@@ -23,27 +20,27 @@ import {
 } from "./finance-mock-data";
 import { VendorFinancialData } from "./finance-types";
 import {
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip as RechartsTooltip,
-    Legend,
-    ResponsiveContainer,
-    PieChart, // Import PieChart
-    Pie, // Import Pie
-    Cell, // Import Cell
-  } from 'recharts';
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip as RechartsTooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']; // Define COLORS
-
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const StyledCard = styled(Card)(({ theme }) => ({
   boxShadow: theme.shadows[2],
   borderRadius: theme.shape.borderRadius,
   border: "1px solid",
   borderColor: theme.palette.divider,
+  marginBottom: theme.spacing(3), // Updated spacing
 }));
 
 const MetricLabel = styled(Typography)(({ theme }) => ({
@@ -78,7 +75,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
   color,
 }) => (
   <StyledCard>
-    <CardContent>
+    <CardContent sx={{ marginBottom: (theme) => theme.spacing(1) }}>
       <Box display="flex" alignItems="center" justifyContent="space-between">
         <Box display="flex" alignItems="center">
           <Icon style={{ color, fontSize: 40, marginRight: 16 }} />
@@ -103,7 +100,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
             label={direction === "up" ? "Increase" : "Decrease"}
             size="small"
             sx={{
-              marginLeft: 1,
+              marginLeft: (theme) => theme.spacing(1),
               backgroundColor:
                 direction === "up"
                   ? "rgba(76, 175, 80, 0.1)"
@@ -178,7 +175,7 @@ const VendorTypeSection: React.FC<{ data: VendorFinancialData }> = ({
   return (
     <StyledCard>
       <CardContent>
-        <Box mb={3}>
+        <Box mb={(theme) => theme.spacing(3)}>
           <Typography variant="h6" gutterBottom>
             {data.vendorName}
           </Typography>
@@ -186,7 +183,6 @@ const VendorTypeSection: React.FC<{ data: VendorFinancialData }> = ({
             Available Balance: {formatCurrency(data.availableBalance.value)}
           </Typography>
         </Box>
-
         <Grid container spacing={3}>
           {getMetricsByType().map((metric, index) => (
             <Grid item xs={12} md={4} key={index}>
@@ -194,14 +190,11 @@ const VendorTypeSection: React.FC<{ data: VendorFinancialData }> = ({
                 <Typography variant="h5" gutterBottom>
                   {metric.value}
                 </Typography>
-                <Typography color="textSecondary">
-                  {metric.label}
-                </Typography>
+                <Typography color="textSecondary">{metric.label}</Typography>
               </Box>
             </Grid>
           ))}
         </Grid>
-
         <Box mt={3} height={200}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
@@ -241,10 +234,8 @@ const VendorTypeSection: React.FC<{ data: VendorFinancialData }> = ({
 };
 
 export default function FinanceContent() {
-  //const [selectedPeriod, setSelectedPeriod] = useState("month");
-
   return (
-    <Box p={3}>
+    <Box p={(theme) => theme.spacing(3)}>
       {/* Aggregate Metrics */}
       <Grid container spacing={3} mb={4}>
         <Grid item xs={12}>
@@ -303,26 +294,10 @@ export default function FinanceContent() {
                     <YAxis />
                     <RechartsTooltip />
                     <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="tours"
-                      stroke="#8884d8"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="tickets"
-                      stroke="#82ca9d"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="rentals"
-                      stroke="#ffc658"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="lessons"
-                      stroke="#ff7300"
-                    />
+                    <Line type="monotone" dataKey="tours" stroke="#8884d8" />
+                    <Line type="monotone" dataKey="tickets" stroke="#82ca9d" />
+                    <Line type="monotone" dataKey="rentals" stroke="#ffc658" />
+                    <Line type="monotone" dataKey="lessons" stroke="#ff7300" />
                   </LineChart>
                 </ResponsiveContainer>
               </Box>
@@ -346,16 +321,14 @@ export default function FinanceContent() {
                       outerRadius={100}
                       fill="#8884d8"
                       dataKey="value"
-                      label
+                      label={(entry) => `$${entry.value}`}
                     >
-                      {mockAggregateData.revenueByType.map(
-                        (entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
-                          />
-                        )
-                      )}
+                      {mockAggregateData.revenueByType.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
                     </Pie>
                     <RechartsTooltip />
                     <Legend />
