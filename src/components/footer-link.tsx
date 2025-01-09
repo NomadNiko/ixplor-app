@@ -7,87 +7,66 @@ import { Facebook, Instagram, MailPlusIcon, Twitter } from "lucide-react";
 import Typography from "@mui/material/Typography";
 
 export default function Footer() {
-    const [isFixed, setIsFixed] = useState(true);
-  
-    useEffect(() => {
-      const checkPosition = () => {
-        const pageHeight = document.documentElement.scrollHeight;
-        const viewportHeight = window.innerHeight;
-        setIsFixed(pageHeight <= viewportHeight + 200);
-      };
-  
-      checkPosition();
-      window.addEventListener('resize', checkPosition);
-      window.addEventListener('scroll', checkPosition);
-  
-      return () => {
-        window.removeEventListener('resize', checkPosition);
-        window.removeEventListener('scroll', checkPosition); 
-      };
-    }, []);
-  
-    const currentYear = new Date().getFullYear();
-  
-    return (
+  const [isFixed, setIsFixed] = useState(true);
+
+  useEffect(() => {
+    const checkPosition = () => {
+      const pageHeight = document.documentElement.scrollHeight;
+      const viewportHeight = window.innerHeight;
+      setIsFixed(pageHeight <= viewportHeight + 200);
+    };
+
+    checkPosition();
+    window.addEventListener('resize', checkPosition);
+    window.addEventListener('scroll', checkPosition);
+
+    return () => {
+      window.removeEventListener('resize', checkPosition);
+      window.removeEventListener('scroll', checkPosition); 
+    };
+  }, []);
+
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        py: 1, // Adjust vertical padding here for less spacing around content
+        mt: 2,
+        position: isFixed ? "fixed" : "relative", 
+        bottom: isFixed ? 0 : "auto",
+        left: 0,
+        bgcolor: "background.default",
+        borderTop: "1px solid",
+        borderColor: "divider",
+        ...(isFixed && {
+          "&:before": {
+            content: '""',
+            display: "block",
+            height: "50px", // Reduce this value for less gap
+            width: "100%"
+          }
+        })
+      }}
+    >
+      {/* Social Icons */}
       <Box
         sx={{
-          width: "100%",
-          py: 1,
-          mt: 2,
-          position: isFixed ? "fixed" : "relative", 
-          bottom: isFixed ? 0 : "auto",
-          left: 0,
-          bgcolor: "background.default",
-          borderTop: "1px solid",
-          borderColor: "divider",
-          ...(isFixed && {
-            "&:before": {
-              content: '""',
-              display: "block",
-              height: "120px",
-              width: "100%"
-            }
-          })
-        }}
-      >
-      {/* Social Icons */}
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
+          display: 'flex',
+          justifyContent: 'center',
           gap: 4,
-          mb: 2 
+          mb: 2 // Adjust margin-bottom for spacing below icons
         }}
       >
-        <MuiLink 
-          href="https://www.facebook.com/real.ixplor/" 
-          target="_blank"
-          sx={{ 
-            color: 'text.secondary',
-            '&:hover': { color: 'primary.main' }
-          }}
-        >
+        <MuiLink href="https://www.facebook.com/ixplor.app" target="_blank" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
           <Facebook size={24} />
         </MuiLink>
-        <MuiLink 
-          href="https://x.com/real_iXplor" 
-          target="_blank"
-          sx={{ 
-            color: 'text.secondary',
-            '&:hover': { color: 'primary.main' }
-          }}
-        >
-          <Twitter size={24} />
-        </MuiLink>
-        <MuiLink 
-          href="https://instagram.com" 
-          target="_blank"
-          sx={{ 
-            color: 'text.secondary',
-            '&:hover': { color: 'primary.main' }
-          }}
-        >
+        <MuiLink href="https://www.instagram.com/ixplor.app" target="_blank" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
           <Instagram size={24} />
+        </MuiLink>
+        <MuiLink href="https://twitter.com/ixplor_app" target="_blank" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
+          <Twitter size={24} />
         </MuiLink>
         <MuiLink 
           href="mailto:aloha@ixplor.app" 
