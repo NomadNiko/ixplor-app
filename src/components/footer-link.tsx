@@ -32,8 +32,8 @@ export default function Footer() {
       <Box
         sx={{
           width: "100%",
-          py: 4,
-          mt: 6,
+          py: 1,
+          mt: 2,
           position: isFixed ? "fixed" : "relative", 
           bottom: isFixed ? 0 : "auto",
           left: 0,
