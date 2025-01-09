@@ -1,5 +1,4 @@
 "use client";
-
 import { useTranslation } from "@/services/i18n/client";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid2";

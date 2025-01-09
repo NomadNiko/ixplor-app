@@ -1,3 +1,4 @@
+"use client";
 import { VendorFinancialData } from '../../finance-types';
 import { mockVendorFinancialData } from '../../finance-mock-data';
 import VendorFinanceCard from './VendorFinanceCard';

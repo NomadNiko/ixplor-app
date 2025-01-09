@@ -62,8 +62,8 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
                 light: 'rgb(0, 255, 64)',
               },
               background: {
-                default: 'rgb(146, 161, 189)',
-                paper: 'rgb(190, 193, 228)',
+                default: 'rgb(184, 189, 255)',
+                paper: 'rgb(212, 214, 235)',
               },
             },
           },
@@ -188,7 +188,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             styleOverrides: {
               root: ({ theme }: { theme: Theme }) => ({
                 backgroundColor: theme.palette.mode === 'dark' ? 
-                  "rgb(30, 27, 37)" : "#ffffff",
+                  "rgb(30, 27, 37)" : "rgb(195, 187, 214)",
                 borderRadius: '12px',
               }),
             },
@@ -197,7 +197,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             styleOverrides: {
               paper: ({ theme }: { theme: Theme }) => ({
                 backgroundColor: theme.palette.mode === 'dark' ? 
-                  "rgb(30, 27, 37)" : "#ffffff",
+                  "rgb(30, 27, 37)" : "rgb(177, 176, 223)",
                 borderRadius: '12px',
               }),
             },
@@ -208,7 +208,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
                 backgroundColor: theme.palette.mode === 'dark' ? 
                   "rgb(20, 17, 27)" : "rgb(102, 0, 0)",
                 color: theme.palette.mode === 'dark' ? 
-                  "rgb(255, 191, 191)" : "rgb(206, 168, 250)",
+                  "rgb(255, 191, 191)" : "rgb(121, 133, 201)",
                 scrollbarWidth: "auto",
                 scrollbarColor: theme.palette.mode === 'dark' ?
                   "rgb(43, 19, 70) rgb(20, 17, 27)" : "rgb(43, 19, 70) rgb(20, 17, 27)",

@@ -1,5 +1,4 @@
-// src/app/[language]/vendor/components/VendorEditView/CalendarSection.tsx
-
+"use client";
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
