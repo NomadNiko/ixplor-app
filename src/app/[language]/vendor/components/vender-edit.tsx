@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { useTranslation } from "@/services/i18n/client";
 import { useSnackbar } from "@/hooks/use-snackbar";
@@ -10,55 +9,52 @@ import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Box from "@mui/material/Box";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import { mockVendorDetails } from "../mock-data";
-import { useForm, FormProvider } from "react-hook-form";
+import { InventorySection } from './VendorEditView/InventorySection';
+import { CalendarSection } from './VendorEditView/CalendarSection';
 import FormTextInput from "@/components/form/text-input/form-text-input";
 import FormSelectInput from "@/components/form/select/form-select";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import ListAltIcon from "@mui/icons-material/ListAlt";
-
-
+import { FormProvider, useForm } from "react-hook-form";
 
 interface VendorEditProps {
   vendorId: string;
   onBackClick: () => void;
 }
 
-// Form types for each vendor product
 interface BaseForm {
-    name: string;
-    description?: string;
-    price?: string;
-  }
-  
-  interface TourForm extends BaseForm {
-    duration: string;
-    maxParticipants: string;
-  }
-  
-  interface TicketForm extends BaseForm {
-    type: string;
-    validFrom: string;
-    validTo: string;
-    availableCount: string;
-  }
-  
-  interface RentalForm extends BaseForm {
-    category: string;
-    totalUnits: string;
-  }
-  
-  interface LessonForm extends BaseForm {
-    instructor: string;
-    duration: string;
-  }
+  name: string;
+  description?: string;
+  price?: string;
+}
 
+interface TourForm extends BaseForm {
+  duration: string;
+  maxParticipants: string;
+}
 
-// Edit section tab value type
+interface TicketForm extends BaseForm {
+  type: string;
+  validFrom: string;
+  validTo: string;
+  availableCount: string;
+}
+
+interface RentalForm extends BaseForm {
+  category: string;
+  totalUnits: string;
+}
+
+interface LessonForm extends BaseForm {
+  instructor: string;
+  duration: string;
+}
+
 type TabValue = "details" | "calendar" | "inventory";
 
 export default function VendorEdit({ vendorId, onBackClick }: VendorEditProps) {
@@ -67,7 +63,6 @@ export default function VendorEdit({ vendorId, onBackClick }: VendorEditProps) {
   const vendor = mockVendorDetails.find((v) => v.id === vendorId);
   const [activeTab, setActiveTab] = useState<TabValue>("details");
 
-  // Form initialization based on vendor type
   const methods = useForm<TourForm | TicketForm | RentalForm | LessonForm>({
     defaultValues: {
       name: "",
@@ -93,17 +88,17 @@ export default function VendorEdit({ vendorId, onBackClick }: VendorEditProps) {
     },
   });
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: TabValue) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: TabValue) => {
     setActiveTab(newValue);
   };
 
   const handleSave = async (formData: TourForm | TicketForm | RentalForm | LessonForm) => {
-  // Simulate saving data
-  console.log('Saving product:', formData);
-  enqueueSnackbar("Changes saved successfully!", { variant: "success" });
-};
+    console.log('Saving product:', formData);
+    enqueueSnackbar("Changes saved successfully!", { variant: "success" });
+  };
 
-  // Render different forms based on vendor type
+  if (!vendor) return null;
+
   const renderProductForm = () => {
     if (!vendor) return null;
 
@@ -194,7 +189,6 @@ export default function VendorEdit({ vendorId, onBackClick }: VendorEditProps) {
                   testId="ticket-price"
                 />
               </Grid>
-              {/* Add date pickers for validity period */}
             </Grid>
           </Box>
         );
@@ -274,73 +268,73 @@ export default function VendorEdit({ vendorId, onBackClick }: VendorEditProps) {
     }
   };
 
-  if (!vendor) return null;
-
   return (
     <FormProvider {...methods}>
-      <Container maxWidth="md">
-        <Grid container spacing={3} pt={3}>
-          {/* Header with back button */}
-          <Grid
-            size={{ xs: 12 }}
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Button startIcon={<ArrowBackIcon />} onClick={onBackClick}>
-              {t("vendorEdit.actions.cancel")}
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={methods.handleSubmit(handleSave)}
+      <Container maxWidth="lg">
+        <form onSubmit={methods.handleSubmit(handleSave)}>
+          <Grid container spacing={3} pt={3}>
+            <Grid
+              size={{ xs: 12 }}
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
             >
-              {t("vendorEdit.actions.save")}
-            </Button>
-          </Grid>
+              <Button startIcon={<ArrowBackIcon />} onClick={onBackClick}>
+                {t("vendorEdit.actions.cancel")}
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+              >
+                {t("vendorEdit.actions.save")}
+              </Button>
+            </Grid>
 
-          {/* Vendor name and type */}
-          <Grid size={{ xs: 12 }}>
-            <Typography variant="h4" gutterBottom>
-              {vendor.name}
-            </Typography>
-            <Typography variant="body1" color="textSecondary" gutterBottom>
-              {vendor.description}
-            </Typography>
-          </Grid>
+            <Grid size={{ xs: 12 }}>
+              <Typography variant="h4" gutterBottom>
+                {vendor.name}
+              </Typography>
+              <Typography variant="body1" color="textSecondary" gutterBottom>
+                {vendor.description}
+              </Typography>
+            </Grid>
 
-          {/* Tabs for different sections */}
-          <Grid size={{ xs: 12 }}>
-            <Tabs value={activeTab} onChange={handleTabChange} sx={{ mb: 3 }}>
-              <Tab
-                icon={<AddCircleIcon />}
-                label="Add Product"
-                value="details"
-              />
-              <Tab
-                icon={<CalendarMonthIcon />}
-                label="Schedule"
-                value="calendar"
-              />
-              <Tab icon={<ListAltIcon />} label="Inventory" value="inventory" />
-            </Tabs>
-          </Grid>
+            <Grid size={{ xs: 12 }}>
+              <Tabs value={activeTab} onChange={handleTabChange} sx={{ mb: 3 }}>
+                <Tab
+                  icon={<AddCircleIcon />}
+                  label="Add Product"
+                  value="details"
+                />
+                <Tab
+                  icon={<CalendarMonthIcon />}
+                  label="Schedule"
+                  value="calendar"
+                />
+                <Tab 
+                  icon={<ListAltIcon />} 
+                  label="Inventory" 
+                  value="inventory" 
+                />
+              </Tabs>
+            </Grid>
 
-          {/* Content based on active tab */}
-          <Grid size={{ xs: 12 }}>
-            <Card>
-              <CardContent>
-                {activeTab === "details" && renderProductForm()}
-                {activeTab === "calendar" && (
-                  <Typography>Calendar view coming soon...</Typography>
-                )}
-                {activeTab === "inventory" && (
-                  <Typography>Inventory management coming soon...</Typography>
-                )}
-              </CardContent>
-            </Card>
+            <Grid size={{ xs: 12 }}>
+              <Card>
+                <CardContent>
+                  {activeTab === "calendar" && (
+                    <CalendarSection vendor={vendor} />
+                  )}
+                  {activeTab === "inventory" && (
+                    <InventorySection vendor={vendor} />
+                  )}
+                  {activeTab === "details" && renderProductForm()}
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
-        </Grid>
+        </form>
       </Container>
     </FormProvider>
   );
