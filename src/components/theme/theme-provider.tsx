@@ -69,7 +69,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           },
         },
         typography: {
-          fontFamily: '"Exo 2", "Roboto", "Helvetica", "Arial", sans-serif',
+          fontFamily: '"Exo", "Roboto", "Helvetica", "Arial", sans-serif',
           h1: {
             fontSize: '2.5rem',
             fontWeight: 600,
