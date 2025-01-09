@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { getServerTranslation } from "@/services/i18n";
 import FinanceContent from "./page-content";
-import withPageRequiredAuth from "@/services/auth/with-page-required-auth";
 
 type Props = {
   params: Promise<{ language: string }>;
@@ -22,9 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// This ensures the finance page requires authentication
-const ProtectedFinanceContent = withPageRequiredAuth(FinanceContent);
-
+// The page component itself should be a server component
 export default function FinancePage() {
-  return <ProtectedFinanceContent />;
+  return <FinanceContent />;
 }
