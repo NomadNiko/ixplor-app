@@ -70,7 +70,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           },
         },
         typography: {
-          fontFamily: '"Exo", "sans-sarif"',
+          fontFamily: "'Love Ya Like A Sister', system-ui",
           h1: {
             fontSize: '2.5rem',
             fontWeight: 600,

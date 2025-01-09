@@ -1345,6 +1345,21 @@
   resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-9.3.0.tgz#ef398dab34c67faaa0e348318c905eae3564fa58"
   integrity sha512-r0tJ3ZOkMd9xsu3VRfqlFR6cz0V/jFYRswAIpC+m/DIfAUXq7g8N7wTAlhSANySXYGKzGryfDXwtwsY8TxEIDw==
 
+"@fontsource/exo-2@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@fontsource/exo-2/-/exo-2-5.1.1.tgz#28e95125c762bae02a607d1247e11eec6f3f0858"
+  integrity sha512-bddZi/wDrWJ1oWRB4DBCrxwTtpcQXpwvHhLWhmKbVAhP5m2l4BAPx6w5nWraRbAeV68R+KFsIF5vZSjVEQFvdQ==
+
+"@fontsource/exo@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@fontsource/exo/-/exo-5.1.1.tgz#ede5a3554fb145552d9b7b03e4d705eb86eea60e"
+  integrity sha512-Z4Cby+XzwcACYBIjPI9cYogL9+43VCc3K6xiu5qT9Zc+wEX7rAa5l1j1nnR6TyjN5kF3ky0g3+hEzVVixtp1Dg==
+
+"@fontsource/love-ya-like-a-sister@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@fontsource/love-ya-like-a-sister/-/love-ya-like-a-sister-5.1.1.tgz#78d895c550c12dab878e319b22b0f1f2fa020f76"
+  integrity sha512-0Edv/QVFmW+GsaKxHw7p9EeHfNIJsdSsOD148FlE93Clf+rKiWYQ7cTzlyJdC00O/mAtS8wwmlacECYIOrsuqw==
+
 "@fontsource/roboto@^5.0.8":
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/@fontsource/roboto/-/roboto-5.1.1.tgz#64b3f819baf8d3bcfb48c0437ddc7e4118a6ab14"
