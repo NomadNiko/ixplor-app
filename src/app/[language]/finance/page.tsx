@@ -3,11 +3,12 @@ import { getServerTranslation } from "@/services/i18n";
 import FinanceContent from "./page-content";
 
 type Props = {
-  params: { language: string };
+  params: Promise<{ language: string }>;
 };
 
-export async function generateMetadata(props: Props): Promise<Metadata> {
-  const { t } = await getServerTranslation(props.params.language, "finance");
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const resolvedParams = await params;
+  const { t } = await getServerTranslation(resolvedParams.language, "finance");
   return {
     title: t("title"),
     description: t("description"),
