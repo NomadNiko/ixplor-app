@@ -1,4 +1,5 @@
 /* eslint-disable no-restricted-syntax */
+"use client";
 import { useEffect, useState } from 'react';
 import Box from "@mui/material/Box";
 import MuiLink from "@mui/material/Link";
