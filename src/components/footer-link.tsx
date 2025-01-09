@@ -13,7 +13,7 @@ export default function Footer() {
       const checkPosition = () => {
         const pageHeight = document.documentElement.scrollHeight;
         const viewportHeight = window.innerHeight;
-        setIsFixed(pageHeight <= viewportHeight);
+        setIsFixed(pageHeight <= viewportHeight + 200);
       };
   
       checkPosition();
