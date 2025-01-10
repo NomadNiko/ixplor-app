@@ -46,13 +46,13 @@ export default function VendorContent() {
         <VendorList onVendorSelect={handleVendorSelect} />
       )}
 
-      {viewState.mode === "view" && viewState.selectedVendorId && (
-        <VendorView
-          vendorId={viewState.selectedVendorId}
-          onBackClick={handleBackToList}
-          onEditClick={handleEditClick}
-        />
-      )}
+{viewState.mode === "view" && viewState.selectedVendorId && (
+  <VendorView
+    vendorId={viewState.selectedVendorId}
+    onBackClick={handleBackToList}
+    onEditClick={handleEditClick}
+  />
+)}
 
       {viewState.mode === "edit" && viewState.selectedVendorId && (
         <VendorEdit

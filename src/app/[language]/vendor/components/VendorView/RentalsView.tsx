@@ -23,13 +23,13 @@ import {
 } from "lucide-react";
 import { RentalProduct, Size } from "@/types/vendor-types";
 import { StatCard } from "./styled/vendor-view-styled";
-import onEditClick from "../../page-content";
 
 interface RentalsViewProps {
   rentals: RentalProduct[];
+  onEditClick: () => void; 
 }
 
-export default function RentalsView({ rentals }: RentalsViewProps) {
+export default function RentalsView({ rentals, onEditClick }: RentalsViewProps) {
   const [activeTab, setActiveTab] = useState("inventory");
   const [selectedProduct, setSelectedProduct] = useState<RentalProduct | null>(
     null

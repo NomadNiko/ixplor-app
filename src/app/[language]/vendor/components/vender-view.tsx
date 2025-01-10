@@ -37,9 +37,14 @@ export default function VendorView({
         return vendor.tours ? <ToursView tours={vendor.tours} /> : null;
       case "tickets":
         return vendor.tickets ? <TicketsView tickets={vendor.tickets} /> : null;
-      case "rentals":
-        return vendor.rentals ? <RentalsView rentals={vendor.rentals} /> : null;
-      case "lessons":
+        case "rentals":
+          return vendor.rentals ? (
+            <RentalsView 
+              rentals={vendor.rentals} 
+              onEditClick={onEditClick}  // Pass the onEditClick method here
+            /> 
+          ) : null;
+        case "lessons":
         return vendor.lessons ? <LessonsView lessons={vendor.lessons} /> : null;
       default:
         return null;
