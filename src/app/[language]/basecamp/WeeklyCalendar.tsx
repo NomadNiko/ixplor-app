@@ -99,12 +99,15 @@ function WeeklyCalendar() {
   }, []);
 
   const getEventsForDay = (date: Date) => {
-    return events.filter((event) => {
-      console.log(event);
-      // In a real app, we'd do proper date comparison
-      // For now, randomly distribute events across the week
+    const minEvents = 4; 
+    const maxEvents = 12;
+    const numberOfEvents = Math.floor(Math.random() * (maxEvents - minEvents + 1)) + minEvents;
+  
+    return Array.from({ length: numberOfEvents }).map(() => {
+      // Select a random event from your `events` array
       console.log(date);
-      return Math.random() > 0.7;
+      const randomIndex = Math.floor(Math.random() * events.length);
+      return events[randomIndex];
     });
   };
 
