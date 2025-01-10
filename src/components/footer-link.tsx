@@ -11,9 +11,6 @@ export default function Footer() {
 
   useEffect(() => {
     const checkPosition = () => {
-    //   const pageHeight = document.documentElement.scrollHeight;
-    //   const viewportHeight = window.innerHeight;
-      //setIsFixed(pageHeight <= viewportHeight + 200);
     };
 
     checkPosition();
@@ -37,17 +34,8 @@ export default function Footer() {
         position: isFixed ? "fixed" : "relative", 
         bottom: isFixed ? 0 : "auto",
         left: 0,
-        bgcolor: "background.default",
         borderTop: "1px solid",
         borderColor: "divider",
-        // ...(isFixed && {
-        //   "&:before": {
-        //     content: '""',
-        //     display: "block",
-        //     height: "50px", // Reduce this value for less gap
-        //     width: "100%"
-        //   }
-        // })
       }}
     >
       {/* Social Icons */}
@@ -56,7 +44,7 @@ export default function Footer() {
           display: 'flex',
           justifyContent: 'center',
           gap: 4,
-          mb: 2 // Adjust margin-bottom for spacing below icons
+          mb: 2
         }}
       >
         <MuiLink href="https://www.facebook.com/real.ixplor" target="_blank" sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
