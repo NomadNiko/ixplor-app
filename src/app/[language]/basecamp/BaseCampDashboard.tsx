@@ -78,7 +78,7 @@ const QuickStatsWidget = () => {
             <Users className="text-warning" />
             <div>
               <Typography variant="h4">New</Typography>
-              <Typography variant="body2" color="text.secondary">Onboard Vendor Profile</Typography>
+              <Typography variant="body2" color="text.secondary">Add Vendor</Typography>
             </div>
           </Box>
         </Card>
