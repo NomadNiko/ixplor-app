@@ -226,25 +226,37 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
          },
 
          MuiTextField: {
-           styleOverrides: {
-             root: ({ theme }: { theme: Theme }) => ({
-               '& .MuiOutlinedInput-root': {
-                 borderRadius: theme.spacing(1),
-                 backgroundColor: alpha(theme.palette.background.paper, 0.4),
-                 transition: theme.transitions.create(['background-color', 'box-shadow'], {
-                   duration: theme.transitions.duration.shorter,
-                 }),
-                 '&:hover': {
-                   backgroundColor: alpha(theme.palette.background.paper, 0.6),
-                 },
-                 '&.Mui-focused': {
-                   backgroundColor: alpha(theme.palette.background.paper, 0.8),
-                   boxShadow: `0 0 0 2px ${alpha(theme.palette.primary.main, 0.25)}`,
-                 },
-               },
-             }),
-           },
-         },
+          styleOverrides: {
+            root: ({ theme }: { theme: Theme }) => ({
+              '& .MuiOutlinedInput-root': {
+                borderRadius: theme.spacing(1),
+                height: theme.spacing(5.5), // 44px at default spacing of 8px
+                backgroundColor: alpha(theme.palette.background.paper, 0.4),
+                transition: theme.transitions.create(['background-color', 'box-shadow'], {
+                  duration: theme.transitions.duration.shorter,
+                }),
+                '&:hover': {
+                  backgroundColor: alpha(theme.palette.background.paper, 0.6),
+                },
+                '&.Mui-focused': {
+                  backgroundColor: alpha(theme.palette.background.paper, 0.8),
+                  boxShadow: `0 0 0 ${theme.spacing(0.25)} ${alpha(theme.palette.primary.main, 0.25)}`,
+                },
+                '&.MuiInputBase-multiline': {
+                  height: 'auto',
+                  minHeight: theme.spacing(5.5),
+                  padding: theme.spacing(1, 1.75)
+                }
+              },
+              '& .MuiInputLabel-outlined': {
+                transform: `translate(${theme.spacing(1.75)}, ${theme.spacing(1.625)}) scale(1)`,
+                '&.MuiInputLabel-shrink': {
+                  transform: `translate(${theme.spacing(1.75)}, ${theme.spacing(-0.75)}) scale(0.75)`,
+                }
+              }
+            }),
+          },
+        },
 
          MuiTableHead: {
            styleOverrides: {
