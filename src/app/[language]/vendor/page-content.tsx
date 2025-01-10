@@ -14,19 +14,19 @@ interface ViewState {
 
 export default function VendorContent() {
   const [viewState, setViewState] = useState<ViewState>({
-    mode: "list"
+    mode: "list",
   });
 
   const handleVendorSelect = (vendorId: string) => {
     setViewState({
       mode: "view",
-      selectedVendorId: vendorId
+      selectedVendorId: vendorId,
     });
   };
 
   const handleBackToList = () => {
     setViewState({
-      mode: "list"
+      mode: "list",
     });
   };
 
@@ -35,7 +35,7 @@ export default function VendorContent() {
 
     setViewState({
       mode: "edit",
-      selectedVendorId: viewState.selectedVendorId
+      selectedVendorId: viewState.selectedVendorId,
     });
   };
 
@@ -43,11 +43,9 @@ export default function VendorContent() {
   return (
     <>
       {viewState.mode === "list" && (
-        <VendorList 
-          onVendorSelect={handleVendorSelect}
-        />
+        <VendorList onVendorSelect={handleVendorSelect} />
       )}
-      
+
       {viewState.mode === "view" && viewState.selectedVendorId && (
         <VendorView
           vendorId={viewState.selectedVendorId}
@@ -55,14 +53,16 @@ export default function VendorContent() {
           onEditClick={handleEditClick}
         />
       )}
-      
+
       {viewState.mode === "edit" && viewState.selectedVendorId && (
         <VendorEdit
           vendorId={viewState.selectedVendorId}
-          onBackClick={() => setViewState({
-            mode: "view",
-            selectedVendorId: viewState.selectedVendorId
-          })}
+          onBackClick={() =>
+            setViewState({
+              mode: "view",
+              selectedVendorId: viewState.selectedVendorId,
+            })
+          }
         />
       )}
     </>
