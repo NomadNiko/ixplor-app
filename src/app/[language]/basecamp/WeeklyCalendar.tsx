@@ -104,7 +104,7 @@ function WeeklyCalendar() {
       // In a real app, we'd do proper date comparison
       // For now, randomly distribute events across the week
       console.log(date);
-      return Math.random() > 1.2;
+      return Math.random() > 0.7;
     });
   };
 
