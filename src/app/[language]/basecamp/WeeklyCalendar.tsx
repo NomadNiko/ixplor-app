@@ -21,8 +21,6 @@ function WeeklyCalendar() {
     [weekStart]
   );
 
-  const visibleDays = isMobile ? days.slice(0, 3) : days;
-
   const getEventsForDay = () => {
     return Math.random() > 0.7 ? [{
       id: 'sample',
@@ -74,7 +72,7 @@ function WeeklyCalendar() {
           flexDirection: isMobile ? 'column' : 'row'
         }}
       >
-        {visibleDays.map(day => (
+        {days.map(day => (
           <Card
             key={day.toISOString()}
             className="flex-1 p-3"
