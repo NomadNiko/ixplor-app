@@ -5,6 +5,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
+import FooterLink from "@/components/footer-link";
 import { 
   Store, 
   DollarSign, 
@@ -97,6 +98,7 @@ export default function BaseCampDashboard() {
 
       <QuickStatsWidget />
       <WeeklyCalendar />
+      <FooterLink />
     </Container>
   );
 }

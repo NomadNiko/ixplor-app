@@ -27,7 +27,7 @@ function WeeklyCalendar() {
 
   // Generate calendar days
   const days = useMemo(
-    () => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)),
+    () => Array.from({ length: 4 }, (_, i) => addDays(weekStart, i)),
     [weekStart]
   );
 
@@ -108,8 +108,8 @@ function WeeklyCalendar() {
     });
   };
 
-  const nextWeek = () => setWeekStart((date) => addDays(date, 7));
-  const prevWeek = () => setWeekStart((date) => addDays(date, -7));
+  const nextWeek = () => setWeekStart((date) => addDays(date, 4));
+  const prevWeek = () => setWeekStart((date) => addDays(date, -4));
 
   const getEventColor = (type: string) => {
     switch (type) {
@@ -147,7 +147,7 @@ function WeeklyCalendar() {
           </IconButton>
           <Typography variant="subtitle1" component="span" mx={1}>
             {format(weekStart, "MMM d")} -{" "}
-            {format(addDays(weekStart, 6), "MMM d, yyyy")}
+            {format(addDays(weekStart, 3), "MMM d, yyyy")}
           </Typography>
           <IconButton
             onClick={nextWeek}
@@ -172,7 +172,7 @@ function WeeklyCalendar() {
             key={day.toISOString()}
             className="p-3"
             sx={{
-              minWidth: "200px",
+              minWidth: "250px",
               flex: "0 0 auto",
               backgroundColor: isSameDay(day, new Date())
                 ? "action.hover"

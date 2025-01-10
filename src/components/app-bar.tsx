@@ -180,7 +180,7 @@ function ResponsiveAppBar() {
             </Menu>
           </Box>
           <Image
-                src="/img/iX_Logo_white_on_Trans_01.png"
+                src="/img/ixplor_white_small.png"
                 alt="iXplor Logo"
                 width={48}
                 height={48}

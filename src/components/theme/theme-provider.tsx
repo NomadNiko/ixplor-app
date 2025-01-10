@@ -83,7 +83,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
          },
          background: {
            default: '#0F172A',
-           paper: 'rgb(35, 49, 71, 0.85)',
+           paper: 'rgb(28, 40, 58, 0.92)',
          },
          text: {
            primary: '#F8FAFC',

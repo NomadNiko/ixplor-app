@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography';
 import FinanceOverview from './FinanceOverview';
 import VendorFinanceList from './VendorFinanceList';
 import VendorDetailView from './VendorDetailView';
+import FooterLink from '@/components/footer-link';
 import { useState } from 'react';
 import { VendorFinancialData } from '../../finance-types';
 
@@ -24,6 +25,7 @@ export default function FinanceDashboard() {
       <FinanceOverview />
       <Typography variant="h5" gutterBottom className="mt-6">Vendor Financial Status</Typography>
       <VendorFinanceList onVendorSelect={setSelectedVendor} />
+      <FooterLink />
     </Box>
   );
 }
