@@ -100,13 +100,7 @@ function ResponsiveAppBar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              <Image
-                src="/img/iX_Logo_white_on_Trans_01.png"
-                alt="iXplor Logo"
-                width={48}
-                height={48}
-                style={{ marginRight: 16 }}
-              />
+              
               <MenuItem onClick={handleCloseNavMenu} component={Link} href="/">
                 <Typography textAlign="center">
                   {t("common:navigation.basecamp")}
@@ -185,6 +179,13 @@ function ResponsiveAppBar() {
                 ]}
             </Menu>
           </Box>
+          <Image
+                src="/img/iX_Logo_white_on_Trans_01.png"
+                alt="iXplor Logo"
+                width={48}
+                height={48}
+                style={{ marginRight: 16 }}
+              />
           <Typography
             variant="h5"
             noWrap

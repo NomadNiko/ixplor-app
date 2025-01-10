@@ -28,7 +28,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
      createTheme({
        spacing: 8,
        shape: {
-         borderRadius: 12,
+         borderRadius: 8,
        },
 
        palette: {
@@ -83,7 +83,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
          },
          background: {
            default: '#0F172A',
-           paper: 'rgba(30, 41, 59, 0.5)',
+           paper: 'rgb(35, 49, 71, 0.85)',
          },
          text: {
            primary: '#F8FAFC',
