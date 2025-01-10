@@ -14,12 +14,18 @@ import IconButton from '@mui/material/IconButton';
 import Chip from '@mui/material/Chip';
 import { Plus, Edit2, AlertTriangle } from 'lucide-react';
 import { VendorProfileDetails } from '@/types/vendor-types';
+import { RentalEditSection } from './RentalEditSection';
 
-interface InventorySectionProps {
-  vendor: VendorProfileDetails;
-}
 
-export function InventorySection({ vendor }: InventorySectionProps) {
+
+// interface InventorySectionProps {
+//   vendor: VendorProfileDetails;
+// }
+
+export function InventorySection({ vendor }: { vendor: VendorProfileDetails }) {
+  if (vendor.type === 'rentals') {
+    return <RentalEditSection vendor={vendor} />;
+  }
   const getInventoryItems = () => {
     if (vendor.rentals) {
       return vendor.rentals;

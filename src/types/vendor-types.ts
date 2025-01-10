@@ -38,12 +38,33 @@ export interface RentalProduct {
   id: string;
   name: string;
   category: string;
+  description?: string;
+  images?: string[];
   totalUnits: number;
   availableUnits: number;
   bookedUnits: number;
   dueOut: number;
   dueIn: number;
+  sizes: Array<{
+    id: string;
+    label: string;
+    available: number;
+    total: number;
+    pricePerHour: number;
+    pricePerDay: number;
+    pricePerWeek: number;
+  }>;
+  condition: 'excellent' | 'good' | 'fair';
+  maintenanceSchedule?: Array<{
+    id: string;
+    startDate: string;
+    endDate: string;
+    reason: string;
+    itemCount: number;
+  }>;
+  lastServiced?: string;
 }
+
 
 export interface LessonProduct {
   id: string;

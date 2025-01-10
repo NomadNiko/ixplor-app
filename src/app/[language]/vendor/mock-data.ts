@@ -5,7 +5,7 @@ export const mockVendorDetails: VendorProfileDetails[] = [
     id: "1",
     name: "Mountain Edge Rentals",
     type: "rentals",
-    description: "Premium ski and snowboard rental shop with the latest equipment for all skill levels",
+    description: "Premium ski and snowboard rental shop with the latest equipment",
     status: "published",
     lastUpdated: "2024-01-07",
     rentals: [
@@ -13,32 +13,36 @@ export const mockVendorDetails: VendorProfileDetails[] = [
         id: "r1",
         name: "Premium Ski Package",
         category: "Ski Equipment",
+        description: "High-performance ski set for advanced skiers",
+        images: ["/img/ski-1.jpg", "/img/ski-2.jpg"],
         totalUnits: 50,
         availableUnits: 32,
         bookedUnits: 15,
         dueOut: 8,
-        dueIn: 5
+        dueIn: 5,
+        sizes: [
+          {
+            id: "ski-150",
+            label: "150cm",
+            available: 10,
+            total: 15,
+            pricePerHour: 20,
+            pricePerDay: 75,
+            pricePerWeek: 400
+          },
+          {
+            id: "ski-160",
+            label: "160cm",
+            available: 12,
+            total: 15,
+            pricePerHour: 20,
+            pricePerDay: 75,
+            pricePerWeek: 400
+          }
+        ],
+        condition: "excellent",
+        lastServiced: "2024-01-01"
       },
-      {
-        id: "r2",
-        name: "Beginner Snowboard Package",
-        category: "Snowboard Equipment",
-        totalUnits: 30,
-        availableUnits: 20,
-        bookedUnits: 8,
-        dueOut: 4,
-        dueIn: 2
-      },
-      {
-        id: "r3",
-        name: "Kids Ski Package",
-        category: "Children Equipment",
-        totalUnits: 25,
-        availableUnits: 15,
-        bookedUnits: 7,
-        dueOut: 3,
-        dueIn: 3
-      }
     ]
   },
   {
