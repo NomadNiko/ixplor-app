@@ -10,140 +10,145 @@ interface EventDetailsProps {
 }
 
 export function EventDetails({ event }: EventDetailsProps) {
-  const renderMetadataItems = () => {
-    if (!event.metadata) return null;
-
-    switch (event.metadata.type) {
-      case 'tour':
-        return (
-          <>
-            <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-              <Users size={16} />
-              <Typography variant="body2">
-                {`${event.metadata.data.current || 0} / ${event.metadata.data.capacity || 0} Participants`}
-              </Typography>
-            </Box>
-            {event.metadata.data.guide && (
+    const renderMetadataItems = () => {
+      if (!event.metadata) return null;
+      switch (event.metadata.type) {
+        case 'tour':
+          const tourData = event.metadata.data;
+          return (
+            <>
+              <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+                <Users size={16} />
+                <Typography variant="body2">
+                  {`${tourData.current}/${tourData.capacity} Participants`}
+                </Typography>
+              </Box>
+              {tourData.guide && (
+                <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+                  <GraduationCap size={16} />
+                  <Typography variant="body2">
+                    Guide: {tourData.guide}
+                  </Typography>
+                </Box>
+              )}
+            </>
+          );
+  
+        case 'lesson':
+          const lessonData = event.metadata.data;
+          return (
+            <>
               <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
                 <GraduationCap size={16} />
                 <Typography variant="body2">
-                  Guide: {event.metadata.data.guide}
+                  {`Instructor: ${lessonData.instructor}`}
                 </Typography>
               </Box>
-            )}
-          </>
-        );
-
-      case 'lesson':
-        return (
-          <>
-            <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-              <GraduationCap size={16} />
-              <Typography variant="body2">
-                {`Instructor: ${event.metadata.data.instructor}`}
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-              <Users size={16} />
-              <Typography variant="body2">
-                {`${event.metadata.data.currentStudents || 0} / ${event.metadata.data.maxStudents} Students`}
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-              <Globe size={16} />
-              <Typography variant="body2">
-                {event.metadata.data.languages.join(', ')}
-              </Typography>
-            </Box>
-          </>
-        );
-
-      case 'rental':
-        return (
-          <>
-            <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-              <Tag size={16} />
-              <Typography variant="body2">
-                {event.metadata.data.itemName}
-              </Typography>
-            </Box>
-            {event.metadata.data.pickupLocation && (
               <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-                <MapPin size={16} />
+                <Users size={16} />
                 <Typography variant="body2">
-                  {`Pickup: ${event.metadata.data.pickupLocation}`}
+                  {`${lessonData.current}/${lessonData.maxStudents} Students`}
                 </Typography>
               </Box>
-            )}
-          </>
-        );
-
-      case 'ticket':
-        return (
-          <>
-            <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-              <Clock size={16} />
-              <Typography variant="body2">
-                {`Valid: ${format(parseISO(event.metadata.data.validity.start), 'MMM d')} - ${format(parseISO(event.metadata.data.validity.end), 'MMM d')}`}
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-              <Tag size={16} />
-              <Typography variant="body2">
-                {`Type: ${event.metadata.data.type}`}
-              </Typography>
-            </Box>
-          </>
-        );
-    }
-  };
-
-  return (
-    <Box sx={{ p: 2, maxWidth: 300 }}>
-      <Typography variant="h6" gutterBottom>
-        {event.title}
-      </Typography>
-      
-      <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-        <Clock size={16} />
-        <Typography variant="body2">
-          {format(
-            typeof event.start === 'string' ? parseISO(event.start) : event.start,
-            'MMM d, h:mm a'
-          )}
+              <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+                <Globe size={16} />
+                <Typography variant="body2">
+                  {lessonData.languages.join(', ')}
+                </Typography>
+              </Box>
+            </>
+          );
+  
+        case 'rental':
+          const rentalData = event.metadata.data;
+          return (
+            <>
+              <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+                <Tag size={16} />
+                <Typography variant="body2">
+                  {rentalData.itemName}
+                </Typography>
+              </Box>
+              {rentalData.pickupLocation && (
+                <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+                  <MapPin size={16} />
+                  <Typography variant="body2">
+                    {`Pickup: ${rentalData.pickupLocation}`}
+                  </Typography>
+                </Box>
+              )}
+            </>
+          );
+  
+        case 'ticket':
+          const ticketData = event.metadata.data;
+          return (
+            <>
+              <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+                <Clock size={16} />
+                <Typography variant="body2">
+                  {`Valid: ${format(parseISO(ticketData.validity.start), 'MMM d')} - ${format(parseISO(ticketData.validity.end), 'MMM d')}`}
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+                <Tag size={16} />
+                <Typography variant="body2">
+                  {`Type: ${ticketData.type}`}
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+                <Users size={16} />
+                <Typography variant="body2">
+                  {`${ticketData.current}/${ticketData.capacity} Sold`}
+                </Typography>
+              </Box>
+            </>
+          );
+      }
+    };
+  
+    return (
+      <Box sx={{ p: 2, maxWidth: 300 }}>
+        <Typography variant="h6" gutterBottom>
+          {event.title}
         </Typography>
-      </Box>
-
-      {event.metadata?.data.price && (
+        
         <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-          <DollarSign size={16} />
+          <Clock size={16} />
           <Typography variant="body2">
-            ${event.metadata.data.price}
+            {format(
+              typeof event.start === 'string' ? parseISO(event.start) : event.start,
+              'MMM d, h:mm a'
+            )}
           </Typography>
         </Box>
-      )}
-
-      {renderMetadataItems()}
-
-      {event.metadata?.data.location && (
-        <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-          <MapPin size={16} />
-          <Typography variant="body2">
-            {event.metadata.data.location}
-          </Typography>
+        {event.metadata?.data.price && (
+          <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+            <DollarSign size={16} />
+            <Typography variant="body2">
+              ${event.metadata.data.price}
+            </Typography>
+          </Box>
+        )}
+        {renderMetadataItems()}
+        {event.metadata?.data.location && (
+          <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+            <MapPin size={16} />
+            <Typography variant="body2">
+              {event.metadata.data.location}
+            </Typography>
+          </Box>
+        )}
+        <Box sx={{ mt: 1 }}>
+          <Chip
+            label={event.status}
+            color={
+              event.status === 'available' ? 'success' :
+              event.status === 'booked' ? 'primary' : 'warning'
+            }
+            size="small"
+          />
         </Box>
-      )}
-
-      <Box sx={{ mt: 1 }}>
-        <Chip
-          label={event.status}
-          color={
-            event.status === 'available' ? 'success' :
-            event.status === 'booked' ? 'primary' : 'warning'
-          }
-          size="small"
-        />
       </Box>
-    </Box>
-  );
-}
+    );
+  }

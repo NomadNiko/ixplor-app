@@ -1,14 +1,14 @@
-import { useState } from "react";
+//import { useState } from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
+//import Button from "@mui/material/Button";
+//import ButtonGroup from "@mui/material/ButtonGroup";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { Calendar } from "@/components/calendar";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { VendorProfileDetails, RentalProduct } from "@/types/vendor-types";
-import { CalendarView, CalendarEvent } from "@/components/calendar/types";
+import { CalendarEvent } from "@/components/calendar/types";
 
 const createRentalEvents = (rentals: RentalProduct[]): CalendarEvent[] => {
   return rentals.flatMap(rental => {
@@ -83,9 +83,7 @@ const createRentalEvents = (rentals: RentalProduct[]): CalendarEvent[] => {
 };
 
 export function CalendarSection({ vendor }: { vendor: VendorProfileDetails }) {
-  const [view, setView] = useState<CalendarView>("week");
-  const events = vendor.rentals ? createRentalEvents(vendor.rentals) : [];
-
+  
   if (!vendor.rentals || vendor.rentals.length === 0) {
     return (
       <Card>
@@ -98,29 +96,22 @@ export function CalendarSection({ vendor }: { vendor: VendorProfileDetails }) {
     );
   }
 
+  const events = vendor.rentals ? createRentalEvents(vendor.rentals) : [];
+
   return (
     <Card>
       <CardContent>
-        <Box className="flex justify-between items-center mb-4">
-          <Box className="flex items-center gap-2">
-            <CalendarIcon className="text-primary" size={24} />
-            <Typography variant="h6">Rental Calendar</Typography>
-          </Box>
-          <Box className="flex items-center gap-4">
-            <ButtonGroup>
-              {(["week", "month"] as CalendarView[]).map((viewOption) => (
-                <Button
-                  key={viewOption}
-                  variant={view === viewOption ? "contained" : "outlined"}
-                  onClick={() => setView(viewOption)}
-                >
-                  {viewOption.charAt(0).toUpperCase() + viewOption.slice(1)}
-                </Button>
-              ))}
-            </ButtonGroup>
-          </Box>
+        <Box className="flex items-center gap-2 mb-4">
+          <CalendarIcon className="text-primary" size={24} />
+          <Typography variant="h6">Rental Calendar</Typography>
         </Box>
-        <Calendar events={events} initialView={view} height="600px" />
+        <Calendar 
+          events={events} 
+          initialView="week" 
+          height="600px"
+          // Add default date prop to ensure consistency
+          initialDate={new Date()} 
+        />
       </CardContent>
     </Card>
   );

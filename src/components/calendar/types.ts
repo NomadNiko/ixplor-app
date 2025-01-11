@@ -17,42 +17,45 @@ export interface BaseEventMetadata {
 }
 
 export interface TourEventMetadata extends BaseEventMetadata {
-  guide?: string;
-  capacity?: number;
-  current?: number;
-  difficulty?: 'beginner' | 'intermediate' | 'advanced';
-  meetingPoint?: string;
-  includes?: string[];
-}
-
-export interface LessonEventMetadata extends BaseEventMetadata {
-  instructor: string;
-  maxStudents: number;
-  currentStudents?: number;
-  expertise: string;
-  languages: string[];
-  requirements?: string;
-}
-
-export interface RentalEventMetadata extends BaseEventMetadata {
-  itemName: string;
-  size?: string;
-  condition?: string;
-  pickupLocation?: string;
-  returnLocation?: string;
-  maintenanceNotes?: string;
-}
-
-export interface TicketEventMetadata extends BaseEventMetadata {
-  type: 'season-pass' | 'day-pass' | 'multi-day' | 'half-day';
-  validity: {
-    start: string;
-    end: string;
-  };
-  benefits?: string[];
-  restrictions?: string;
-}
-
+    current: number;
+    capacity: number;
+    guide?: string;
+    difficulty?: 'beginner' | 'intermediate' | 'advanced';
+    meetingPoint?: string;
+    includes?: string[];
+  }
+  
+  export interface LessonEventMetadata extends BaseEventMetadata {
+    instructor: string;
+    current: number;
+    maxStudents: number;
+    expertise: string;
+    languages: string[];
+    requirements?: string;
+  }
+  
+  export interface RentalEventMetadata extends BaseEventMetadata {
+    itemName: string;
+    size?: string;
+    condition?: string;
+    pickupLocation?: string;
+    returnLocation?: string;
+    maintenanceNotes?: string;
+    current?: number;
+    total?: number;
+  }
+  
+  export interface TicketEventMetadata extends BaseEventMetadata {
+    type: 'season-pass' | 'day-pass' | 'multi-day' | 'half-day';
+    current: number;
+    capacity: number;
+    validity: {
+      start: string;
+      end: string;
+    };
+    benefits?: string[];
+    restrictions?: string;
+  }
 export type EventMetadata = 
   | { type: 'tour'; data: TourEventMetadata }
   | { type: 'lesson'; data: LessonEventMetadata }

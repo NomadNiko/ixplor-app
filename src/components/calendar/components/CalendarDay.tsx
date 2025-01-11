@@ -13,45 +13,50 @@ interface CalendarDayProps {
 }
 
 export function CalendarDay({
-  date,
-  view,
-  currentDate,
-  events,
-  onClick,
-  renderEvent
-}: CalendarDayProps) {
-  const isToday = isSameDay(date, new Date());
-  const isCurrentMonth = isSameMonth(date, currentDate);
-
-  return (
-    <Box
-      sx={{
-        height: view === 'month' ? 120 : '100%',
-        p: 1,
-        backgroundColor: isToday ? 'action.hover' : 'background.paper',
-        opacity: isCurrentMonth ? 1 : 0.5,
-        border: '1px solid',
-        borderColor: 'divider',
-        overflow: 'hidden',
-        cursor: 'pointer',
-        '&:hover': {
-          backgroundColor: 'action.hover',
-        },
-      }}
-      onClick={() => onClick(date)}
-    >
-      <Typography
-        variant="caption"
+    date,
+    view,
+    currentDate,
+    events,
+    onClick,
+    renderEvent
+  }: CalendarDayProps) {
+    const isToday = isSameDay(date, new Date());
+    const isCurrentMonth = isSameMonth(date, currentDate);
+  
+    return (
+      <Box
         sx={{
-          fontWeight: isToday ? 'bold' : 'regular',
-          color: isToday ? 'primary.main' : 'text.primary',
+          height: view === 'month' ? 120 : '100%',
+          minHeight: view === 'day' ? '800px' : undefined,
+          p: 1,
+          backgroundColor: isToday ? 'action.hover' : 'background.paper',
+          opacity: isCurrentMonth ? 1 : 0.5,
+          border: '1px solid',
+          borderColor: 'divider',
+          overflow: 'hidden',
+          cursor: 'pointer',
+          display: 'flex',
+          flexDirection: 'column',
+          '&:hover': {
+            backgroundColor: 'action.hover',
+          },
         }}
+        onClick={() => onClick(date)}
       >
-        {format(date, view === 'month' ? 'd' : 'MMM d')}
-      </Typography>
-      <Box sx={{ mt: 1 }}>
-        {events.map(renderEvent)}
+        <Typography
+          variant="caption"
+          sx={{
+            fontWeight: isToday ? 'bold' : 'regular',
+            color: isToday ? 'primary.main' : 'text.primary',
+            mb: 1,
+          }}
+        >
+          {format(date, view === 'month' ? 'd' : 'MMM d')}
+        </Typography>
+        
+        <Box sx={{ flex: 1, overflowY: 'auto' }}>
+          {events.map(renderEvent)}
+        </Box>
       </Box>
-    </Box>
-  );
-}
+    );
+  }

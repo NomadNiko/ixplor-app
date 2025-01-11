@@ -13,22 +13,20 @@ touch "$output_file"
 
 # Root directories for both frontend and backend
 declare -a root_dirs=(
-  "./*"
+  "./src"
 )
 
 # Important directories to include
 declare -a include_patterns=(
-  "/src/**/*"
-  "/docs/**/*"
-  "/config/**/*"
-  "package.json"
-  "tsconfig.json"
-  ".env.example"
+  "/app/**/*"
+  "/components/**/*"
+  "/hooks/**/*"
 )
 
 # Patterns to exclude
 declare -a exclude_patterns=(
   "node_modules"
+  "privacy-policy"
   ".git"
   ".vscode"
   ".idea"
