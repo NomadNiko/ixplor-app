@@ -19,9 +19,10 @@ import { VendorProfileDetails } from '@/types/vendor-types';
 
 interface RentalEditSectionProps {
   vendor: VendorProfileDetails;
+  onEditClick: () => void; 
 }
 
-export function RentalEditSection({ vendor }: RentalEditSectionProps) {
+export function RentalEditSection({ vendor, onEditClick }: RentalEditSectionProps) {
   const [activeTab, setActiveTab] = useState('inventory');
 
   if (vendor.type !== 'rentals' || !vendor.rentals) return null;
@@ -33,7 +34,7 @@ export function RentalEditSection({ vendor }: RentalEditSectionProps) {
         <Button 
           variant="contained" 
           startIcon={<Plus size={18} />}
-          onClick={() => {/* Add new item modal */}}
+          onClick={() => onEditClick()} 
         >
           Add New Item
         </Button>

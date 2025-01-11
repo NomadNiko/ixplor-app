@@ -61,8 +61,10 @@ export default function VendorContent() {
             setViewState({
               mode: "view",
               selectedVendorId: viewState.selectedVendorId,
-            })
+            }
+          )
           }
+          
         />
       )}
     </>

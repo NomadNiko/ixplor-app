@@ -17,14 +17,14 @@ import { VendorProfileDetails } from '@/types/vendor-types';
 import { RentalEditSection } from './RentalEditSection';
 
 
+interface InventorySectionProps {
+  vendor: VendorProfileDetails;
+  onEditClick: () => void;
+}
 
-// interface InventorySectionProps {
-//   vendor: VendorProfileDetails;
-// }
-
-export function InventorySection({ vendor }: { vendor: VendorProfileDetails }) {
+export function InventorySection({ vendor, onEditClick }: InventorySectionProps) {
   if (vendor.type === 'rentals') {
-    return <RentalEditSection vendor={vendor} />;
+    return <RentalEditSection vendor={vendor} onEditClick={onEditClick} />;
   }
   const getInventoryItems = () => {
     if (vendor.rentals) {

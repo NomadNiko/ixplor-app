@@ -327,7 +327,10 @@ export default function VendorEdit({ vendorId, onBackClick }: VendorEditProps) {
                     <CalendarSection vendor={vendor} />
                   )}
                   {activeTab === "inventory" && (
-                    <InventorySection vendor={vendor} />
+                    <InventorySection 
+                    vendor={vendor}
+                    onEditClick={() => setActiveTab("details")}
+                    />
                   )}
                   {activeTab === "details" && renderProductForm()}
                 </CardContent>
