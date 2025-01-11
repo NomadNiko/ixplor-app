@@ -1,6 +1,75 @@
 export type VendorStatus = "pending" | "published" | "rejected";
 export type VendorType = "rentals" | "tickets" | "lessons" | "tours";
 
+// Tour-specific types
+export interface WeatherForecast {
+  condition: string;
+  temperature: number;
+  snowCondition?: string;
+  sunset?: string;
+  chanceOfRain?: number;
+}
+
+export interface MeetingPoint {
+  name: string;
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
+  description: string;
+}
+
+export interface Guide {
+  id: string;
+  name: string;
+  photo: string;
+  certifications: string[];
+  experience: string;
+  languages: string[];
+  specialties: string[];
+  availability: 'full-time' | 'part-time';
+  rating: number;
+  totalTours: number;
+}
+
+export interface CalendarEvent {
+  id: string;
+  productId: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  status: 'available' | 'booked' | 'cancelled';
+  currentBookings: number;
+  meetingPoint: string;
+  guideId: string;
+  weatherForecast?: WeatherForecast;
+  notes?: string;
+}
+
+export interface SeasonalAvailability {
+  startDate: string;
+  endDate: string;
+}
+
+export interface TourProduct {
+  id: string;
+  name: string;
+  description: string;
+  duration: string;
+  price: number;
+  maxParticipants: number;
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  rating: number;
+  totalReviews: number;
+  seasonalAvailability: SeasonalAvailability;
+  requirements: string[];
+  includes: string[];
+  meetingPoint: MeetingPoint;
+  guide: Guide;
+  schedule: CalendarEvent[];
+}
+
+// Keep existing types
 export interface MaintenanceScheduleItem {
   id: string;
   startDate: string;
@@ -63,36 +132,6 @@ export interface LessonProduct {
   maxStudents: number;
   includes: string[];
   requirements: string;
-}
-
-export interface Guide {
-  name: string;
-  certifications: string[];
-  experience: string;
-}
-
-export interface CalendarEvent {
-  id: string;
-  productId: string;
-  date: string;
-  startTime: string;
-  endTime: string;
-  status: 'available' | 'booked' | 'cancelled';
-  currentBookings: number;
-  meetingPoint: string;
-}
-
-export interface TourProduct {
-  id: string;
-  name: string;
-  description: string;
-  duration: string;
-  price: number;
-  maxParticipants: number;
-  requirements: string[];
-  includes: string[];
-  guide: Guide;
-  schedule: CalendarEvent[];
 }
 
 export interface VendorProfileDetails {

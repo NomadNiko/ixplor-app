@@ -6,15 +6,15 @@ const skiPackageMaintenance = [
     startDate: "2024-01-01",
     endDate: "2024-01-02",
     reason: "Weekly edge sharpening and waxing",
-    itemCount: 6
+    itemCount: 6,
   },
   {
     id: "m2",
     startDate: "2024-01-08",
     endDate: "2024-01-09",
     reason: "Regular maintenance and inspection",
-    itemCount: 6
-  }
+    itemCount: 6,
+  },
 ];
 
 const snowboardMaintenance = [
@@ -23,24 +23,24 @@ const snowboardMaintenance = [
     startDate: "2024-01-03",
     endDate: "2024-01-04",
     reason: "Bi-weekly edge check and waxing",
-    itemCount: 4
+    itemCount: 4,
   },
   {
-    id: "m4", 
+    id: "m4",
     startDate: "2024-01-17",
-    endDate: "2024-01-18", 
+    endDate: "2024-01-18",
     reason: "Regular maintenance and inspection",
-    itemCount: 4
-  }  
+    itemCount: 4,
+  },
 ];
-
 
 export const mockVendorDetails: VendorProfileDetails[] = [
   {
     id: "1",
     name: "Mountain Edge Rentals",
     type: "rentals",
-    description: "Premium ski and snowboard rental shop with the latest equipment",
+    description:
+      "Premium ski and snowboard rental shop with the latest equipment",
     status: "published",
     lastUpdated: "2024-01-07",
     rentals: [
@@ -48,7 +48,8 @@ export const mockVendorDetails: VendorProfileDetails[] = [
         id: "r1",
         name: "Premium Ski Package",
         category: "Ski Equipment",
-        description: "High-performance ski set including boots, poles, and helmet",
+        description:
+          "High-performance ski set including boots, poles, and helmet",
         images: ["/img/ski-1.jpg", "/img/ski-2.jpg"],
         totalUnits: 6,
         availableUnits: 3,
@@ -63,7 +64,7 @@ export const mockVendorDetails: VendorProfileDetails[] = [
             total: 2,
             pricePerHour: 20,
             pricePerDay: 75,
-            pricePerWeek: 400
+            pricePerWeek: 400,
           },
           {
             id: "ski-160",
@@ -72,7 +73,7 @@ export const mockVendorDetails: VendorProfileDetails[] = [
             total: 2,
             pricePerHour: 20,
             pricePerDay: 75,
-            pricePerWeek: 400
+            pricePerWeek: 400,
           },
           {
             id: "ski-170",
@@ -81,8 +82,8 @@ export const mockVendorDetails: VendorProfileDetails[] = [
             total: 2,
             pricePerHour: 20,
             pricePerDay: 75,
-            pricePerWeek: 400
-          }
+            pricePerWeek: 400,
+          },
         ],
         condition: "excellent",
         lastServiced: "2024-01-01",
@@ -107,7 +108,7 @@ export const mockVendorDetails: VendorProfileDetails[] = [
             total: 2,
             pricePerHour: 20,
             pricePerDay: 75,
-            pricePerWeek: 400
+            pricePerWeek: 400,
           },
           {
             id: "ski-160",
@@ -116,7 +117,7 @@ export const mockVendorDetails: VendorProfileDetails[] = [
             total: 2,
             pricePerHour: 20,
             pricePerDay: 75,
-            pricePerWeek: 400
+            pricePerWeek: 400,
           },
           {
             id: "ski-170",
@@ -125,125 +126,126 @@ export const mockVendorDetails: VendorProfileDetails[] = [
             total: 2,
             pricePerHour: 20,
             pricePerDay: 75,
-            pricePerWeek: 400
-          }
+            pricePerWeek: 400,
+          },
         ],
         condition: "excellent",
         lastServiced: "2024-01-01",
         maintenanceSchedule: skiPackageMaintenance,
       },
       {
-      id: "r3",
-      name: "Beginner Snowboard Package",
-      category: "Snowboard Equipment",
-      description: "Entry-level snowboard set with boots and helmet",
-      images: ["/img/snowboard-1.jpg", "/img/snowboard-2.jpg"],
-      totalUnits: 4,
-      availableUnits: 2,
-      bookedUnits: 1,
-      dueOut: 1,
-      dueIn: 1,
-      sizes: [
-        {
-          id: "sb-145",
-          label: "145cm",
-          available: 1,
-          total: 2,
-          pricePerHour: 18,
-          pricePerDay: 65,
-          pricePerWeek: 350
-        },
-        {
-          id: "sb-155",
-          label: "155cm",
-          available: 1,
-          total: 2,
-          pricePerHour: 18,
-          pricePerDay: 65,
-          pricePerWeek: 350
-        }
-      ],
-      condition: "good",
-      lastServiced: "2024-01-03",
-      maintenanceSchedule: snowboardMaintenance,
-    },
-    {
-    id: "r4",
-    name: "Intermediate Snowboard Package",
-    category: "Snowboard Equipment",
-    description: "Mid-Range snowboard set with boots and helmet",
-    images: ["/img/snowboard-3.jpg", "/img/snowboard-4.jpg"],
-    totalUnits: 4,
-    availableUnits: 2,
-    bookedUnits: 1,
-    dueOut: 1,
-    dueIn: 1,
-    sizes: [
-      {
-        id: "sb-145",
-        label: "145cm",
-        available: 1,
-        total: 2,
-        pricePerHour: 18,
-        pricePerDay: 65,
-        pricePerWeek: 350
+        id: "r3",
+        name: "Beginner Snowboard Package",
+        category: "Snowboard Equipment",
+        description: "Entry-level snowboard set with boots and helmet",
+        images: ["/img/snowboard-1.jpg", "/img/snowboard-2.jpg"],
+        totalUnits: 4,
+        availableUnits: 2,
+        bookedUnits: 1,
+        dueOut: 1,
+        dueIn: 1,
+        sizes: [
+          {
+            id: "sb-145",
+            label: "145cm",
+            available: 1,
+            total: 2,
+            pricePerHour: 18,
+            pricePerDay: 65,
+            pricePerWeek: 350,
+          },
+          {
+            id: "sb-155",
+            label: "155cm",
+            available: 1,
+            total: 2,
+            pricePerHour: 18,
+            pricePerDay: 65,
+            pricePerWeek: 350,
+          },
+        ],
+        condition: "good",
+        lastServiced: "2024-01-03",
+        maintenanceSchedule: snowboardMaintenance,
       },
       {
-        id: "sb-155",
-        label: "155cm",
-        available: 1,
-        total: 2,
-        pricePerHour: 18,
-        pricePerDay: 65,
-        pricePerWeek: 350
-      }
+        id: "r4",
+        name: "Intermediate Snowboard Package",
+        category: "Snowboard Equipment",
+        description: "Mid-Range snowboard set with boots and helmet",
+        images: ["/img/snowboard-3.jpg", "/img/snowboard-4.jpg"],
+        totalUnits: 4,
+        availableUnits: 2,
+        bookedUnits: 1,
+        dueOut: 1,
+        dueIn: 1,
+        sizes: [
+          {
+            id: "sb-145",
+            label: "145cm",
+            available: 1,
+            total: 2,
+            pricePerHour: 18,
+            pricePerDay: 65,
+            pricePerWeek: 350,
+          },
+          {
+            id: "sb-155",
+            label: "155cm",
+            available: 1,
+            total: 2,
+            pricePerHour: 18,
+            pricePerDay: 65,
+            pricePerWeek: 350,
+          },
+        ],
+        condition: "good",
+        lastServiced: "2024-01-03",
+        maintenanceSchedule: snowboardMaintenance,
+      },
+      {
+        id: "r5",
+        name: "Premium Snowboard Package",
+        category: "Snowboard Equipment",
+        description: "High-performance snowboard set with boots and helmet",
+        images: ["/img/snowboard-5.jpg", "/img/snowboard-6.jpg"],
+        totalUnits: 4,
+        availableUnits: 2,
+        bookedUnits: 1,
+        dueOut: 1,
+        dueIn: 1,
+        sizes: [
+          {
+            id: "sb-145",
+            label: "145cm",
+            available: 1,
+            total: 2,
+            pricePerHour: 18,
+            pricePerDay: 65,
+            pricePerWeek: 350,
+          },
+          {
+            id: "sb-155",
+            label: "155cm",
+            available: 1,
+            total: 2,
+            pricePerHour: 18,
+            pricePerDay: 65,
+            pricePerWeek: 350,
+          },
+        ],
+        condition: "good",
+        lastServiced: "2024-01-03",
+        maintenanceSchedule: snowboardMaintenance,
+      },
     ],
-    condition: "good",
-    lastServiced: "2024-01-03",
-    maintenanceSchedule: snowboardMaintenance,
-  },
-  {
-  id: "r5",
-  name: "Premium Snowboard Package",
-  category: "Snowboard Equipment",
-  description: "High-performance snowboard set with boots and helmet",
-  images: ["/img/snowboard-5.jpg", "/img/snowboard-6.jpg"],
-  totalUnits: 4,
-  availableUnits: 2,
-  bookedUnits: 1,
-  dueOut: 1,
-  dueIn: 1,
-  sizes: [
-    {
-      id: "sb-145",
-      label: "145cm",
-      available: 1,
-      total: 2,
-      pricePerHour: 18,
-      pricePerDay: 65,
-      pricePerWeek: 350
-    },
-    {
-      id: "sb-155",
-      label: "155cm",
-      available: 1,
-      total: 2,
-      pricePerHour: 18,
-      pricePerDay: 65,
-      pricePerWeek: 350
-    }
-  ],
-  condition: "good",
-  lastServiced: "2024-01-03",
-  maintenanceSchedule: snowboardMaintenance,
-}
-    ]
   },
   {
     id: "2",
     name: "Peak Pass Sales",
     type: "tickets",
-    description: "Official vendor for seasonal and daily ski passes to Mountain Resort",
+    description:
+      "Official vendor for seasonal and daily ski passes to Mountain Resort",
     status: "published",
     lastUpdated: "2024-01-06",
     tickets: [
@@ -261,9 +263,9 @@ export const mockVendorDetails: VendorProfileDetails[] = [
           "Priority lift access",
           "10% off rentals",
           "Free parking",
-          "Bring a friend tickets (3x)"
+          "Bring a friend tickets (3x)",
         ],
-        restrictions: "Non-transferable, photo ID required"
+        restrictions: "Non-transferable, photo ID required",
       },
       {
         id: "t2",
@@ -276,7 +278,7 @@ export const mockVendorDetails: VendorProfileDetails[] = [
         soldCount: 34,
         availableCount: 40,
         benefits: ["Same-day lift access", "Basic insurance coverage"],
-        restrictions: "Valid only for date of purchase"
+        restrictions: "Valid only for date of purchase",
       },
       {
         id: "t3",
@@ -289,15 +291,16 @@ export const mockVendorDetails: VendorProfileDetails[] = [
         soldCount: 22,
         availableCount: 30,
         benefits: ["Afternoon lift access", "Basic insurance coverage"],
-        restrictions: "Valid Monday-Friday only, excluding holidays"
-      }
-    ]
+        restrictions: "Valid Monday-Friday only, excluding holidays",
+      },
+    ],
   },
   {
     id: "3",
     name: "Pro Snowboarding Lessons",
     type: "lessons",
-    description: "Professional snowboarding instruction from certified instructors",
+    description:
+      "Professional snowboarding instruction from certified instructors",
     status: "published",
     lastUpdated: "2024-01-05",
     lessons: [
@@ -311,8 +314,12 @@ export const mockVendorDetails: VendorProfileDetails[] = [
         expertise: "Level 3 Certified Instructor",
         languages: ["English", "Spanish"],
         maxStudents: 1,
-        includes: ["Basic technique", "Safety instruction", "Equipment guidance"],
-        requirements: "No prior experience needed"
+        includes: [
+          "Basic technique",
+          "Safety instruction",
+          "Equipment guidance",
+        ],
+        requirements: "No prior experience needed",
       },
       {
         id: "l2",
@@ -326,7 +333,7 @@ export const mockVendorDetails: VendorProfileDetails[] = [
         languages: ["English"],
         maxStudents: 4,
         includes: ["Advanced turning", "Speed control", "Terrain adaptation"],
-        requirements: "Must be comfortable on blue runs"
+        requirements: "Must be comfortable on blue runs",
       },
       {
         id: "l3",
@@ -339,40 +346,73 @@ export const mockVendorDetails: VendorProfileDetails[] = [
         languages: ["English", "French"],
         maxStudents: 2,
         includes: ["Jump techniques", "Rail safety", "Trick progression"],
-        requirements: "Must be proficient on black runs and basic park features"
-      }
-    ]
+        requirements:
+          "Must be proficient on black runs and basic park features",
+      },
+    ],
   },
   {
     id: "4",
     name: "Alpine Adventure Tours",
-    type: "tours",
-    description: "Guided backcountry and scenic mountain tours",
-    status: "published",
+    type: "tours" as const,
+    description:
+      "Professional guided tours through the most scenic mountain trails and adventures",
+    status: "published" as const,
     lastUpdated: "2024-01-04",
     tours: [
       {
         id: "tr1",
         name: "Backcountry Powder Adventure",
-        description: "Expert-led backcountry tour to pristine powder locations",
+        description:
+          "Expert-led backcountry tour to pristine powder locations with stunning views",
         duration: "6 hours",
         price: 299,
         maxParticipants: 4,
+        difficulty: "advanced",
+        rating: 4.8,
+        totalReviews: 24,
+        seasonalAvailability: {
+          startDate: "2024-11-15",
+          endDate: "2025-04-15",
+        },
         requirements: [
           "Advanced skiing/riding ability",
           "Proper winter clothing",
-          "Basic avalanche safety knowledge"
+          "Basic avalanche safety knowledge",
         ],
         includes: [
           "Safety equipment rental",
           "Hot lunch",
           "Transportation to/from resort",
-          "Photos of your adventure"
+          "Professional photos",
         ],
+        meetingPoint: {
+          name: "Main Lodge",
+          coordinates: {
+            lat: 39.1911,
+            lng: -106.8175,
+          },
+          description: "Meet at the fireplace in Main Lodge lobby",
+        },
         guide: {
+          id: "g1",
           name: "Mike Thompson",
-          certifications: ["AMGA Ski Guide", "Wilderness First Responder"],
-          experience: "15 years backcountry guiding"
+          photo: "/img/guides/mike-thompson.jpg",
+          certifications: [
+            "AMGA Ski Guide",
+            "Wilderness First Responder",
+            "Avalanche Level 3 Certified",
+          ],
+          experience: "15 years backcountry guiding",
+          languages: ["English", "Spanish"],
+          specialties: [
+            "Backcountry Skiing",
+            "Avalanche Safety",
+            "Alpine Climbing",
+          ],
+          availability: "full-time",
+          rating: 4.9,
+          totalTours: 156,
         },
         schedule: [
           {
@@ -383,7 +423,14 @@ export const mockVendorDetails: VendorProfileDetails[] = [
             endTime: "14:00",
             status: "available",
             currentBookings: 2,
-            meetingPoint: "Main Lodge"
+            meetingPoint: "Main Lodge",
+            guideId: "g1",
+            weatherForecast: {
+              condition: "sunny",
+              temperature: 28,
+              snowCondition: "powder",
+            },
+            notes: "Perfect conditions expected",
           },
           {
             id: "s2",
@@ -393,32 +440,70 @@ export const mockVendorDetails: VendorProfileDetails[] = [
             endTime: "14:00",
             status: "booked",
             currentBookings: 4,
-            meetingPoint: "Main Lodge"
-          }
-        ]
+            meetingPoint: "Main Lodge",
+            guideId: "g1",
+            weatherForecast: {
+              condition: "partly cloudy",
+              temperature: 25,
+              snowCondition: "packed powder",
+            },
+            notes: "Group booking - Johnson Family",
+          },
+        ],
       },
       {
         id: "tr2",
-        name: "Sunset Mountain Tour",
-        description: "Scenic evening snowshoe tour with photography opportunities",
+        name: "Sunset Mountain Photography Tour",
+        description:
+          "Capture the magic of mountain sunsets with professional photography instruction",
         duration: "3 hours",
         price: 149,
         maxParticipants: 6,
+        difficulty: "beginner",
+        rating: 4.9,
+        totalReviews: 32,
+        seasonalAvailability: {
+          startDate: "2024-01-01",
+          endDate: "2024-12-31",
+        },
         requirements: [
           "Basic fitness level",
-          "Warm winter clothing",
-          "Camera (optional)"
+          "Warm clothing",
+          "Camera (can be provided)",
         ],
         includes: [
-          "Snowshoe equipment",
+          "Professional photography instruction",
           "Hot beverages",
-          "Professional photos",
-          "Headlamp"
+          "Camera rental if needed",
+          "Digital photo package",
         ],
+        meetingPoint: {
+          name: "Photography Center",
+          coordinates: {
+            lat: 39.1922,
+            lng: -106.8183,
+          },
+          description: "Meet at the Photography Center next to the ski school",
+        },
         guide: {
-          name: "Lisa Chen",
-          certifications: ["Wilderness Guide", "Photography Instructor"],
-          experience: "8 years mountain guiding"
+          id: "g2",
+          name: "Sarah Chen",
+          photo: "/img/guides/sarah-chen.jpg",
+          certifications: [
+            "Professional Photographer",
+            "Wilderness Guide",
+            "First Aid Certified",
+          ],
+          experience: "8 years mountain photography",
+          languages: ["English", "Mandarin"],
+          specialties: [
+            "Landscape Photography",
+            "Night Sky Photography",
+            "Wildlife Photography",
+          ],
+          availability: "part-time",
+          rating: 4.9,
+          totalTours: 245,
         },
         schedule: [
           {
@@ -429,10 +514,108 @@ export const mockVendorDetails: VendorProfileDetails[] = [
             endTime: "18:00",
             status: "available",
             currentBookings: 3,
-            meetingPoint: "Guest Services Center"
-          }
-        ]
-      }
-    ]
-  }
+            meetingPoint: "Photography Center",
+            guideId: "g2",
+            weatherForecast: {
+              condition: "clear",
+              temperature: 32,
+              sunset: "17:42",
+            },
+            notes: "Perfect sunset conditions expected",
+          },
+          {
+            id: "s4",
+            productId: "tr2",
+            date: "2024-01-17",
+            startTime: "15:00",
+            endTime: "18:00",
+            status: "available",
+            currentBookings: 2,
+            meetingPoint: "Photography Center",
+            guideId: "g2",
+            weatherForecast: {
+              condition: "partly cloudy",
+              temperature: 30,
+              sunset: "17:43",
+            },
+            notes: "Dramatic clouds should make for great photos",
+          },
+        ],
+      },
+      {
+        id: "tr3",
+        name: "Family Mountain Discovery Tour",
+        description:
+          "A fun, educational tour perfect for families to learn about mountain ecosystems",
+        duration: "4 hours",
+        price: 199,
+        maxParticipants: 8,
+        difficulty: "beginner",
+        rating: 4.7,
+        totalReviews: 18,
+        seasonalAvailability: {
+          startDate: "2024-05-15",
+          endDate: "2024-10-15",
+        },
+        requirements: [
+          "Suitable for all ages",
+          "Comfortable walking shoes",
+          "Water bottle",
+        ],
+        includes: [
+          "Nature guide booklet",
+          "Snacks and refreshments",
+          "Wildlife spotting equipment",
+          "Educational materials",
+        ],
+        meetingPoint: {
+          name: "Nature Center",
+          coordinates: {
+            lat: 39.19,
+            lng: -106.817,
+          },
+          description: "Meet at the Nature Center main entrance",
+        },
+        guide: {
+          id: "g3",
+          name: "David Miller",
+          photo: "/img/guides/david-miller.jpg",
+          certifications: [
+            "Environmental Educator",
+            "Wildlife Guide",
+            "First Aid Certified",
+          ],
+          experience: "12 years nature education",
+          languages: ["English", "German"],
+          specialties: [
+            "Family Tours",
+            "Wildlife Education",
+            "Plant Identification",
+          ],
+          availability: "full-time",
+          rating: 4.8,
+          totalTours: 312,
+        },
+        schedule: [
+          {
+            id: "s5",
+            productId: "tr3",
+            date: "2024-06-15",
+            startTime: "09:00",
+            endTime: "13:00",
+            status: "available",
+            currentBookings: 4,
+            meetingPoint: "Nature Center",
+            guideId: "g3",
+            weatherForecast: {
+              condition: "sunny",
+              temperature: 65,
+              chanceOfRain: 0,
+            },
+            notes: "Wildlife activity high in morning hours",
+          },
+        ],
+      },
+    ],
+  },
 ];
