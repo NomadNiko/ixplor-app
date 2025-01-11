@@ -7,7 +7,7 @@ import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import { addDays, format, startOfWeek, isSameDay } from "date-fns";
-import { mockVendorDetails } from "../vendor/mock-data";
+import { mockVendorDetails } from "../../../mock-data/mock-data";
 import { useRouter } from "next/navigation";
 
 interface CalendarEvent {

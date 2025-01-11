@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
-import { mockVendorDetails } from "../mock-data";
+import { mockVendorDetails } from "../../../../mock-data/mock-data";
 import FooterLink from "@/components/footer-link";
 import ToursView from "./VendorView/ToursView";
 import TicketsView from "./VendorView/TicketsView";

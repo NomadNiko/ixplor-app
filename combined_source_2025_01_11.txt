@@ -5211,17 +5211,14 @@ export default function VendorView({
 
 // ./src/app/[language]/vendor/components/VendorEditView/CalendarSection.tsx
 ----------------------------------------
-import { useState } from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { Calendar } from "@/components/calendar";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { VendorProfileDetails, RentalProduct } from "@/types/vendor-types";
-import { CalendarView, CalendarEvent } from "@/components/calendar/types";
+import { CalendarEvent } from "@/components/calendar/types";
 const createRentalEvents = (rentals: RentalProduct[]): CalendarEvent[] => {
   return rentals.flatMap(rental => {
     const events: CalendarEvent[] = [];
@@ -5287,8 +5284,7 @@ const createRentalEvents = (rentals: RentalProduct[]): CalendarEvent[] => {
   });
 };
 export function CalendarSection({ vendor }: { vendor: VendorProfileDetails }) {
-  const [view, setView] = useState<CalendarView>("week");
-  const events = vendor.rentals ? createRentalEvents(vendor.rentals) : [];
+  
   if (!vendor.rentals || vendor.rentals.length === 0) {
     return (
       <Card>
@@ -5300,29 +5296,20 @@ export function CalendarSection({ vendor }: { vendor: VendorProfileDetails }) {
       </Card>
     );
   }
+  const events = vendor.rentals ? createRentalEvents(vendor.rentals) : [];
   return (
     <Card>
       <CardContent>
-        <Box className="flex justify-between items-center mb-4">
-          <Box className="flex items-center gap-2">
-            <CalendarIcon className="text-primary" size={24} />
-            <Typography variant="h6">Rental Calendar</Typography>
-          </Box>
-          <Box className="flex items-center gap-4">
-            <ButtonGroup>
-              {(["week", "month"] as CalendarView[]).map((viewOption) => (
-                <Button
-                  key={viewOption}
-                  variant={view === viewOption ? "contained" : "outlined"}
-                  onClick={() => setView(viewOption)}
-                >
-                  {viewOption.charAt(0).toUpperCase() + viewOption.slice(1)}
-                </Button>
-              ))}
-            </ButtonGroup>
-          </Box>
+        <Box className="flex items-center gap-2 mb-4">
+          <CalendarIcon className="text-primary" size={24} />
+          <Typography variant="h6">Rental Calendar</Typography>
         </Box>
-        <Calendar events={events} initialView={view} height="600px" />
+        <Calendar 
+          events={events} 
+          initialView="week" 
+          height="600px"
+          initialDate={new Date()} 
+        />
       </CardContent>
     </Card>
   );
@@ -6956,38 +6943,45 @@ export interface BaseEventMetadata {
   location?: string;
 }
 export interface TourEventMetadata extends BaseEventMetadata {
-  guide?: string;
-  capacity?: number;
-  current?: number;
-  difficulty?: 'beginner' | 'intermediate' | 'advanced';
-  meetingPoint?: string;
-  includes?: string[];
-}
-export interface LessonEventMetadata extends BaseEventMetadata {
-  instructor: string;
-  maxStudents: number;
-  currentStudents?: number;
-  expertise: string;
-  languages: string[];
-  requirements?: string;
-}
-export interface RentalEventMetadata extends BaseEventMetadata {
-  itemName: string;
-  size?: string;
-  condition?: string;
-  pickupLocation?: string;
-  returnLocation?: string;
-  maintenanceNotes?: string;
-}
-export interface TicketEventMetadata extends BaseEventMetadata {
-  type: 'season-pass' | 'day-pass' | 'multi-day' | 'half-day';
-  validity: {
-    start: string;
-    end: string;
-  };
-  benefits?: string[];
-  restrictions?: string;
-}
+    current: number;
+    capacity: number;
+    guide?: string;
+    difficulty?: 'beginner' | 'intermediate' | 'advanced';
+    meetingPoint?: string;
+    includes?: string[];
+  }
+  
+  export interface LessonEventMetadata extends BaseEventMetadata {
+    instructor: string;
+    current: number;
+    maxStudents: number;
+    expertise: string;
+    languages: string[];
+    requirements?: string;
+  }
+  
+  export interface RentalEventMetadata extends BaseEventMetadata {
+    itemName: string;
+    size?: string;
+    condition?: string;
+    pickupLocation?: string;
+    returnLocation?: string;
+    maintenanceNotes?: string;
+    current?: number;
+    total?: number;
+  }
+  
+  export interface TicketEventMetadata extends BaseEventMetadata {
+    type: 'season-pass' | 'day-pass' | 'multi-day' | 'half-day';
+    current: number;
+    capacity: number;
+    validity: {
+      start: string;
+      end: string;
+    };
+    benefits?: string[];
+    restrictions?: string;
+  }
 export type EventMetadata = 
   | { type: 'tour'; data: TourEventMetadata }
   | { type: 'lesson'; data: LessonEventMetadata }
@@ -7207,81 +7201,137 @@ interface CalendarDayProps {
   renderEvent: (event: CalendarEvent) => React.ReactNode;
 }
 export function CalendarDay({
-  date,
-  view,
-  currentDate,
-  events,
-  onClick,
-  renderEvent
-}: CalendarDayProps) {
-  const isToday = isSameDay(date, new Date());
-  const isCurrentMonth = isSameMonth(date, currentDate);
-  return (
-    <Box
-      sx={{
-        height: view === 'month' ? 120 : '100%',
-        p: 1,
-        backgroundColor: isToday ? 'action.hover' : 'background.paper',
-        opacity: isCurrentMonth ? 1 : 0.5,
-        border: '1px solid',
-        borderColor: 'divider',
-        overflow: 'hidden',
-        cursor: 'pointer',
-        '&:hover': {
-          backgroundColor: 'action.hover',
-        },
-      }}
-      onClick={() => onClick(date)}
-    >
-      <Typography
-        variant="caption"
+    date,
+    view,
+    currentDate,
+    events,
+    onClick,
+    renderEvent
+  }: CalendarDayProps) {
+    const isToday = isSameDay(date, new Date());
+    const isCurrentMonth = isSameMonth(date, currentDate);
+  
+    return (
+      <Box
         sx={{
-          fontWeight: isToday ? 'bold' : 'regular',
-          color: isToday ? 'primary.main' : 'text.primary',
+          height: view === 'month' ? 120 : '100%',
+          minHeight: view === 'day' ? '800px' : undefined,
+          p: 1,
+          backgroundColor: isToday ? 'action.hover' : 'background.paper',
+          opacity: isCurrentMonth ? 1 : 0.5,
+          border: '1px solid',
+          borderColor: 'divider',
+          overflow: 'hidden',
+          cursor: 'pointer',
+          display: 'flex',
+          flexDirection: 'column',
+          '&:hover': {
+            backgroundColor: 'action.hover',
+          },
         }}
+        onClick={() => onClick(date)}
       >
-        {format(date, view === 'month' ? 'd' : 'MMM d')}
-      </Typography>
-      <Box sx={{ mt: 1 }}>
-        {events.map(renderEvent)}
+        <Typography
+          variant="caption"
+          sx={{
+            fontWeight: isToday ? 'bold' : 'regular',
+            color: isToday ? 'primary.main' : 'text.primary',
+            mb: 1,
+          }}
+        >
+          {format(date, view === 'month' ? 'd' : 'MMM d')}
+        </Typography>
+        
+        <Box sx={{ flex: 1, overflowY: 'auto' }}>
+          {events.map(renderEvent)}
+        </Box>
       </Box>
-    </Box>
-  );
-}
+    );
+  }
 ----------------------------------------
 
 // ./src/components/calendar/components/CalendarEvent.tsx
 ----------------------------------------
 import  Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { EVENT_COLORS } from '../utils/eventUtils';
 import type { CalendarEvent } from '../types';
+import { Book, Map, Package, Ticket } from 'lucide-react';
 interface CalendarEventProps {
   event: CalendarEvent;
   onClick: (event: CalendarEvent, element: HTMLElement) => void;
 }
 export function CalendarEvent({ event, onClick }: CalendarEventProps) {
-  return (
-    <Box
-      sx={{
-        backgroundColor: EVENT_COLORS[event.type],
-        color: 'white',
-        p: 0.5,
-        borderRadius: 1,
-        mb: 0.5,
-        cursor: 'pointer',
-        '&:hover': {
-          opacity: 0.9,
-        },
-      }}
-      onClick={(e) => onClick(event, e.currentTarget)}
-    >
-      <Typography variant="caption" noWrap>
-        {event.title}
-      </Typography>
-    </Box>
-  );
-}
+    const getEventIcon = () => {
+      switch(event.type) {
+        case 'rental': return <Package size={14} />;
+        case 'tour': return <Map size={14} />;
+        case 'lesson': return <Book size={14} />;
+        case 'ticket': return <Ticket size={14} />;
+        default: return null;
+      }
+    };
+    const getStatusColor = (status: string) => {
+        switch(status) {
+          case 'available': return 'success.main';
+          case 'booked': return 'warning.main';
+          case 'cancelled': return 'error.main';
+          default: return 'primary.main';
+        }
+      };
+    
+      const renderEventDetails = () => {
+        if (!event.metadata?.data) return null;
+    
+        switch (event.metadata.type) {
+          case 'rental':
+            const rentalData = event.metadata.data;
+            return `${rentalData.itemName} ${rentalData.current ? `(${rentalData.current}/${rentalData.total || '-'})` : ''}`;
+            
+          case 'tour':
+            const tourData = event.metadata.data;
+            return `${tourData.current}/${tourData.capacity} participants`;
+            
+          case 'lesson':
+            const lessonData = event.metadata.data;
+            return `Instructor: ${lessonData.instructor} (${lessonData.current}/${lessonData.maxStudents})`;
+            
+          case 'ticket':
+            const ticketData = event.metadata.data;
+            return `${ticketData.current}/${ticketData.capacity} sold`;
+            
+          default:
+            return null;
+        }
+      };
+    
+      return (
+        <Box
+          sx={{
+            backgroundColor: getStatusColor(event.status),
+            color: 'white',
+            p: 1,
+            borderRadius: 1,
+            mb: 0.5,
+            cursor: 'pointer',
+            '&:hover': {
+              opacity: 0.9,
+            },
+          }}
+          onClick={(e) => onClick(event, e.currentTarget)}
+        >
+          <Box display="flex" alignItems="center" gap={0.5} mb={0.5}>
+            {getEventIcon()}
+            <Typography variant="caption" noWrap fontWeight="medium">
+              {event.title}
+            </Typography>
+          </Box>
+    
+          <Typography variant="caption" component="div" sx={{ opacity: 0.9 }}>
+            {renderEventDetails()}
+          </Typography>
+        </Box>
+      );
+    }
 ----------------------------------------
 
 // ./src/components/calendar/components/CalendarGrid.tsx
@@ -7423,134 +7473,148 @@ interface EventDetailsProps {
   event: CalendarEvent;
 }
 export function EventDetails({ event }: EventDetailsProps) {
-  const renderMetadataItems = () => {
-    if (!event.metadata) return null;
-    switch (event.metadata.type) {
-      case 'tour':
-        return (
-          <>
-            <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-              <Users size={16} />
-              <Typography variant="body2">
-                {`${event.metadata.data.current || 0} / ${event.metadata.data.capacity || 0} Participants`}
-              </Typography>
-            </Box>
-            {event.metadata.data.guide && (
+    const renderMetadataItems = () => {
+      if (!event.metadata) return null;
+      switch (event.metadata.type) {
+        case 'tour':
+          const tourData = event.metadata.data;
+          return (
+            <>
+              <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+                <Users size={16} />
+                <Typography variant="body2">
+                  {`${tourData.current}/${tourData.capacity} Participants`}
+                </Typography>
+              </Box>
+              {tourData.guide && (
+                <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+                  <GraduationCap size={16} />
+                  <Typography variant="body2">
+                    Guide: {tourData.guide}
+                  </Typography>
+                </Box>
+              )}
+            </>
+          );
+  
+        case 'lesson':
+          const lessonData = event.metadata.data;
+          return (
+            <>
               <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
                 <GraduationCap size={16} />
                 <Typography variant="body2">
-                  Guide: {event.metadata.data.guide}
+                  {`Instructor: ${lessonData.instructor}`}
                 </Typography>
               </Box>
-            )}
-          </>
-        );
-      case 'lesson':
-        return (
-          <>
-            <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-              <GraduationCap size={16} />
-              <Typography variant="body2">
-                {`Instructor: ${event.metadata.data.instructor}`}
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-              <Users size={16} />
-              <Typography variant="body2">
-                {`${event.metadata.data.currentStudents || 0} / ${event.metadata.data.maxStudents} Students`}
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-              <Globe size={16} />
-              <Typography variant="body2">
-                {event.metadata.data.languages.join(', ')}
-              </Typography>
-            </Box>
-          </>
-        );
-      case 'rental':
-        return (
-          <>
-            <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-              <Tag size={16} />
-              <Typography variant="body2">
-                {event.metadata.data.itemName}
-              </Typography>
-            </Box>
-            {event.metadata.data.pickupLocation && (
               <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-                <MapPin size={16} />
+                <Users size={16} />
                 <Typography variant="body2">
-                  {`Pickup: ${event.metadata.data.pickupLocation}`}
+                  {`${lessonData.current}/${lessonData.maxStudents} Students`}
                 </Typography>
               </Box>
-            )}
-          </>
-        );
-      case 'ticket':
-        return (
-          <>
-            <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-              <Clock size={16} />
-              <Typography variant="body2">
-                {`Valid: ${format(parseISO(event.metadata.data.validity.start), 'MMM d')} - ${format(parseISO(event.metadata.data.validity.end), 'MMM d')}`}
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-              <Tag size={16} />
-              <Typography variant="body2">
-                {`Type: ${event.metadata.data.type}`}
-              </Typography>
-            </Box>
-          </>
-        );
-    }
-  };
-  return (
-    <Box sx={{ p: 2, maxWidth: 300 }}>
-      <Typography variant="h6" gutterBottom>
-        {event.title}
-      </Typography>
-      
-      <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-        <Clock size={16} />
-        <Typography variant="body2">
-          {format(
-            typeof event.start === 'string' ? parseISO(event.start) : event.start,
-            'MMM d, h:mm a'
-          )}
+              <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+                <Globe size={16} />
+                <Typography variant="body2">
+                  {lessonData.languages.join(', ')}
+                </Typography>
+              </Box>
+            </>
+          );
+  
+        case 'rental':
+          const rentalData = event.metadata.data;
+          return (
+            <>
+              <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+                <Tag size={16} />
+                <Typography variant="body2">
+                  {rentalData.itemName}
+                </Typography>
+              </Box>
+              {rentalData.pickupLocation && (
+                <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+                  <MapPin size={16} />
+                  <Typography variant="body2">
+                    {`Pickup: ${rentalData.pickupLocation}`}
+                  </Typography>
+                </Box>
+              )}
+            </>
+          );
+  
+        case 'ticket':
+          const ticketData = event.metadata.data;
+          return (
+            <>
+              <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+                <Clock size={16} />
+                <Typography variant="body2">
+                  {`Valid: ${format(parseISO(ticketData.validity.start), 'MMM d')} - ${format(parseISO(ticketData.validity.end), 'MMM d')}`}
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+                <Tag size={16} />
+                <Typography variant="body2">
+                  {`Type: ${ticketData.type}`}
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+                <Users size={16} />
+                <Typography variant="body2">
+                  {`${ticketData.current}/${ticketData.capacity} Sold`}
+                </Typography>
+              </Box>
+            </>
+          );
+      }
+    };
+  
+    return (
+      <Box sx={{ p: 2, maxWidth: 300 }}>
+        <Typography variant="h6" gutterBottom>
+          {event.title}
         </Typography>
-      </Box>
-      {event.metadata?.data.price && (
+        
         <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-          <DollarSign size={16} />
+          <Clock size={16} />
           <Typography variant="body2">
-            ${event.metadata.data.price}
+            {format(
+              typeof event.start === 'string' ? parseISO(event.start) : event.start,
+              'MMM d, h:mm a'
+            )}
           </Typography>
         </Box>
-      )}
-      {renderMetadataItems()}
-      {event.metadata?.data.location && (
-        <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
-          <MapPin size={16} />
-          <Typography variant="body2">
-            {event.metadata.data.location}
-          </Typography>
+        {event.metadata?.data.price && (
+          <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+            <DollarSign size={16} />
+            <Typography variant="body2">
+              ${event.metadata.data.price}
+            </Typography>
+          </Box>
+        )}
+        {renderMetadataItems()}
+        {event.metadata?.data.location && (
+          <Box sx={{ display: 'flex', gap: 2, mb: 1 }}>
+            <MapPin size={16} />
+            <Typography variant="body2">
+              {event.metadata.data.location}
+            </Typography>
+          </Box>
+        )}
+        <Box sx={{ mt: 1 }}>
+          <Chip
+            label={event.status}
+            color={
+              event.status === 'available' ? 'success' :
+              event.status === 'booked' ? 'primary' : 'warning'
+            }
+            size="small"
+          />
         </Box>
-      )}
-      <Box sx={{ mt: 1 }}>
-        <Chip
-          label={event.status}
-          color={
-            event.status === 'available' ? 'success' :
-            event.status === 'booked' ? 'primary' : 'warning'
-          }
-          size="small"
-        />
       </Box>
-    </Box>
-  );
-}
+    );
+  }
 ----------------------------------------
 
 // ./src/components/calendar/components/EventPopover.tsx

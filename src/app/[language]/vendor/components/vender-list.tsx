@@ -8,7 +8,7 @@ import CardContent from "@mui/material/CardContent";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
-import { mockVendorDetails } from "../mock-data";
+import { mockVendorDetails } from "../../../../mock-data/mock-data";
 import { VendorStatus } from "@/types/vendor-types";
 import FooterLink from "@/components/footer-link";
 

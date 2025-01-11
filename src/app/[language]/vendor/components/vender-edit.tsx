@@ -15,7 +15,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { mockVendorDetails } from "../mock-data";
+import { mockVendorDetails } from "../../../../mock-data/mock-data";
 import { InventorySection } from './VendorEditView/InventorySection';
 import { CalendarSection } from './VendorEditView/CalendarSection';
 import FormTextInput from "@/components/form/text-input/form-text-input";

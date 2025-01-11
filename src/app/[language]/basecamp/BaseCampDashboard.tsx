@@ -12,7 +12,7 @@ import {
   TrendingUp, 
   Users
 } from 'lucide-react';
-import { mockVendorDetails } from '../vendor/mock-data';
+import { mockVendorDetails } from '../../../mock-data/mock-data';
 import { mockVendorFinancialData } from '../finance/finance-mock-data';
 import WeeklyCalendar from './WeeklyCalendar';
 
