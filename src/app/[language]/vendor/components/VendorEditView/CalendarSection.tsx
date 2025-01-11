@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 import { Calendar } from '@/components/calendar';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
-import { RentalProduct, MaintenanceScheduleItem, VendorProfileDetails } from '@/types/vendor-types';
+import { VendorProfileDetails, RentalProduct } from '@/types/vendor-types';
 import { addMonths, subMonths, format } from 'date-fns';
 import { CalendarView, CalendarEvent } from '@/components/calendar/types';
 
@@ -19,7 +20,7 @@ const createRentalEvents = (rentals: RentalProduct[]): CalendarEvent[] => {
       events.push({
         id: `return-${rental.id}`,
         title: `${rental.name} Return`,
-        start: new Date(), // Backend should provide precise date
+        start: new Date(), 
         type: 'rental',
         status: 'booked',
         metadata: {
@@ -57,7 +58,7 @@ const createRentalEvents = (rentals: RentalProduct[]): CalendarEvent[] => {
     }
 
     // Maintenance Events
-    rental.maintenanceSchedule.forEach((maintenance: MaintenanceScheduleItem) => {
+    rental.maintenanceSchedule.forEach((maintenance) => {
       events.push({
         id: `maintenance-${maintenance.id}`,
         title: `Maintenance: ${rental.name}`,
@@ -82,11 +83,11 @@ const createRentalEvents = (rentals: RentalProduct[]): CalendarEvent[] => {
   });
 };
 
-export function RentalCalendarView({ rentals }: { rentals: RentalProduct[] }) {
+export function CalendarSection({ vendor }: { vendor: VendorProfileDetails }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<CalendarView>('week');
 
-  const events = createRentalEvents(rentals);
+  const events = vendor.rentals ? createRentalEvents(vendor.rentals) : [];
 
   const handleDateNavigation = (direction: 'prev' | 'next') => {
     setCurrentDate(prev => 
@@ -96,64 +97,65 @@ export function RentalCalendarView({ rentals }: { rentals: RentalProduct[] }) {
     );
   };
 
-  return (
-    <Card className="p-4">
-      <Box className="flex justify-between items-center mb-4">
-        <Box className="flex items-center gap-2">
-          <CalendarIcon className="text-primary" size={24} />
-          <Typography variant="h6">Rental Calendar</Typography>
-        </Box>
-        <Box className="flex items-center gap-4">
-          <ButtonGroup>
-            {(['week', 'month'] as CalendarView[]).map(viewOption => (
-              <Button
-                key={viewOption}
-                variant={view === viewOption ? 'contained' : 'outlined'}
-                onClick={() => setView(viewOption)}
-              >
-                {viewOption.charAt(0).toUpperCase() + viewOption.slice(1)}
-              </Button>
-            ))}
-          </ButtonGroup>
-          <Box className="flex items-center gap-2">
-            <Button
-              variant="outlined"
-              onClick={() => handleDateNavigation('prev')}
-            >
-              <ChevronLeft size={20} />
-            </Button>
-            <Typography>
-              {format(currentDate, 'MMMM yyyy')}
-            </Typography>
-            <Button
-              variant="outlined"
-              onClick={() => handleDateNavigation('next')}
-            >
-              <ChevronRight size={20} />
-            </Button>
-          </Box>
-        </Box>
-      </Box>
-
-      <Calendar
-        events={events}
-        initialView={view}
-        initialDate={currentDate}
-        height="600px"
-      />
-    </Card>
-  );
-}
-
-// Use in RentalEditSection and RentalView components
-export function RentalCalendarSection({ vendor }: { vendor: VendorProfileDetails }) {
   if (!vendor.rentals || vendor.rentals.length === 0) {
     return (
-      <Typography variant="body2" color="textSecondary">
-        No rental items available for calendar view
-      </Typography>
+      <Card>
+        <CardContent>
+          <Typography variant="body2" color="textSecondary">
+            No rental items available for calendar view
+          </Typography>
+        </CardContent>
+      </Card>
     );
   }
 
-  return <RentalCalendarView rentals={vendor.rentals} />;
+  return (
+    <Card>
+      <CardContent>
+        <Box className="flex justify-between items-center mb-4">
+          <Box className="flex items-center gap-2">
+            <CalendarIcon className="text-primary" size={24} />
+            <Typography variant="h6">Rental Calendar</Typography>
+          </Box>
+          <Box className="flex items-center gap-4">
+            <ButtonGroup>
+              {(['week', 'month'] as CalendarView[]).map(viewOption => (
+                <Button
+                  key={viewOption}
+                  variant={view === viewOption ? 'contained' : 'outlined'}
+                  onClick={() => setView(viewOption)}
+                >
+                  {viewOption.charAt(0).toUpperCase() + viewOption.slice(1)}
+                </Button>
+              ))}
+            </ButtonGroup>
+            <Box className="flex items-center gap-2">
+              <Button
+                variant="outlined"
+                onClick={() => handleDateNavigation('prev')}
+              >
+                <ChevronLeft size={20} />
+              </Button>
+              <Typography>
+                {format(currentDate, 'MMMM yyyy')}
+              </Typography>
+              <Button
+                variant="outlined"
+                onClick={() => handleDateNavigation('next')}
+              >
+                <ChevronRight size={20} />
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+
+        <Calendar
+          events={events}
+          initialView={view}
+          initialDate={currentDate}
+          height="600px"
+        />
+      </CardContent>
+    </Card>
+  );
 }
