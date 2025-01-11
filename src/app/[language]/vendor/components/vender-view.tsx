@@ -35,8 +35,8 @@ export default function VendorView({
     switch (vendor.type) {
       case "tours":
         return vendor.tours ? <ToursView tours={vendor.tours} /> : null;
-      case "tickets":
-        return vendor.tickets ? <TicketsView tickets={vendor.tickets} /> : null;
+        case "tickets":
+          return vendor.tickets ? <TicketsView tickets={vendor.tickets} onEditClick={onEditClick} /> : null;
         case "rentals":
           return vendor.rentals ? (
             <RentalsView 
