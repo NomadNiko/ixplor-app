@@ -90,39 +90,153 @@ export const mockVendorDetails: VendorProfileDetails[] = [
       },
       {
         id: "r2",
-        name: "Beginner Snowboard Package",
-        category: "Snowboard Equipment",
-        description: "Entry-level snowboard set with boots and helmet",
-        images: ["/img/snowboard-1.jpg", "/img/snowboard-2.jpg"],
-        totalUnits: 4,
+        name: "Beginner Ski Package",
+        category: "Ski Equipment",
+        description: "Mid-Range ski set including boots, poles, and helmet",
+        images: ["/img/ski-3.jpg", "/img/ski-4.jpg"],
+        totalUnits: 3,
         availableUnits: 2,
         bookedUnits: 1,
         dueOut: 1,
-        dueIn: 1,
+        dueIn: 2,
         sizes: [
           {
-            id: "sb-145",
-            label: "145cm",
+            id: "ski-150",
+            label: "150cm",
             available: 1,
             total: 2,
-            pricePerHour: 18,
-            pricePerDay: 65,
-            pricePerWeek: 350
+            pricePerHour: 20,
+            pricePerDay: 75,
+            pricePerWeek: 400
           },
           {
-            id: "sb-155",
-            label: "155cm",
-            available: 1,
+            id: "ski-160",
+            label: "160cm",
+            available: 2,
             total: 2,
-            pricePerHour: 18,
-            pricePerDay: 65,
-            pricePerWeek: 350
+            pricePerHour: 20,
+            pricePerDay: 75,
+            pricePerWeek: 400
+          },
+          {
+            id: "ski-170",
+            label: "170cm",
+            available: 0,
+            total: 2,
+            pricePerHour: 20,
+            pricePerDay: 75,
+            pricePerWeek: 400
           }
         ],
-        condition: "good",
-        lastServiced: "2024-01-03",
-        maintenanceSchedule: snowboardMaintenance,
+        condition: "excellent",
+        lastServiced: "2024-01-01",
+        maintenanceSchedule: skiPackageMaintenance,
+      },
+      {
+      id: "r3",
+      name: "Beginner Snowboard Package",
+      category: "Snowboard Equipment",
+      description: "Entry-level snowboard set with boots and helmet",
+      images: ["/img/snowboard-1.jpg", "/img/snowboard-2.jpg"],
+      totalUnits: 4,
+      availableUnits: 2,
+      bookedUnits: 1,
+      dueOut: 1,
+      dueIn: 1,
+      sizes: [
+        {
+          id: "sb-145",
+          label: "145cm",
+          available: 1,
+          total: 2,
+          pricePerHour: 18,
+          pricePerDay: 65,
+          pricePerWeek: 350
+        },
+        {
+          id: "sb-155",
+          label: "155cm",
+          available: 1,
+          total: 2,
+          pricePerHour: 18,
+          pricePerDay: 65,
+          pricePerWeek: 350
+        }
+      ],
+      condition: "good",
+      lastServiced: "2024-01-03",
+      maintenanceSchedule: snowboardMaintenance,
+    },
+    {
+    id: "r4",
+    name: "Intermediate Snowboard Package",
+    category: "Snowboard Equipment",
+    description: "Mid-Range snowboard set with boots and helmet",
+    images: ["/img/snowboard-3.jpg", "/img/snowboard-4.jpg"],
+    totalUnits: 4,
+    availableUnits: 2,
+    bookedUnits: 1,
+    dueOut: 1,
+    dueIn: 1,
+    sizes: [
+      {
+        id: "sb-145",
+        label: "145cm",
+        available: 1,
+        total: 2,
+        pricePerHour: 18,
+        pricePerDay: 65,
+        pricePerWeek: 350
+      },
+      {
+        id: "sb-155",
+        label: "155cm",
+        available: 1,
+        total: 2,
+        pricePerHour: 18,
+        pricePerDay: 65,
+        pricePerWeek: 350
       }
+    ],
+    condition: "good",
+    lastServiced: "2024-01-03",
+    maintenanceSchedule: snowboardMaintenance,
+  },
+  {
+  id: "r5",
+  name: "Premium Snowboard Package",
+  category: "Snowboard Equipment",
+  description: "High-performance snowboard set with boots and helmet",
+  images: ["/img/snowboard-5.jpg", "/img/snowboard-6.jpg"],
+  totalUnits: 4,
+  availableUnits: 2,
+  bookedUnits: 1,
+  dueOut: 1,
+  dueIn: 1,
+  sizes: [
+    {
+      id: "sb-145",
+      label: "145cm",
+      available: 1,
+      total: 2,
+      pricePerHour: 18,
+      pricePerDay: 65,
+      pricePerWeek: 350
+    },
+    {
+      id: "sb-155",
+      label: "155cm",
+      available: 1,
+      total: 2,
+      pricePerHour: 18,
+      pricePerDay: 65,
+      pricePerWeek: 350
+    }
+  ],
+  condition: "good",
+  lastServiced: "2024-01-03",
+  maintenanceSchedule: snowboardMaintenance,
+}
     ]
   },
   {
