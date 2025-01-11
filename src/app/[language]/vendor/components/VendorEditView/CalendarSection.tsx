@@ -1,109 +1,159 @@
-"use client";
 import { useState } from 'react';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-import Chip from '@mui/material/Chip';
-import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
-import { Clock, Users, DollarSign, X, Calendar } from 'lucide-react';
-import { VendorProfileDetails } from '@/types/vendor-types';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Card from '@mui/material/Card';
+import { Calendar } from '@/components/calendar';
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
+import { RentalProduct, MaintenanceScheduleItem, VendorProfileDetails } from '@/types/vendor-types';
+import { addMonths, subMonths, format } from 'date-fns';
+import { CalendarView, CalendarEvent } from '@/components/calendar/types';
 
-interface CalendarSectionProps {
-  vendor: VendorProfileDetails;
-}
+const createRentalEvents = (rentals: RentalProduct[]): CalendarEvent[] => {
+  return rentals.flatMap(rental => {
+    const events: CalendarEvent[] = [];
 
-export function CalendarSection({ vendor }: CalendarSectionProps) {
-  const [selectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
-
-  // Get all events across all products
-  const getEvents = () => {
-    if (vendor.tours) {
-      return vendor.tours.flatMap(tour => 
-        tour.schedule.map(event => ({
-          ...event,
-          productName: tour.name,
-          price: tour.price
-        }))
-      );
+    // Due In Events
+    if (rental.dueIn > 0) {
+      events.push({
+        id: `return-${rental.id}`,
+        title: `${rental.name} Return`,
+        start: new Date(), // Backend should provide precise date
+        type: 'rental',
+        status: 'booked',
+        metadata: {
+          type: 'rental',
+          data: {
+            itemName: rental.name,
+            condition: rental.condition,
+            pickupLocation: 'Main Store',
+            price: rental.sizes[0]?.pricePerDay || 0,
+            notes: `${rental.dueIn} units due`
+          }
+        }
+      });
     }
-    return [];
+
+    // Due Out Events
+    if (rental.dueOut > 0) {
+      events.push({
+        id: `pickup-${rental.id}`,
+        title: `${rental.name} Pickup`,
+        start: new Date(), 
+        type: 'rental',
+        status: 'booked',
+        metadata: {
+          type: 'rental',
+          data: {
+            itemName: rental.name,
+            condition: rental.condition,
+            pickupLocation: 'Main Store',
+            price: rental.sizes[0]?.pricePerDay || 0,
+            notes: `${rental.dueOut} units to pickup`
+          }
+        }
+      });
+    }
+
+    // Maintenance Events
+    rental.maintenanceSchedule.forEach((maintenance: MaintenanceScheduleItem) => {
+      events.push({
+        id: `maintenance-${maintenance.id}`,
+        title: `Maintenance: ${rental.name}`,
+        start: new Date(maintenance.startDate),
+        end: new Date(maintenance.endDate),
+        type: 'rental',
+        status: 'booked',
+        metadata: {
+          type: 'rental',
+          data: {
+            itemName: rental.name,
+            condition: rental.condition,
+            pickupLocation: 'Maintenance Area',
+            price: 0,
+            notes: maintenance.reason
+          }
+        }
+      });
+    });
+
+    return events;
+  });
+};
+
+export function RentalCalendarView({ rentals }: { rentals: RentalProduct[] }) {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [view, setView] = useState<CalendarView>('week');
+
+  const events = createRentalEvents(rentals);
+
+  const handleDateNavigation = (direction: 'prev' | 'next') => {
+    setCurrentDate(prev => 
+      direction === 'prev' 
+        ? subMonths(prev, 1) 
+        : addMonths(prev, 1)
+    );
   };
 
-  const events = getEvents();
-  const todaysEvents = events.filter(event => event.date === selectedDate);
-
   return (
-    <Box>
-      <Grid container spacing={3}>
-        <Grid item xs={8}>
-          {/* Calendar Grid */}
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>Scheduled Events</Typography>
-              {todaysEvents.map((event) => (
-                <Card key={event.id} sx={{ mb: 2, p: 2 }}>
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Box>
-                      <Typography variant="subtitle1">{event.productName}</Typography>
-                      <Box display="flex" alignItems="center" gap={2} mt={1}>
-                        <Box display="flex" alignItems="center" gap={1}>
-                          <Clock size={16} />
-                          <Typography variant="body2">
-                            {event.startTime} - {event.endTime}
-                          </Typography>
-                        </Box>
-                        <Chip 
-                          label={event.status} 
-                          color={event.status === 'available' ? 'success' : 
-                                event.status === 'booked' ? 'primary' : 'error'} 
-                          size="small" 
-                        />
-                      </Box>
-                    </Box>
-                    <IconButton size="small">
-                      <X size={16} />
-                    </IconButton>
-                  </Box>
-                </Card>
-              ))}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={4}>
-          {/* Quick Actions */}
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>Quick Actions</Typography>
-              <Button 
-                variant="outlined" 
-                fullWidth 
-                startIcon={<Calendar />}
-                sx={{ mb: 2 }}
+    <Card className="p-4">
+      <Box className="flex justify-between items-center mb-4">
+        <Box className="flex items-center gap-2">
+          <CalendarIcon className="text-primary" size={24} />
+          <Typography variant="h6">Rental Calendar</Typography>
+        </Box>
+        <Box className="flex items-center gap-4">
+          <ButtonGroup>
+            {(['week', 'month'] as CalendarView[]).map(viewOption => (
+              <Button
+                key={viewOption}
+                variant={view === viewOption ? 'contained' : 'outlined'}
+                onClick={() => setView(viewOption)}
               >
-                Add New Event
+                {viewOption.charAt(0).toUpperCase() + viewOption.slice(1)}
               </Button>
-              <Button 
-                variant="outlined" 
-                fullWidth 
-                startIcon={<Users />}
-                sx={{ mb: 2 }}
-              >
-                Manage Capacity
-              </Button>
-              <Button 
-                variant="outlined" 
-                fullWidth 
-                startIcon={<DollarSign />}
-              >
-                Update Pricing
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    </Box>
+            ))}
+          </ButtonGroup>
+          <Box className="flex items-center gap-2">
+            <Button
+              variant="outlined"
+              onClick={() => handleDateNavigation('prev')}
+            >
+              <ChevronLeft size={20} />
+            </Button>
+            <Typography>
+              {format(currentDate, 'MMMM yyyy')}
+            </Typography>
+            <Button
+              variant="outlined"
+              onClick={() => handleDateNavigation('next')}
+            >
+              <ChevronRight size={20} />
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+
+      <Calendar
+        events={events}
+        initialView={view}
+        initialDate={currentDate}
+        height="600px"
+      />
+    </Card>
   );
+}
+
+// Use in RentalEditSection and RentalView components
+export function RentalCalendarSection({ vendor }: { vendor: VendorProfileDetails }) {
+  if (!vendor.rentals || vendor.rentals.length === 0) {
+    return (
+      <Typography variant="body2" color="textSecondary">
+        No rental items available for calendar view
+      </Typography>
+    );
+  }
+
+  return <RentalCalendarView rentals={vendor.rentals} />;
 }
