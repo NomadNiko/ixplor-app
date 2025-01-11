@@ -23,13 +23,17 @@ import {
 } from "lucide-react";
 import { RentalProduct, Size } from "@/types/vendor-types";
 import { StatCard } from "./styled/vendor-view-styled";
+import { CalendarSection } from "../VendorEditView/CalendarSection";
 
 interface RentalsViewProps {
   rentals: RentalProduct[];
-  onEditClick: () => void; 
+  onEditClick: () => void;
 }
 
-export default function RentalsView({ rentals, onEditClick }: RentalsViewProps) {
+export default function RentalsView({
+  rentals,
+  onEditClick,
+}: RentalsViewProps) {
   const [activeTab, setActiveTab] = useState("inventory");
   const [selectedProduct, setSelectedProduct] = useState<RentalProduct | null>(
     null
@@ -249,16 +253,17 @@ export default function RentalsView({ rentals, onEditClick }: RentalsViewProps) 
 
           {/* Calendar Tab Content */}
           {activeTab === "calendar" && (
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Rental Calendar
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Calendar view coming soon...
-                </Typography>
-              </CardContent>
-            </Card>
+            <CalendarSection
+              vendor={{
+                id: "vendor-id",
+                name: "Vendor Name",
+                type: "rentals",
+                description: "",
+                status: "published",
+                lastUpdated: new Date().toISOString(),
+                rentals: rentals,
+              }}
+            />
           )}
 
           {/* Maintenance Tab Content */}
