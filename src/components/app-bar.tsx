@@ -19,7 +19,6 @@ import { useTranslation } from "@/services/i18n/client";
 import Link from "@/components/link";
 import { RoleEnum } from "@/services/api/types/role";
 import Divider from "@mui/material/Divider";
-import ThemeSwitchButton from "@/components/switch-theme-button";
 import { IS_SIGN_UP_ENABLED } from "@/services/auth/config";
 
 function ResponsiveAppBar() {
@@ -196,7 +195,6 @@ function ResponsiveAppBar() {
               mr: 1,
             }}
           >
-            <ThemeSwitchButton />
           </Box>
 
           {!isLoaded ? (
