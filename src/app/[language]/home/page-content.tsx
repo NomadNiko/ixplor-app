@@ -1,3 +1,4 @@
+"use client";
 import { useState } from 'react';
 import { Globe, Star, CalendarDays, User, Search } from 'lucide-react';
 import TextField from '@mui/material/TextField';
