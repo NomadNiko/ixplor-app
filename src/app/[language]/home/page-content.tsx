@@ -1,28 +1,30 @@
-"use client";
-import { useState, useMemo } from 'react';
+import { useState, type CSSProperties } from 'react';
 import Map, { NavigationControl, GeolocateControl } from 'react-map-gl';
 import { styled, useTheme } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { Earth, Star, CalendarDays, User, Search } from 'lucide-react';
+import { Earth, Star, CalendarDays, User, Search, Timer, Ticket, Binoculars, GraduationCap } from 'lucide-react';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-// Styled components for consistent look
+type FilterType = 'tours' | 'lessons' | 'rentals' | 'tickets';
+
 const NavButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.primary.main,
-  backgroundColor: 'rgba(28, 40, 58, 0.8)',
+  backgroundColor: theme.palette.background.glass,
   backdropFilter: 'blur(10px)',
   '&:hover': {
-    backgroundColor: 'rgba(28, 40, 58, 0.9)',
+    backgroundColor: theme.palette.background.glassHover,
   }
 }));
 
 const SearchBar = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
-    backgroundColor: 'rgba(28, 40, 58, 0.8)',
+    backgroundColor: theme.palette.background.glass,
     backdropFilter: 'blur(10px)',
     '& fieldset': {
       borderColor: 'transparent',
@@ -33,26 +35,48 @@ const SearchBar = styled(TextField)(({ theme }) => ({
   },
 }));
 
+const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
+  backgroundColor: theme.palette.background.glass,
+  backdropFilter: 'blur(10px)',
+  '& .MuiToggleButton-root': {
+    color: theme.palette.text.primary,
+    borderColor: theme.palette.divider,
+    '&.Mui-selected': {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.primary.contrastText,
+      '&:hover': {
+        backgroundColor: theme.palette.primary.dark,
+      },
+    },
+  },
+}));
+
 const MapHomeLayout = () => {
   const [viewState, setViewState] = useState({
     latitude: 40.7128,
     longitude: -74.006,
     zoom: 12
   });
+  
+  const [filterType, setFilterType] = useState<FilterType>('tours');
+
+  const handleFilterChange = (
+    event: React.MouseEvent<HTMLElement>, 
+    newFilterType: FilterType | null
+  ) => {
+    if (newFilterType !== null) {
+      setFilterType(newFilterType);
+    }
+  };
 
   const theme = useTheme();
 
-  // Create a custom style object using useMemo
-  const navigationControlStyle = useMemo(() => {
-    return {
-      "--mapbox-ctrl-icon-opacity": "0.8",
-      "--mapbox-ctrl-icon-color": "hsl(0, 0%, 100%)",
-      "--mapbox-ctrl-icon-hover-color": "hsl(0, 0%, 75%)",
-      "--mapbox-ctrl-group-background": "hsl(210, 21%, 15%)",
-      "--mapbox-ctrl-group-border-color": "hsla(0, 0%, 0%, 0.5)",
-      "--mapbox-ctrl-group-hover-background": "hsl(210, 21%, 20%)",
-    };
-  }, []);
+  const controlStyle: CSSProperties = {
+    padding: theme.spacing(1),
+    backgroundColor: theme.palette.background.glass,
+    backdropFilter: 'blur(10px)',
+    borderRadius: theme.shape.borderRadius,
+  };
 
   return (
     <Box sx={{ height: 'calc(100vh - 64px)', width: '100%', position: "relative" }}>
@@ -63,7 +87,6 @@ const MapHomeLayout = () => {
         mapboxAccessToken={MAPBOX_TOKEN}
         style={{ width: "100%", height: "100%" }}
       >
-        {/* Container for other components to snap to */}
         <Container
           maxWidth="md"
           sx={{
@@ -71,63 +94,60 @@ const MapHomeLayout = () => {
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            pointerEvents: "none", // Allow map interactions through the container
-            "& > *": { pointerEvents: "auto" } // Re-enable pointer events for children
+            pointerEvents: "none",
+            "& > *": { pointerEvents: "auto" }
           }}
         >
-          {/* Wrapper for GeolocateControl and NavigationControl */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "start",
-              pt: 2, // Padding top
-              // Adjust positioning for both controls
-              position: 'relative',
-              left: theme.spacing(2), // Add left spacing
-              zIndex: 1, // Ensure controls are above other elements
-            }}
-          >
-            <GeolocateControl
-              position="top-left"
-              style={{
-                top: theme.spacing(500),
-                left: 0,
-              }}
-            />
-
-            <NavigationControl
-              position="top-left"
-              style={{
-                ...navigationControlStyle,
-                top: theme.spacing(50),
-                left: 0,
-              }}
-            />
+          <Box sx={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 1 }}>
+            <GeolocateControl style={controlStyle} />
+            <NavigationControl style={controlStyle} />
           </Box>
 
-          {/* Search bar container */}
           <Box
             sx={{
-              position: "absolute", // Position absolutely within the Container
-              top: theme.spacing(2), // Adjust top spacing
-              left: theme.spacing(2), // Match container's left spacing
-              right: theme.spacing(2), // Match container's right spacing
+              position: "absolute",
+              top: theme.spacing(2),
+              left: theme.spacing(2),
+              right: theme.spacing(2),
               display: "flex",
-              gap: theme.spacing(1),
-              zIndex: 1, // Ensure search bar is above other elements
+              flexDirection: "column",
+              gap: theme.spacing(2),
+              zIndex: 1,
             }}
           >
             <SearchBar
               fullWidth
-              placeholder="  Find adventures near you..."
+              placeholder="Find adventures near you..."
               InputProps={{
-                startAdornment: <Search className="mr-4 text-gray-400" size={20} />
+                startAdornment: <Search size={20} />
               }}
             />
+            
+            <StyledToggleButtonGroup
+              value={filterType}
+              exclusive
+              onChange={handleFilterChange}
+              fullWidth
+            >
+              <ToggleButton value="tours">
+                <Binoculars size={20} />
+                <Box component="span" sx={{ ml: 1 }}>Tours</Box>
+              </ToggleButton>
+              <ToggleButton value="lessons">
+                <GraduationCap size={20} />
+                <Box component="span" sx={{ ml: 1 }}>Lessons</Box>
+              </ToggleButton>
+              <ToggleButton value="rentals">
+                <Timer size={20} />
+                <Box component="span" sx={{ ml: 1 }}>Rentals</Box>
+              </ToggleButton>
+              <ToggleButton value="tickets">
+                <Ticket size={20} />
+                <Box component="span" sx={{ ml: 1 }}>Tickets</Box>
+              </ToggleButton>
+            </StyledToggleButtonGroup>
           </Box>
 
-          {/* Bottom navigation container */}
           <Box
             sx={{
               width: { xs: "100%", md: "100%" },
@@ -140,10 +160,10 @@ const MapHomeLayout = () => {
                 xs: `calc(${theme.spacing(2)} + env(safe-area-inset-bottom))`,
                 md: theme.spacing(2)
               },
-              backgroundColor: "rgba(28, 40, 58, 0.8)",
+              backgroundColor: theme.palette.background.glass,
               backdropFilter: "blur(10px)",
               borderRadius: { xs: 0, md: 2 },
-              zIndex: 1, // Ensure bottom bar is above other elements
+              zIndex: 1,
             }}
           >
             <Box

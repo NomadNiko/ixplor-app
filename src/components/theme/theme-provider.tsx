@@ -3,6 +3,7 @@ import { createTheme, ThemeProvider as MuiThemeProvider, Theme } from '@mui/mate
 import { alpha } from '@mui/material/styles';
 import { useMemo, PropsWithChildren } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
+
 declare module '@mui/material/styles' {
  interface Palette {
    customGradients: {
@@ -20,6 +21,14 @@ declare module '@mui/material/styles' {
    }
  }
 }
+
+declare module '@mui/material/styles/createPalette' {
+  interface TypeBackground {
+    glass: string;
+    glassHover: string;
+  }
+}
+
 function ThemeProvider(props: PropsWithChildren<{}>) {
  const theme = useMemo(
    () =>
@@ -79,19 +88,22 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
            900: '#111827',
          },
          background: {
-           default: '#0F172A',
-           paper: 'rgb(28, 40, 58, 0.92)',
-         },
-         text: {
-           primary: '#F8FAFC',
-           secondary: '#94A3B8',
-         },
-         customGradients: {
-           primary: 'linear-gradient(to right, #3B82F6, #8B5CF6)',
-           secondary: 'linear-gradient(to right, #8B5CF6, #D946EF)',
-           background: 'linear-gradient(to bottom, #0F172A, #1E293B)',
-         },
-       },
+          default: '#0F172A',
+          paper: 'rgb(28, 40, 58, 0.92)',
+          glass: 'rgba(28, 40, 58, 0.8)',
+          glassHover: 'rgba(28, 40, 58, 0.9)',
+        },
+        text: {
+          primary: '#F8FAFC',
+          secondary: '#94A3B8',
+        },
+        divider: 'rgba(255, 255, 255, 0.12)',
+        customGradients: {
+          primary: 'linear-gradient(to right, #3B82F6, #8B5CF6)',
+          secondary: 'linear-gradient(to right, #8B5CF6, #D946EF)',
+          background: 'linear-gradient(to bottom, #0F172A, #1E293B)',
+        },
+      },
        typography: {
          fontFamily: '"Orbitron Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
          h1: {
@@ -222,7 +234,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             root: ({ theme }: { theme: Theme }) => ({
               '& .MuiOutlinedInput-root': {
                 borderRadius: theme.spacing(1),
-                height: theme.spacing(5.5), // 44px at default spacing of 8px
+                height: theme.spacing(5.5),
                 backgroundColor: alpha(theme.palette.background.paper, 0.4),
                 transition: theme.transitions.create(['background-color', 'box-shadow'], {
                   duration: theme.transitions.duration.shorter,
@@ -319,6 +331,26 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
              }),
            },
          },
+         MuiToggleButton: {
+           styleOverrides: {
+             root: ({ theme }: { theme: Theme }) => ({
+               color: theme.palette.text.primary,
+               borderColor: alpha(theme.palette.common.white, 0.12),
+               backgroundColor: theme.palette.background.glass,
+               backdropFilter: 'blur(10px)',
+               '&.Mui-selected': {
+                 backgroundColor: theme.palette.primary.main,
+                 color: theme.palette.primary.contrastText,
+                 '&:hover': {
+                   backgroundColor: theme.palette.primary.dark,
+                 },
+               },
+               '&:hover': {
+                 backgroundColor: theme.palette.background.glassHover,
+               },
+             }),
+           },
+         },
        },
      }),
    []
@@ -330,4 +362,5 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
    </MuiThemeProvider>
  );
 }
+
 export default ThemeProvider;
