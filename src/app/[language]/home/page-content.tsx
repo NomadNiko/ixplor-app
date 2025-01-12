@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import Map, { NavigationControl, GeolocateControl } from "react-map-gl";
 import { styled } from "@mui/material/styles";
