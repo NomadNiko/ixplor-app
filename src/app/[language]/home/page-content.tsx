@@ -1,3 +1,4 @@
+"use client";
 import { useState } from 'react';
 import Map, { NavigationControl, GeolocateControl } from 'react-map-gl';
 import { Input, Button } from '@nextui-org/react';
