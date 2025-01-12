@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { MapPin, Star, CalendarDays, User, Search, ChevronLeft } from 'lucide-react';
+import { Earth, Star, CalendarDays, User, Search } from 'lucide-react';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -118,12 +118,9 @@ const MapHomeLayout = () => {
               zIndex: 1, // Ensure search bar is above other elements
             }}
           >
-            <NavButton size="large">
-              <ChevronLeft />
-            </NavButton>
             <SearchBar
               fullWidth
-              placeholder="Find adventures near you..."
+              placeholder="  Find adventures near you..."
               InputProps={{
                 startAdornment: <Search className="mr-4 text-gray-400" size={20} />
               }}
@@ -160,7 +157,7 @@ const MapHomeLayout = () => {
               }}
             >
               <NavButton>
-                <MapPin />
+                <Earth />
               </NavButton>
               <NavButton>
                 <Star />
