@@ -75,31 +75,33 @@ const MapHomeLayout = () => {
             "& > *": { pointerEvents: "auto" } // Re-enable pointer events for children
           }}
         >
-          {/* Move GeolocateControl and NavigationControl inside Container */}
+          {/* Wrapper for GeolocateControl and NavigationControl */}
           <Box
             sx={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "start",
-              pt: 2 // Padding top
+              pt: 2, // Padding top
+              // Adjust positioning for both controls
+              position: 'relative',
+              left: theme.spacing(2), // Add left spacing
+              zIndex: 1, // Ensure controls are above other elements
             }}
           >
             <GeolocateControl
               position="top-left"
               style={{
-                position: "relative",
-                top: theme.spacing(10), // Use theme.spacing for 80px
-                left: "0px"
+                top: theme.spacing(10),
+                left: 0,
               }}
             />
 
             <NavigationControl
               position="top-left"
               style={{
-                ...navigationControlStyle, // Apply the custom style object
-                position: "relative",
-                top: theme.spacing(10), // Use theme.spacing for 80px
-                left: "0px"
+                ...navigationControlStyle,
+                top: theme.spacing(10),
+                left: 0,
               }}
             />
           </Box>
@@ -107,12 +109,13 @@ const MapHomeLayout = () => {
           {/* Search bar container */}
           <Box
             sx={{
-              position: "relative",
-              top: theme.spacing(2),
-              left: 0,
-              right: 0,
+              position: "absolute", // Position absolutely within the Container
+              top: theme.spacing(2), // Adjust top spacing
+              left: theme.spacing(2), // Match container's left spacing
+              right: theme.spacing(2), // Match container's right spacing
               display: "flex",
-              gap: theme.spacing(1)
+              gap: theme.spacing(1),
+              zIndex: 1, // Ensure search bar is above other elements
             }}
           >
             <NavButton size="large">
@@ -130,19 +133,20 @@ const MapHomeLayout = () => {
           {/* Bottom navigation container */}
           <Box
             sx={{
-              width: { xs: "100%", md: "100%" }, // Full width on mobile, container width on desktop
-              position: { xs: "fixed", md: "relative" }, // Fixed on mobile, relative in container on desktop
-              bottom: { xs: 0, md: theme.spacing(2) }, // Stick to bottom on mobile, 16px from bottom on desktop
-              left: { xs: 0, md: "auto" }, // Align left on mobile, auto on desktop for centering in container
-              right: { xs: 0, md: "auto" }, // Align right on mobile, auto on desktop for centering in container
+              width: { xs: "100%", md: "100%" },
+              position: { xs: "fixed", md: "relative" },
+              bottom: { xs: 0, md: theme.spacing(2) },
+              left: { xs: 0, md: "auto" },
+              right: { xs: 0, md: "auto" },
               padding: theme.spacing(2),
               paddingBottom: {
                 xs: `calc(${theme.spacing(2)} + env(safe-area-inset-bottom))`,
                 md: theme.spacing(2)
-              }, // Add extra padding on mobile for safe area
+              },
               backgroundColor: "rgba(28, 40, 58, 0.8)",
               backdropFilter: "blur(10px)",
-              borderRadius: { xs: 0, md: 2 } // No border radius on mobile, 2 on desktop
+              borderRadius: { xs: 0, md: 2 },
+              zIndex: 1, // Ensure bottom bar is above other elements
             }}
           >
             <Box
@@ -151,8 +155,8 @@ const MapHomeLayout = () => {
                 justifyContent: "space-around",
                 alignItems: "center",
                 width: "100%",
-                height: theme.spacing(7.5), // Increased height to 60px
-                pb: { xs: "env(safe-area-inset-bottom)", md: 0 } // Add padding for safe area on mobile
+                height: theme.spacing(7.5),
+                pb: { xs: "env(safe-area-inset-bottom)", md: 0 }
               }}
             >
               <NavButton>
