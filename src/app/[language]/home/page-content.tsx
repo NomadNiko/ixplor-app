@@ -99,7 +99,7 @@ const MapHomeLayout = () => {
             "& > *": { pointerEvents: "auto" }
           }}
         >
-          <Box sx={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 1 }}>
+          <Box sx={{ position: 'absolute', left: '50%', top: '5%', transform: 'translate(-50%, -50%)', zIndex: 1 }}>
             <GeolocateControl style={controlStyle} />
             <NavigationControl style={controlStyle} />
           </Box>
