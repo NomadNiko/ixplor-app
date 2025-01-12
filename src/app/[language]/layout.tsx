@@ -5,12 +5,13 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import '@fontsource-variable/orbitron'
+import '@fontsource-variable/orbitron';
 import CssBaseline from "@mui/material/CssBaseline";
+import { NextUIProvider } from "@nextui-org/react";
+import type { Metadata } from "next";
 import { dir } from "i18next";
 import "@/services/i18n/config";
 import { languages } from "@/services/i18n/config";
-import type { Metadata } from "next";
 import ToastContainer from "@/components/snackbar-provider";
 import { getServerTranslation } from "@/services/i18n";
 import StoreLanguageProvider from "@/services/i18n/store-language-provider";
@@ -31,7 +32,6 @@ type Props = {
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
   const { t } = await getServerTranslation(params.language, "common");
-
   return {
     title: t("title"),
   };
@@ -46,15 +46,13 @@ export default async function RootLayout(props: {
   params: Promise<{ language: string }>;
 }) {
   const params = await props.params;
-
   const { language } = params;
-
   const { children } = props;
 
   return (
     <html lang={language} dir={dir(language)} suppressHydrationWarning>
       <head>
-      <link href='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css' rel='stylesheet' />
+        <link href='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css' rel='stylesheet' />
       </head>
       <body suppressHydrationWarning>
         <InitColorSchemeScript />
@@ -62,25 +60,26 @@ export default async function RootLayout(props: {
           <ReactQueryDevtools initialIsOpen={false} />
           <ThemeProvider>
             <CssBaseline />
-
-            <StoreLanguageProvider>
-              <ConfirmDialogProvider>
-                <AuthProvider>
-                  <GoogleAuthProvider>
-                    <FacebookAuthProvider>
-                      <LeavePageProvider>
-                        <ResponsiveAppBar />
-                        {children}
-                        <ToastContainer
-                          position="bottom-left"
-                          hideProgressBar
-                        />
-                      </LeavePageProvider>
-                    </FacebookAuthProvider>
-                  </GoogleAuthProvider>
-                </AuthProvider>
-              </ConfirmDialogProvider>
-            </StoreLanguageProvider>
+            <NextUIProvider>
+              <StoreLanguageProvider>
+                <ConfirmDialogProvider>
+                  <AuthProvider>
+                    <GoogleAuthProvider>
+                      <FacebookAuthProvider>
+                        <LeavePageProvider>
+                          <ResponsiveAppBar />
+                          {children}
+                          <ToastContainer
+                            position="bottom-left"
+                            hideProgressBar
+                          />
+                        </LeavePageProvider>
+                      </FacebookAuthProvider>
+                    </GoogleAuthProvider>
+                  </AuthProvider>
+                </ConfirmDialogProvider>
+              </StoreLanguageProvider>
+            </NextUIProvider>
           </ThemeProvider>
         </QueryClientProvider>
       </body>
