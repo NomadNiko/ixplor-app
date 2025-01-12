@@ -1,54 +1,77 @@
-"use client";
 import { useState } from 'react';
-import { Globe, Star, CalendarDays, User, Search } from 'lucide-react';
-import TextField from '@mui/material/TextField';
+import Map, { NavigationControl, GeolocateControl } from 'react-map-gl';
+import { Input, Button } from '@nextui-org/react';
+import { MapPin, Star, CalendarDays, User, Search, ChevronLeft } from 'lucide-react';
+
+// You'll need to get a Mapbox token
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
 const MapHomeLayout = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [viewState, setViewState] = useState({
+    latitude: 40.7128,
+    longitude: -74.0060,
+    zoom: 12
+  });
 
   return (
     <div className="h-screen w-full flex flex-col relative bg-slate-900">
-      {/* Search Bar */}
-      <div className="absolute top-4 left-4 right-4 z-10">
-        <TextField
-          fullWidth
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search for activities..."
-          variant="outlined"
-          InputProps={{
-            startAdornment: <Search className="mr-2 text-gray-400" size={20} />,
-            className: "bg-slate-800/90 backdrop-blur-sm rounded-lg text-white",
-          }}
-        />
-      </div>
+      {/* Map Layer */}
+      <Map
+        {...viewState}
+        onMove={evt => setViewState(evt.viewState)}
+        mapStyle="mapbox://styles/mapbox/dark-v11"
+        mapboxAccessToken={MAPBOX_TOKEN}
+        className="w-full h-full"
+      >
+        <GeolocateControl position="top-right" />
+        <NavigationControl position="top-right" />
+      </Map>
 
-      {/* Map Area */}
-      <div className="flex-1 bg-slate-800">
-        {/* Map will be integrated here */}
-        <div className="w-full h-full flex items-center justify-center text-gray-400">
-          Map Integration Coming Soon
+      {/* Search Overlay */}
+      <div className="absolute top-0 left-0 right-0 p-4 z-10">
+        <div className="flex gap-2">
+          <Button isIconOnly color="default" className="bg-slate-800/80 backdrop-blur-md">
+            <ChevronLeft />
+          </Button>
+          <Input
+            classNames={{
+              input: "text-white",
+              base: "bg-slate-800/80 backdrop-blur-md",
+            }}
+            placeholder="Find adventures near you..."
+            startContent={<Search className="text-default-400" size={20} />}
+          />
         </div>
       </div>
 
       {/* Bottom Navigation */}
-      <div className="bg-slate-800/90 backdrop-blur-sm p-4 flex justify-around items-center">
-        <button className="flex flex-col items-center text-blue-500">
-          <Globe size={24} />
-          <span className="text-xs mt-1">Map</span>
-        </button>
-        <button className="flex flex-col items-center text-gray-400">
-          <Star size={24} />
-          <span className="text-xs mt-1">Favorites</span>
-        </button>
-        <button className="flex flex-col items-center text-gray-400">
-          <CalendarDays size={24} />
-          <span className="text-xs mt-1">Booked</span>
-        </button>
-        <button className="flex flex-col items-center text-gray-400">
-          <User size={24} />
-          <span className="text-xs mt-1">Profile</span>
-        </button>
+      <div className="absolute bottom-0 left-0 right-0 p-4">
+        <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-4 mx-auto max-w-md flex justify-around">
+          <Button 
+            isIconOnly 
+            variant="light" 
+            className="text-blue-500"
+            startContent={<MapPin size={24} />}
+          />
+          <Button 
+            isIconOnly 
+            variant="light" 
+            className="text-default-400"
+            startContent={<Star size={24} />}
+          />
+          <Button 
+            isIconOnly 
+            variant="light" 
+            className="text-default-400"
+            startContent={<CalendarDays size={24} />}
+          />
+          <Button 
+            isIconOnly 
+            variant="light" 
+            className="text-default-400"
+            startContent={<User size={24} />}
+          />
+        </div>
       </div>
     </div>
   );

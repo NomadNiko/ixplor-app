@@ -5,6 +5,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import '@fontsource-variable/orbitron'
 import CssBaseline from "@mui/material/CssBaseline";
 import { dir } from "i18next";
 import "@/services/i18n/config";
@@ -52,6 +53,9 @@ export default async function RootLayout(props: {
 
   return (
     <html lang={language} dir={dir(language)} suppressHydrationWarning>
+      <head>
+      <link href='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css' rel='stylesheet' />
+      </head>
       <body suppressHydrationWarning>
         <InitColorSchemeScript />
         <QueryClientProvider client={queryClient}>

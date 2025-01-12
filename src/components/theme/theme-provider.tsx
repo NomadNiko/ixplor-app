@@ -93,7 +93,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
          },
        },
        typography: {
-         fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+         fontFamily: '"Orbitron Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
          h1: {
            fontSize: '2.5rem',
            fontWeight: 600,

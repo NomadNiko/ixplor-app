@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import MapHomeLayout from "./page-content";
+import MapHomeLayout from "./home/page-content";
 import { getServerTranslation } from "@/services/i18n";
 
 type Props = {
