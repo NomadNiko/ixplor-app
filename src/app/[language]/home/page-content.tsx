@@ -1,7 +1,10 @@
-"use client";
 import { useState } from "react";
 import Map, { NavigationControl, GeolocateControl } from "react-map-gl";
-import { Input, Button } from "@nextui-org/react";
+import { styled } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 import {
   MapPin,
   Star,
@@ -11,8 +14,42 @@ import {
   ChevronLeft,
 } from "lucide-react";
 
-// You'll need to get a Mapbox token
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+
+const NavButton = styled(IconButton)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  backgroundColor: "rgba(28, 40, 58, 0.8)",
+  backdropFilter: "blur(10px)",
+  "&:hover": {
+    backgroundColor: "rgba(28, 40, 58, 0.9)",
+  },
+}));
+
+const SearchBar = styled(TextField)(({ theme }) => ({
+  "& .MuiOutlinedInput-root": {
+    backgroundColor: "rgba(28, 40, 58, 0.8)",
+    backdropFilter: "blur(10px)",
+    "& fieldset": {
+      borderColor: "transparent",
+    },
+    "&:hover fieldset": {
+      borderColor: theme.palette.primary.main,
+    },
+  },
+}));
+
+const BottomNav = styled(Paper)(({ theme }) => ({
+  position: "absolute",
+  bottom: theme.spacing(4),
+  left: "50%",
+  transform: "translateX(-50%)",
+  padding: theme.spacing(2),
+  display: "flex",
+  gap: theme.spacing(4),
+  backgroundColor: "rgba(28, 40, 58, 0.8)",
+  backdropFilter: "blur(10px)",
+  borderRadius: theme.spacing(2),
+}));
 
 const MapHomeLayout = () => {
   const [viewState, setViewState] = useState({
@@ -22,8 +59,9 @@ const MapHomeLayout = () => {
   });
 
   return (
-    <div className="h-screen w-full flex flex-col relative bg-slate-900">
-      {/* Map Layer */}
+    <Box
+      sx={{ height: "calc(100vh - 64px)", width: "100%", position: "relative" }}
+    >
       <Map
         {...viewState}
         onMove={(evt) => setViewState(evt.viewState)}
@@ -35,57 +73,43 @@ const MapHomeLayout = () => {
         <NavigationControl position="top-right" />
       </Map>
 
-      {/* Search Overlay */}
-      <div className="absolute top-0 left-0 right-0 p-4 z-10">
-        <div className="flex gap-2">
-          <Button
-            isIconOnly
-            color="default"
-            className="bg-slate-800/80 backdrop-blur-md"
-          >
-            <ChevronLeft />
-          </Button>
-          <Input
-            classNames={{
-              input: "text-white",
-              base: "bg-slate-800/80 backdrop-blur-md",
-            }}
-            placeholder="Find adventures near you..."
-            startContent={<Search className="text-default-400" size={20} />}
-          />
-        </div>
-      </div>
+      <Box
+        sx={{
+          position: "absolute",
+          top: 16,
+          left: 16,
+          right: 16,
+          display: "flex",
+          gap: 1,
+        }}
+      >
+        <NavButton size="large">
+          <ChevronLeft />
+        </NavButton>
+        <SearchBar
+          fullWidth
+          placeholder="Find adventures near you..."
+          InputProps={{
+            startAdornment: <Search className="mr-4 text-gray-400" size={20} />,
+          }}
+        />
+      </Box>
 
-      {/* Bottom Navigation */}
-      <div className="absolute bottom-0 left-0 right-0 p-4">
-        <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-4 mx-auto max-w-md flex justify-around">
-          <Button
-            isIconOnly
-            variant="light"
-            className="text-blue-500"
-            startContent={<MapPin size={24} />}
-          />
-          <Button
-            isIconOnly
-            variant="light"
-            className="text-default-400"
-            startContent={<Star size={24} />}
-          />
-          <Button
-            isIconOnly
-            variant="light"
-            className="text-default-400"
-            startContent={<CalendarDays size={24} />}
-          />
-          <Button
-            isIconOnly
-            variant="light"
-            className="text-default-400"
-            startContent={<User size={24} />}
-          />
-        </div>
-      </div>
-    </div>
+      <BottomNav elevation={0}>
+        <NavButton>
+          <MapPin />
+        </NavButton>
+        <NavButton>
+          <Star />
+        </NavButton>
+        <NavButton>
+          <CalendarDays />
+        </NavButton>
+        <NavButton>
+          <User />
+        </NavButton>
+      </BottomNav>
+    </Box>
   );
 };
 
