@@ -91,7 +91,7 @@ const MapHomeLayout = () => {
             <GeolocateControl
               position="top-left"
               style={{
-                top: theme.spacing(10),
+                top: theme.spacing(500),
                 left: 0,
               }}
             />
@@ -100,7 +100,7 @@ const MapHomeLayout = () => {
               position="top-left"
               style={{
                 ...navigationControlStyle,
-                top: theme.spacing(10),
+                top: theme.spacing(50),
                 left: 0,
               }}
             />
