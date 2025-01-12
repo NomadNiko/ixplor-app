@@ -1,4 +1,8 @@
-import { TourSchedule } from '@/types/vendor-types';
+// src/mock-data/types/tour-schedules.ts
+import { TourProduct } from '@/types/vendor-types';
+
+// Using the type from TourProduct's schedule property
+type TourSchedule = TourProduct['schedule'][0];
 
 export const mockTourSchedules: TourSchedule[] = [
   {
@@ -17,6 +21,5 @@ export const mockTourSchedules: TourSchedule[] = [
       snowCondition: "powder"
     },
     notes: "Perfect conditions expected"
-  },
-  // Add additional tour schedules...
+  }
 ];

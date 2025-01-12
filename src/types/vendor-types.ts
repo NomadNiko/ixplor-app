@@ -1,83 +1,8 @@
-export type VendorStatus = "pending" | "published" | "rejected";
-export type VendorType = "rentals" | "tickets" | "lessons" | "tours";
+// src/types/vendor-types.ts
 
-// Tour-specific types
-export interface WeatherForecast {
-  condition: string;
-  temperature: number;
-  snowCondition?: string;
-  sunset?: string;
-  chanceOfRain?: number;
-}
+export type VendorStatus = "published" | "pending" | "draft";
 
-export interface MeetingPoint {
-  name: string;
-  coordinates: {
-    lat: number;
-    lng: number;
-  };
-  description: string;
-}
-
-export interface Guide {
-  id: string;
-  name: string;
-  photo: string;
-  certifications: string[];
-  experience: string;
-  languages: string[];
-  specialties: string[];
-  availability: 'full-time' | 'part-time';
-  rating: number;
-  totalTours: number;
-}
-
-export interface CalendarEvent {
-  id: string;
-  productId: string;
-  date: string;
-  startTime: string;
-  endTime: string;
-  status: 'available' | 'booked' | 'cancelled';
-  currentBookings: number;
-  meetingPoint: string;
-  guideId: string;
-  weatherForecast?: WeatherForecast;
-  notes?: string;
-}
-
-export interface SeasonalAvailability {
-  startDate: string;
-  endDate: string;
-}
-
-export interface TourProduct {
-  id: string;
-  name: string;
-  description: string;
-  duration: string;
-  price: number;
-  maxParticipants: number;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  rating: number;
-  totalReviews: number;
-  seasonalAvailability: SeasonalAvailability;
-  requirements: string[];
-  includes: string[];
-  meetingPoint: MeetingPoint;
-  guide: Guide;
-  schedule: CalendarEvent[];
-}
-
-// Keep existing types
-export interface MaintenanceScheduleItem {
-  id: string;
-  startDate: string;
-  endDate: string;
-  reason: string;
-  itemCount: number;
-}
-
+// Equipment/Rental Types
 export interface Size {
   id: string;
   label: string;
@@ -86,6 +11,14 @@ export interface Size {
   pricePerHour: number;
   pricePerDay: number;
   pricePerWeek: number;
+}
+
+export interface MaintenanceSchedule {
+  id: string;
+  startDate: string;
+  endDate: string;
+  reason: string;
+  itemCount: number;
 }
 
 export interface RentalProduct {
@@ -102,13 +35,14 @@ export interface RentalProduct {
   sizes: Size[];
   condition: string;
   lastServiced: string;
-  maintenanceSchedule: MaintenanceScheduleItem[];
+  maintenanceSchedule: MaintenanceSchedule[];
 }
 
+// Ticket Types
 export interface TicketProduct {
   id: string;
   name: string;
-  type: "season-pass" | "day-pass" | "multi-day" | "half-day";
+  type: string;
   description: string;
   price: number;
   validFrom: string;
@@ -119,29 +53,93 @@ export interface TicketProduct {
   restrictions: string;
 }
 
+// Lesson Types
 export interface LessonProduct {
   id: string;
   name: string;
   instructor: string;
   duration: string;
   price: number;
-  status: 'available' | 'booked' | 'requested';
-  scheduledDate?: string;
+  status: string;
   expertise: string;
   languages: string[];
   maxStudents: number;
   includes: string[];
   requirements: string;
+  scheduledDate?: string;
 }
 
+export interface TourSchedule {
+  id: string;
+  productId: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  status: string;
+  currentBookings: number;
+  meetingPoint: string;
+  guideId: string;
+  weatherForecast?: {
+    condition: string;
+    temperature: number;
+    snowCondition?: string;
+    sunset?: string;
+  };
+  notes?: string;
+}
+
+export interface TourTemplate {
+  id: string;
+  name: string;
+  description: string;
+  duration: string;
+  price: number;
+  maxParticipants: number;
+  difficulty: string;
+  rating: number;
+  totalReviews: number;
+  seasonalAvailability: {
+    startDate: string;
+    endDate: string;
+  };
+  requirements: string[];
+  includes: string[];
+  meetingPoint: {
+    name: string;
+    coordinates: {
+      lat: number;
+      lng: number;
+    };
+    description: string;
+  };
+  guide: {
+    id: string;
+    name: string;
+    photo: string;
+    certifications: string[];
+    experience: string;
+    languages: string[];
+    specialties: string[];
+    availability: string;
+    rating: number;
+    totalTours: number;
+  };
+}
+
+// TourProduct extends TourTemplate and adds schedule
+export interface TourProduct extends TourTemplate {
+  schedule: TourSchedule[];
+}
+
+// Main Vendor Type
 export interface VendorProfileDetails {
   id: string;
   name: string;
-  type: VendorType;
+  type: "tours" | "tickets" | "rentals" | "lessons";
   description: string;
   status: VendorStatus;
-  actionRequired?: string;
   lastUpdated: string;
+  actionRequired?: string;
   tours?: TourProduct[];
   tickets?: TicketProduct[];
   rentals?: RentalProduct[];
