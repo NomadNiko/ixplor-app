@@ -19,6 +19,7 @@ import IconButton from "@mui/material/IconButton";
 import ClearOutlinedIcon from "@mui/icons-material/ClearOutlined";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageList from "@mui/material/ImageList";
+import Image from "next/image";
 
 type ImagePickerProps = {
   error?: string;
@@ -141,7 +142,7 @@ function ImagePicker(props: ImagePickerProps) {
                   />
                 </IconButton>
               </StyledOverlay>
-              <img src={props.value.path} loading="lazy" />
+              <Image src={props.value.path} alt="Uploaded image" loading="lazy" />
             </ImageListItem>
           </ImageList>
         </>

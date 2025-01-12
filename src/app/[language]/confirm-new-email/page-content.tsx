@@ -16,6 +16,7 @@ import { useTranslation } from "@/services/i18n/client";
 import useAuthActions from "@/services/auth/use-auth-actions";
 import useAuth from "@/services/auth/use-auth";
 
+
 export default function ConfirmNewEmail() {
   const { enqueueSnackbar } = useSnackbar();
   const fetchConfirmNewEmail = useAuthConfirmNewEmailService();
@@ -70,6 +71,7 @@ export default function ConfirmNewEmail() {
     t,
     isLoaded,
     setUser,
+    user,
     fetchAuthGetMe,
   ]);
 
