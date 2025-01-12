@@ -1,6 +1,6 @@
-import { TourProduct } from '@/types/vendor-types';
+import { TourTemplate } from '@/types/vendor-types';
 
-export const mockTourTemplates: Omit<TourProduct, 'schedule'>[] = [
+export const mockTourTemplates: TourTemplate[] = [
   {
     id: "tr1",
     name: "Backcountry Powder Adventure",
@@ -40,7 +40,7 @@ export const mockTourTemplates: Omit<TourProduct, 'schedule'>[] = [
       photo: "/img/guides/mike-thompson.jpg",
       certifications: [
         "AMGA Ski Guide",
-        "Wilderness First Responder", 
+        "Wilderness First Responder",
         "Avalanche Level 3 Certified"
       ],
       experience: "15 years backcountry guiding",
@@ -50,5 +50,6 @@ export const mockTourTemplates: Omit<TourProduct, 'schedule'>[] = [
       rating: 4.9,
       totalTours: 156
     }
-  }
+  },
+  // Add additional tour templates...
 ];

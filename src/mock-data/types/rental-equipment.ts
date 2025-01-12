@@ -1,6 +1,6 @@
 import { RentalProduct } from '@/types/vendor-types';
 
-const skiPackageMaintenance = [
+const rentalEquipmentMaintenance = [
   {
     id: "m1",
     startDate: "2024-01-01",
@@ -43,7 +43,7 @@ export const mockRentalEquipment: RentalProduct[] = [
     ],
     condition: "excellent",
     lastServiced: "2024-01-01",
-    maintenanceSchedule: skiPackageMaintenance
+    maintenanceSchedule: rentalEquipmentMaintenance
   },
   // Additional rental equipment...
 ];
