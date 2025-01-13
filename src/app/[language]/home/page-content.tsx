@@ -183,8 +183,8 @@ const MapHomeLayout = () => {
           <Box
             sx={{
               width: { xs: "100%", md: "100%" },
-              position: { xs: "fixed", md: "relative" },
-              bottom: { xs: 0, md: theme.spacing(2) },
+              position: "fixed",
+              bottom: 0,
               left: { xs: 0, md: "auto" },
               right: { xs: 0, md: "auto" },
               padding: theme.spacing(2),
