@@ -153,26 +153,26 @@ const MapHomeLayout = () => {
               size="small"
             >
               <ToggleButton value="tours">
-                <Binoculars size={16} />
-                <Box component="span" sx={{ ml: 0.5, fontSize: "0.85rem" }}>
+                <Binoculars size={14} />
+                <Box component="span" sx={{ ml: 0.5, fontSize: "0.60rem" }}>
                   Tours
                 </Box>
               </ToggleButton>
               <ToggleButton value="lessons">
-                <GraduationCap size={16} />
-                <Box component="span" sx={{ ml: 0.5, fontSize: "0.85rem" }}>
+                <GraduationCap size={14} />
+                <Box component="span" sx={{ ml: 0.5, fontSize: "0.60rem" }}>
                   Lessons
                 </Box>
               </ToggleButton>
               <ToggleButton value="rentals">
-                <Timer size={16} />
-                <Box component="span" sx={{ ml: 0.5, fontSize: "0.85rem" }}>
+                <Timer size={14} />
+                <Box component="span" sx={{ ml: 0.5, fontSize: "0.60rem" }}>
                   Rentals
                 </Box>
               </ToggleButton>
               <ToggleButton value="tickets">
-                <Ticket size={16} />
-                <Box component="span" sx={{ ml: 0.5, fontSize: "0.85rem" }}>
+                <Ticket size={14} />
+                <Box component="span" sx={{ ml: 0.5, fontSize: "0.60rem" }}>
                   Tickets
                 </Box>
               </ToggleButton>
