@@ -14,9 +14,9 @@ const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
 const MapHomeLayout = () => {
   const [viewState, setViewState] = useState({
-    latitude: 21.2850,
-    longitude: -157.8356,
-    zoom: 14,
+    latitude: 21.277,
+    longitude: -157.826,
+    zoom: 13,
   });
   const [selectedVendor, setSelectedVendor] = useState<VendorLocation | null>(null);
   const [showFullView, setShowFullView] = useState(false);
