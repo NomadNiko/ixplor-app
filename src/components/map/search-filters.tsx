@@ -1,4 +1,3 @@
-"use client";
 import { Search, Binoculars, GraduationCap, Timer, Ticket } from "lucide-react";
 import Box from "@mui/material/Box";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -34,7 +33,11 @@ export const SearchFilters = ({ filterType, onFilterChange }: SearchFiltersProps
     
     <StyledToggleButtonGroup
       value={filterType}
-      onChange={onFilterChange}
+      onChange={(event, newFilters) => {
+        // Allow for empty selection
+        onFilterChange(event, newFilters || []);
+      }}
+      aria-label="filter types"
       fullWidth
       size="small"
     >

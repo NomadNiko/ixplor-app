@@ -20,7 +20,7 @@ const MapHomeLayout = () => {
   });
   const [selectedVendor, setSelectedVendor] = useState<VendorLocation | null>(null);
   const [showFullView, setShowFullView] = useState(false);
-  const [filterType, setFilterType] = useState<FilterType>(["tours"]);
+  const [filterType, setFilterType] = useState<FilterType>([]); // Initialize with empty array
   
   const theme = useTheme();
   
@@ -33,13 +33,12 @@ const MapHomeLayout = () => {
   };
 
   const handleFilterChange = (event: React.MouseEvent<HTMLElement>, newFilterTypes: FilterType) => {
-    if (newFilterTypes.length > 0) {
-      setFilterType(newFilterTypes);
-    }
+    setFilterType(newFilterTypes);
   };
 
+  // Show all vendors if no filters are selected
   const filteredVendors = vendorLocations.features.filter(
-    vendor => filterType.includes(vendor.properties.vendorType)
+    vendor => filterType.length === 0 || filterType.includes(vendor.properties.vendorType)
   );
 
   return (
@@ -87,7 +86,6 @@ const MapHomeLayout = () => {
           onClose={() => setSelectedVendor(null)}
         />
       )}
-
       {selectedVendor && showFullView && (
         <VendorFullView
           vendor={selectedVendor}
