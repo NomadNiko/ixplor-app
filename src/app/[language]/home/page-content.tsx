@@ -20,10 +20,14 @@ import {
   GraduationCap,
 } from "lucide-react";
 
-const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+// Import our vendor components and data
+import { VendorMarker, VendorShortView, VendorFullView } from "@/components/vendor/vendor-display";
+import vendorLocations, { VendorLocation } from "@/components/mock-data/vendor-location";
 
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 type FilterType = Array<"tours" | "lessons" | "rentals" | "tickets">;
 
+// Styled components from the original file
 const NavButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.primary.light,
   backgroundColor: theme.palette.background.glass,
@@ -63,14 +67,20 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 }));
 
 const MapHomeLayout = () => {
+  // State for map view
   const [viewState, setViewState] = useState({
     latitude: 21.2850,
     longitude: -157.8356,
     zoom: 14,
   });
 
+  // State for vendor display
+  const [selectedVendor, setSelectedVendor] = useState<VendorLocation | null>(null);
+  const [showFullView, setShowFullView] = useState(false);
+  
+  // State for filtering
   const [filterType, setFilterType] = useState<FilterType>(["tours"]);
-
+  
   const handleFilterChange = (
     event: React.MouseEvent<HTMLElement>,
     newFilterTypes: FilterType
@@ -82,7 +92,8 @@ const MapHomeLayout = () => {
   };
 
   const theme = useTheme();
-
+  
+  // Map control styling
   const controlStyle: CSSProperties = {
     padding: theme.spacing(1),
     backgroundColor: theme.palette.background.glass,
@@ -90,6 +101,11 @@ const MapHomeLayout = () => {
     color: theme.palette.primary.main,
     borderRadius: theme.shape.borderRadius,
   };
+
+  // Filter vendors based on selected types
+  const filteredVendors = vendorLocations.features.filter(
+    vendor => filterType.includes(vendor.properties.vendorType)
+  );
 
   return (
     <Box
@@ -105,16 +121,28 @@ const MapHomeLayout = () => {
         <Box
           sx={{
             position: "absolute",
-
             zIndex: -100,
             display: "flex",
             flexDirection: "column",
             gap: 1,
-            pointerEvents: "auto", // Explicitly enable pointer events
+            pointerEvents: "auto",
           }}
         >
           <GeolocateControl position="top-right" style={controlStyle} />
         </Box>
+        
+        {/* Display filtered vendor markers */}
+        {filteredVendors.map((vendor) => (
+          <VendorMarker
+            key={vendor.properties.businessName}
+            vendor={vendor}
+            onClick={() => {
+              setSelectedVendor(vendor);
+              setShowFullView(false);
+            }}
+          />
+        ))}
+
         <Container
           maxWidth="md"
           sx={{
@@ -138,7 +166,6 @@ const MapHomeLayout = () => {
               zIndex: 1,
             }}
           >
-
             <SearchBar
               placeholder="  Find adventures near you..."
               InputProps={{
@@ -149,7 +176,7 @@ const MapHomeLayout = () => {
                 alignSelf: "flex-start",
               }}
             />
-
+            
             <StyledToggleButtonGroup
               value={filterType}
               onChange={handleFilterChange}
@@ -183,6 +210,7 @@ const MapHomeLayout = () => {
             </StyledToggleButtonGroup>
           </Box>
 
+          {/* Bottom navigation */}
           <Box
             sx={{
               width: { xs: "100%", md: "100%" },
@@ -227,6 +255,22 @@ const MapHomeLayout = () => {
           </Box>
         </Container>
       </Map>
+
+      {/* Display vendor information */}
+      {selectedVendor && !showFullView && (
+        <VendorShortView
+          vendor={selectedVendor}
+          onViewMore={() => setShowFullView(true)}
+          onClose={() => setSelectedVendor(null)}
+        />
+      )}
+
+      {selectedVendor && showFullView && (
+        <VendorFullView
+          vendor={selectedVendor}
+          onClose={() => setShowFullView(false)}
+        />
+      )}
     </Box>
   );
 };
