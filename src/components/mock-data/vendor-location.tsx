@@ -76,12 +76,171 @@ const vendorLocations = {
           'country': 'United States',
           'logoUrl': 'https://alohasunshinetours.com/wp-content/uploads/sites/1826/2018/10/AST-LOGO-WITH-SHADOW.png?h=120&zoom=2'
         }
-      }
-    ]
-  } as const;
+      },
+      {
+        'type': 'Feature',
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [-157.824874, 21.275486]
+        },
+        'properties': {
+          'businessName': 'Waikiki Beach Rentals',
+          'description': 'Beach Equipment Rentals',
+          'vendorType': 'rentals',
+          'website': 'https://waikikibeachrentals.com/',
+          'address': '2410 Koa Ave',
+          'city': 'Honolulu',
+          'state': 'HI',
+          'postalCode': '96815',
+          'country': 'United States',
+          'logoUrl': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpQz9q26qAammLYqh6jygw7-vjz-EO2B9hGg&s'
+        }
+      },
+      {
+        'type': 'Feature',
+        'geometry': {
+          'type': 'Point',
+          'coordinates': [-157.816987, 21.286197]
+        },
+        'properties': {
+          'businessName': 'Honolulu Zoo',
+          'description': 'Zoo',
+          'vendorType': 'tickets',
+          'website': 'https://honoluluzoo.org/',
+          'address': '151 Kapahulu Ave',
+          'city': 'Honolulu',
+          'state': 'HI',
+          'postalCode': '96815',
+          'country': 'United States',
+          'logoUrl': 'https://www.citypass.com/sites/default/files/styles/city_120x120/public/2022-04/honolulu-zoo-logo-120x120.png'
+        }
+      },
+      {
+            'type': 'Feature',
+            'geometry': {
+              'type': 'Point',
+              'coordinates': [-157.853781, 21.274392]
+            },
+            'properties': {
+              'businessName': 'Iolani Palace',
+              'description': 'Historical Landmark',
+              'vendorType': 'tickets',
+              'website': 'https://www.iolanipalace.org/',
+              'address': '364 S King St',
+              'city': 'Honolulu',
+              'state': 'HI',
+              'postalCode': '96813',
+              'country': 'United States',
+              'logoUrl': 'https://drupal8-prod.visittheusa.com/sites/default/files/styles/hero_l_x2/public/images/hero_media_image/2017-01/IolaniPalace_Honolulu_Hawaii_02_web720.jpg'
+            }
+          },{
+            'type': 'Feature',
+            'geometry': {
+              'type': 'Point',
+              'coordinates': [-157.843447, 21.286597]
+            },
+            'properties': {
+              'businessName': 'Waikiki Surf School',
+              'description': 'Learn to surf with experienced instructors',
+              'vendorType': 'lessons',
+              'website': 'https://waikikisurfschool.com/',
+              'address': '2420 Koa Ave',
+              'city': 'Honolulu',
+              'state': 'HI',
+              'postalCode': '96815',
+              'country': 'United States',
+              'logoUrl': 'https://www.waikikisurfschool.com/wp-content/uploads/2019/03/cropped-favicon-1-192x192.png'
+            }
+          },
+          {
+            'type': 'Feature',
+            'geometry': {
+              'type': 'Point',
+              'coordinates': [-157.837447, 21.289597]
+            },
+            'properties': {
+              'businessName': 'Hula Lessons with Aloha',
+              'description': 'Immerse yourself in the Hawaiian Culture',
+              'vendorType': 'lessons',
+              'website': 'https://www.hulahula.com/',
+              'address': '134 Kapahulu Ave',
+              'city': 'Honolulu',
+              'state': 'HI',
+              'postalCode': '96815',
+              'country': 'United States',
+              'logoUrl': 'https://www.hulahula.com/wp-content/uploads/2019/03/cropped-favicon-1-192x192.png'
+            }
+          },
+          {
+            'type': 'Feature',
+            'geometry': {
+              'type': 'Point',
+              'coordinates': [-157.8241926, 21.2848128]
+            },
+            'properties': {
+              'businessName': 'Waikiki Segway Tours',
+              'description': 'Guided Segway Tours',
+              'vendorType': 'tours',
+              'website': 'https://www.hawaiiadventours.com/',
+              'address': '2446 Koa Ave',
+              'city': 'Honolulu',
+              'state': 'HI',
+              'postalCode': '96815',
+              'country': 'United States',
+              'logoUrl': 'https://www.hawaiiadventours.com/logo2.png'
+            }
+          },
+          {
+            'type': 'Feature',
+            'geometry': {
+              'type': 'Point',
+              'coordinates': [-157.839213, 21.274345]
+            },
+            'properties': {
+              'businessName': 'Blue Hawaii Surf',
+              'description': 'Surfboard, Paddleboard, Kayak & Boogie Board Rentals',
+              'vendorType': 'rentals',
+              'website': 'https://www.bluehawaiisurf.com/',
+              'address': '2410 Koa Ave',
+              'city': 'Honolulu',
+              'state': 'HI',
+              'postalCode': '96815',
+              'country': 'United States',
+              'logoUrl': 'https://www.bluehawaiisurf.com/cdn/shop/files/bluehawaiisurf_180x.png?v=1673362653'
+            }
+          },
+          {
+            'type': 'Feature',
+            'geometry': {
+              'type': 'Point',
+              'coordinates': [-157.837447, 21.284597]
+            },
+            'properties': {
+              'businessName': 'Island Water Sports Hawaii',
+              'description': 'Jet Ski, Kayak, SUP & Snorkel Rentals',
+              'vendorType': 'rentals',
+              'website': 'https://www.islandwatersportshawaii.com/',
+              'address': '134 Kapahulu Ave',
+              'city': 'Honolulu',
+              'state': 'HI',
+              'postalCode': '96815',
+              'country': 'United States',
+              'logoUrl': 'https://www.islandwatersportshawaii.com/wp-content/uploads/2019/03/cropped-favicon-1-192x192.png'
+            }
+          }
+        ]
+      } as const;
   
   export type VendorLocation = typeof vendorLocations.features[number];
   export type VendorProperties = VendorLocation['properties'];
   export type VendorType = VendorProperties['vendorType'];
   
   export default vendorLocations;
+
+
+
+
+
+
+  
+      
