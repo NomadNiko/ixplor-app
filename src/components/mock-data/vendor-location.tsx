@@ -81,7 +81,7 @@ const vendorLocations = {
         'type': 'Feature',
         'geometry': {
           'type': 'Point',
-          'coordinates': [-157.824874, 21.275486]
+          'coordinates': [-157.824884, 21.275496]
         },
         'properties': {
           'businessName': 'Waikiki Beach Rentals',
@@ -100,7 +100,7 @@ const vendorLocations = {
         'type': 'Feature',
         'geometry': {
           'type': 'Point',
-          'coordinates': [-157.816987, 21.286197]
+          'coordinates': [-157.8189222, 21.2711641]
         },
         'properties': {
           'businessName': 'Honolulu Zoo',
@@ -119,7 +119,7 @@ const vendorLocations = {
             'type': 'Feature',
             'geometry': {
               'type': 'Point',
-              'coordinates': [-157.853781, 21.274392]
+              'coordinates': [-157.858746, 21.3068365]
             },
             'properties': {
               'businessName': 'Iolani Palace',
@@ -137,7 +137,7 @@ const vendorLocations = {
             'type': 'Feature',
             'geometry': {
               'type': 'Point',
-              'coordinates': [-157.843447, 21.286597]
+              'coordinates': [-157.8543744, 21.2925444]
             },
             'properties': {
               'businessName': 'Waikiki Surf School',
