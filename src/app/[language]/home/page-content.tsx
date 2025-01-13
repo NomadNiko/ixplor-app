@@ -1,6 +1,6 @@
 "use client";
 import { useState, type CSSProperties } from "react";
-import Map, { NavigationControl, GeolocateControl } from "react-map-gl";
+import Map, {  GeolocateControl } from "react-map-gl";
 import { styled, useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
@@ -87,6 +87,7 @@ const MapHomeLayout = () => {
     padding: theme.spacing(1),
     backgroundColor: theme.palette.background.glass,
     backdropFilter: "blur(10px)",
+    color: theme.palette.primary.main,
     borderRadius: theme.shape.borderRadius,
   };
 
@@ -112,8 +113,7 @@ const MapHomeLayout = () => {
             pointerEvents: "auto", // Explicitly enable pointer events
           }}
         >
-          <GeolocateControl position= "bottom-right" style={controlStyle} />
-          <NavigationControl position= "bottom-right" style={controlStyle} />
+          <GeolocateControl position= "top-right" style={controlStyle} />
         </Box>
         <Container
           maxWidth="md"
@@ -143,6 +143,9 @@ const MapHomeLayout = () => {
               placeholder="   Find adventures near you..."
               InputProps={{
                 startAdornment: <Search size={20} />,
+                endAdornment: (
+                  <IconButton sx={{ mr: "50px" }} disabled />
+              ),
               }}
             />
 
