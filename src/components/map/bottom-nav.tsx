@@ -5,11 +5,11 @@ import { NavButton } from "./styled-components";
 export const BottomNav = () => (
   <Box
     sx={{
-      width: { xs: "100%", md: "100%" },
+      width: "100",
       position: "fixed",
       bottom: { xs: 0, md: 10 },
-      left: { xs: 0, md: 100 },
-      right: { xs: 0, md: 100 },
+      left: 0,
+      right: 0,
       padding: (theme) => theme.spacing(2),
       backgroundColor: (theme) => theme.palette.background.glass,
       backdropFilter: "blur(10px)",
