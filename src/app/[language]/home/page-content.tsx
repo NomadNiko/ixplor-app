@@ -181,11 +181,11 @@ const MapHomeLayout = () => {
 
           <Box
             sx={{
-              width: { xs: "100%", md: "100%" },
+              width: { xs: "100%", md: "95%" },
               position: "fixed",
-              bottom: 0,
-              left: 0,
-              right: 0,
+              bottom: 20,
+              left: 20,
+              right: 20,
               padding: theme.spacing(2),
               paddingBottom: {
                 xs: `calc(${theme.spacing(2)} + env(safe-area-inset-bottom))`,
@@ -203,7 +203,7 @@ const MapHomeLayout = () => {
                 justifyContent: "space-around",
                 alignItems: "center",
                 width: "100%",
-                height: theme.spacing(7.5),
+                height: theme.spacing(5),
                 pb: { xs: "env(safe-area-inset-bottom)", md: 0 },
               }}
             >
