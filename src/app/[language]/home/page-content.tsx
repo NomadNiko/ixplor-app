@@ -16,7 +16,7 @@ const MapHomeLayout = () => {
   const [viewState, setViewState] = useState({
     latitude: 21.277,
     longitude: -157.826,
-    zoom: 13,
+    zoom: 14,
   });
   const [selectedVendor, setSelectedVendor] = useState<VendorLocation | null>(null);
   const [showFullView, setShowFullView] = useState(false);

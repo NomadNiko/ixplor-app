@@ -81,7 +81,7 @@ const vendorLocations = {
         'type': 'Feature',
         'geometry': {
           'type': 'Point',
-          'coordinates': [-157.824884, 21.275496]
+          'coordinates': [-157.826884, 21.277496]
         },
         'properties': {
           'businessName': 'Waikiki Beach Rentals',
