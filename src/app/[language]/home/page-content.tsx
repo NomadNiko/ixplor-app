@@ -64,9 +64,9 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 
 const MapHomeLayout = () => {
   const [viewState, setViewState] = useState({
-    latitude: 21.285002,
-    longitude: -157.835693,
-    zoom: 10,
+    latitude: 21.2850,
+    longitude: -157.8356,
+    zoom: 14,
   });
 
   const [filterType, setFilterType] = useState<FilterType>(["tours"]);
