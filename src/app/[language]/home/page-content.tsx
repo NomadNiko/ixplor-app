@@ -114,9 +114,10 @@ const MapHomeLayout = () => {
           <Box
             sx={{
               position: "absolute",
-              left: "50%",
-              top: "5%",
-              transform: "translate(-50%, -50%)",
+              right: 0,
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "primary.main",
               zIndex: 1,
             }}
           >
@@ -138,7 +139,7 @@ const MapHomeLayout = () => {
           >
             <SearchBar
               fullWidth
-              placeholder="Find adventures near you..."
+              placeholder="   Find adventures near you..."
               InputProps={{
                 startAdornment: <Search size={20} />,
               }}
