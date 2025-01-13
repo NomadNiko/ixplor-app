@@ -145,7 +145,7 @@ const MapHomeLayout = () => {
                 startAdornment: <Search size={22} />,
               }}
               sx={{
-                width: "88%",
+                width: { xs: "85%", md: "95%" },
                 alignSelf: "flex-start",
               }}
             />
