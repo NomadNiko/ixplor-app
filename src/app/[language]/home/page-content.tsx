@@ -1,12 +1,13 @@
 "use client";
-import { useState, type CSSProperties } from "react";
-import Map, { GeolocateControl } from "react-map-gl";
+import { useState, useRef, type CSSProperties } from "react";
+import Map, { MapRef, GeolocateControl } from "react-map-gl";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { useTheme } from "@mui/material/styles";
 import { SearchFilters } from "@/components/map/search-filters";
 import { BottomNav } from "@/components/map/bottom-nav";
-import { VendorMarker, VendorShortView, VendorFullView } from "@/components/vendor/vendor-display";
+import { VendorShortView, VendorFullView } from "@/components/vendor/vendor-display";
+import { ClusteredVendorMarkers } from "@/components/vendor/clustered-vendor-markers";
 import vendorLocations, { VendorLocation } from "@/components/mock-data/vendor-location";
 import { FilterType } from "@/components/map/types";
 
@@ -20,7 +21,9 @@ const MapHomeLayout = () => {
   });
   const [selectedVendor, setSelectedVendor] = useState<VendorLocation | null>(null);
   const [showFullView, setShowFullView] = useState(false);
-  const [filterType, setFilterType] = useState<FilterType>([]); // Initialize with empty array
+  const [filterType, setFilterType] = useState<FilterType>([]);
+  const [bounds, setBounds] = useState<[number, number, number, number] | undefined>();
+  const mapRef = useRef<MapRef>(null);
   
   const theme = useTheme();
   
@@ -36,10 +39,22 @@ const MapHomeLayout = () => {
     setFilterType(newFilterTypes);
   };
 
-  // Show all vendors if no filters are selected
   const filteredVendors = vendorLocations.features.filter(
     vendor => filterType.length === 0 || filterType.includes(vendor.properties.vendorType)
   );
+
+  const updateBounds = () => {
+    const map = mapRef.current?.getMap();
+    const mapBounds = map?.getBounds();
+    if (mapBounds) {
+      setBounds([
+        mapBounds.getWest(),
+        mapBounds.getSouth(),
+        mapBounds.getEast(),
+        mapBounds.getNorth()
+      ]);
+    }
+  };
 
   return (
     <Box sx={{ height: "calc(100vh - 64px)", width: "100%", position: "relative" }}>
@@ -49,19 +64,21 @@ const MapHomeLayout = () => {
         mapStyle="mapbox://styles/mapbox/dark-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
         style={{ width: "100%", height: "100%" }}
+        ref={mapRef}
+        onLoad={updateBounds}
+        onMoveEnd={updateBounds}
       >
         <GeolocateControl position="top-right" style={controlStyle} />
         
-        {filteredVendors.map((vendor) => (
-          <VendorMarker
-            key={vendor.properties.businessName}
-            vendor={vendor}
-            onClick={() => {
-              setSelectedVendor(vendor);
-              setShowFullView(false);
-            }}
-          />
-        ))}
+        <ClusteredVendorMarkers
+          vendors={filteredVendors}
+          onClick={(vendor) => {
+            setSelectedVendor(vendor);
+            setShowFullView(false);
+          }}
+          bounds={bounds}
+          zoom={viewState.zoom}
+        />
 
         <Container maxWidth="md" sx={{
           height: "100%",
@@ -86,6 +103,7 @@ const MapHomeLayout = () => {
           onClose={() => setSelectedVendor(null)}
         />
       )}
+      
       {selectedVendor && showFullView && (
         <VendorFullView
           vendor={selectedVendor}

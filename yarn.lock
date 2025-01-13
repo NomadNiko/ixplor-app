@@ -4461,7 +4461,7 @@
     "@types/node" "*"
     iconv-lite "^0.6.3"
 
-"@types/mapbox-gl@>=1.0.0":
+"@types/mapbox-gl@>=1.0.0", "@types/mapbox-gl@^3.4.1":
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/@types/mapbox-gl/-/mapbox-gl-3.4.1.tgz#b6a1b81b802e62fb7e1d1d13a97ccece63b232a3"
   integrity sha512-NsGKKtgW93B+UaLPti6B7NwlxYlES5DpV5Gzj9F75rK5ALKsqSk15CiEHbOnTr09RGbr6ZYiCdI+59NNNcAImg==
@@ -12015,6 +12015,14 @@ use-composed-ref@^1.3.0:
   resolved "https://registry.yarnpkg.com/use-composed-ref/-/use-composed-ref-1.4.0.tgz#09e023bf798d005286ad85cd20674bdf5770653b"
   integrity sha512-djviaxuOOh7wkj0paeO1Q/4wMZ8Zrnag5H6yBvzN7AKKe8beOaED9SF5/ByLqsku8NP4zQqsvM2u3ew/tJK8/w==
 
+use-deep-compare-effect@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/use-deep-compare-effect/-/use-deep-compare-effect-1.8.1.tgz#ef0ce3b3271edb801da1ec23bf0754ef4189d0c6"
+  integrity sha512-kbeNVZ9Zkc0RFGpfMN3MNfaKNvcLNyxOAAd9O4CBZ+kCBXXscn9s/4I+8ytUER4RDpEYs5+O6Rs4PqiZ+rHr5Q==
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    dequal "^2.0.2"
+
 use-isomorphic-layout-effect@^1.1.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/use-isomorphic-layout-effect/-/use-isomorphic-layout-effect-1.2.0.tgz#afb292eb284c39219e8cb8d3d62d71999361a21d"
@@ -12026,6 +12034,14 @@ use-latest@^1.2.1:
   integrity sha512-mhg3xdm9NaM8q+gLT8KryJPnRFOz1/5XPBhmDEVZK1webPzDjrPk7f/mbpeLqTgB9msytYWANxgALOCJKnLvcQ==
   dependencies:
     use-isomorphic-layout-effect "^1.1.1"
+
+use-supercluster@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/use-supercluster/-/use-supercluster-1.2.0.tgz#f61cfa833d3ab0cc62b627e961b31d41b2d14483"
+  integrity sha512-yVsFzcsLqoa4w43r+RcYGLEWfhpeUaGu86dVFA+iDSw6eVwFSrzKN6g1GhcLZg7/BdKm2Gp1fRZ+O+AgcbqF+w==
+  dependencies:
+    dequal "^2.0.3"
+    use-deep-compare-effect "^1.8.1"
 
 utf7@>=1.0.2:
   version "1.0.2"
