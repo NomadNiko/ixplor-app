@@ -64,9 +64,9 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 
 const MapHomeLayout = () => {
   const [viewState, setViewState] = useState({
-    latitude: 40.7128,
-    longitude: -74.006,
-    zoom: 12,
+    latitude: 21.285002,
+    longitude: -157.835693,
+    zoom: 10,
   });
 
   const [filterType, setFilterType] = useState<FilterType>(["tours"]);
@@ -142,10 +142,10 @@ const MapHomeLayout = () => {
             <SearchBar
               placeholder="  Find adventures near you..."
               InputProps={{
-                startAdornment: <Search size={20} />,
+                startAdornment: <Search size={22} />,
               }}
               sx={{
-                width: "80%",
+                width: "88%",
                 alignSelf: "flex-start",
               }}
             />
@@ -185,11 +185,11 @@ const MapHomeLayout = () => {
 
           <Box
             sx={{
-              width: { xs: "100%", md: "60%" },
+              width: { xs: "100%", md: "100%" },
               position: "fixed",
-              bottom: 0,
-              left: 0,
-              right: 0,
+              bottom: { xs: 0, md: 10 },
+              left: { xs: 0, md: 100 },
+              right: { xs: 0, md: 100 },
               padding: theme.spacing(2),
               paddingBottom: {
                 xs: `calc(${theme.spacing(2)} + env(safe-area-inset-bottom))`,
