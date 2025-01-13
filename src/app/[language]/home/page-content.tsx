@@ -25,7 +25,7 @@ const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 type FilterType = Array<"tours" | "lessons" | "rentals" | "tickets">;
 
 const NavButton = styled(IconButton)(({ theme }) => ({
-  color: theme.palette.primary.main,
+  color: theme.palette.primary.light,
   backgroundColor: theme.palette.background.glass,
   backdropFilter: "blur(10px)",
   "&:hover": {
@@ -94,21 +94,6 @@ const MapHomeLayout = () => {
     <Box
       sx={{ height: "calc(100vh - 64px)", width: "100%", position: "relative" }}
     >
-      <Box
-        sx={{
-          position: "absolute",
-          right: theme.spacing(4), // Give some padding from right edge
-          top: "65%", // Position lower on page
-          zIndex: 1,
-          display: "flex",
-          flexDirection: "column",
-          gap: 1,
-          pointerEvents: "auto", // Explicitly enable pointer events
-        }}
-      >
-        <GeolocateControl style={controlStyle} />
-        <NavigationControl style={controlStyle} />
-      </Box>
       <Map
         {...viewState}
         onMove={(evt) => setViewState(evt.viewState)}
@@ -116,6 +101,20 @@ const MapHomeLayout = () => {
         mapboxAccessToken={MAPBOX_TOKEN}
         style={{ width: "100%", height: "100%" }}
       >
+        <Box
+          sx={{
+            position: "absolute",
+            
+            zIndex: -100,
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
+            pointerEvents: "auto", // Explicitly enable pointer events
+          }}
+        >
+          <GeolocateControl style={controlStyle} />
+          <NavigationControl style={controlStyle} />
+        </Box>
         <Container
           maxWidth="md"
           sx={{
