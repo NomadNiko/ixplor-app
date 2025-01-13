@@ -1,6 +1,6 @@
 "use client";
 import { useState, type CSSProperties } from "react";
-import Map, {  GeolocateControl } from "react-map-gl";
+import Map, { GeolocateControl } from "react-map-gl";
 import { styled, useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
@@ -105,7 +105,7 @@ const MapHomeLayout = () => {
         <Box
           sx={{
             position: "absolute",
-            
+
             zIndex: -100,
             display: "flex",
             flexDirection: "column",
@@ -113,7 +113,7 @@ const MapHomeLayout = () => {
             pointerEvents: "auto", // Explicitly enable pointer events
           }}
         >
-          <GeolocateControl position= "top-right" style={controlStyle} />
+          <GeolocateControl position="top-right" style={controlStyle} />
         </Box>
         <Container
           maxWidth="md"
@@ -138,14 +138,15 @@ const MapHomeLayout = () => {
               zIndex: 1,
             }}
           >
+
             <SearchBar
-              fullWidth
-              placeholder="   Find adventures near you..."
+              placeholder="  Find adventures near you..."
               InputProps={{
                 startAdornment: <Search size={20} />,
-                endAdornment: (
-                  <IconButton sx={{ mr: "50px" }} disabled />
-              ),
+              }}
+              sx={{
+                width: "80%",
+                alignSelf: "flex-start",
               }}
             />
 
@@ -184,11 +185,11 @@ const MapHomeLayout = () => {
 
           <Box
             sx={{
-              width: { xs: "100%", md: "95%" },
+              width: { xs: "100%", md: "60%" },
               position: "fixed",
-              bottom: 20,
-              left: 20,
-              right: 20,
+              bottom: 0,
+              left: 0,
+              right: 0,
               padding: theme.spacing(2),
               paddingBottom: {
                 xs: `calc(${theme.spacing(2)} + env(safe-area-inset-bottom))`,
