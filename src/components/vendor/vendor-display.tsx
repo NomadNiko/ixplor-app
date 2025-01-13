@@ -63,6 +63,7 @@ export const VendorShortView: React.FC<{
            src={logoUrl} 
            alt={businessName}
            className="w-16 h-16 object-contain"
+           width="200"
          />
          <Box className="flex-1">
            <Typography variant="h6" className="text-white">
