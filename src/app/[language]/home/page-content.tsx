@@ -94,6 +94,21 @@ const MapHomeLayout = () => {
     <Box
       sx={{ height: "calc(100vh - 64px)", width: "100%", position: "relative" }}
     >
+      <Box
+        sx={{
+          position: "absolute",
+          right: theme.spacing(4), // Give some padding from right edge
+          top: "65%", // Position lower on page
+          zIndex: 1,
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+          pointerEvents: "auto", // Explicitly enable pointer events
+        }}
+      >
+        <GeolocateControl style={controlStyle} />
+        <NavigationControl style={controlStyle} />
+      </Box>
       <Map
         {...viewState}
         onMove={(evt) => setViewState(evt.viewState)}
@@ -101,21 +116,6 @@ const MapHomeLayout = () => {
         mapboxAccessToken={MAPBOX_TOKEN}
         style={{ width: "100%", height: "100%" }}
       >
-        <Box
-          sx={{
-            position: "absolute",
-            right: theme.spacing(4), // Give some padding from right edge
-            top: "65%", // Position lower on page
-            zIndex: 1,
-            display: "flex",
-            flexDirection: "column",
-            gap: 1,
-            pointerEvents: "auto", // Explicitly enable pointer events
-          }}
-        >
-          <GeolocateControl style={controlStyle} />
-          <NavigationControl style={controlStyle} />
-        </Box>
         <Container
           maxWidth="md"
           sx={{
@@ -185,8 +185,8 @@ const MapHomeLayout = () => {
               width: { xs: "100%", md: "100%" },
               position: "fixed",
               bottom: 0,
-              left: { xs: 0, md: "auto" },
-              right: { xs: 0, md: "auto" },
+              left: 0,
+              right: 0,
               padding: theme.spacing(2),
               paddingBottom: {
                 xs: `calc(${theme.spacing(2)} + env(safe-area-inset-bottom))`,
