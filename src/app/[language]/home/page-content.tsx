@@ -22,7 +22,7 @@ import {
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-type FilterType = Array<'tours' | 'lessons' | 'rentals' | 'tickets'>;
+type FilterType = Array<"tours" | "lessons" | "rentals" | "tickets">;
 
 const NavButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -69,7 +69,7 @@ const MapHomeLayout = () => {
     zoom: 12,
   });
 
-  const [filterType, setFilterType] = useState<FilterType>(['tours']);
+  const [filterType, setFilterType] = useState<FilterType>(["tours"]);
 
   const handleFilterChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -101,6 +101,21 @@ const MapHomeLayout = () => {
         mapboxAccessToken={MAPBOX_TOKEN}
         style={{ width: "100%", height: "100%" }}
       >
+        <Box
+          sx={{
+            position: "absolute",
+            right: theme.spacing(4), // Give some padding from right edge
+            top: "65%", // Position lower on page
+            zIndex: 1,
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
+            pointerEvents: "auto", // Explicitly enable pointer events
+          }}
+        >
+          <GeolocateControl style={controlStyle} />
+          <NavigationControl style={controlStyle} />
+        </Box>
         <Container
           maxWidth="md"
           sx={{
@@ -112,22 +127,6 @@ const MapHomeLayout = () => {
             "& > *": { pointerEvents: "auto" },
           }}
         >
-          <Box
-            sx={{
-              position: "absolute",
-              right: theme.spacing(4), // Give some padding from right edge
-              top: "65%", // Position lower on page
-              zIndex: 1,
-              display: "flex",
-              flexDirection: "column",
-              gap: 1,
-              pointerEvents: "auto", // Explicitly enable pointer events
-            }}
-          >
-            <GeolocateControl style={controlStyle} />
-            <NavigationControl style={controlStyle} />
-          </Box>
-
           <Box
             sx={{
               position: "absolute",
