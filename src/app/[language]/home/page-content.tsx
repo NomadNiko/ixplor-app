@@ -112,8 +112,8 @@ const MapHomeLayout = () => {
             pointerEvents: "auto", // Explicitly enable pointer events
           }}
         >
-          <GeolocateControl style={controlStyle} />
-          <NavigationControl style={controlStyle} />
+          <GeolocateControl position= "bottom-right" style={controlStyle} />
+          <NavigationControl position= "bottom-right" style={controlStyle} />
         </Box>
         <Container
           maxWidth="md"
