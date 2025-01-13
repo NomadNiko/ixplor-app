@@ -56,7 +56,7 @@ export const VendorShortView: React.FC<{
 }> = ({ vendor, onViewMore, onClose }) => {
  const { businessName, description, logoUrl } = vendor.properties;
  return (
-   <Card className="absolute bottom-24 left-4 right-4 md:left-24 md:right-24 bg-background-glass backdrop-blur-md z-50">
+   <Card className="absolute bottom-[7rem] left-4 right-4 md:left-24 md:right-24 bg-background-glass backdrop-blur-md z-50">
      <CardContent className="p-4">
        <Box className="flex items-start gap-4">
          <img 
@@ -106,7 +106,7 @@ export const VendorFullView: React.FC<{
    logoUrl 
  } = vendor.properties;
  return (
-   <Card className="absolute bottom-24 left-4 right-4 md:left-24 md:right-24 bg-background-glass backdrop-blur-md overflow-auto z-50">
+   <Card className="absolute bottom-[7rem] left-4 right-4 md:left-24 md:right-24 bg-background-glass backdrop-blur-md overflow-auto z-50">
      <CardContent className="p-6">
        <Box className="flex justify-between items-start mb-6">
          <Box className="flex items-center gap-4">
