@@ -56,38 +56,50 @@ export const VendorShortView: React.FC<{
 }> = ({ vendor, onViewMore, onClose }) => {
  const { businessName, description, logoUrl } = vendor.properties;
  return (
-   <Card className="absolute bottom-[7rem] left-4 right-4 md:left-24 md:right-24 bg-background-glass backdrop-blur-md z-50">
-     <CardContent className="p-4">
-       <Box className="flex items-start gap-4">
-         <img 
-           src={logoUrl} 
-           alt={businessName}
-           className="w-16 h-16 object-contain"
-           width="200"
-         />
-         <Box className="flex-1">
-           <Typography variant="h6" className="text-white">
-             {businessName}
-           </Typography>
-           <Typography variant="body2" className="text-gray-300 line-clamp-2">
-             {description}
-           </Typography>
-           <button
-             onClick={onViewMore}
-             className="mt-2 text-primary-light hover:text-primary-main text-sm"
+   <Box sx={{
+     width: "100%",
+     position: "fixed",
+     bottom: { xs: 0, md: 10 },
+     left: 0,
+     right: 0,
+     padding: (theme) => theme.spacing(2),
+     backgroundColor: (theme) => theme.palette.background.glass,
+     backdropFilter: "blur(10px)",
+     borderRadius: { xs: 0, md: 2 },
+     zIndex: 1,
+   }}>
+     <Card className="bg-background-glass backdrop-blur-md">
+       <CardContent className="p-4">
+         <Box className="flex items-start gap-4">
+           <img 
+             src={logoUrl} 
+             alt={businessName}
+             className="w-16 h-16 object-contain"
+           />
+           <Box className="flex-1">
+             <Typography variant="h6" className="text-white">
+               {businessName}
+             </Typography>
+             <Typography variant="body2" className="text-gray-300 line-clamp-2">
+               {description}
+             </Typography>
+             <button
+               onClick={onViewMore}
+               className="mt-2 text-primary-light hover:text-primary-main text-sm"
+             >
+               View More
+             </button>
+           </Box>
+           <button 
+             onClick={onClose}
+             className="text-gray-400 hover:text-white"
            >
-             View More
+             ×
            </button>
          </Box>
-         <button 
-           onClick={onClose}
-           className="text-gray-400 hover:text-white"
-         >
-           ×
-         </button>
-       </Box>
-     </CardContent>
-   </Card>
+       </CardContent>
+     </Card>
+   </Box>
  );
 };
 
@@ -107,67 +119,80 @@ export const VendorFullView: React.FC<{
    logoUrl 
  } = vendor.properties;
  return (
-   <Card className="absolute bottom-[7rem] left-4 right-4 md:left-24 md:right-24 bg-background-glass backdrop-blur-md overflow-auto z-50">
-     <CardContent className="p-6">
-       <Box className="flex justify-between items-start mb-6">
-         <Box className="flex items-center gap-4">
-           <img 
-             src={logoUrl} 
-             alt={businessName}
-             className="w-24 h-24 object-contain"
-           />
-           <Box>
-             <Typography variant="h4" className="text-white">
-               {businessName}
-             </Typography>
-             <Chip
-               icon={getVendorIcon(vendorType)}
-               label={vendorType.charAt(0).toUpperCase() + vendorType.slice(1)}
-               size="small"
-               className="mt-2"
+   <Box sx={{
+     width: "100%",
+     position: "fixed",
+     bottom: { xs: 0, md: 10 },
+     left: 0,
+     right: 0,
+     padding: (theme) => theme.spacing(2),
+     backgroundColor: (theme) => theme.palette.background.glass,
+     backdropFilter: "blur(10px)",
+     borderRadius: { xs: 0, md: 2 },
+     zIndex: 1,
+   }}>
+     <Card className="bg-background-glass backdrop-blur-md overflow-auto">
+       <CardContent className="p-6">
+         <Box className="flex justify-between items-start mb-6">
+           <Box className="flex items-center gap-4">
+             <img 
+               src={logoUrl} 
+               alt={businessName}
+               className="w-24 h-24 object-contain"
              />
+             <Box>
+               <Typography variant="h4" className="text-white">
+                 {businessName}
+               </Typography>
+               <Chip
+                 icon={getVendorIcon(vendorType)}
+                 label={vendorType.charAt(0).toUpperCase() + vendorType.slice(1)}
+                 size="small"
+                 className="mt-2"
+               />
+             </Box>
+           </Box>
+           <button 
+             onClick={onClose}
+             className="text-gray-400 hover:text-white text-2xl"
+           >
+             ×
+           </button>
+         </Box>
+         <Box className="space-y-6">
+           <Box>
+             <Typography variant="h6" className="text-white mb-2">
+               About
+             </Typography>
+             <Typography className="text-gray-300">
+               {description}
+             </Typography>
+           </Box>
+           <Box>
+             <Typography variant="h6" className="text-white mb-2">
+               Location
+             </Typography>
+             <Typography className="text-gray-300">
+               {address}<br />
+               {city}, {state} {postalCode}
+             </Typography>
+           </Box>
+           <Box>
+             <Typography variant="h6" className="text-white mb-2">
+               Contact
+             </Typography>
+             <a 
+               href={website}
+               target="_blank"
+               rel="noopener noreferrer"
+               className="text-primary-light hover:text-primary-main"
+             >
+               Visit Website
+             </a>
            </Box>
          </Box>
-         <button 
-           onClick={onClose}
-           className="text-gray-400 hover:text-white text-2xl"
-         >
-           ×
-         </button>
-       </Box>
-       <Box className="space-y-6">
-         <Box>
-           <Typography variant="h6" className="text-white mb-2">
-             About
-           </Typography>
-           <Typography className="text-gray-300">
-             {description}
-           </Typography>
-         </Box>
-         <Box>
-           <Typography variant="h6" className="text-white mb-2">
-             Location
-           </Typography>
-           <Typography className="text-gray-300">
-             {address}<br />
-             {city}, {state} {postalCode}
-           </Typography>
-         </Box>
-         <Box>
-           <Typography variant="h6" className="text-white mb-2">
-             Contact
-           </Typography>
-           <a 
-             href={website}
-             target="_blank"
-             rel="noopener noreferrer"
-             className="text-primary-light hover:text-primary-main"
-           >
-             Visit Website
-           </a>
-         </Box>
-       </Box>
-     </CardContent>
-   </Card>
+       </CardContent>
+     </Card>
+   </Box>
  );
 };
