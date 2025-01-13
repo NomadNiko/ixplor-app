@@ -32,7 +32,6 @@ export const VendorMarker: React.FC<{
 }> = ({ vendor, onClick }) => {
  const { coordinates } = vendor.geometry;
  const { businessName, vendorType } = vendor.properties;
-
  return (
    <Marker
      longitude={coordinates[0]}
@@ -56,9 +55,8 @@ export const VendorShortView: React.FC<{
  onClose: () => void;
 }> = ({ vendor, onViewMore, onClose }) => {
  const { businessName, description, logoUrl } = vendor.properties;
-
  return (
-   <Card className="absolute bottom-24 left-4 right-4 md:left-24 md:right-24 bg-background-glass backdrop-blur-md">
+   <Card className="absolute bottom-24 left-4 right-4 md:left-24 md:right-24 bg-background-glass backdrop-blur-md z-50">
      <CardContent className="p-4">
        <Box className="flex items-start gap-4">
          <img 
@@ -107,9 +105,8 @@ export const VendorFullView: React.FC<{
    postalCode,
    logoUrl 
  } = vendor.properties;
-
  return (
-   <Card className="absolute top-24 bottom-24 left-4 right-4 md:left-24 md:right-24 bg-background-glass backdrop-blur-md overflow-auto">
+   <Card className="absolute bottom-24 left-4 right-4 md:left-24 md:right-24 bg-background-glass backdrop-blur-md overflow-auto z-50">
      <CardContent className="p-6">
        <Box className="flex justify-between items-start mb-6">
          <Box className="flex items-center gap-4">
@@ -137,7 +134,6 @@ export const VendorFullView: React.FC<{
            ×
          </button>
        </Box>
-
        <Box className="space-y-6">
          <Box>
            <Typography variant="h6" className="text-white mb-2">
@@ -147,7 +143,6 @@ export const VendorFullView: React.FC<{
              {description}
            </Typography>
          </Box>
-
          <Box>
            <Typography variant="h6" className="text-white mb-2">
              Location
@@ -157,7 +152,6 @@ export const VendorFullView: React.FC<{
              {city}, {state} {postalCode}
            </Typography>
          </Box>
-
          <Box>
            <Typography variant="h6" className="text-white mb-2">
              Contact
