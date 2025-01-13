@@ -22,7 +22,7 @@ import {
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-type FilterType = "tours" | "lessons" | "rentals" | "tickets";
+type FilterType = Array<'tours' | 'lessons' | 'rentals' | 'tickets'>;
 
 const NavButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -69,15 +69,16 @@ const MapHomeLayout = () => {
     zoom: 12,
   });
 
-  const [filterType, setFilterType] = useState<FilterType>("tours");
+  const [filterType, setFilterType] = useState<FilterType>(['tours']);
 
   const handleFilterChange = (
     event: React.MouseEvent<HTMLElement>,
-    newFilterType: FilterType | null
+    newFilterTypes: FilterType
   ) => {
-    if (newFilterType !== null) {
-      setFilterType(newFilterType);
+    if (newFilterTypes.length === 0) {
+      return;
     }
+    setFilterType(newFilterTypes);
   };
 
   const theme = useTheme();
@@ -114,11 +115,13 @@ const MapHomeLayout = () => {
           <Box
             sx={{
               position: "absolute",
-              right: 0,
-              top: "50%",
-              transform: "translateY(-50%)",
-              color: "primary.main",
+              right: theme.spacing(4), // Give some padding from right edge
+              top: "65%", // Position lower on page
               zIndex: 1,
+              display: "flex",
+              flexDirection: "column",
+              gap: 1,
+              pointerEvents: "auto", // Explicitly enable pointer events
             }}
           >
             <GeolocateControl style={controlStyle} />
@@ -147,7 +150,6 @@ const MapHomeLayout = () => {
 
             <StyledToggleButtonGroup
               value={filterType}
-              exclusive
               onChange={handleFilterChange}
               fullWidth
               size="small"
