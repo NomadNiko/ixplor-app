@@ -1,11 +1,10 @@
 import { useMemo, useState } from 'react';
 import { Marker } from 'react-map-gl';
 import useSupercluster from 'use-supercluster';
-import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import { VendorLocation, VendorType } from '@/components/mock-data/vendor-location';
 import { VendorListView } from './vendor-list';
-import { Binoculars, GraduationCap, Timer, Ticket } from 'lucide-react';
+import { Binoculars, GraduationCap, Ticket, Timer, Users } from 'lucide-react';
 
 interface PointProperties {
   cluster: false;
@@ -106,20 +105,28 @@ export const ClusteredVendorMarkers = ({
               longitude={longitude}
               latitude={latitude}
             >
-              <Box 
-                onClick={() => setSelectedCluster({
-                  vendors: clusterVendors,
-                  position: { longitude, latitude }
-                })}
-                className="bg-primary-main text-white rounded-full p-3 flex items-center justify-center cursor-pointer hover:bg-primary-dark transition-colors"
-                sx={{
-                  minWidth: '2rem',
-                  minHeight: '2rem',
-                  transform: `scale(${1 + (point_count / points.length) * 0.5})`,
+              <Chip
+                icon={<Users size={14} />}
+                label={`${point_count} Vendors`}
+                onClick={() => {
+                  setSelectedCluster({
+                    vendors: clusterVendors,
+                    position: { longitude, latitude }
+                  });
                 }}
-              >
-                {point_count}
-              </Box>
+                sx={{
+                  backgroundColor: 'primary.main',
+                  color: 'primary.contrastText',
+                  '& .MuiChip-icon': {
+                    color: 'inherit'
+                  },
+                  transform: `scale(${1 + (point_count / points.length) * 0.5})`,
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    backgroundColor: 'primary.dark',
+                  }
+                }}
+              />
             </Marker>
           );
         }
