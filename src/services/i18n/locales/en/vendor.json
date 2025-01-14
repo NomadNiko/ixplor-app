@@ -1,69 +1,39 @@
 {
-    "title": "Vendor Registration",
-    "description": "Register your business to start offering tours, lessons, rentals, or tickets to customers.",
-    "steps": {
-      "business": "Business Information",
-      "contact": "Contact Information", 
-      "location": "Location Information"
-    },
-    "fields": {
-      "businessName": {
-        "label": "Business Name",
-        "error": "Business name is required"
-      },
-      "vendorType": {
-        "label": "Business Type",
-        "error": "Please select a business type",
-        "options": {
-          "tours": "Tours",
-          "lessons": "Lessons",
-          "rentals": "Rentals",
-          "tickets": "Tickets"
-        }
-      },
-      "description": {
-        "label": "Business Description",
-        "error": "Description is required"
-      },
-      "email": {
-        "label": "Email Address",
-        "error": "Valid email is required"
-      },
-      "phone": {
-        "label": "Phone Number",
-        "error": "Valid phone number is required"
-      },
-      "website": {
-        "label": "Website",
-        "error": "Valid URL is required"
-      },
-      "logoUrl": {
-        "label": "Logo URL",
-        "error": "Valid URL is required" 
-      },
-      "address": {
-        "label": "Street Address",
-        "error": "Address is required"
-      },
-      "city": {
-        "label": "City",
-        "error": "City is required"
-      },
-      "state": {
-        "label": "State",
-        "error": "State is required"
-      },
-      "postalCode": {
-        "label": "Postal Code",
-        "error": "Valid postal code is required"
-      }
-    },
-    "buttons": {
-      "next": "Next",
-      "back": "Back",
-      "submit": "Submit Registration",
-      "submitting": "Submitting..."
-    },
-    "success": "Vendor registration successful!",
-    "error": "There was an error registering your business. Please try again."
-  }
+  "vendorRegistration": "Vendor Registration",
+  "registerBusiness": "Register your business to start offering tours, lessons, rentals, or tickets to customers.",
+  "businessInformation": "Business Information",
+  "contactDetails": "Contact Details",
+  "locationInformation": "Location Information",
+  "businessName": "Business Name",
+  "businessNameRequired": "Business name is required",
+  "vendorType": "Business Type",
+  "vendorTypeRequired": "Please select a business type",
+  "tours": "Tours",
+  "lessons": "Lessons",
+  "rentals": "Rentals",
+  "tickets": "Tickets",
+  "description": "Business Description",
+  "descriptionRequired": "Description is required",
+  "email": "Email Address",
+  "emailRequired": "Valid email is required",
+  "phone": "Phone Number",
+  "phoneRequired": "Valid phone number is required",
+  "website": "Website",
+  "websiteRequired": "Valid URL is required",
+  "logoUrl": "Logo URL",
+  "logoUrlRequired": "Valid URL is required",
+  "address": "Street Address",
+  "addressRequired": "Address is required",
+  "city": "City",
+  "cityRequired": "City is required",
+  "state": "State",
+  "stateRequired": "State is required",
+  "postalCode": "Postal Code",
+  "postalCodeRequired": "Valid postal code is required",
+  "next": "Next",
+  "back": "Back",
+  "submitRegistration": "Submit Registration",
+  "submitting": "Submitting...",
+  "success": "Vendor registration successful!",
+  "error": "There was an error registering your business. Please try again."
+}
