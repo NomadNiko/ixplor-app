@@ -5,6 +5,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { useTranslation } from "@/services/i18n/client";
 import { useTheme } from "@mui/material/styles";
+import Image from "next/image";
 
 export default function PaymentMethods() {
   const { t } = useTranslation("cart");
@@ -28,7 +29,7 @@ export default function PaymentMethods() {
             variant="outlined"
             fullWidth
             startIcon={
-              <img
+              <Image
                 src="https://logos-world.net/wp-content/uploads/2022/12/Stripe-Logo.png"
                 alt="StripeLogo"
                 style={logoStyle}
@@ -42,7 +43,7 @@ export default function PaymentMethods() {
             variant="outlined"
             fullWidth
             startIcon={
-              <img
+              <Image
                 src="https://logos-world.net/wp-content/uploads/2020/12/Cash-App-Logo.png"
                 alt="Cash App"
                 style={logoStyle}
@@ -56,7 +57,7 @@ export default function PaymentMethods() {
             variant="outlined"
             fullWidth
             startIcon={
-              <img
+              <Image
                 src="https://logos-world.net/wp-content/uploads/2021/12/Venmo-Logo.png"
                 alt="Venmo"
                 style={logoStyle}
@@ -70,7 +71,7 @@ export default function PaymentMethods() {
             variant="outlined"
             fullWidth
             startIcon={
-              <img
+              <Image
                 src="https://logos-world.net/wp-content/uploads/2020/11/Square-Logo.png"
                 alt="Square"
                 style={logoStyle}

@@ -16,6 +16,7 @@ import {
   Phone,
   Mail
 } from 'lucide-react';
+import Image from "next/image";
 
 const getVendorIcon = (type: VendorType) => {
   switch (type) {
@@ -102,7 +103,7 @@ export const VendorFullView: React.FC<{
               justifyContent: 'center',
               flexShrink: 0
             }}>
-              <img 
+              <Image 
                 src={logoUrl} 
                 alt={businessName}
                 style={{ 

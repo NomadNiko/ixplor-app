@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { VendorLocation } from '@/components/mock-data/vendor-location';
 import { X, Phone } from 'lucide-react';
+import Image from "next/image";
 
 export const VendorShortView: React.FC<{
   vendor: VendorLocation;
@@ -58,7 +59,7 @@ export const VendorShortView: React.FC<{
               justifyContent: 'center',
               flexShrink: 0
             }}>
-              <img 
+              <Image 
                 src={logoUrl} 
                 alt={businessName}
                 style={{ 
