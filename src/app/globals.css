@@ -1,1 +1,12 @@
 /* Your global CSS here */
+@font-face {
+
+    font-family: 'iXplor'; 
+
+    src: url('/iXplor.ttf') format('truetype');
+
+    font-weight: normal;
+
+    font-style: normal;
+
+}

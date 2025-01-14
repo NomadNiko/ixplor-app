@@ -59,6 +59,7 @@ function ResponsiveAppBar() {
               mr: 2,
               display: { xs: "none", md: "flex" },
               fontWeight: 700,
+              fontFamily: 'iXplor',
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
