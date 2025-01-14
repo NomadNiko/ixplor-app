@@ -17,10 +17,11 @@ const vendorSchema = z.object({
   logoUrl: z.string().url('Invalid URL').optional()
 });
 
-function ErrorMessage({ name, errors }) {
-  return errors[name] ? (
+function ErrorMessage({ name, errors = {} }) {
+  const error = errors?.[name];
+  return error ? (
     <p className="text-red-500 text-sm mt-1">
-      {errors[name].message}
+      {error.message}
     </p>
   ) : null;
 }
@@ -60,7 +61,8 @@ export default function VendorOnboardingForm() {
     mode: 'onChange'
   });
 
-  const { handleSubmit, control, useFormState: { errors } } = methods;
+  const { handleSubmit, control, useFormState = {} } = methods;
+  const { errors = {} } = useFormState;
   
   const onSubmit = async (data) => {
     try {
@@ -81,49 +83,64 @@ export default function VendorOnboardingForm() {
     }
   };
 
-  const BusinessInfoStep = () => (
-    <div className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium mb-1">
-          Business Name
-        </label>
-        <Controller
-          name="businessName"
-          control={control}
-          render={({ field }) => (
-            <>
+  const FormInput = ({ 
+    name, 
+    label, 
+    type = 'text', 
+    className = "w-full p-2 rounded border bg-background-glass",
+    options = [] 
+  }) => (
+    <div>
+      <label className="block text-sm font-medium mb-1">
+        {label}
+      </label>
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => (
+          <>
+            {options.length > 0 ? (
+              <select 
+                {...field} 
+                className={className}
+              >
+                {options.map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            ) : (
               <input
                 {...field}
-                className="w-full p-2 rounded border bg-background-glass"
+                type={type}
+                className={className}
               />
-              <ErrorMessage name="businessName" errors={errors} />
-            </>
-          )}
-        />
-      </div>
-      <div>
-        <label className="block text-sm font-medium mb-1">
-          Business Type
-        </label>
-        <Controller
-          name="vendorType"
-          control={control}
-          render={({ field }) => (
-            <>
-              <select
-                {...field}
-                className="w-full p-2 rounded border bg-background-glass"
-              >
-                <option value="tours">Tours</option>
-                <option value="lessons">Lessons</option>
-                <option value="rentals">Rentals</option>
-                <option value="tickets">Tickets</option>
-              </select>
-              <ErrorMessage name="vendorType" errors={errors} />
-            </>
-          )}
-        />
-      </div>
+            )}
+            <ErrorMessage name={name} errors={errors} />
+          </>
+        )}
+      />
+    </div>
+  );
+
+  const BusinessInfoStep = () => (
+    <div className="space-y-4">
+      <FormInput 
+        name="businessName" 
+        label="Business Name" 
+      />
+      <FormInput 
+        name="vendorType" 
+        label="Business Type" 
+        type="select"
+        options={[
+          { value: 'tours', label: 'Tours' },
+          { value: 'lessons', label: 'Lessons' },
+          { value: 'rentals', label: 'Rentals' },
+          { value: 'tickets', label: 'Tickets' }
+        ]} 
+      />
       <div>
         <label className="block text-sm font-medium mb-1">
           Description
@@ -158,83 +175,27 @@ export default function VendorOnboardingForm() {
   const ContactInfoStep = () => (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Email
-          </label>
-          <Controller
-            name="email"
-            control={control}
-            render={({ field }) => (
-              <>
-                <input
-                  {...field}
-                  type="email"
-                  className="w-full p-2 rounded border bg-background-glass"
-                />
-                <ErrorMessage name="email" errors={errors} />
-              </>
-            )}
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Phone
-          </label>
-          <Controller
-            name="phone"
-            control={control}
-            render={({ field }) => (
-              <>
-                <input
-                  {...field}
-                  type="tel"
-                  className="w-full p-2 rounded border bg-background-glass"
-                />
-                <ErrorMessage name="phone" errors={errors} />
-              </>
-            )}
-          />
-        </div>
-      </div>
-      <div>
-        <label className="block text-sm font-medium mb-1">
-          Website
-        </label>
-        <Controller
-          name="website"
-          control={control}
-          render={({ field }) => (
-            <>
-              <input
-                {...field}
-                type="url"
-                className="w-full p-2 rounded border bg-background-glass"
-              />
-              <ErrorMessage name="website" errors={errors} />
-            </>
-          )}
+        <FormInput 
+          name="email" 
+          label="Email" 
+          type="email" 
+        />
+        <FormInput 
+          name="phone" 
+          label="Phone" 
+          type="tel" 
         />
       </div>
-      <div>
-        <label className="block text-sm font-medium mb-1">
-          Logo URL
-        </label>
-        <Controller
-          name="logoUrl"
-          control={control}
-          render={({ field }) => (
-            <>
-              <input
-                {...field}
-                type="url"
-                className="w-full p-2 rounded border bg-background-glass"
-              />
-              <ErrorMessage name="logoUrl" errors={errors} />
-            </>
-          )}
-        />
-      </div>
+      <FormInput 
+        name="website" 
+        label="Website" 
+        type="url"
+      />
+      <FormInput 
+        name="logoUrl" 
+        label="Logo URL" 
+        type="url"
+      />
       <div className="flex justify-between">
         <button
           type="button"
@@ -256,80 +217,24 @@ export default function VendorOnboardingForm() {
 
   const LocationInfoStep = () => (
     <div className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium mb-1">
-          Street Address
-        </label>
-        <Controller
-          name="address"
-          control={control}
-          render={({ field }) => (
-            <>
-              <input
-                {...field}
-                className="w-full p-2 rounded border bg-background-glass"
-              />
-              <ErrorMessage name="address" errors={errors} />
-            </>
-          )}
-        />
-      </div>
+      <FormInput 
+        name="address" 
+        label="Street Address" 
+      />
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            City
-          </label>
-          <Controller
-            name="city"
-            control={control}
-            render={({ field }) => (
-              <>
-                <input
-                  {...field}
-                  className="w-full p-2 rounded border bg-background-glass"
-                />
-                <ErrorMessage name="city" errors={errors} />
-              </>
-            )}
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            State
-          </label>
-          <Controller
-            name="state"
-            control={control}
-            render={({ field }) => (
-              <>
-                <input
-                  {...field}
-                  className="w-full p-2 rounded border bg-background-glass"
-                />
-                <ErrorMessage name="state" errors={errors} />
-              </>
-            )}
-          />
-        </div>
-      </div>
-      <div>
-        <label className="block text-sm font-medium mb-1">
-          Postal Code
-        </label>
-        <Controller
-          name="postalCode"
-          control={control}
-          render={({ field }) => (
-            <>
-              <input
-                {...field}
-                className="w-full p-2 rounded border bg-background-glass"
-              />
-              <ErrorMessage name="postalCode" errors={errors} />
-            </>
-          )}
+        <FormInput 
+          name="city" 
+          label="City" 
+        />
+        <FormInput 
+          name="state" 
+          label="State" 
         />
       </div>
+      <FormInput 
+        name="postalCode" 
+        label="Postal Code" 
+      />
       <div className="flex justify-between">
         <button
           type="button"
