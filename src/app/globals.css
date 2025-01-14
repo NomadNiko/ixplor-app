@@ -3,9 +3,9 @@
 
     font-family: 'iXplor'; 
 
-    src: url('fonts/iXplor.ttf') format('truetype');
+    src: url('/fonts/iXplor.ttf') format('truetype');
 
-    font-weight: normal;
+    font-weight: bold;
 
     font-style: normal;
 
