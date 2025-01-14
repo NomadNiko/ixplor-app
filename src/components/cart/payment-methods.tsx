@@ -8,6 +8,12 @@ import { useTranslation } from "@/services/i18n/client";
 export default function PaymentMethods() {
   const { t } = useTranslation("cart");
 
+  const logoStyle = {
+    height: 48, // Doubled from 24
+    marginRight: 'auto', // Push logo to left side
+    marginLeft: 16 // Add some spacing from the edge
+  };
+
   return (
     <Card>
       <CardContent>
@@ -23,7 +29,7 @@ export default function PaymentMethods() {
               <img
                 src="https://logos-world.net/wp-content/uploads/2022/12/Stripe-Logo.png"
                 alt="StripeLogo"
-                style={{ height: 24 }}
+                style={logoStyle}
               />
             }
           >
@@ -37,7 +43,7 @@ export default function PaymentMethods() {
               <img
                 src="https://logos-world.net/wp-content/uploads/2020/12/Cash-App-Logo.png"
                 alt="Cash App"
-                style={{ height: 24 }}
+                style={logoStyle}
               />
             }
           >
@@ -51,7 +57,7 @@ export default function PaymentMethods() {
               <img
                 src="https://logos-world.net/wp-content/uploads/2021/12/Venmo-Logo.png"
                 alt="Venmo"
-                style={{ height: 24 }}
+                style={logoStyle}
               />
             }
           >
@@ -65,7 +71,7 @@ export default function PaymentMethods() {
               <img
                 src="https://logos-world.net/wp-content/uploads/2020/11/Square-Logo.png"
                 alt="Square"
-                style={{ height: 24 }}
+                style={logoStyle}
               />
             }
           >
