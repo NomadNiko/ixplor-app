@@ -187,7 +187,16 @@ export const VendorFullView: React.FC<{
       borderRadius: { xs: 0, md: 2 },
       zIndex: 1,
     }}>
-      <Card sx={{ position: 'relative' }}>
+      <Card 
+        sx={{ 
+          position: 'relative', 
+          maxHeight: { 
+            xs: 'calc(100vh - 60px)', // Limit height on mobile 
+            md: 'none' // Allow full height on desktop
+          },
+          overflowY: 'auto' // Make content scrollable if it exceeds max height
+        }}
+      >
         <IconButton 
           onClick={onClose}
           sx={{ 
