@@ -7,7 +7,7 @@ export const mockCartItems: CartItemType[] = [
     description: "Class III Rapids Tour with Professional Guide",
     price: 129.99,
     quantity: 2,
-    image: "/api/placeholder/200/200",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Ark_white_water1101.jpg/1280px-Ark_white_water1101.jpg",
     type: "tour",
     date: "2025-01-15",
     duration: "4 hours"
@@ -18,7 +18,7 @@ export const mockCartItems: CartItemType[] = [
     description: "9ft Longboard - Perfect for Beginners",
     price: 49.99,
     quantity: 1,
-    image: "/api/placeholder/200/200",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Mavericks_Surf_Contest_2010b.jpg/1280px-Mavericks_Surf_Contest_2010b.jpg",
     type: "rental",
     duration: "24 hours"
   },
@@ -28,7 +28,7 @@ export const mockCartItems: CartItemType[] = [
     description: "Scenic Mountain Trail with Expert Guide",
     price: 79.99,
     quantity: 3,
-    image: "/api/placeholder/200/200",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Escursionismo_sulle_Alpi.jpg/1280px-Escursionismo_sulle_Alpi.jpg",
     type: "tour",
     date: "2025-01-16",
     duration: "6 hours"
@@ -39,7 +39,7 @@ export const mockCartItems: CartItemType[] = [
     description: "Double Kayak with All Safety Equipment",
     price: 65.99,
     quantity: 1,
-    image: "/api/placeholder/200/200",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Remic_Rapids%2C_Ottawa%2C_ON_%2814018430256%29.jpg/1280px-Remic_Rapids%2C_Ottawa%2C_ON_%2814018430256%29.jpg",
     type: "rental",
     duration: "4 hours"
   }
