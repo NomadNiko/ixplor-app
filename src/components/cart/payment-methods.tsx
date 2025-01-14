@@ -4,14 +4,16 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { useTranslation } from "@/services/i18n/client";
+import { useTheme } from "@mui/material/styles";
 
 export default function PaymentMethods() {
   const { t } = useTranslation("cart");
+  const theme = useTheme();
 
   const logoStyle = {
     height: 48, // Doubled from 24
     marginRight: 'auto', // Push logo to left side
-    marginLeft: 16 // Add some spacing from the edge
+    marginLeft: theme.spacing(2) // Use theme spacing
   };
 
   return (
