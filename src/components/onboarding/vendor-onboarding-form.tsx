@@ -58,7 +58,7 @@ export default function VendorRegistrationForm() {
     mode: 'onChange'
   });
 
-  const { handleSubmit, trigger, control } = methods;
+  const { handleSubmit, trigger, control, reset } = methods;
 
   const steps = [
     'Business Information',
@@ -76,9 +76,31 @@ export default function VendorRegistrationForm() {
       case 1:
         isStepValid = await trigger(['email', 'phone', 'website', 'logoUrl']);
         break;
+      case 2:
+        isStepValid = await trigger(['address', 'city', 'state', 'postalCode']);
+        break;
     }
 
     if (isStepValid) {
+      // Reset the form for the next step's fields
+      switch (activeStep) {
+        case 0:
+          reset({
+            businessName: '',
+            description: '',
+            vendorType: 'tours'
+          });
+          break;
+        case 1:
+          reset({
+            email: '',
+            phone: '',
+            website: '',
+            logoUrl: ''
+          });
+          break;
+      }
+
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
   };
@@ -102,6 +124,9 @@ export default function VendorRegistrationForm() {
       }
       
       console.log('Vendor registration successful', data);
+      // Optionally reset the entire form after successful submission
+      reset();
+      setActiveStep(0);
     } catch (error) {
       console.error('Error submitting form:', error);
     }
