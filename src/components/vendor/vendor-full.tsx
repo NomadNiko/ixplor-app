@@ -107,7 +107,7 @@ export const VendorFullView: React.FC<{
                 src={logoUrl} 
                 alt={businessName}
                 style={{ 
-                  maxWidth: '300px',
+                  maxWidth: '200px',
                   maxHeight: '100%',
                   width: 'auto',
                   height: 'auto',
@@ -128,7 +128,7 @@ export const VendorFullView: React.FC<{
             </Box>
           </Box>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 , fontSize: "0.80rem"}}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 , fontSize: "0.60rem"}}>
             <Box>
               <Typography variant="h6" gutterBottom>
                 About

@@ -63,7 +63,7 @@ export const VendorShortView: React.FC<{
                 src={logoUrl} 
                 alt={businessName}
                 style={{ 
-                  maxWidth: '150px',
+                  maxWidth: '200px',
                   maxHeight: '100%',
                   width: 'auto',
                   height: 'auto',
