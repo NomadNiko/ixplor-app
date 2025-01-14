@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, type CSSProperties } from "react";
-import Map, { MapRef, NavigationControl } from "react-map-gl";
+import Map, { MapRef, GeolocateControl } from "react-map-gl";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { useTheme } from "@mui/material/styles";
@@ -26,6 +26,14 @@ const MapHomeLayout = () => {
   const mapRef = useRef<MapRef>(null);
   
   const theme = useTheme();
+  
+  const controlStyle: CSSProperties = {
+    padding: theme.spacing(1),
+    backgroundColor: theme.palette.background.glass,
+    backdropFilter: "blur(10px)",
+    color: "#ffffff",
+    borderRadius: theme.shape.borderRadius,
+  };
 
   const handleFilterChange = (event: React.MouseEvent<HTMLElement>, newFilterTypes: FilterType) => {
     setFilterType(newFilterTypes);
@@ -48,13 +56,6 @@ const MapHomeLayout = () => {
     }
   };
 
-  // Navigation control styles
-  const navControlStyle: CSSProperties = {
-    right: theme.spacing(2),
-    bottom: theme.spacing(12), // Adjust based on your bottom nav height
-    zIndex: 1, // Ensure it's behind other UI elements
-  };
-
   return (
     <Box sx={{ height: "calc(100vh - 64px)", width: "100%", position: "relative" }}>
       <Map
@@ -67,12 +68,7 @@ const MapHomeLayout = () => {
         onLoad={updateBounds}
         onMoveEnd={updateBounds}
       >
-        <NavigationControl
-          position="bottom-right"
-          style={navControlStyle}
-          showCompass={false}
-          visualizePitch={false}
-        />
+        <GeolocateControl position="top-right" style={controlStyle} />
         
         <ClusteredVendorMarkers
           vendors={filteredVendors}
@@ -83,35 +79,6 @@ const MapHomeLayout = () => {
           bounds={bounds}
           zoom={viewState.zoom}
         />
-
-        {/* Apply global style for navigation control elements */}
-        <style>
-          {`
-            .mapboxgl-ctrl button.mapboxgl-ctrl-zoom-in .mapboxgl-ctrl-icon {
-              background-color: ${theme.palette.background.glass} !important;
-              border-radius: ${theme.shape.borderRadius}px !important;
-            }
-            .mapboxgl-ctrl button.mapboxgl-ctrl-zoom-out .mapboxgl-ctrl-icon {
-              background-color: ${theme.palette.background.glass} !important;
-              border-radius: ${theme.shape.borderRadius}px !important;
-            }
-            .mapboxgl-ctrl button.mapboxgl-ctrl-zoom-in:hover .mapboxgl-ctrl-icon,
-            .mapboxgl-ctrl button.mapboxgl-ctrl-zoom-out:hover .mapboxgl-ctrl-icon {
-              background-color: ${theme.palette.background.glassHover} !important;
-            }
-            .mapboxgl-ctrl button.mapboxgl-ctrl-zoom-in,
-            .mapboxgl-ctrl button.mapboxgl-ctrl-zoom-out {
-              background-color: transparent !important;
-            }
-            .mapboxgl-ctrl-group {
-              background-color: transparent !important;
-              border: none !important;
-            }
-            .mapboxgl-ctrl-icon {
-              filter: invert(46%) sepia(96%) saturate(1396%) hue-rotate(200deg) brightness(100%) contrast(91%) !important;
-            }
-          `}
-        </style>
 
         <Container maxWidth="md" sx={{
           height: "100%",
