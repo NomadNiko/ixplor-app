@@ -65,7 +65,7 @@ export const VendorFullView: React.FC<{
         sx={{ 
           position: 'relative', 
           maxHeight: { 
-            xs: 'calc(100vh - 60px)', 
+            xs: 'calc(100vh - 120px)', 
             md: 'none'
           },
           overflowY: 'auto'
