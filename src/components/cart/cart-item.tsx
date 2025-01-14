@@ -66,7 +66,10 @@ export default function CartItem({ item, onQuantityChange, onRemove }: CartItemP
           sx={{ 
             width: "100%", 
             textAlign: isMobile ? "center" : "left",
-            mb: isMobile ? 1 : 0
+            mb: isMobile ? 1 : 0,
+            display: "flex",
+            flexDirection: "column",
+            gap: isMobile ? 0.5 : 0
           }}
         >
           <Typography variant={isMobile ? "subtitle1" : "h6"}>
@@ -76,16 +79,33 @@ export default function CartItem({ item, onQuantityChange, onRemove }: CartItemP
             variant={isMobile ? "caption" : "body2"} 
             color="text.secondary" 
             gutterBottom
+            sx={{ 
+              display: "block",
+              width: "100%",
+              wordWrap: "break-word"
+            }}
           >
             {item.description}
           </Typography>
           {item.date && (
-            <Typography variant={isMobile ? "caption" : "body2"}>
+            <Typography 
+              variant={isMobile ? "caption" : "body2"}
+              sx={{ 
+                display: "block",
+                width: "100%"
+              }}
+            >
               {t("date")}: {item.date}
             </Typography>
           )}
           {item.duration && (
-            <Typography variant={isMobile ? "caption" : "body2"}>
+            <Typography 
+              variant={isMobile ? "caption" : "body2"}
+              sx={{ 
+                display: "block",
+                width: "100%"
+              }}
+            >
               {t("duration")}: {item.duration}
             </Typography>
           )}
