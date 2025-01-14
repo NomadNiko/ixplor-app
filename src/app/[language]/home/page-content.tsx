@@ -62,7 +62,9 @@ const MapHomeLayout = () => {
     setFilterType(newFilterTypes);
   };
 
-  const filteredVendors = vendors.filter(
+  const filteredVendors = vendors.map(vendor => 
+    vendor._doc ? vendor._doc : vendor
+  ).filter(
     vendor => filterType.length === 0 || filterType.includes(vendor.vendorType)
   );
 

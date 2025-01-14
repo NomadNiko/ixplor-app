@@ -29,6 +29,7 @@ export interface VendorProperties {
   adminNotes?: string;
   createdAt: string;
   updatedAt: string;
+  _doc?: Vendor;
 }
 
 export type VendorFeature = Feature<Point, VendorProperties>;

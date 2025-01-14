@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import ToggleButton from "@mui/material/ToggleButton";
 import { SearchBar, StyledToggleButtonGroup } from "./styled-components";
 import { FilterType } from "./types";
+//import { VendorLocation } from "@/components/mock-data/vendor-location";
 
 type SearchFiltersProps = {
   filterType: FilterType;
@@ -34,7 +35,7 @@ export const SearchFilters = ({ filterType, onFilterChange }: SearchFiltersProps
     <StyledToggleButtonGroup
       value={filterType}
       onChange={(event, newFilters) => {
-        // Allow for empty selection
+        // Allow for empty selection and handle Mongoose document structure
         onFilterChange(event, newFilters || []);
       }}
       aria-label="filter types"
