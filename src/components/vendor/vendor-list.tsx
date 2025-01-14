@@ -7,19 +7,23 @@ import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import { useTheme } from "@mui/material/styles";
 import { VendorLocation, VendorType } from '@/components/mock-data/vendor-location';
 import { X, Binoculars, GraduationCap, Timer, Ticket } from 'lucide-react';
 
-const getVendorIcon = (type: VendorType) => {
+const VendorIcon = ({ type }: { type: VendorType }) => {
+  const theme = useTheme();
+  const iconSize = theme.spacing(2.5); // 20px equivalent
+
   switch (type) {
     case 'tours':
-      return <Binoculars size={20} />;
+      return <Binoculars size={iconSize} />;
     case 'lessons':
-      return <GraduationCap size={20} />;
+      return <GraduationCap size={iconSize} />;
     case 'rentals':
-      return <Timer size={20} />;
+      return <Timer size={iconSize} />;
     case 'tickets':
-      return <Ticket size={20} />;
+      return <Ticket size={iconSize} />;
   }
 };
 
@@ -29,6 +33,8 @@ export const VendorListView: React.FC<{
   onClose: () => void;
   position: { longitude: number; latitude: number };
 }> = ({ vendors, onVendorClick, onClose, position }) => {
+  const theme = useTheme();
+
   return (
     <Box
       sx={{
@@ -36,8 +42,8 @@ export const VendorListView: React.FC<{
         left: position.longitude,
         top: position.latitude,
         transform: 'translate(-50%, -100%)',
-        marginTop: -1, // Small offset to avoid overlap with markers
-        width: 280, // Roughly the width of 4 markers
+        marginTop: theme.spacing(-0.125), // Small offset to avoid overlap with markers
+        width: theme.spacing(35), // Roughly the width of 4 markers
         zIndex: 2,
       }}
     >
@@ -47,15 +53,15 @@ export const VendorListView: React.FC<{
             onClick={onClose}
             sx={{
               position: 'absolute',
-              top: 8,
-              right: 8,
+              top: theme.spacing(1),
+              right: theme.spacing(1),
               color: 'text.secondary',
               '&:hover': {
                 color: 'text.primary'
               }
             }}
           >
-            <X size={20} />
+            <X size={theme.spacing(2.5)} />
           </IconButton>
 
           <Typography variant="h6" gutterBottom>
@@ -64,7 +70,7 @@ export const VendorListView: React.FC<{
 
           <List
             sx={{
-              maxHeight: 280,
+              maxHeight: theme.spacing(35),
               overflow: 'auto',
               '&::-webkit-scrollbar': {
                 display: 'none'
@@ -85,8 +91,8 @@ export const VendorListView: React.FC<{
                   }
                 }}
               >
-                <ListItemIcon sx={{ minWidth: 40 }}>
-                  {getVendorIcon(vendor.properties.vendorType)}
+                <ListItemIcon sx={{ minWidth: theme.spacing(5) }}>
+                  <VendorIcon type={vendor.properties.vendorType} />
                 </ListItemIcon>
                 <ListItemText 
                   primary={vendor.properties.businessName}
