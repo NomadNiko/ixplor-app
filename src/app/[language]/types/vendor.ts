@@ -1,5 +1,5 @@
-// src/app/[language]/types/vendor.ts
 import { Feature, Point } from 'geojson';
+import { FetchJsonResponse } from '@/services/api/types/fetch-json-response';
 
 export enum VendorStatusEnum {
   SUBMITTED = 'SUBMITTED',
@@ -29,16 +29,22 @@ export interface VendorProperties {
   adminNotes?: string;
   createdAt: string;
   updatedAt: string;
-  _doc?: Vendor;
+  location: {
+    type: 'Point';
+    coordinates: [number, number];
+  };
 }
 
 export type VendorFeature = Feature<Point, VendorProperties>;
 
-export interface Vendor extends VendorProperties {
-  longitude?: number;
-  latitude?: number;
+export interface Vendor extends Omit<VendorProperties, 'location'> {
+  location: {
+    type: 'Point';
+    coordinates: [number, number];
+  };
 }
 
 export interface VendorResponse {
   data: Vendor[];
 }
+export type VendorApiResponse = FetchJsonResponse<VendorResponse>;

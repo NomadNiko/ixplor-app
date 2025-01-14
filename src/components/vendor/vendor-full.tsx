@@ -1,22 +1,24 @@
-// src/components/vendor/vendor-full.tsx
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Chip from "@mui/material/Chip";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+//import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
-import { Vendor } from '@/app/[language]/types/vendor';
-import { X, Phone, Mail } from 'lucide-react';
+import { Phone, Mail, X, Globe } from "lucide-react";
 import { Image } from "@nextui-org/react";
+import { useTranslation } from "@/services/i18n/client";
+import { Vendor } from "@/app/[language]/types/vendor";
 
 interface VendorFullViewProps {
   vendor: Vendor;
   onClose: () => void;
 }
 
-export const VendorFullView: React.FC<VendorFullViewProps> = ({ vendor, onClose }) => {
+export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
+  const { t } = useTranslation("vendor");
+
   return (
     <Box sx={{
       width: "100%",
@@ -24,8 +26,8 @@ export const VendorFullView: React.FC<VendorFullViewProps> = ({ vendor, onClose 
       bottom: { xs: 0, md: 10 },
       left: 0,
       right: 0,
-      padding: (theme) => theme.spacing(2),
-      backgroundColor: (theme) => theme.palette.background.glass,
+      padding: theme => theme.spacing(2),
+      backgroundColor: theme => theme.palette.background.glass,
       backdropFilter: "blur(10px)",
       borderRadius: { xs: 0, md: 2 },
       zIndex: 1,
@@ -46,7 +48,7 @@ export const VendorFullView: React.FC<VendorFullViewProps> = ({ vendor, onClose 
           >
             <X size={20} />
           </IconButton>
-
+          
           <Box sx={{ pt: 6 }}>
             <Box sx={{ 
               display: 'flex',
@@ -75,14 +77,14 @@ export const VendorFullView: React.FC<VendorFullViewProps> = ({ vendor, onClose 
                   }}
                 />
               </Box>
-
               <Box>
                 <Typography variant="h4" gutterBottom>
                   {vendor.businessName}
                 </Typography>
                 <Chip
-                  label={vendor.vendorType.charAt(0).toUpperCase() + vendor.vendorType.slice(1)}
+                  label={t(`vendorTypes.${vendor.vendorType}`)}
                   size="small"
+                  color="primary"
                 />
               </Box>
             </Box>
@@ -90,7 +92,7 @@ export const VendorFullView: React.FC<VendorFullViewProps> = ({ vendor, onClose 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
               <Box>
                 <Typography variant="h6" gutterBottom>
-                  About
+                  {t("about")}
                 </Typography>
                 <Typography color="text.secondary">
                   {vendor.description}
@@ -99,7 +101,7 @@ export const VendorFullView: React.FC<VendorFullViewProps> = ({ vendor, onClose 
 
               <Box>
                 <Typography variant="h6" gutterBottom>
-                  Location
+                  {t("location")}
                 </Typography>
                 <Typography color="text.secondary">
                   {vendor.address}<br />
@@ -109,7 +111,7 @@ export const VendorFullView: React.FC<VendorFullViewProps> = ({ vendor, onClose 
 
               <Box>
                 <Typography variant="h6" gutterBottom>
-                  Contact
+                  {t("contact")}
                 </Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   <Typography 
@@ -131,15 +133,20 @@ export const VendorFullView: React.FC<VendorFullViewProps> = ({ vendor, onClose 
                     </Link>
                   </Typography>
                   {vendor.website && (
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      href={vendor.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Typography 
+                      color="text.secondary" 
+                      sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
                     >
-                      Visit Website
-                    </Button>
+                      <Globe size={16} />
+                      <Link 
+                        href={vendor.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        color="inherit"
+                      >
+                        {t("visitWebsite")}
+                      </Link>
+                    </Typography>
                   )}
                 </Box>
               </Box>

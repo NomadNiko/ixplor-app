@@ -2,11 +2,14 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import { Vendor } from '@/app/[language]/types/vendor';
-import { X, Phone } from 'lucide-react';
+import Button from "@mui/material/Button";
+import { Phone, X } from "lucide-react";
 import { Image } from "@nextui-org/react";
+import { useTranslation } from "@/services/i18n/client";
+import { useTheme } from "@mui/material/styles";
+//import useMediaQuery from "@mui/material/useMediaQuery";
+import { Vendor } from "@/app/[language]/types/vendor";
 
 interface VendorShortViewProps {
   vendor: Vendor;
@@ -14,11 +17,11 @@ interface VendorShortViewProps {
   onClose: () => void;
 }
 
-export const VendorShortView: React.FC<VendorShortViewProps> = ({ 
-  vendor, 
-  onViewMore, 
-  onClose 
-}) => {
+export const VendorShortView = ({ vendor, onViewMore, onClose }: VendorShortViewProps) => {
+  const { t } = useTranslation("vendor");
+  //const theme = useTheme();
+  //const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  
   return (
     <Box sx={{
       width: "100%",
@@ -26,8 +29,8 @@ export const VendorShortView: React.FC<VendorShortViewProps> = ({
       bottom: { xs: 0, md: 10 },
       left: 0,
       right: 0,
-      padding: (theme) => theme.spacing(2),
-      backgroundColor: (theme) => theme.palette.background.glass,
+      padding: theme => theme.spacing(2),
+      backgroundColor: theme => theme.palette.background.glass,
       backdropFilter: "blur(10px)",
       borderRadius: { xs: 0, md: 2 },
       zIndex: 1,
@@ -86,8 +89,17 @@ export const VendorShortView: React.FC<VendorShortViewProps> = ({
               <Typography variant="h6">
                 {vendor.businessName}
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Phone size={14} /> {vendor.phone}
+              <Typography 
+                variant="body2" 
+                color="text.secondary" 
+                sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: 1 
+                }}
+              >
+                <Phone size={14} /> 
+                {vendor.phone}
               </Typography>
             </Box>
           </Box>
@@ -102,7 +114,7 @@ export const VendorShortView: React.FC<VendorShortViewProps> = ({
               onClick={onViewMore}
               size="small"
             >
-              Learn More
+              {t("learnMore")}
             </Button>
           </Box>
         </CardContent>
