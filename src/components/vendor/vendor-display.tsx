@@ -60,7 +60,7 @@ export const VendorShortView: React.FC<{
   onViewMore: () => void;
   onClose: () => void;
 }> = ({ vendor, onViewMore, onClose }) => {
-  const { businessName, description, logoUrl, phone } = vendor.properties;
+  const { businessName, logoUrl, phone } = vendor.properties;
   return (
     <Box sx={{
       width: "100%",
