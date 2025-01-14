@@ -18,11 +18,12 @@ const vendorSchema = z.object({
   logoUrl: z.string().url('Invalid URL').optional()
 });
 
-// // Form state component
-// const FormState = ({ control }) => {
-//   //const { errors, isSubmitting } = useFormState({ control });
-//   return null; // This component just manages state
-// };
+// Form state component
+const FormState = ({ control }) => {
+  const { errors, isSubmitting } = useFormState({ control });
+  console.log("Button pressed. Errors: " + errors + " isSubmitting: " + isSubmitting )
+  return null; // This component just manages state
+};
 
 // Step 1 component
 const BusinessInfoStep = ({ register, errors, onNext }) => (
