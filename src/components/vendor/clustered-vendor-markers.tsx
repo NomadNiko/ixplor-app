@@ -21,15 +21,7 @@ interface PointProperties {
   logoUrl: string;
 }
 
-// interface ClusterFeatureProperties {
-//   cluster: true;
-//   cluster_id: number;
-//   point_count: number;
-//   point_count_abbreviated: number;
-// }
-
 type PointFeature = GeoJSON.Feature<GeoJSON.Point, PointProperties>;
-//type ClusterFeature = GeoJSON.Feature<GeoJSON.Point, ClusterFeatureProperties>;
 
 const getVendorIcon = (type: VendorType) => {
   switch (type) {
@@ -63,8 +55,9 @@ export const ClusteredVendorMarkers = ({
       properties: {
         cluster: false,
         vendorId: vendor.properties.businessName,
-        ...vendor.properties
-      },
+        ...vendor.properties,
+        country: 'United States', // Add a default country
+      } as PointProperties,
       geometry: {
         type: 'Point',
         coordinates: [

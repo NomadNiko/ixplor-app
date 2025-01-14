@@ -7,13 +7,16 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
 import { VendorLocation, VendorType } from '@/components/mock-data/vendor-location';
 import { 
   Binoculars, 
   GraduationCap,
   Timer,
   Ticket,
-  X
+  X,
+  Phone,
+  Mail
 } from 'lucide-react';
 
 const getVendorIcon = (type: VendorType) => {
@@ -57,7 +60,7 @@ export const VendorShortView: React.FC<{
   onViewMore: () => void;
   onClose: () => void;
 }> = ({ vendor, onViewMore, onClose }) => {
-  const { businessName, description, logoUrl } = vendor.properties;
+  const { businessName, description, logoUrl, phone } = vendor.properties;
   return (
     <Box sx={{
       width: "100%",
@@ -128,6 +131,9 @@ export const VendorShortView: React.FC<{
               <Typography variant="body2" color="text.secondary">
                 {description}
               </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Phone size={14} /> {phone}
+              </Typography>
             </Box>
           </Box>
           
@@ -163,7 +169,9 @@ export const VendorFullView: React.FC<{
     city,
     state,
     postalCode,
-    logoUrl 
+    logoUrl,
+    phone,
+    email
   } = vendor.properties;
   
   return (
@@ -260,15 +268,35 @@ export const VendorFullView: React.FC<{
               <Typography variant="h6" gutterBottom>
                 Contact
               </Typography>
-              <Button
-                variant="outlined"
-                color="primary"
-                href={website}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Visit Website
-              </Button>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Typography 
+                  color="text.secondary" 
+                  sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                >
+                  <Phone size={16} /> 
+                  <Link href={`tel:${phone}`} color="inherit">
+                    {phone}
+                  </Link>
+                </Typography>
+                <Typography 
+                  color="text.secondary" 
+                  sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                >
+                  <Mail size={16} /> 
+                  <Link href={`mailto:${email}`} color="inherit">
+                    {email}
+                  </Link>
+                </Typography>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  href={website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Visit Website
+                </Button>
+              </Box>
             </Box>
           </Box>
         </CardContent>
