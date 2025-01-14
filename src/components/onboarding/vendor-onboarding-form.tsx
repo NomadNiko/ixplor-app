@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
@@ -20,13 +21,13 @@ const vendorSchema = z.object({
   businessName: z.string().min(1, 'Business name is required'),
   description: z.string().min(1, 'Description is required'),
   vendorType: z.enum(['tours', 'lessons', 'rentals', 'tickets']),
-  
+
   // Contact Information
   email: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'Invalid phone number'),
   website: z.string().url('Invalid URL').optional(),
   logoUrl: z.string().url('Invalid URL').optional(),
-  
+
   // Location Information
   address: z.string().min(1, 'Address is required'),
   city: z.string().min(1, 'City is required'),
@@ -65,6 +66,31 @@ export default function VendorRegistrationForm() {
     'Contact Details',
     'Location Information'
   ];
+  
+  useEffect(() => {
+      // Reset form when active step changes (form loads for that step)
+      if (activeStep === 0) {
+        reset({
+          businessName: '',
+          description: '',
+          vendorType: 'tours',
+        });
+      } else if (activeStep === 1) {
+        reset({
+          email: '',
+          phone: '',
+          website: '',
+          logoUrl: '',
+        });
+      } else if (activeStep === 2) {
+        reset({
+          address: '',
+          city: '',
+          state: '',
+          postalCode: '',
+        });
+      }
+    }, [activeStep, reset]);
 
   const handleNext = async () => {
     let isStepValid = false;
@@ -82,25 +108,6 @@ export default function VendorRegistrationForm() {
     }
 
     if (isStepValid) {
-      // Reset the form for the next step's fields
-      switch (activeStep) {
-        case 0:
-          reset({
-            businessName: '',
-            description: '',
-            vendorType: 'tours'
-          });
-          break;
-        case 1:
-          reset({
-            email: '',
-            phone: '',
-            website: '',
-            logoUrl: ''
-          });
-          break;
-      }
-
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
   };
@@ -122,7 +129,7 @@ export default function VendorRegistrationForm() {
       if (!response.ok) {
         throw new Error('Failed to create vendor');
       }
-      
+
       console.log('Vendor registration successful', data);
       // Optionally reset the entire form after successful submission
       reset();
@@ -356,8 +363,8 @@ export default function VendorRegistrationForm() {
                 <Grid container justifyContent="space-between">
                   <Grid item>
                     {activeStep !== 0 && (
-                      <Button 
-                        onClick={handleBack} 
+                      <Button
+                        onClick={handleBack}
                         sx={{ mr: 1 }}
                       >
                         Back
@@ -366,17 +373,17 @@ export default function VendorRegistrationForm() {
                   </Grid>
                   <Grid item>
                     {activeStep === steps.length - 1 ? (
-                      <Button 
-                        type="submit" 
-                        variant="contained" 
+                      <Button
+                        type="submit"
+                        variant="contained"
                         color="primary"
                       >
                         Submit
                       </Button>
                     ) : (
-                      <Button 
-                        variant="contained" 
-                        color="primary" 
+                      <Button
+                        variant="contained"
+                        color="primary"
                         onClick={handleNext}
                       >
                         Next
