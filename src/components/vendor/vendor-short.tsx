@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import { Phone, X } from "lucide-react";
 import { Image } from "@nextui-org/react";
 import { useTranslation } from "@/services/i18n/client";
-import { useTheme } from "@mui/material/styles";
+//import { useTheme } from "@mui/material/styles";
 //import useMediaQuery from "@mui/material/useMediaQuery";
 import { Vendor } from "@/app/[language]/types/vendor";
 
