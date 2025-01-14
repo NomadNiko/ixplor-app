@@ -1,9 +1,10 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Marker } from 'react-map-gl';
 import useSupercluster from 'use-supercluster';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import { VendorLocation, VendorType } from '@/components/mock-data/vendor-location';
+import { VendorListView } from './vendor-list';
 import { Binoculars, GraduationCap, Timer, Ticket } from 'lucide-react';
 
 interface PointProperties {
@@ -49,6 +50,11 @@ export const ClusteredVendorMarkers = ({
   bounds,
   zoom
 }: ClusteredVendorMarkersProps) => {
+  const [selectedCluster, setSelectedCluster] = useState<{
+    vendors: VendorLocation[];
+    position: { longitude: number; latitude: number };
+  } | null>(null);
+
   const points = useMemo(() => {
     return vendors.map(vendor => ({
       type: 'Feature',
@@ -56,7 +62,7 @@ export const ClusteredVendorMarkers = ({
         cluster: false,
         vendorId: vendor.properties.businessName,
         ...vendor.properties,
-        country: 'United States', // Add a default country
+        country: 'United States',
       } as PointProperties,
       geometry: {
         type: 'Point',
@@ -68,7 +74,7 @@ export const ClusteredVendorMarkers = ({
     })) as PointFeature[];
   }, [vendors]);
 
-  const { clusters } = useSupercluster({
+  const { clusters, supercluster } = useSupercluster({
     points,
     bounds,
     zoom,
@@ -84,14 +90,27 @@ export const ClusteredVendorMarkers = ({
         const [longitude, latitude] = cluster.geometry.coordinates;
         
         if (cluster.properties.cluster) {
-          const { point_count } = cluster.properties;
+          const { cluster_id, point_count } = cluster.properties;
+          
+          // Find vendors in this cluster
+          const clusterPoints = supercluster?.getChildren(cluster_id);
+          const clusterVendors = clusterPoints ? vendors.filter(vendor => 
+            clusterPoints.some(point => 
+              point.properties?.vendorId === vendor.properties.businessName
+            )
+          ) : [];
+
           return (
             <Marker
-              key={`cluster-${cluster.properties.cluster_id}`}
+              key={`cluster-${cluster_id}`}
               longitude={longitude}
               latitude={latitude}
             >
               <Box 
+                onClick={() => setSelectedCluster({
+                  vendors: clusterVendors,
+                  position: { longitude, latitude }
+                })}
                 className="bg-primary-main text-white rounded-full p-3 flex items-center justify-center cursor-pointer hover:bg-primary-dark transition-colors"
                 sx={{
                   minWidth: '2rem',
@@ -105,7 +124,6 @@ export const ClusteredVendorMarkers = ({
           );
         }
 
-        // Individual markers
         const vendor = vendors.find(v => 
           v.properties.businessName === (cluster.properties as PointProperties).vendorId
         );
@@ -128,6 +146,18 @@ export const ClusteredVendorMarkers = ({
           </Marker>
         );
       })}
+
+      {selectedCluster && (
+        <VendorListView
+          vendors={selectedCluster.vendors}
+          onVendorClick={(vendor) => {
+            onClick(vendor);
+            setSelectedCluster(null);
+          }}
+          onClose={() => setSelectedCluster(null)}
+          position={selectedCluster.position}
+        />
+      )}
     </>
   );
 };
