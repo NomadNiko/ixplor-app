@@ -9,7 +9,7 @@ export function useGetVendorsService() {
   const fetch = useFetch();
   
   return useCallback(async (requestConfig?: RequestConfigType) => {
-    const requestUrl = new URL(`${API_URL}/v1/vendors`);
+    const requestUrl = new URL(`${API_URL}/vendors`);
     return fetch(requestUrl, {
       method: 'GET',
       ...requestConfig,
@@ -26,7 +26,7 @@ export function useGetNearbyVendorsService() {
     radius?: number,
     requestConfig?: RequestConfigType
   ) => {
-    const requestUrl = new URL(`${API_URL}/v1/vendors/nearby`);
+    const requestUrl = new URL(`${API_URL}/vendors/nearby`);
     requestUrl.searchParams.append('lat', lat.toString());
     requestUrl.searchParams.append('lng', lng.toString());
     if (radius) {
