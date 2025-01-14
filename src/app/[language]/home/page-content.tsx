@@ -1,46 +1,69 @@
 "use client";
-import { useState, useRef, type CSSProperties } from "react";
-import Map, { MapRef, GeolocateControl } from "react-map-gl";
+import { useState, useRef, useEffect } from 'react';
+import Map, { MapRef, GeolocateControl } from 'react-map-gl';
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { useTheme } from "@mui/material/styles";
+//import { useTheme } from "@mui/material/styles";
 import { SearchFilters } from "@/components/map/search-filters";
 import { BottomNav } from "@/components/map/bottom-nav";
 import { VendorShortView, VendorFullView } from "@/components/vendor/vendor-display";
 import { ClusteredVendorMarkers } from "@/components/vendor/clustered-vendor-markers";
-import vendorLocations, { VendorLocation } from "@/components/mock-data/vendor-location";
-import { FilterType } from "@/components/map/types";
+//import { FilterType } from "@/components/map/types";
+import { useGetVendorsService } from "@/services/api/services/vendors";
+import CircularProgress from "@mui/material/CircularProgress";
+import { Vendor, VendorType } from '../types/vendor';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
+interface ViewState {
+  latitude: number;
+  longitude: number;
+  zoom: number;
+}
+
 const MapHomeLayout = () => {
-  const [viewState, setViewState] = useState({
+  const [viewState, setViewState] = useState<ViewState>({
     latitude: 21.277,
     longitude: -157.826,
     zoom: 14,
   });
-  const [selectedVendor, setSelectedVendor] = useState<VendorLocation | null>(null);
+  
+  const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
   const [showFullView, setShowFullView] = useState(false);
-  const [filterType, setFilterType] = useState<FilterType>([]);
+  const [filterType, setFilterType] = useState<VendorType[]>([]);
   const [bounds, setBounds] = useState<[number, number, number, number] | undefined>();
+  
   const mapRef = useRef<MapRef>(null);
+  //const theme = useTheme();
   
-  const theme = useTheme();
-  
-  const controlStyle: CSSProperties = {
-    padding: theme.spacing(1),
-    backgroundColor: theme.palette.background.glass,
-    backdropFilter: "blur(10px)",
-    color: "#ffffff",
-    borderRadius: theme.shape.borderRadius,
-  };
+  const getVendors = useGetVendorsService();
+  //const getNearbyVendors = useGetNearbyVendorsService();
 
-  const handleFilterChange = (event: React.MouseEvent<HTMLElement>, newFilterTypes: FilterType) => {
+  useEffect(() => {
+    const fetchVendors = async () => {
+      try {
+        setLoading(true);
+        const response = await getVendors();
+        if (response.status === 200) {
+          setVendors(response.data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching vendors:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchVendors();
+  }, [getVendors]);
+
+  const handleFilterChange = (event: React.MouseEvent<HTMLElement>, newFilterTypes: VendorType[]) => {
     setFilterType(newFilterTypes);
   };
 
-  const filteredVendors = vendorLocations.features.filter(
-    vendor => filterType.length === 0 || filterType.includes(vendor.properties.vendorType)
+  const filteredVendors = vendors.filter(
+    vendor => filterType.length === 0 || filterType.includes(vendor.vendorType)
   );
 
   const updateBounds = () => {
@@ -56,6 +79,22 @@ const MapHomeLayout = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <Box 
+        sx={{ 
+          height: "calc(100vh - 64px)", 
+          width: "100%", 
+          display: "flex", 
+          alignItems: "center", 
+          justifyContent: "center" 
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ height: "calc(100vh - 64px)", width: "100%", position: "relative" }}>
       <Map
@@ -68,7 +107,7 @@ const MapHomeLayout = () => {
         onLoad={updateBounds}
         onMoveEnd={updateBounds}
       >
-        <GeolocateControl position="top-right" style={controlStyle} />
+        <GeolocateControl position="top-right" />
         
         <ClusteredVendorMarkers
           vendors={filteredVendors}

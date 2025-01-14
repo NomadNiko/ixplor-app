@@ -4,17 +4,21 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import { VendorLocation } from '@/components/mock-data/vendor-location';
+import { Vendor } from '@/app/[language]/types/vendor';
 import { X, Phone } from 'lucide-react';
 import { Image } from "@nextui-org/react";
 
-export const VendorShortView: React.FC<{
-  vendor: VendorLocation;
+interface VendorShortViewProps {
+  vendor: Vendor;
   onViewMore: () => void;
   onClose: () => void;
-}> = ({ vendor, onViewMore, onClose }) => {
-  const { businessName, logoUrl, phone } = vendor.properties;
+}
 
+export const VendorShortView: React.FC<VendorShortViewProps> = ({ 
+  vendor, 
+  onViewMore, 
+  onClose 
+}) => {
   return (
     <Box sx={{
       width: "100%",
@@ -60,8 +64,8 @@ export const VendorShortView: React.FC<{
               flexShrink: 0
             }}>
               <Image 
-                src={logoUrl} 
-                alt={businessName}
+                src={vendor.logoUrl} 
+                alt={vendor.businessName}
                 style={{ 
                   maxWidth: '200px',
                   maxHeight: '100%',
@@ -80,10 +84,10 @@ export const VendorShortView: React.FC<{
               gap: 1
             }}>
               <Typography variant="h6">
-                {businessName}
+                {vendor.businessName}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Phone size={14} /> {phone}
+                <Phone size={14} /> {vendor.phone}
               </Typography>
             </Box>
           </Box>
