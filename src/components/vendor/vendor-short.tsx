@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { VendorLocation } from '@/components/mock-data/vendor-location';
 import { X, Phone } from 'lucide-react';
-import Image from "next/image";
+import { Image } from "@nextui-org/react";
 
 export const VendorShortView: React.FC<{
   vendor: VendorLocation;

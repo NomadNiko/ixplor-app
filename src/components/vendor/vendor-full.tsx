@@ -16,7 +16,7 @@ import {
   Phone,
   Mail
 } from 'lucide-react';
-import Image from "next/image";
+import { Image } from "@nextui-org/react";
 
 const getVendorIcon = (type: VendorType) => {
   switch (type) {

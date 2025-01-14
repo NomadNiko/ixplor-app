@@ -5,7 +5,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { useTranslation } from "@/services/i18n/client";
 import { useTheme } from "@mui/material/styles";
-import Image from "next/image";
+import { Image } from "@nextui-org/react";
 
 export default function PaymentMethods() {
  const { t } = useTranslation("cart");
