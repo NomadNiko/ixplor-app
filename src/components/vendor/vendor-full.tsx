@@ -128,7 +128,7 @@ export const VendorFullView: React.FC<{
             </Box>
           </Box>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 , fontSize: "0.80rem"}}>
             <Box>
               <Typography variant="h6" gutterBottom>
                 About
