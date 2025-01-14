@@ -109,7 +109,7 @@ export const VendorShortView: React.FC<{
                 src={logoUrl} 
                 alt={businessName}
                 style={{ 
-                  maxWidth: '200px',
+                  maxWidth: '150px',
                   maxHeight: '100%',
                   width: 'auto',
                   height: 'auto',
@@ -128,9 +128,6 @@ export const VendorShortView: React.FC<{
               <Typography variant="h6">
                 {businessName}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {description}
-              </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Phone size={14} /> {phone}
               </Typography>
@@ -147,7 +144,7 @@ export const VendorShortView: React.FC<{
               onClick={onViewMore}
               size="small"
             >
-              View More
+              Learn More
             </Button>
           </Box>
         </CardContent>
@@ -232,7 +229,7 @@ export const VendorFullView: React.FC<{
                 src={logoUrl} 
                 alt={businessName}
                 style={{ 
-                  maxWidth: '200px',
+                  maxWidth: '300px',
                   maxHeight: '100%',
                   width: 'auto',
                   height: 'auto',
