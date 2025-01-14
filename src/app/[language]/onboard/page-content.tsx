@@ -6,7 +6,7 @@ import { useTranslation } from "@/services/i18n/client";
 import VendorOnboardingForm from "@/components/onboarding/vendor-onboarding-form";
 
 export default function VendorOnboardingPage() {
-  const { t } = useTranslation("vendor-onboarding");
+  const { t } = useTranslation("vendor");
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>

@@ -1,4 +1,6 @@
 {
+  "title": "Onboard",
+  "description": "Fill out an application to be an iXplor Vendor",
   "vendorRegistration": "Vendor Registration",
   "registerBusiness": "Register your business to start offering tours, lessons, rentals, or tickets to customers.",
   "businessInformation": "Business Information",
@@ -12,7 +14,7 @@
   "lessons": "Lessons",
   "rentals": "Rentals",
   "tickets": "Tickets",
-  "description": "Business Description",
+  "businessDescription": "Business Description",
   "descriptionRequired": "Description is required",
   "email": "Email Address",
   "emailRequired": "Valid email is required",

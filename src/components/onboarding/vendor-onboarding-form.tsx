@@ -19,7 +19,7 @@ import { useTranslation } from "@/services/i18n/client";
 const vendorSchema = z.object({
   // Business Information
   businessName: z.string().min(1, 'Business name is required'),
-  description: z.string().min(1, 'Description is required'),
+  businessDescription: z.string().min(1, 'Description is required'),
   vendorType: z.enum(['tours', 'lessons', 'rentals', 'tickets']),
 
   // Contact Information
@@ -45,7 +45,7 @@ export default function VendorRegistrationForm() {
     resolver: zodResolver(vendorSchema),
     defaultValues: {
       businessName: '',
-      description: '',
+      businessDescription: '',
       vendorType: 'tours',
       email: '',
       phone: '',
@@ -72,7 +72,7 @@ export default function VendorRegistrationForm() {
       if (activeStep === 0) {
         reset({
           businessName: '',
-          description: '',
+          businessDescription: '',
           vendorType: 'tours',
         });
       } else if (activeStep === 1) {
@@ -97,7 +97,7 @@ export default function VendorRegistrationForm() {
 
     switch (activeStep) {
       case 0:
-        isStepValid = await trigger(['businessName', 'description', 'vendorType']);
+        isStepValid = await trigger(['businessName', 'businessDescription', 'vendorType']);
         break;
       case 1:
         isStepValid = await trigger(['email', 'phone', 'website', 'logoUrl']);
@@ -161,13 +161,13 @@ export default function VendorRegistrationForm() {
             </Grid>
             <Grid item xs={12}>
               <Controller
-                name="description"
+                name="businessDescription"
                 control={control}
                 render={({ field, fieldState: { error } }) => (
                   <TextField
                     {...field}
                     fullWidth
-                    label={t("description")}
+                    label={t("businessDescription")}
                     multiline
                     rows={4}
                     error={!!error}
