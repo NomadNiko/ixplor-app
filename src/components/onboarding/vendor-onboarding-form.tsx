@@ -38,7 +38,7 @@ const vendorSchema = z.object({
 type VendorFormData = z.infer<typeof vendorSchema>;
 
 export default function VendorRegistrationForm() {
-  const { t } = useTranslation("vendor");
+  const { t } = useTranslation("onboard");
   const [activeStep, setActiveStep] = useState(0);
 
   const methods = useForm<VendorFormData>({

@@ -8,7 +8,7 @@ type Props = {
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
-  const { t } = await getServerTranslation(params.language, "vendor-onboarding");
+  const { t } = await getServerTranslation(params.language, "onboard");
   return {
     title: t("title"),
   };
