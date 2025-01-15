@@ -48,24 +48,32 @@ export default function ApprovalsPage() {
     }
 
     try {
+      const updateData = {
+        vendorStatus: action,
+        ...(action === VendorStatusEnum.ACTION_NEEDED ? { actionNeeded: notes } : {}),
+        ...(notes ? { adminNotes: notes } : {})
+      };
+
       const response = await fetch(`${API_URL}/vendors/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${tokensInfo.token}`
         },
-        body: JSON.stringify({
-          vendorStatus: action,
-          adminNotes: notes,
-          actionNeeded: action === VendorStatusEnum.ACTION_NEEDED ? notes : undefined
-        })
+        body: JSON.stringify(updateData)
       });
 
-      if (response.ok) {
-        enqueueSnackbar(t(`success.${action.toLowerCase()}`), { variant: 'success' });
-        await loadVendors();
-      } else {
+      if (!response.ok) {
         throw new Error('Failed to update vendor');
+      }
+
+      const result = await response.json();
+      
+      if (result.data) {
+        enqueueSnackbar(t(`success.${action.toLowerCase()}`), { variant: 'success' });
+        await loadVendors(); // Reload the vendors list
+      } else {
+        throw new Error('Invalid response format');
       }
     } catch (error) {
       console.error('Error updating vendor:', error);
