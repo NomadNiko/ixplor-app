@@ -55,6 +55,7 @@ const MapHomeLayout = () => {
     backdropFilter: "blur(10px)",
     color: theme.palette.primary.main,
     borderRadius: theme.shape.borderRadius,
+    zIndex: 0,
   };
 
   useEffect(() => {
