@@ -141,6 +141,15 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
               </Box>
 
               <Box>
+                <Typography variant="subtitle2" color="text.secondary">
+                  {t("adminNotes")}
+                </Typography>
+                <Typography>
+                  {vendor.adminNotes || t("noAdminNotes")}
+                </Typography>
+              </Box>
+
+              <Box>
                 <Typography
                   sx={{
                     fontSize: "1.2rem",
