@@ -98,7 +98,7 @@ export default function VendorRegistrationForm() {
         return;
       }
 
-      const vendorResponse = await fetch('/api/vendors', {
+      const vendorResponse = await fetch('${API_URL}/vendors', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
