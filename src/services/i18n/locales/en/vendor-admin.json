@@ -5,6 +5,7 @@
     "contact": "Contact Information",
     "location": "Location",
     "status": "Vendor Status",
+    "adminNotes": "Admin Notes",
     "notesPlaceholder": "Add notes about this vendor (required for Reject or Needs Action)",
     "approve": "Activate",
     "reject": "Reject",
