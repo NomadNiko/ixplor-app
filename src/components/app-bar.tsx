@@ -102,32 +102,32 @@ function ResponsiveAppBar() {
                   {t("common:navigation.home")}
                 </Typography>
               </MenuItem>
-
-              {!!user?.role && user.role.id === 1 && (
-                <MenuItem
-                  onClick={handleCloseNavMenu}
-                  component={Link}
-                  href="/onboard"
-                >
-                  <Typography textAlign="center">
-                    {t("common:navigation.onboard")}
-                  </Typography>
-                </MenuItem>
-              )}
-
-
-              {!!user?.role && user.role.id === 1 && (
-                <MenuItem
-                  onClick={handleCloseNavMenu}
-                  component={Link}
-                  href="/approvals"
-                >
-                  <Typography textAlign="center">
-                    {t("common:navigation.approvals")}
-                  </Typography>
-                </MenuItem>
-              )}
-
+              {!!user?.role &&
+                [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
+                  <MenuItem
+                    key="onboard"
+                    onClick={handleCloseNavMenu}
+                    component={Link}
+                    href="/onboard"
+                  >
+                    <Typography textAlign="center">
+                      {t("common:navigation.onboard")}
+                    </Typography>
+                  </MenuItem>,
+                ]}
+              {!!user?.role &&
+                [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
+                  <MenuItem
+                    key="approvals"
+                    onClick={handleCloseNavMenu}
+                    component={Link}
+                    href="/admin-panel/approvals"
+                  >
+                    <Typography textAlign="center">
+                      {t("common:navigation.approvals")}
+                    </Typography>
+                  </MenuItem>,
+                ]}
               {!!user?.role &&
                 [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
                   <MenuItem
@@ -140,8 +140,8 @@ function ResponsiveAppBar() {
                       {t("common:navigation.users")}
                     </Typography>
                   </MenuItem>,
-                  // mobile-menu-items
                 ]}
+              {/* mobile-menu-items */}
               {isLoaded &&
                 !user && [
                   <Divider key="divider" />,
@@ -199,28 +199,30 @@ function ResponsiveAppBar() {
 
             {!!user?.role &&
               [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
-                <MenuItem
-                  onClick={handleCloseNavMenu}
-                  component={Link}
-                  href="/onboard"
-                >
-                  <Typography textAlign="center">
+                <>
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                    component={Link}
+                    href="/onboard"
+                  >
                     {t("common:navigation.onboard")}
-                  </Typography>
-                </MenuItem>
+                  </Button>
+                </>
               )}
 
             {!!user?.role &&
               [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
-                <MenuItem
-                  onClick={handleCloseNavMenu}
-                  component={Link}
-                  href="/approvals"
-                >
-                  <Typography textAlign="center">
+                <>
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                    component={Link}
+                    href="/approvals"
+                  >
                     {t("common:navigation.approvals")}
-                  </Typography>
-                </MenuItem>
+                  </Button>
+                </>
               )}
 
             {!!user?.role &&
