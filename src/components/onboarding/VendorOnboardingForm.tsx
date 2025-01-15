@@ -18,6 +18,7 @@ import { ContactDetailsStep } from './steps/ContactDetailsStep';
 import { LocationStep } from './steps/LocationStep';
 import { vendorSchema, VendorFormData } from './types';
 import { PlaceResult } from '@/hooks/use-google-places';
+import { API_URL } from '@/services/api/config';
 
 export default function VendorRegistrationForm() {
   const { t } = useTranslation("onboard");
@@ -98,7 +99,7 @@ export default function VendorRegistrationForm() {
         return;
       }
 
-      const vendorResponse = await fetch('${API_URL}/vendors', {
+      const vendorResponse = await fetch(`${API_URL}/vendors`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
