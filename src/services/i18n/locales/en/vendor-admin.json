@@ -1,6 +1,6 @@
 {
     "title": "Vendor Administration",
-    "subtitle": "Review and manage vendor applications",
+    "subtitle": "Review and manage Active Vendors",
     "noVendors": "No vendors could be loaded. Please troubleshoot further as this should not happen.",
     "contact": "Contact Information",
     "location": "Location",

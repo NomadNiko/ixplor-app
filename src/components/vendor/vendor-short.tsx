@@ -33,7 +33,7 @@ export const VendorShortView = ({ vendor, onViewMore, onClose }: VendorShortView
       backgroundColor: theme => theme.palette.background.glass,
       backdropFilter: "blur(10px)",
       borderRadius: { xs: 0, md: 2 },
-      zIndex: 1,
+      zIndex: 1000,
     }}>
       <Card sx={{ position: 'relative' }}>
         <IconButton 
@@ -54,8 +54,8 @@ export const VendorShortView = ({ vendor, onViewMore, onClose }: VendorShortView
         <CardContent sx={{ pt: 6 }}>
           <Box sx={{ 
             display: 'flex',
-            flexDirection: { xs: 'column', sm: 'row' },
-            alignItems: { xs: 'center', sm: 'flex-start' },
+            flexDirection: { xs: 'column', sm: 'column' },
+            alignItems: { xs: 'center', sm: 'center' },
             gap: 2
           }}>
             <Box sx={{ 
@@ -70,10 +70,8 @@ export const VendorShortView = ({ vendor, onViewMore, onClose }: VendorShortView
                 src={vendor.logoUrl} 
                 alt={vendor.businessName}
                 style={{ 
-                  maxWidth: '200px',
-                  maxHeight: '100%',
-                  width: 'auto',
-                  height: 'auto',
+                  maxWidth: '100px',
+                  maxHeight: '100px',
                   objectFit: 'contain'
                 }}
               />

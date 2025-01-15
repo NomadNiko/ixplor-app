@@ -30,7 +30,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
       backgroundColor: theme => theme.palette.background.glass,
       backdropFilter: "blur(10px)",
       borderRadius: { xs: 0, md: 2 },
-      zIndex: 1,
+      zIndex: 1000,
     }}>
       <Card>
         <CardContent sx={{ position: 'relative' }}>
@@ -54,7 +54,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
               display: 'flex',
               flexDirection: { xs: 'column', sm: 'row' },
               alignItems: { xs: 'center', sm: 'flex-start' },
-              gap: 3,
+              gap: 2,
               mb: 4
             }}>
               <Box sx={{ 

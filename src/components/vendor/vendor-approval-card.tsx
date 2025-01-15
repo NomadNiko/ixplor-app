@@ -81,8 +81,8 @@ export const VendorApprovalCard: React.FC<VendorApprovalCardProps> = ({
               src={vendor.logoUrl}
               alt={vendor.businessName}
               style={{
-                maxWidth: '100%',
-                maxHeight: '100%',
+                maxWidth: '100px',
+                maxHeight: '100px',
                 objectFit: 'contain'
               }}
             />
