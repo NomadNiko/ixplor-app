@@ -103,6 +103,31 @@ function ResponsiveAppBar() {
                 </Typography>
               </MenuItem>
 
+              {!!user?.role && user.role.id === 1 && (
+                <MenuItem
+                  onClick={handleCloseNavMenu}
+                  component={Link}
+                  href="/onboard"
+                >
+                  <Typography textAlign="center">
+                    {t("common:navigation.onboard")}
+                  </Typography>
+                </MenuItem>
+              )}
+
+
+              {!!user?.role && user.role.id === 1 && (
+                <MenuItem
+                  onClick={handleCloseNavMenu}
+                  component={Link}
+                  href="/approvals"
+                >
+                  <Typography textAlign="center">
+                    {t("common:navigation.approvals")}
+                  </Typography>
+                </MenuItem>
+              )}
+
               {!!user?.role &&
                 [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
                   <MenuItem
