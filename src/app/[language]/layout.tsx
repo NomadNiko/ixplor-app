@@ -6,6 +6,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import '@fontsource-variable/orbitron';
+import '@fontsource/new-tegomin';
 import CssBaseline from "@mui/material/CssBaseline";
 import { NextUIProvider } from "@nextui-org/react";
 import type { Metadata } from "next";

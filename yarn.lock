@@ -1355,6 +1355,11 @@
   resolved "https://registry.yarnpkg.com/@fontsource-variable/orbitron/-/orbitron-5.1.1.tgz#00d972bc7e5f46572b64f9ead3d7bbecb6d8ac5a"
   integrity sha512-pg835pz69XVQn7rzGF3/SZ848SK5gT/gvFdIIiBDUtVVyJLVOGEd68FVFuyX5B5KR3VHOQeWjUVBg662obCqhg==
 
+"@fontsource/new-tegomin@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@fontsource/new-tegomin/-/new-tegomin-5.1.1.tgz#41ad7fc5aed320c4ad7f097760bc1fe0e46883b8"
+  integrity sha512-x9+pXKjtOn1BWHf8yrXydsv6MooDZq5lM1BZ8PBi/tgZtbwi72Wi0jVYAb/0tJAnHfcn67xAZGH69V+NbhSmhg==
+
 "@fontsource/roboto@^5.0.8":
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/@fontsource/roboto/-/roboto-5.1.1.tgz#64b3f819baf8d3bcfb48c0437ddc7e4118a6ab14"
