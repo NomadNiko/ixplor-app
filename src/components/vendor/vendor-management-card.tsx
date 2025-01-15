@@ -1,19 +1,12 @@
 import { useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import { useTranslation } from "@/services/i18n/client";
-import { Vendor, VendorStatusEnum } from "@/app/[language]/types/vendor";
-import { Check, X, AlertTriangle, Trash2, Edit2 } from "lucide-react";
-import { Image } from "@nextui-org/react";
-import useConfirmDialog from "@/components/confirm-dialog/use-confirm-dialog";
 import Divider from "@mui/material/Divider";
-import { useSnackbar } from "@/hooks/use-snackbar";
-import { useTheme } from "@mui/material/styles";
+import { VendorHeader } from "./vendor-header";
+import { VendorInfoGrid } from "./vendor-info-grid";
+import { VendorActionSection } from "./vendor-action-section";
 import { VendorEditCard } from "./vendor-edit-card";
+import { Vendor, VendorStatusEnum } from "@/app/[language]/types/vendor";
 
 interface VendorManagementCardProps {
   vendor: Vendor;
@@ -28,42 +21,21 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
   onDelete,
   onUpdate,
 }) => {
-  const { t } = useTranslation("vendor-admin");
-  const { enqueueSnackbar } = useSnackbar();
   const [notes, setNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const { confirmDialog } = useConfirmDialog();
-  const theme = useTheme();
 
-  const handleAction = async (action: VendorStatusEnum) => {
-    if (isSubmitting) return;
-    if (
-      (action === VendorStatusEnum.REJECTED ||
-        action === VendorStatusEnum.ACTION_NEEDED) &&
-      !notes.trim()
-    ) {
-      enqueueSnackbar(t("errors.notesRequired"), { variant: "error" });
-      return;
-    }
+  const handleAction = async (id: string, action: VendorStatusEnum, notes: string) => {
     setIsSubmitting(true);
-    await onAction(vendor._id, action, notes);
+    await onAction(id, action, notes);
     setIsSubmitting(false);
     setNotes("");
   };
 
-  const handleDelete = async () => {
-    const confirmed = await confirmDialog({
-      title: t("deleteConfirm.title"),
-      message: t("deleteConfirm.message"),
-      successButtonText: t("deleteConfirm.confirm"),
-      cancelButtonText: t("deleteConfirm.cancel"),
-    });
-    if (confirmed) {
-      setIsSubmitting(true);
-      await onDelete(vendor._id);
-      setIsSubmitting(false);
-    }
+  const handleDelete = async (id: string) => {
+    setIsSubmitting(true);
+    await onDelete(id);
+    setIsSubmitting(false);
   };
 
   if (isEditing) {
@@ -82,169 +54,32 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
   return (
     <Card>
       <CardContent sx={{ position: "relative" }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            gap: 3,
-            mb: 2,
-          }}
-        >
-          <Box
-            sx={{
-              width: { xs: "100%", sm: 100 },
-              height: { xs: 100, sm: 100 },
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-            }}
-          >
-            <Image
-              src={vendor.logoUrl}
-              alt={vendor.businessName}
-              style={{
-                maxWidth: "100px",
-                maxHeight: "100px",
-                objectFit: "contain",
-              }}
-            />
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <Typography variant="h5" gutterBottom>
-              {vendor.businessName}
-            </Typography>
-            <Typography
-              color="text.secondary"
-              component="p"
-              variant="body2"
-              sx={{ mb: 2 }}
-            >
-              {vendor.description}
-            </Typography>
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                gap: 2,
-              }}
-            >
-              <Box>
-                <Typography variant="subtitle2" color="text.secondary">
-                  {t("contact")}
-                </Typography>
-                <Typography>{vendor.email}</Typography>
-                <Typography>{vendor.phone}</Typography>
-              </Box>
-              <Box>
-                <Typography variant="subtitle2" color="text.secondary">
-                  {t("location")}
-                </Typography>
-                <Typography>{vendor.address}</Typography>
-                <Typography>
-                  {vendor.city}, {vendor.state} {vendor.postalCode}
-                </Typography>
-              </Box>
-              <Box>
-                <Typography variant="subtitle2" color="text.secondary">
-                  {t("adminNotes")}
-                </Typography>
-                <Typography>
-                  {vendor.adminNotes || t("noAdminNotes")}
-                </Typography>
-              </Box>
-              <Box>
-                <Typography
-                  sx={{
-                    fontSize: "1.2rem",
-                  }}
-                  variant="subtitle2"
-                  color="success.light"
-                >
-                  {t("status")}
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: "1.2rem",
-                  }}
-                  color="warning.main"
-                >
-                  {vendor.vendorStatus}
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-        </Box>
-        <Divider sx={{ my: 2 }} />
-        <TextField
-          fullWidth
-          multiline
-          rows={3}
-          variant="outlined"
-          placeholder={t("notesPlaceholder")}
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          sx={{ mb: 2 }}
+        <VendorHeader
+          logoUrl={vendor.logoUrl}
+          businessName={vendor.businessName}
+          description={vendor.description}
         />
-        <Box
-          sx={{
-            display: "flex",
-            gap: 1,
-            flexWrap: "wrap",
-          }}
-        >
-          <Button
-            variant="contained"
-            sx={{ background: theme.palette.success.main }}
-            startIcon={<Check size={16} />}
-            onClick={() => handleAction(VendorStatusEnum.APPROVED)}
-            disabled={isSubmitting}
-          >
-            {t("approve")}
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            startIcon={<X size={16} />}
-            onClick={() => handleAction(VendorStatusEnum.REJECTED)}
-            disabled={isSubmitting}
-          >
-            {t("reject")}
-          </Button>
-          <Button
-            variant="contained"
-            color="warning"
-            startIcon={<AlertTriangle size={16} />}
-            onClick={() => handleAction(VendorStatusEnum.ACTION_NEEDED)}
-            disabled={isSubmitting}
-          >
-            {t("needsAction")}
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<Edit2 size={16} />}
-            onClick={() => setIsEditing(true)}
-            disabled={isSubmitting}
-          >
-            {t("edit")}
-          </Button>
-          <Button
-            variant="contained"
-            sx={{
-              background: theme.palette.error.main,
-              ml: "auto",
-            }}
-            startIcon={<Trash2 size={16} />}
-            onClick={handleDelete}
-            disabled={isSubmitting}
-          >
-            {t("delete")}
-          </Button>
-        </Box>
+        <VendorInfoGrid
+          email={vendor.email}
+          phone={vendor.phone}
+          address={vendor.address}
+          city={vendor.city}
+          state={vendor.state}
+          postalCode={vendor.postalCode}
+          adminNotes={vendor.adminNotes}
+          vendorStatus={vendor.vendorStatus}
+        />
+        <Divider sx={{ my: 2 }} />
+        <VendorActionSection
+          onAction={handleAction}
+          onDelete={handleDelete}
+          onEdit={() => setIsEditing(true)}
+          vendorId={vendor._id}
+          notes={notes}
+          setNotes={setNotes}
+          isSubmitting={isSubmitting}
+        />
       </CardContent>
     </Card>
   );
 };
-
-export default VendorManagementCard;
