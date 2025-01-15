@@ -1,3 +1,4 @@
+"use client";
 import type { Metadata } from "next";
 import { getServerTranslation } from "@/services/i18n";
 import ApprovalsPage from "./page-content";
