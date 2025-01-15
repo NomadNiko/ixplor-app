@@ -143,7 +143,7 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
               <Box>
                 <Typography
                   sx={{
-                    fontSize: "2rem",
+                    fontSize: "1.2rem",
                   }}
                   variant="subtitle2"
                   color="success.light"
@@ -152,7 +152,7 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
                 </Typography>
                 <Typography
                   sx={{
-                    fontSize: "2rem",
+                    fontSize: "1.2rem",
                   }}
                   color="warning.main"
                 >
