@@ -59,7 +59,7 @@ function ResponsiveAppBar() {
               mr: 2,
               display: { xs: "none", md: "flex" },
               fontWeight: 700,
-              fontFamily: 'iXplor',
+              fontFamily: "iXplor",
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
@@ -174,6 +174,32 @@ function ResponsiveAppBar() {
 
             {!!user?.role &&
               [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
+                <MenuItem
+                  onClick={handleCloseNavMenu}
+                  component={Link}
+                  href="/onboard"
+                >
+                  <Typography textAlign="center">
+                    {t("common:navigation.onboard")}
+                  </Typography>
+                </MenuItem>
+              )}
+
+            {!!user?.role &&
+              [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
+                <MenuItem
+                  onClick={handleCloseNavMenu}
+                  component={Link}
+                  href="/approvals"
+                >
+                  <Typography textAlign="center">
+                    {t("common:navigation.approvals")}
+                  </Typography>
+                </MenuItem>
+              )}
+
+            {!!user?.role &&
+              [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
@@ -193,8 +219,7 @@ function ResponsiveAppBar() {
               display: "flex",
               mr: 1,
             }}
-          >
-          </Box>
+          ></Box>
 
           {!isLoaded ? (
             <CircularProgress color="inherit" />

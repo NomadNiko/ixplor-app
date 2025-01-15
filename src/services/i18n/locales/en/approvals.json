@@ -1,0 +1,30 @@
+{
+    "title": "Vendor Approvals",
+    "subtitle": "Review and manage vendor applications",
+    "noVendors": "No pending vendors to review",
+    "contact": "Contact Information",
+    "location": "Location",
+    "notesPlaceholder": "Add notes about this vendor (required for Reject or Needs Action)",
+    "approve": "Approve",
+    "reject": "Reject",
+    "needsAction": "Needs Action",
+    "delete": "Delete",
+    "deleteConfirm": {
+      "title": "Delete Vendor",
+      "message": "Are you sure you want to delete this vendor? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "success": {
+      "approved": "Vendor has been approved",
+      "rejected": "Vendor has been rejected",
+      "action_needed": "Vendor has been marked as needing action",
+      "deleted": "Vendor has been deleted"
+    },
+    "errors": {
+      "failedToLoadVendors": "Failed to load vendors. Please try again.",
+      "updateFailed": "Failed to update vendor status",
+      "deleteFailed": "Failed to delete vendor",
+      "unauthorized": "You are not authorized to perform this action"
+    }
+  }
