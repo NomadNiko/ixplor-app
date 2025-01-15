@@ -7,38 +7,37 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useTranslation } from "@/services/i18n/client";
 import { Vendor, VendorStatusEnum } from "@/app/[language]/types/vendor";
-import { Check, X, AlertTriangle, Trash2 } from "lucide-react";
+import { Check, X, AlertTriangle, Trash2, Edit2 } from "lucide-react";
 import { Image } from "@nextui-org/react";
 import useConfirmDialog from "@/components/confirm-dialog/use-confirm-dialog";
 import Divider from "@mui/material/Divider";
 import { useSnackbar } from "@/hooks/use-snackbar";
 import { useTheme } from "@mui/material/styles";
+import { VendorEditCard } from "./vendor-edit-card";
 
 interface VendorManagementCardProps {
   vendor: Vendor;
-  onAction: (
-    id: string,
-    action: VendorStatusEnum,
-    notes: string
-  ) => Promise<void>;
+  onAction: (id: string, action: VendorStatusEnum, notes: string) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
+  onUpdate: () => Promise<void>;
 }
 
 export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
   vendor,
   onAction,
   onDelete,
+  onUpdate,
 }) => {
   const { t } = useTranslation("vendor-admin");
   const { enqueueSnackbar } = useSnackbar();
   const [notes, setNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const { confirmDialog } = useConfirmDialog();
   const theme = useTheme();
 
   const handleAction = async (action: VendorStatusEnum) => {
     if (isSubmitting) return;
-
     if (
       (action === VendorStatusEnum.REJECTED ||
         action === VendorStatusEnum.ACTION_NEEDED) &&
@@ -47,7 +46,6 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
       enqueueSnackbar(t("errors.notesRequired"), { variant: "error" });
       return;
     }
-
     setIsSubmitting(true);
     await onAction(vendor._id, action, notes);
     setIsSubmitting(false);
@@ -61,13 +59,25 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
       successButtonText: t("deleteConfirm.confirm"),
       cancelButtonText: t("deleteConfirm.cancel"),
     });
-
     if (confirmed) {
       setIsSubmitting(true);
       await onDelete(vendor._id);
       setIsSubmitting(false);
     }
   };
+
+  if (isEditing) {
+    return (
+      <VendorEditCard
+        vendor={vendor}
+        onSave={async () => {
+          setIsEditing(false);
+          await onUpdate();
+        }}
+        onCancel={() => setIsEditing(false)}
+      />
+    );
+  }
 
   return (
     <Card>
@@ -100,12 +110,10 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
               }}
             />
           </Box>
-
           <Box sx={{ flex: 1 }}>
             <Typography variant="h5" gutterBottom>
               {vendor.businessName}
             </Typography>
-
             <Typography
               color="text.secondary"
               component="p"
@@ -114,7 +122,6 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
             >
               {vendor.description}
             </Typography>
-
             <Box
               sx={{
                 display: "grid",
@@ -129,7 +136,6 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
                 <Typography>{vendor.email}</Typography>
                 <Typography>{vendor.phone}</Typography>
               </Box>
-
               <Box>
                 <Typography variant="subtitle2" color="text.secondary">
                   {t("location")}
@@ -139,7 +145,6 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
                   {vendor.city}, {vendor.state} {vendor.postalCode}
                 </Typography>
               </Box>
-
               <Box>
                 <Typography variant="subtitle2" color="text.secondary">
                   {t("adminNotes")}
@@ -148,7 +153,6 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
                   {vendor.adminNotes || t("noAdminNotes")}
                 </Typography>
               </Box>
-
               <Box>
                 <Typography
                   sx={{
@@ -165,15 +169,13 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
                   }}
                   color="warning.main"
                 >
-                  {vendor.vendorStatus.toUpperCase()}
+                  {vendor.vendorStatus}
                 </Typography>
               </Box>
             </Box>
           </Box>
         </Box>
-
         <Divider sx={{ my: 2 }} />
-
         <TextField
           fullWidth
           multiline
@@ -184,7 +186,6 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
           onChange={(e) => setNotes(e.target.value)}
           sx={{ mb: 2 }}
         />
-
         <Box
           sx={{
             display: "flex",
@@ -201,7 +202,6 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
           >
             {t("approve")}
           </Button>
-
           <Button
             variant="contained"
             color="error"
@@ -211,7 +211,6 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
           >
             {t("reject")}
           </Button>
-
           <Button
             variant="contained"
             color="warning"
@@ -221,7 +220,15 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
           >
             {t("needsAction")}
           </Button>
-
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<Edit2 size={16} />}
+            onClick={() => setIsEditing(true)}
+            disabled={isSubmitting}
+          >
+            {t("edit")}
+          </Button>
           <Button
             variant="contained"
             sx={{
@@ -239,3 +246,5 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
     </Card>
   );
 };
+
+export default VendorManagementCard;

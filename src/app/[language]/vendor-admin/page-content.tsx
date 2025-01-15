@@ -1,4 +1,3 @@
-"use client";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -44,14 +43,12 @@ export default function VendorAdminPage() {
       enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
       return;
     }
-
     try {
       const updateData = {
         vendorStatus: action,
         ...(action === VendorStatusEnum.ACTION_NEEDED ? { actionNeeded: notes } : {}),
         ...(notes ? { adminNotes: notes } : {})
       };
-
       const response = await fetch(`${API_URL}/vendors/${id}`, {
         method: 'PUT',
         headers: {
@@ -60,11 +57,9 @@ export default function VendorAdminPage() {
         },
         body: JSON.stringify(updateData)
       });
-
       if (!response.ok) {
         throw new Error('Failed to update vendor');
       }
-
       const result = await response.json();
       
       if (result.data) {
@@ -85,7 +80,6 @@ export default function VendorAdminPage() {
       enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
       return;
     }
-
     try {
       const response = await fetch(`${API_URL}/vendors/${id}`, {
         method: 'DELETE',
@@ -93,7 +87,6 @@ export default function VendorAdminPage() {
           'Authorization': `Bearer ${tokensInfo.token}`
         }
       });
-
       if (response.ok) {
         enqueueSnackbar(t('success.deleted'), { variant: 'success' });
         await loadVendors();
@@ -132,7 +125,6 @@ export default function VendorAdminPage() {
       <Typography color="text.secondary" paragraph>
         {t("subtitle")}
       </Typography>
-
       <Grid container spacing={3}>
         {vendors.length === 0 ? (
           <Grid item xs={12}>
@@ -147,6 +139,7 @@ export default function VendorAdminPage() {
                 vendor={vendor}
                 onAction={handleVendorAction}
                 onDelete={handleDelete}
+                onUpdate={loadVendors}
               />
             </Grid>
           ))
