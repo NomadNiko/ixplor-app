@@ -18,3 +18,17 @@ export function useGetVendorsService() {
     return wrapperFetchJsonResponse<VendorResponse>(response);
   }, [fetch]);
 }
+
+export function useGetAllVendorsService() {
+  const fetch = useFetch();
+  
+  return useCallback(async (requestConfig?: RequestConfigType) => {
+    const requestUrl = new URL(`${API_URL}/vendors/admin/all`);
+    const response = await fetch(requestUrl, {
+      method: 'GET',
+      ...requestConfig,
+    });
+    
+    return wrapperFetchJsonResponse<VendorResponse>(response);
+  }, [fetch]);
+}

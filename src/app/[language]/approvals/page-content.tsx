@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
 import { useTranslation } from "@/services/i18n/client";
-import { useGetVendorsService } from "@/services/api/services/vendors";
+import { useGetAllVendorsService } from "@/services/api/services/vendors";
 import { useEffect, useState } from 'react';
 import { Vendor, VendorStatusEnum } from "@/app/[language]/types/vendor";
 import { useSnackbar } from "@/hooks/use-snackbar";
@@ -18,12 +18,12 @@ export default function ApprovalsPage() {
   const { enqueueSnackbar } = useSnackbar();
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(true);
-  const getVendors = useGetVendorsService();
+  const getAllVendors = useGetAllVendorsService();
 
   const loadVendors = async () => {
     try {
       setLoading(true);
-      const response = await getVendors();
+      const response = await getAllVendors();
       if (response.status === HTTP_CODES_ENUM.OK && response.data) {
         const submittedVendors = response.data.data.filter(
           (v) => v.vendorStatus === VendorStatusEnum.SUBMITTED
