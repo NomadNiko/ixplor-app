@@ -8,7 +8,7 @@ import { useGetAllVendorsService } from "@/services/api/services/vendors";
 import { useEffect, useState } from 'react';
 import { Vendor, VendorStatusEnum } from "@/app/[language]/types/vendor";
 import { useSnackbar } from "@/hooks/use-snackbar";
-import { VendorApprovalCard } from "@/components/vendor/vendor-approval-card";
+import { VendorManagementCard } from "@/components/vendor/vendor-management-card";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import HTTP_CODES_ENUM from "@/services/api/types/http-codes";
@@ -143,7 +143,7 @@ export default function VendorAdminPage() {
         ) : (
           vendors.map((vendor) => (
             <Grid item xs={12} key={vendor._id}>
-              <VendorApprovalCard
+              <VendorManagementCard
                 vendor={vendor}
                 onAction={handleVendorAction}
                 onDelete={handleDelete}
