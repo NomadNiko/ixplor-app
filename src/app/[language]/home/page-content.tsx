@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, CSSProperties } from 'react';
 import Map, { MapRef, GeolocateControl, ViewState } from 'react-map-gl';
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -14,6 +14,7 @@ import HTTP_CODES_ENUM from '@/services/api/types/http-codes';
 import { BBox } from 'geojson';
 import { useSnackbar } from '@/hooks/use-snackbar';
 import { useTranslation } from '@/services/i18n/client';
+import { useTheme } from '@mui/material/styles';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -44,6 +45,17 @@ const MapHomeLayout = () => {
 
   const mapRef = useRef<MapRef>(null);
   const getVendors = useGetVendorsService();
+
+   
+  const theme = useTheme();
+
+  const controlStyle: CSSProperties = {
+    padding: theme.spacing(1),
+    backgroundColor: theme.palette.background.glass,
+    backdropFilter: "blur(10px)",
+    color: theme.palette.primary.main,
+    borderRadius: theme.shape.borderRadius,
+  };
 
   useEffect(() => {
     const fetchVendors = async () => {
@@ -150,6 +162,7 @@ const MapHomeLayout = () => {
           trackUserLocation
           showUserHeading
           onGeolocate={handleGeolocate}
+          style={controlStyle}
         />
         
         <ClusteredVendorMarkers
