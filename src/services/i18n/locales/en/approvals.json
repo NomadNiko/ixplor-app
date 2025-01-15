@@ -25,6 +25,7 @@
       "failedToLoadVendors": "Failed to load vendors. Please try again.",
       "updateFailed": "Failed to update vendor status",
       "deleteFailed": "Failed to delete vendor",
-      "unauthorized": "You are not authorized to perform this action"
+      "unauthorized": "You are not authorized to perform this action",
+      "notesRequired": "You are not authorized to perform this action"
     }
   }

@@ -72,19 +72,7 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
   return (
     <Card>
       <CardContent sx={{ position: "relative" }}>
-        {/* Vendor Status Text */}
-        <Typography
-          variant="caption"
-          sx={{
-            position: "absolute",
-            top: 16,
-            right: 16,
-            color: "text.secondary",
-          }}
-        >
-          {t(`status.${vendor.vendorStatus.toLowerCase()}`)}
-        </Typography>
-
+      
         <Box
           sx={{
             display: "flex",
@@ -151,6 +139,13 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
                 <Typography>
                   {vendor.city}, {vendor.state} {vendor.postalCode}
                 </Typography>
+              </Box>
+
+              <Box>
+                <Typography variant="subtitle2" color="text.secondary">
+                  {t("status")}
+                </Typography>
+                <Typography>{vendor.vendorStatus.toLowerCase()}</Typography>
               </Box>
             </Box>
           </Box>

@@ -4,10 +4,11 @@
     "noVendors": "No vendors could be loaded. Please troubleshoot further as this should not happen.",
     "contact": "Contact Information",
     "location": "Location",
+    "status": "Vendor Status",
     "notesPlaceholder": "Add notes about this vendor (required for Reject or Needs Action)",
-    "approve": "Approve",
+    "approve": "Activate",
     "reject": "Reject",
-    "needsAction": "Needs Action",
+    "needsAction": "Disable",
     "delete": "Delete",
     "deleteConfirm": {
       "title": "Delete Vendor",
@@ -25,6 +26,7 @@
       "failedToLoadVendors": "Failed to load vendors. Please try again.",
       "updateFailed": "Failed to update vendor status",
       "deleteFailed": "Failed to delete vendor",
-      "unauthorized": "You are not authorized to perform this action"
+      "unauthorized": "You are not authorized to perform this action",
+      "notesRequired": "You are not authorized to perform this action"
     }
   }
