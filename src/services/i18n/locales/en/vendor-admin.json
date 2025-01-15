@@ -19,7 +19,7 @@
     "success": {
       "approved": "Vendor has been approved",
       "rejected": "Vendor has been rejected",
-      "action_needed": "Vendor has been marked as needing action",
+      "action_needed": "Vendor disabled and marked as needing action",
       "deleted": "Vendor has been deleted"
     },
     "errors": {
@@ -27,6 +27,6 @@
       "updateFailed": "Failed to update vendor status",
       "deleteFailed": "Failed to delete vendor",
       "unauthorized": "You are not authorized to perform this action",
-      "notesRequired": "You are not authorized to perform this action"
+      "notesRequired": "Notes are required to Reject or Disable Vendor"
     }
   }

@@ -109,9 +109,9 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
 
             <Typography
               color="text.secondary"
-              paragraph
+              component="p"
               variant="body2"
-              sx={{ mb: 1 }}
+              sx={{ mb: 2 }}
             >
               {vendor.description}
             </Typography>
@@ -142,10 +142,12 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
               </Box>
 
               <Box>
-                <Typography variant="subtitle2" color="text.secondary">
+                <Typography variant="subtitle2" color="success.light">
                   {t("status")}
                 </Typography>
-                <Typography>{vendor.vendorStatus.toLowerCase()}</Typography>
+                <Typography color="warning.main">
+                  {vendor.vendorStatus.toUpperCase()}
+                </Typography>
               </Box>
             </Box>
           </Box>
@@ -173,7 +175,7 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
         >
           <Button
             variant="contained"
-            sx={{ backgroundColor: theme.palette.success.main }}
+            sx={{ background: theme.palette.success.main }}
             startIcon={<Check size={16} />}
             onClick={() => handleAction(VendorStatusEnum.APPROVED)}
             disabled={isSubmitting}
@@ -204,7 +206,7 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
           <Button
             variant="contained"
             sx={{
-              backgroundColor: theme.palette.error.main,
+              background: theme.palette.error.main,
               ml: "auto",
             }}
             startIcon={<Trash2 size={16} />}
