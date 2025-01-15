@@ -16,9 +16,26 @@ import StepLabel from '@mui/material/StepLabel';
 import { BusinessInfoStep } from './steps/BusinessInfoStep';
 import { ContactDetailsStep } from './steps/ContactDetailsStep';
 import { LocationStep } from './steps/LocationStep';
-import { vendorSchema, VendorFormData } from './types';
+import { vendorSchema } from './types';
 import { PlaceResult } from '@/hooks/use-google-places';
 import { API_URL } from '@/services/api/config';
+
+// Update the form data type to match the expected server format
+type VendorFormData = {
+  businessName: string;
+  description: string;
+  vendorType: 'tours' | 'lessons' | 'rentals' | 'tickets';
+  email: string;
+  phone: string;
+  website?: string;
+  logoUrl?: string;
+  address: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  latitude: number;
+  longitude: number;
+};
 
 export default function VendorRegistrationForm() {
   const { t } = useTranslation("onboard");
@@ -40,17 +57,14 @@ export default function VendorRegistrationForm() {
       city: '',
       state: '',
       postalCode: '',
-      location: {
-        type: 'Point',
-        coordinates: [0, 0]
-      }
+      latitude: 0,
+      longitude: 0
     },
     mode: 'onChange'
   });
 
-
   const { handleSubmit, trigger, control, setValue } = methods;
-
+  
   const steps = [
     'Business Information',
     'Contact Details',
@@ -67,7 +81,7 @@ export default function VendorRegistrationForm() {
         isStepValid = await trigger(['email', 'phone', 'website', 'logoUrl']);
         break;
       case 2:
-        isStepValid = await trigger(['address', 'city', 'state', 'postalCode', 'location']);
+        isStepValid = await trigger(['address', 'city', 'state', 'postalCode', 'latitude', 'longitude']);
         break;
     }
     if (isStepValid) {
@@ -84,10 +98,8 @@ export default function VendorRegistrationForm() {
     setValue('city', placeResult.city);
     setValue('state', placeResult.state);
     setValue('postalCode', placeResult.postalCode);
-    setValue('location', {
-      type: 'Point', 
-      coordinates: [placeResult.longitude, placeResult.latitude]
-    });
+    setValue('latitude', placeResult.latitude);
+    setValue('longitude', placeResult.longitude);
   };
 
   const onSubmit = async (formData: VendorFormData) => {
@@ -99,6 +111,7 @@ export default function VendorRegistrationForm() {
         return;
       }
 
+      // Submit data directly with latitude and longitude
       const vendorResponse = await fetch(`${API_URL}/vendors`, {
         method: 'POST',
         headers: {
@@ -107,13 +120,13 @@ export default function VendorRegistrationForm() {
         },
         body: JSON.stringify({
           ...formData,
-          vendorStatus: 'APPROVED'
+          vendorStatus: 'SUBMITTED'
         })
       });
 
       if (vendorResponse.ok) {
         enqueueSnackbar(t('success.vendorCreated'), { variant: 'success' });
-        router.push('/admin-panel/vendors');
+        router.push('/');
       } else {
         throw new Error('Failed to create vendor profile');
       }
@@ -157,10 +170,7 @@ export default function VendorRegistrationForm() {
                 <Grid container justifyContent="space-between">
                   <Grid item>
                     {activeStep !== 0 && (
-                      <Button
-                        onClick={handleBack}
-                        sx={{ mr: 1 }}
-                      >
+                      <Button onClick={handleBack} sx={{ mr: 1 }}>
                         Back
                       </Button>
                     )}

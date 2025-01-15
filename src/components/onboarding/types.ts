@@ -14,10 +14,8 @@ export const vendorSchema = z.object({
   city: z.string().min(1, 'City is required'),
   state: z.string().min(1, 'State is required'),
   postalCode: z.string().min(5, 'Invalid postal code'),
-  location: z.object({
-    type: z.literal('Point'),
-    coordinates: z.tuple([z.number(), z.number()])
-  })
+  latitude: z.number(),
+  longitude: z.number()
 });
 
 export type VendorFormData = z.infer<typeof vendorSchema>;
