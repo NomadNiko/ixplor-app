@@ -1,20 +1,16 @@
 import { useState } from 'react';
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 import { useTranslation } from "@/services/i18n/client";
 import { Vendor } from "@/app/[language]/types/vendor";
-import { Image } from "@nextui-org/react";
 import { useSnackbar } from "@/hooks/use-snackbar";
-import { useTheme } from "@mui/material/styles";
-import MenuItem from '@mui/material/MenuItem';
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import Divider from "@mui/material/Divider";
-import { Save, X } from 'lucide-react';
+import { VendorEditHeader } from './vendor-edit-header';
+import { VendorEditContact } from './vendor-edit-contact';
+import { VendorEditLocation } from './vendor-edit-location';
+import { VendorEditActions } from './vendor-edit-actions';
 
 interface VendorEditCardProps {
   vendor: Vendor;
@@ -29,7 +25,7 @@ export const VendorEditCard: React.FC<VendorEditCardProps> = ({
 }) => {
   const { t } = useTranslation("vendor-admin");
   const { enqueueSnackbar } = useSnackbar();
-  const theme = useTheme();
+  
   const [formData, setFormData] = useState({
     businessName: vendor.businessName,
     description: vendor.description,
@@ -94,183 +90,45 @@ export const VendorEditCard: React.FC<VendorEditCardProps> = ({
   return (
     <Card>
       <CardContent>
-        <Box sx={{
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          gap: 3,
-          mb: 2,
-        }}>
-          <Box sx={{
-            width: { xs: "100%", sm: 100 },
-            height: { xs: 100, sm: 100 },
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-          }}>
-            <Image
-              src={formData.logoUrl}
-              alt={formData.businessName}
-              style={{
-                maxWidth: "100px",
-                maxHeight: "100px",
-                objectFit: "contain",
-              }}
-            />
-          </Box>
-
-          <Box sx={{ flex: 1 }}>
-            <Typography variant="h5" gutterBottom>
-              {t('editVendor')}
-            </Typography>
-
-            <Box sx={{ display: 'grid', gap: 2 }}>
-              <TextField
-                fullWidth
-                label={t('businessName')}
-                name="businessName"
-                value={formData.businessName}
-                onChange={handleInputChange}
-              />
-
-              <TextField
-                fullWidth
-                multiline
-                rows={3}
-                label={t('description')}
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-              />
-
-              <TextField
-                select
-                fullWidth
-                label={t('vendorType')}
-                name="vendorType"
-                value={formData.vendorType}
-                onChange={handleInputChange}
-              >
-                {['tours', 'lessons', 'rentals', 'tickets'].map((type) => (
-                  <MenuItem key={type} value={type}>
-                    {type.charAt(0).toUpperCase() + type.slice(1)}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Box>
-          </Box>
-        </Box>
+        <VendorEditHeader
+          logoUrl={formData.logoUrl}
+          businessName={formData.businessName}
+          description={formData.description}
+          vendorType={formData.vendorType}
+          onChange={handleInputChange}
+          t={t}
+        />
 
         <Divider sx={{ my: 2 }} />
 
-        <Box sx={{ display: 'grid', gap: 2 }}>
-          <Typography variant="h6">{t('contact')}</Typography>
-          <TextField
-            fullWidth
-            label={t('email')}
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-          />
-          <TextField
-            fullWidth
-            label={t('phone')}
-            name="phone"
-            value={formData.phone}
-            onChange={handleInputChange}
-          />
-          <TextField
-            fullWidth
-            label={t('website')}
-            name="website"
-            value={formData.website}
-            onChange={handleInputChange}
-          />
-          <TextField
-            fullWidth
-            label={t('logoUrl')}
-            name="logoUrl"
-            value={formData.logoUrl}
-            onChange={handleInputChange}
-          />
-        </Box>
+        <VendorEditContact
+          email={formData.email}
+          phone={formData.phone}
+          website={formData.website}
+          logoUrl={formData.logoUrl}
+          onChange={handleInputChange}
+          t={t}
+        />
 
         <Divider sx={{ my: 2 }} />
 
-        <Box sx={{ display: 'grid', gap: 2 }}>
-          <Typography variant="h6">{t('location')}</Typography>
-          <TextField
-            fullWidth
-            label={t('address')}
-            name="address"
-            value={formData.address}
-            onChange={handleInputChange}
-          />
-          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 2 }}>
-            <TextField
-              fullWidth
-              label={t('city')}
-              name="city"
-              value={formData.city}
-              onChange={handleInputChange}
-            />
-            <TextField
-              fullWidth
-              label={t('state')}
-              name="state"
-              value={formData.state}
-              onChange={handleInputChange}
-            />
-            <TextField
-              fullWidth
-              label={t('postalCode')}
-              name="postalCode"
-              value={formData.postalCode}
-              onChange={handleInputChange}
-            />
-          </Box>
-        </Box>
+        <VendorEditLocation
+          address={formData.address}
+          city={formData.city}
+          state={formData.state}
+          postalCode={formData.postalCode}
+          onChange={handleInputChange}
+          t={t}
+        />
 
         <Divider sx={{ my: 2 }} />
 
-        <Box sx={{ display: 'grid', gap: 2 }}>
-          <Typography variant="h6">{t('adminNotes')}</Typography>
-          <TextField
-            fullWidth
-            multiline
-            rows={3}
-            label={t('adminNotes')}
-            name="adminNotes"
-            value={formData.adminNotes}
-            onChange={handleInputChange}
-          />
-        </Box>
-
-        <Box sx={{
-          display: "flex",
-          gap: 1,
-          mt: 2,
-          justifyContent: "flex-end"
-        }}>
-          <Button
-            variant="contained"
-            color="error"
-            startIcon={<X size={16} />}
-            onClick={onCancel}
-            disabled={isSubmitting}
-          >
-            {t("cancel")}
-          </Button>
-          <Button
-            variant="contained"
-            startIcon={<Save size={16} />}
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-            sx={{ background: theme.palette.success.main }}
-          >
-            {t("save")}
-          </Button>
-        </Box>
+        <VendorEditActions
+          onSave={handleSubmit}
+          onCancel={onCancel}
+          isSubmitting={isSubmitting}
+          t={t}
+        />
       </CardContent>
     </Card>
   );
