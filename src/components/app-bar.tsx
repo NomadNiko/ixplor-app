@@ -121,7 +121,7 @@ function ResponsiveAppBar() {
                     key="approvals"
                     onClick={handleCloseNavMenu}
                     component={Link}
-                    href="/admin-panel/approvals"
+                    href="/approvals"
                   >
                     <Typography textAlign="center">
                       {t("common:navigation.approvals")}
