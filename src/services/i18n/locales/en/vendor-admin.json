@@ -10,6 +10,7 @@
     "approve": "Activate",
     "reject": "Reject",
     "needsAction": "Disable",
+    "noAdminNotes": "Such Empty...",
     "delete": "Delete",
     "deleteConfirm": {
       "title": "Delete Vendor",
