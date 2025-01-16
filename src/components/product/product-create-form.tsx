@@ -104,7 +104,7 @@ export default function ProductCreationForm() {
         return;
       }
 
-      const productResponse = await fetch(`${API_URL}/products`, {
+      const productResponse = await fetch(`${API_URL}/api/products`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
