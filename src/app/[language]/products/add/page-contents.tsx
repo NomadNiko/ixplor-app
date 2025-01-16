@@ -3,7 +3,8 @@
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "@/services/i18n/client";
-import ProductCreationForm from "@/components/product/product-create-form";
+import ProductCreateCard from "@/components/product/product-create-card";
+
 
 export default function ProductCreationPageContent() {
   const { t } = useTranslation("products");
@@ -18,7 +19,7 @@ export default function ProductCreationPageContent() {
         {t("subtitle")}
       </Typography>
       
-      <ProductCreationForm />
+      <ProductCreateCard />
     </Container>
   );
 }
