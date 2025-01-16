@@ -9,7 +9,6 @@ import { useTranslation } from "@/services/i18n/client";
 import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
-import HTTP_CODES_ENUM from "@/services/api/types/http-codes";
 import { ProductCard } from '@/components/product/product-card';
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -70,16 +69,12 @@ export default function ProductsPageContent() {
       });
   
       if (response.ok) {
-        const data = await response.json();
-        if (data.status === HTTP_CODES_ENUM.OK) {
-          const productsWithLocation = data.data.map((product: Product) => ({
-            ...product,
-            location: product.location || defaultLocation
-          }));
-          setProducts(productsWithLocation);
-        } else {
-          throw new Error('Failed to load products');
-        }
+        const result = await response.json();
+        const productsWithLocation = result.data.map((product: Product) => ({
+          ...product,
+          location: product.location || defaultLocation
+        }));
+        setProducts(productsWithLocation);
       } else {
         throw new Error('Failed to load products');
       }
