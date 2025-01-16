@@ -10,7 +10,8 @@
     "logout": "Logout",
     "onboard": "Onboard",
     "approvals": "Approve",
-    "vendor-admin": "Vendors"
+    "vendor-admin": "Vendors",
+    "product": "Products"
   },
   "formInputs": {
     "avatarInput": {
