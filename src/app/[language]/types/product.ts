@@ -20,6 +20,8 @@ export interface Product {
   productStatus: ProductStatusEnum;
   createdAt: string;
   updatedAt: string;
+  city?: string;
+  state?: string;
 }
 
 export enum ProductStatusEnum {
