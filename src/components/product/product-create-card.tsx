@@ -84,7 +84,7 @@ function ProductFormFields() {
     <Box sx={{ display: 'grid', gap: 2, mb: 3 }}>
       <TextField
         fullWidth
-        label={t('productName')}
+        label={t('fields.productName')}
         name="productName"
         value={formData?.productName || ''}
         onChange={(e) => setValue('productName', e.target.value)}
@@ -94,7 +94,7 @@ function ProductFormFields() {
         fullWidth
         multiline
         rows={3}
-        label={t('productDescription')}
+        label={t('fields.productDescription')}
         name="productDescription"
         value={formData?.productDescription || ''}
         onChange={(e) => setValue('productDescription', e.target.value)}
@@ -103,7 +103,7 @@ function ProductFormFields() {
       <TextField
         select
         fullWidth
-        label={t('productType')}
+        label={t('fields.productType')}
         name="productType"
         value={formData?.productType || 'tours'}
         onChange={(e) => setValue('productType', e.target.value as "tours" | "lessons" | "rentals" | "tickets")}
@@ -119,7 +119,7 @@ function ProductFormFields() {
         fullWidth
         type="number"
         name="productPrice"
-        label={t('productPrice')}
+        label={t('fields.productPrice')}
         value={formData?.productPrice || 0}
         onChange={(e) => setValue('productPrice', Number(e.target.value))}
         InputProps={{
@@ -131,7 +131,7 @@ function ProductFormFields() {
         fullWidth
         type="number"
         name="productDuration"
-        label={t('productDuration')}
+        label={t('fields.productDuration')}
         value={formData?.productDuration || ''}
         onChange={(e) => setValue('productDuration', Number(e.target.value))}
         InputProps={{
@@ -139,24 +139,24 @@ function ProductFormFields() {
         }}
       />
 
-      <FormDatePickerInput name="productDate" label={t('productDate')} />
+      <FormDatePickerInput name="productDate" label={t('fields.productDate')} />
       
       <FormTimePickerInput
         name="productStartTime"
-        label={t('productStartTime')}
+        label={t('fields.productStartTime')}
         format="HH:mm"
       />
 
       <FormTimePickerInput
         name="productEndTime"
-        label={t('productEndTime')}
+        label={t('fields.productEndTime')}
         format="HH:mm"
       />
 
       <TextField
         fullWidth
         name="productImageURL"
-        label={t('productImageURL')}
+        label={t('fields.productImageURL')}
         value={formData?.productImageURL || ''}
         onChange={(e) => setValue('productImageURL', e.target.value)}
       />
@@ -164,7 +164,7 @@ function ProductFormFields() {
       <Box>
         <TextField
           fullWidth
-          label={t('productRequirements')}
+          label={t('fields.productRequirements')}
           placeholder={t('requirementsHelp')}
           onKeyDown={handleRequirementsChange}
         />
@@ -200,7 +200,7 @@ function ProductFormFields() {
         multiline
         rows={4}
         name="productWaiver"
-        label={t('productWaiver')}
+        label={t('fields.productWaiver')}
         value={formData?.productWaiver || ''}
         onChange={(e) => setValue('productWaiver', e.target.value)}
       />

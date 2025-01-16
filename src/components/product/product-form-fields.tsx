@@ -15,21 +15,7 @@ export function ProductFormFields() {
   const { t } = useTranslation("products");
   const { control, setValue } = useFormContext<ProductFormData>();
   const formData = useWatch({
-    control,
-    defaultValue: {
-      productName: '',
-      productDescription: '',
-      productType: 'tours',
-      productPrice: 0,
-      productDuration: '',
-      productDate: null,
-      productStartTime: null,
-      productEndTime: null,
-      productAdditionalInfo: '',
-      productRequirements: [],
-      productImageURL: '',
-      productWaiver: '',
-    }
+    control
   });
 
   const handleRequirementsChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -111,7 +97,7 @@ export function ProductFormFields() {
         onChange={(e) => setValue("productDuration", Number(e.target.value))}
         InputProps={{
           endAdornment: (
-            <InputAdornment position="end">{t("fields.hours")}</InputAdornment>
+            <InputAdornment position="end">{t("hours")}</InputAdornment>
           ),
         }}
       />

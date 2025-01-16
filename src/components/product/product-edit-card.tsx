@@ -29,19 +29,20 @@ export function ProductEditCard({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { confirmDialog } = useConfirmDialog();
 
+  // Create form with explicit defaultValues to ensure pre-filling
   const methods = useForm<ProductFormData>({
     defaultValues: {
-      productName: product.productName,
-      productDescription: product.productDescription,
+      productName: product.productName || "",
+      productDescription: product.productDescription || "",
       productType: product.productType,
-      productPrice: product.productPrice,
+      productPrice: product.productPrice || 0,
       productDuration: product.productDuration || "",
       productDate: product.productDate ? new Date(product.productDate) : null,
-      productStartTime: product.productStartTime
-        ? new Date(`1970-01-01T${product.productStartTime}`)
+      productStartTime: product.productStartTime 
+        ? new Date(`1970-01-01T${product.productStartTime}:00.000Z`)
         : null,
       productEndTime: product.productEndTime
-        ? new Date(`1970-01-01T${product.productEndTime}`)
+        ? new Date(`1970-01-01T${product.productEndTime}:00.000Z`)
         : null,
       productAdditionalInfo: product.productAdditionalInfo || "",
       productRequirements: product.productRequirements || [],
@@ -207,3 +208,5 @@ export function ProductEditCard({
     </FormProvider>
   );
 }
+
+export default ProductEditCard;
