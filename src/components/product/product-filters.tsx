@@ -13,7 +13,6 @@ import { Binoculars, GraduationCap, Timer, Ticket, Archive, Send, FileText } fro
 import MuiToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { styled } from '@mui/material/styles';
 
-// Custom styled ToggleButtonGroup that accepts multiple prop
 const ToggleButtonGroup = styled(MuiToggleButtonGroup)`
   &.MuiToggleButtonGroup-root {
     display: flex;
@@ -110,7 +109,6 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({ onFilterChange, cities 
             onChange={handleSearchChange}
             className="bg-background-glass backdrop-blur-md"
           />
-
           <Box>
             <Typography variant="subtitle2" className="mb-2">
               {t("productType")}
@@ -138,7 +136,6 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({ onFilterChange, cities 
               </ToggleButton>
             </ToggleButtonGroup>
           </Box>
-
           <Box>
             <Typography variant="subtitle2" className="mb-2">
               {t("status.title")}
@@ -162,7 +159,6 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({ onFilterChange, cities 
               </ToggleButton>
             </ToggleButtonGroup>
           </Box>
-
           <Box>
             <Typography variant="subtitle2" className="mb-2">
               {t("cities")}
@@ -181,12 +177,11 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({ onFilterChange, cities 
               className="bg-background-glass backdrop-blur-md"
             />
           </Box>
-
           <Box>
-            <Typography variant="subtitle2" className="mb-2">
+            <Typography variant="subtitle2" gutterBottom>
               {t("priceRange")}
             </Typography>
-            <Box className="px-3">
+            <Box sx={{ px: 4, mt: 3, mb: 1 }}>
               <Slider
                 value={filters.priceRange}
                 onChange={handlePriceChange}
@@ -195,9 +190,10 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({ onFilterChange, cities 
                 max={1000}
                 step={10}
                 valueLabelFormat={(value) => `$${value}`}
+                size="small"
               />
             </Box>
-            <Box className="flex justify-between mt-1">
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', px: 3 }}>
               <Typography variant="caption">
                 ${filters.priceRange[0]}
               </Typography>
