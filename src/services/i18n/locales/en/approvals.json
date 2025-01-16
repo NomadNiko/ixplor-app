@@ -20,7 +20,12 @@
       "approved": "Vendor has been approved",
       "rejected": "Vendor has been rejected",
       "action_needed": "Vendor disabled and marked as needing action",
-      "deleted": "Vendor has been deleted"
+      "deleted": "Vendor has been deleted",
+      "status": {
+        "published": "Product published",
+        "draft": "Product saved as draft",
+        "archived": "Product archived"
+      }
     },
     "errors": {
       "failedToLoadVendors": "Failed to load vendors. Please try again.",
