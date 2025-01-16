@@ -1,53 +1,102 @@
 {
-    "title": "Shopping Cart",
-    "orderSummary": "Order Summary",
-    "subtotal": "Subtotal",
-    "tax": "Tax",
-    "total": "Total",
-    "checkout": "Proceed to Checkout",
-    "each": "each",
-    "date": "Date",
-    "duration": "Duration",
-    "quantity": "Quantity",
-    "remove": "Remove",
-    
-    "billingDetails": "Billing Details",
-    "firstName": "First Name",
-    "lastName": "Last Name",
-    "email": "Email",
-    "phone": "Phone",
-    "address": "Address",
-    "city": "City",
-    "state": "State",
-    "zipCode": "ZIP Code",
-    
-    "paymentMethods": "Payment Methods",
-    "payWithStripe": "Pay with Stripe",
-    "payWithCashApp": "Pay with Cash App",
-    "payWithVenmo": "Pay with Venmo",
-    "payWithSquare": "Pay with Square",
-    
-    "validation": {
+  "title": "Shopping Cart",
+  "orderSummary": "Order Summary",
+  "subtotal": "Subtotal",
+  "tax": "Tax",
+  "total": "Total",
+  "checkout": "Proceed to Checkout",
+  "each": "each",
+  "date": "Date",
+  "duration": "Duration",
+  "quantity": "Quantity",
+  "remove": "Remove",
+
+  "orderDetails": {
+      "orderNumber": "Order Number",
+      "orderDate": "Order Date",
+      "status": {
+          "pending": "Pending",
+          "confirmed": "Confirmed",
+          "processing": "Processing",
+          "completed": "Completed",
+          "cancelled": "Cancelled",
+          "refunded": "Refunded"
+      }
+  },
+
+  "billingDetails": "Billing Details",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "email": "Email",
+  "phone": "Phone",
+  "address": "Address",
+  "city": "City",
+  "state": "State",
+  "zipCode": "ZIP Code",
+
+  "paymentMethods": "Payment Methods",
+  "payWithStripe": "Pay with Stripe",
+  "payWithCashApp": "Pay with Cash App",
+  "payWithVenmo": "Pay with Venmo",
+  "payWithSquare": "Pay with Square",
+
+  "validation": {
       "required": "This field is required",
-      "email": "Please enter a valid email address"
-    },
-  
-    "cartEmpty": "Your cart is empty",
-    "continueShopping": "Continue Shopping",
-    "removedItem": "Item removed from cart",
-    "updatedQuantity": "Quantity updated",
-    
-    "tourDetails": {
+      "email": "Please enter a valid email address",
+      "phone": "Please enter a valid phone number",
+      "zipCode": "Please enter a valid ZIP code",
+      "invalidCard": "Invalid card information",
+      "expiredCard": "Card has expired"
+  },
+
+  "cartEmpty": "Your cart is empty",
+  "continueShopping": "Continue Shopping",
+  "removedItem": "Item removed from cart",
+  "updatedQuantity": "Quantity updated",
+
+  "tourDetails": {
       "dateLabel": "Tour Date",
       "timeLabel": "Start Time",
       "locationLabel": "Meeting Point",
-      "guestsLabel": "Number of Guests"
-    },
-    
-    "rentalDetails": {
+      "guestsLabel": "Number of Guests",
+      "guideLabel": "Tour Guide",
+      "notesLabel": "Special Notes"
+  },
+
+  "rentalDetails": {
       "startDateLabel": "Pickup Date",
       "endDateLabel": "Return Date",
       "durationLabel": "Rental Duration",
-      "quantityLabel": "Number of Items"
-    }
+      "quantityLabel": "Number of Items",
+      "depositLabel": "Security Deposit",
+      "termsLabel": "Rental Terms"
+  },
+
+  "actions": {
+      "updateCart": "Update Cart",
+      "clearCart": "Clear Cart",
+      "saveForLater": "Save for Later",
+      "applyPromo": "Apply Promo Code",
+      "checkout": "Checkout",
+      "continue": "Continue Shopping"
+  },
+
+  "messages": {
+      "itemAdded": "Item added to cart",
+      "itemRemoved": "Item removed from cart",
+      "cartUpdated": "Cart updated successfully",
+      "cartCleared": "Cart cleared successfully",
+      "promoApplied": "Promo code applied",
+      "invalidPromo": "Invalid promo code"
+  },
+
+  "errors": {
+      "addToCartFailed": "Failed to add item to cart",
+      "updateFailed": "Failed to update cart",
+      "removeFailed": "Failed to remove item",
+      "checkoutFailed": "Checkout failed",
+      "paymentFailed": "Payment processing failed",
+      "invalidQuantity": "Invalid quantity specified",
+      "insufficientStock": "Insufficient stock available"
   }
+}
