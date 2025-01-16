@@ -7,6 +7,7 @@
     "notesPlaceholder": "Add notes about this vendor (required for Reject or Needs Action)",
     "approve": "Approve",
     "reject": "Reject",
+    "backToDraft": "Keep Draft",
     "needsAction": "Needs Action",
     "delete": "Delete",
     "deleteConfirm": {
@@ -27,5 +28,9 @@
       "deleteFailed": "Failed to delete vendor",
       "unauthorized": "You are not authorized to perform this action",
       "notesRequired": "Notes are required to Reject or Disable Vendor"
+    },
+    "tabs": {
+      "vendors": "Vendors",
+      "products": "Products"
     }
   }
