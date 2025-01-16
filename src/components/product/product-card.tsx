@@ -11,6 +11,7 @@ import { Product, ProductStatusEnum } from '@/app/[language]/types/product';
 import { ProductStatusBadge } from './product-status-badge';
 import { useState } from 'react';
 import { ProductEditCard } from './product-edit-card';
+import { ProductFullView } from './product-full-view';
 
 interface ProductCardProps {
   product: Product;
@@ -21,10 +22,18 @@ interface ProductCardProps {
 
 export const ProductCard = ({ 
   product, 
+  onStatusChange,
+  onDelete,
   onUpdate 
 }: ProductCardProps) => {
   const { t } = useTranslation("products");
   const [isEditing, setIsEditing] = useState(false);
+  const [showFullView, setShowFullView] = useState(false);
+
+  const handleEdit = (event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent card click when clicking edit
+    setIsEditing(true);
+  };
 
   if (isEditing) {
     return (
@@ -41,8 +50,33 @@ export const ProductCard = ({
     );
   }
 
+  if (showFullView) {
+    return (
+      <ProductFullView
+        product={product}
+        onStatusChange={onStatusChange || (() => Promise.resolve())}
+        onDelete={onDelete || (() => Promise.resolve())}
+        onEdit={() => setIsEditing(true)}
+        onClose={() => setShowFullView(false)}
+      />
+    );
+  }
+
   return (
-    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+    <Card 
+      sx={{ 
+        height: '100%', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        position: 'relative',
+        cursor: 'pointer',
+        '&:hover': {
+          transform: 'translateY(-4px)',
+          transition: 'transform 0.2s ease-in-out'
+        }
+      }}
+      onClick={() => setShowFullView(true)}
+    >
       <ProductStatusBadge status={product.productStatus} />
       
       {product.productImageURL && (
@@ -94,7 +128,7 @@ export const ProductCard = ({
           
           <Button
             startIcon={<Edit2 size={16} />}
-            onClick={() => setIsEditing(true)}
+            onClick={handleEdit}
             size="small"
           >
             {t('edit')}

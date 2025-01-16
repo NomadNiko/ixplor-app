@@ -16,11 +16,12 @@ import CardMedia from "@mui/material/CardMedia";
 import { ProductStatusBadge } from './product-status-badge';
 
 interface ProductFullViewProps {
-  product: Product;
-  onStatusChange: (id: string, status: ProductStatusEnum) => Promise<void>;
-  onDelete: (id: string) => Promise<void>;
-  onEdit: () => void;
-}
+    product: Product;
+    onStatusChange: (id: string, status: ProductStatusEnum) => Promise<void>;
+    onDelete: (id: string) => Promise<void>;
+    onEdit: () => void;
+    onClose: () => void;  // Add this to support closing
+  }
 
 export const ProductFullView = ({
   product,
