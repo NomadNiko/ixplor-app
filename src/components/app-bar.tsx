@@ -118,6 +118,19 @@ function ResponsiveAppBar() {
               {!!user?.role &&
                 [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
                   <MenuItem
+                    key="products"
+                    onClick={handleCloseNavMenu}
+                    component={Link}
+                    href="/products"
+                  >
+                    <Typography textAlign="center">
+                      {t("common:navigation.products")}
+                    </Typography>
+                  </MenuItem>,
+                ]}
+              {!!user?.role &&
+                [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
+                  <MenuItem
                     key="approvals"
                     onClick={handleCloseNavMenu}
                     component={Link}
@@ -220,6 +233,20 @@ function ResponsiveAppBar() {
                     href="/onboard"
                   >
                     {t("common:navigation.onboard")}
+                  </Button>
+                </>
+              )}
+
+            {!!user?.role &&
+              [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
+                <>
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                    component={Link}
+                    href="/products"
+                  >
+                    {t("common:navigation.products")}
                   </Button>
                 </>
               )}
