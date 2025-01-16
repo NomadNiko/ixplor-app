@@ -9,7 +9,7 @@ import { Clock, DollarSign } from 'lucide-react';
 import { Product, ProductStatusEnum } from '@/app/[language]/types/product';
 import { ProductStatusBadge } from './product-status-badge';
 import { useState } from 'react';
-import { ProductFullView } from './product-full-view';
+import ProductFullView from "./product-full-view";
 import { ProductEditCard } from './product-edit-card';
 
 interface ProductCardProps {
