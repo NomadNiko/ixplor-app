@@ -1,224 +1,29 @@
 import { useState } from "react";
+import { useForm, FormProvider } from "react-hook-form";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { useTranslation } from "@/services/i18n/client";
-import { Product, ProductStatusEnum } from "@/app/[language]/types/product";
-import { useSnackbar } from "@/hooks/use-snackbar";
-import { API_URL } from "@/services/api/config";
-import { getTokensInfo } from "@/services/auth/auth-tokens-info";
-import { Save, X, Trash2, Archive, Send, FileEdit } from "lucide-react";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormDatePickerInput from "@/components/form/date-pickers/date-picker";
-import FormTimePickerInput from "@/components/form/date-pickers/time-picker";
 import { format } from "date-fns";
-import { useForm, FormProvider, useWatch, useFormContext } from "react-hook-form";
+import { useTranslation } from "@/services/i18n/client";
+import { useSnackbar } from "@/hooks/use-snackbar";
 import useConfirmDialog from "@/components/confirm-dialog/use-confirm-dialog";
-import ButtonGroup from "@mui/material/ButtonGroup";
+import { getTokensInfo } from "@/services/auth/auth-tokens-info";
+import { API_URL } from "@/services/api/config";
+import { Save, X, Trash2 } from "lucide-react";
+import { ProductStatusEnum } from "@/app/[language]/types/product";
+import { ProductFormData, ProductEditCardProps } from "./types";
+import { ProductFormFields } from "./product-form-fields";
+import { ProductStatusButtons } from "./product-status-buttons";
 
-interface ProductFormData {
-  productName: string;
-  productDescription: string;
-  productType: "tours" | "lessons" | "rentals" | "tickets";
-  productPrice: number;
-  productDuration: number | "";
-  productDate: Date | null;
-  productStartTime: Date | null;
-  productEndTime: Date | null;
-  productAdditionalInfo: string;
-  productRequirements: string[];
-  productImageURL: string;
-  productWaiver: string;
-}
-
-interface ProductEditCardProps {
-  product: Product;
-  onSave: () => void;
-  onCancel: () => void;
-  onDelete?: (id: string) => Promise<void>;
-  onStatusChange?: (id: string, status: ProductStatusEnum) => Promise<void>;
-}
-
-function ProductFormFields() {
-  const { t } = useTranslation("products");
-  const { control, setValue } = useFormContext<ProductFormData>();
-  const formData = useWatch({
-    control,
-    defaultValue: {
-      productName: '',
-      productDescription: '',
-      productType: 'tours',
-      productPrice: 0,
-      productDuration: '',
-      productDate: null,
-      productStartTime: null,
-      productEndTime: null,
-      productAdditionalInfo: '',
-      productRequirements: [],
-      productImageURL: '',
-      productWaiver: '',
-    }
-  });
-
-  const handleRequirementsChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const target = e.target as HTMLInputElement;
-      const value = target.value.trim();
-      if (value) {
-        setValue("productRequirements", [...(formData.productRequirements || []), value]);
-        target.value = "";
-      }
-    }
-  };
-
-  const handleRemoveRequirement = (index: number) => {
-    const currentRequirements = formData.productRequirements || [];
-    setValue(
-      "productRequirements",
-      currentRequirements.filter((_, i) => i !== index)
-    );
-  };
-
-  return (
-    <Box sx={{ display: "grid", gap: 2, mb: 3 }}>
-      <TextField
-        fullWidth
-        label={t("productName")}
-        name="productName"
-        value={formData.productName}
-        onChange={(e) => setValue("productName", e.target.value)}
-      />
-      <TextField
-        fullWidth
-        multiline
-        rows={3}
-        name="productDescription"
-        label={t("productDescription")}
-        value={formData.productDescription}
-        onChange={(e) => setValue("productDescription", e.target.value)}
-      />
-      <TextField
-        select
-        fullWidth
-        name="productType"
-        label={t("productType")}
-        value={formData.productType}
-        onChange={(e) =>
-          setValue(
-            "productType",
-            e.target.value as "tours" | "lessons" | "rentals" | "tickets"
-          )
-        }
-      >
-        {["tours", "lessons", "rentals", "tickets"].map((type) => (
-          <MenuItem key={type} value={type}>
-            {t(`productTypes.${type}`)}
-          </MenuItem>
-        ))}
-      </TextField>
-      <TextField
-        fullWidth
-        type="number"
-        name="productPrice"
-        label={t("productPrice")}
-        value={formData.productPrice}
-        onChange={(e) => setValue("productPrice", Number(e.target.value))}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">$</InputAdornment>
-          ),
-        }}
-      />
-      <TextField
-        fullWidth
-        type="number"
-        name="productDuration"
-        label={t("productDuration")}
-        value={formData.productDuration}
-        onChange={(e) => setValue("productDuration", Number(e.target.value))}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">{t("hours")}</InputAdornment>
-          ),
-        }}
-      />
-      <FormDatePickerInput name="productDate" label={t("productDate")} />
-      
-      <FormTimePickerInput
-        name="productStartTime"
-        label={t("productStartTime")}
-        format="HH:mm"
-      />
-      <FormTimePickerInput
-        name="productEndTime"
-        label={t("productEndTime")}
-        format="HH:mm"
-      />
-      <TextField
-        fullWidth
-        name="productImageURL"
-        label={t("productImageURL")}
-        value={formData.productImageURL}
-        onChange={(e) => setValue("productImageURL", e.target.value)}
-      />
-      <Box>
-        <TextField
-          fullWidth
-          label={t("productRequirements")}
-          placeholder={t("requirementsHelp")}
-          onKeyDown={handleRequirementsChange}
-        />
-        {(formData.productRequirements || []).length > 0 && (
-          <Box sx={{ mt: 1 }}>
-            {(formData.productRequirements || []).map((req, index) => (
-              <Typography
-                key={index}
-                variant="body2"
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  mb: 0.5,
-                }}
-              >
-                • {req}
-                <Button
-                  size="small"
-                  color="error"
-                  onClick={() => handleRemoveRequirement(index)}
-                >
-                  <X size={14} />
-                </Button>
-              </Typography>
-            ))}
-          </Box>
-        )}
-      </Box>
-      <TextField
-        fullWidth
-        multiline
-        rows={4}
-        name="productWaiver"
-        label={t("productWaiver")}
-        value={formData.productWaiver}
-        onChange={(e) => setValue("productWaiver", e.target.value)}
-      />
-    </Box>
-  );
-}
-
-export const ProductEditCard = ({
+export function ProductEditCard({
   product,
   onSave,
   onCancel,
   onDelete,
   onStatusChange
-}: ProductEditCardProps) => {
+}: ProductEditCardProps) {
   const { t } = useTranslation("products");
   const { enqueueSnackbar } = useSnackbar();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -336,44 +141,37 @@ export const ProductEditCard = ({
     <FormProvider {...methods}>
       <Card>
         <CardContent>
+          <Typography variant="h5" gutterBottom>
+            {t("productEditing")}
+          </Typography>
+
+          <ProductFormFields />
+
           <Box sx={{ 
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            mb: 3 
+            display: "flex", 
+            flexDirection: "column",
+            gap: 2,
+            mt: 3
           }}>
-            <Typography variant="h5">
-              {t("productEditing")}
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              <ButtonGroup>
-                <Button
-                  onClick={() => handleStatusChange(ProductStatusEnum.PUBLISHED)}
-                  startIcon={<Send size={16} />}
-                  disabled={isSubmitting || product.productStatus === ProductStatusEnum.PUBLISHED}
-                  color="success"
-                >
-                  {t('publish')}
-                </Button>
-                <Button
-                  onClick={() => handleStatusChange(ProductStatusEnum.DRAFT)}
-                  startIcon={<FileEdit size={16} />}
-                  disabled={isSubmitting || product.productStatus === ProductStatusEnum.DRAFT}
-                  color="warning"
-                >
-                  {t('draft')}
-                </Button>
-                <Button
-                  onClick={() => handleStatusChange(ProductStatusEnum.ARCHIVED)}
-                  startIcon={<Archive size={16} />}
-                  disabled={isSubmitting || product.productStatus === ProductStatusEnum.ARCHIVED}
-                  color="info"
-                >
-                  {t('archive')}
-                </Button>
-              </ButtonGroup>
-              
+            <Box sx={{ 
+              display: "flex", 
+              gap: 2,
+              justifyContent: "center"
+            }}>
+              <ProductStatusButtons
+                currentStatus={product.productStatus}
+                onStatusChange={handleStatusChange}
+                isSubmitting={isSubmitting}
+              />
+            </Box>
+
+            <Box sx={{ 
+              display: "flex", 
+              gap: 2,
+              justifyContent: "space-between"
+            }}>
               <Button
+                variant="contained"
                 color="error"
                 startIcon={<Trash2 size={16} />}
                 onClick={handleDelete}
@@ -381,37 +179,31 @@ export const ProductEditCard = ({
               >
                 {t('delete')}
               </Button>
+
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  startIcon={<X size={16} />}
+                  onClick={onCancel}
+                  disabled={isSubmitting}
+                >
+                  {t("cancel")}
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<Save size={16} />}
+                  onClick={methods.handleSubmit(handleSubmit)}
+                  disabled={isSubmitting}
+                >
+                  {t("save")}
+                </Button>
+              </Box>
             </Box>
-          </Box>
-
-          <ProductFormFields />
-
-          <Box sx={{ 
-            display: "flex", 
-            gap: 1, 
-            justifyContent: "flex-end" 
-          }}>
-            <Button
-              variant="contained"
-              color="error"
-              startIcon={<X size={16} />}
-              onClick={onCancel}
-              disabled={isSubmitting}
-            >
-              {t("cancel")}
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<Save size={16} />}
-              onClick={methods.handleSubmit(handleSubmit)}
-              disabled={isSubmitting}
-            >
-              {t("save")}
-            </Button>
           </Box>
         </CardContent>
       </Card>
     </FormProvider>
   );
-};
+}
