@@ -5,12 +5,11 @@ import wrapperFetchJsonResponse from '../wrapper-fetch-json-response';
 import { Product, ProductResponse, CreateProductDto, UpdateProductDto } from '../../../app/[language]/types/product';
 import { RequestConfigType } from './types/request-config';
 
-// Get all products (public)
 export function useGetProductsService() {
   const fetch = useFetch();
   
   return useCallback(async (requestConfig?: RequestConfigType) => {
-    const response = await fetch(`${API_URL}/products`, {
+    const response = await fetch(`${API_URL}/api/products`, {
       method: 'GET',
       ...requestConfig,
     });
@@ -19,12 +18,11 @@ export function useGetProductsService() {
   }, [fetch]);
 }
 
-// Get all products (admin)
 export function useGetAllProductsService() {
   const fetch = useFetch();
   
   return useCallback(async (requestConfig?: RequestConfigType) => {
-    const response = await fetch(`${API_URL}/products/admin/all`, {
+    const response = await fetch(`${API_URL}/api/products/admin/all`, {
       method: 'GET',
       ...requestConfig,
     });
@@ -33,12 +31,11 @@ export function useGetAllProductsService() {
   }, [fetch]);
 }
 
-// Create product
 export function useCreateProductService() {
   const fetch = useFetch();
   
   return useCallback(async (data: CreateProductDto, requestConfig?: RequestConfigType) => {
-    const response = await fetch(`${API_URL}/products`, {
+    const response = await fetch(`${API_URL}/api/products`, {
       method: 'POST',
       body: JSON.stringify(data),
       ...requestConfig,
@@ -48,12 +45,11 @@ export function useCreateProductService() {
   }, [fetch]);
 }
 
-// Update product
 export function useUpdateProductService() {
   const fetch = useFetch();
   
   return useCallback(async (id: string, data: UpdateProductDto, requestConfig?: RequestConfigType) => {
-    const response = await fetch(`${API_URL}/products/${id}`, {
+    const response = await fetch(`${API_URL}/api/products/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
       ...requestConfig,
@@ -63,12 +59,11 @@ export function useUpdateProductService() {
   }, [fetch]);
 }
 
-// Delete product
 export function useDeleteProductService() {
   const fetch = useFetch();
   
   return useCallback(async (id: string, requestConfig?: RequestConfigType) => {
-    const response = await fetch(`${API_URL}/products/${id}`, {
+    const response = await fetch(`${API_URL}/api/products/${id}`, {
       method: 'DELETE',
       ...requestConfig,
     });
@@ -77,12 +72,11 @@ export function useDeleteProductService() {
   }, [fetch]);
 }
 
-// Update product status
 export function useUpdateProductStatusService() {
   const fetch = useFetch();
   
   return useCallback(async (id: string, status: string, requestConfig?: RequestConfigType) => {
-    const response = await fetch(`${API_URL}/products/${id}/status`, {
+    const response = await fetch(`${API_URL}/api/products/${id}/status`, {
       method: 'PUT',
       body: JSON.stringify({ status }),
       ...requestConfig,
