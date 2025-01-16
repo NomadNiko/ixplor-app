@@ -18,6 +18,13 @@ import { format } from "date-fns";
 import { useRouter } from 'next/navigation';
 import { useForm, FormProvider, useWatch, useFormContext } from "react-hook-form";
 
+
+// MUST FIX LATER !!! Default location coordinates (Waikiki Beach) and mock vendor ID 
+const DEFAULT_LATITUDE = 21.2758128;
+const DEFAULT_LONGITUDE = -157.8241926;
+const DEFAULT_VENDOR_ID = "65c0e95eee124a74bee35b7f";
+
+
 interface ProductFormData {
   productName: string;
   productDescription: string;
@@ -239,7 +246,10 @@ export default function ProductCreateCard() {
         productDate: data.productDate ? format(data.productDate, "yyyy-MM-dd") : undefined,
         productStartTime: data.productStartTime ? format(data.productStartTime, "HH:mm") : undefined,
         productEndTime: data.productEndTime ? format(data.productEndTime, "HH:mm") : undefined,
-        productStatus: 'PUBLISHED'
+        productStatus: 'DRAFT',
+        latitude: DEFAULT_LATITUDE,
+        longitude: DEFAULT_LONGITUDE,
+        vendorId: DEFAULT_VENDOR_ID,
       };
 
       const response = await fetch(`${API_URL}/products`, {
