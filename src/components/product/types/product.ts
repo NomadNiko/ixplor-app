@@ -2,7 +2,7 @@ export type ProductType = 'tours' | 'lessons' | 'rentals' | 'tickets';
 
 export enum ProductStatusEnum {
   DRAFT = 'DRAFT',
-  PUBLISHED = 'PUBLISHED',
+  PUBLISHED = 'PUBLISHED', 
   ARCHIVED = 'ARCHIVED'
 }
 
