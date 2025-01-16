@@ -8,7 +8,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
 import { Edit2, Trash2, MoreVertical, DollarSign, Clock } from "lucide-react";
 import useConfirmDialog from "@/components/confirm-dialog/use-confirm-dialog";
-import { ProductStatusBadge } from "./product-card";
+import { ProductStatusBadge } from "./product-status-badge";
 import { Product } from "./types/product";
 import { useTranslation } from "react-i18next";
 import CardMedia from "@mui/material/CardMedia";

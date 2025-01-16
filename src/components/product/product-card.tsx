@@ -3,45 +3,43 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
+import Button from "@mui/material/Button";
 import { formatDistance } from 'date-fns';
 import { useTranslation } from "@/services/i18n/client";
-import { Clock, DollarSign } from 'lucide-react';
-import { Product } from '../../app/[language]/types/product';
+import { Clock, DollarSign, Edit2 } from 'lucide-react';
+import { Product, ProductStatusEnum } from '@/app/[language]/types/product';
+import { ProductStatusBadge } from './product-status-badge';
+import { useState } from 'react';
+import { ProductEditCard } from './product-edit-card';
 
-export const ProductStatusBadge = ({ status }: { status: Product['productStatus'] }) => {
-  const { t } = useTranslation("products");
-  
-  const getStatusColor = (status: Product['productStatus']) => {
-    switch (status) {
-      case 'PUBLISHED':
-        return 'success';
-      case 'DRAFT':
-        return 'warning';
-      case 'ARCHIVED':
-        return 'error';
-      default:
-        return 'default';
-    }
-  };
-
-  return (
-    <Chip
-      size="small"
-      label={t(`status.${status.toLowerCase()}`)}
-      color={getStatusColor(status)}
-      sx={{ position: 'absolute', top: 8, right: 8 }}
-    />
-  );
-};
-
-export const ProductCard: React.FC<{
+interface ProductCardProps {
   product: Product;
+  onStatusChange?: (id: string, status: ProductStatusEnum) => Promise<void>;
   onDelete?: (id: string) => Promise<void>;
-  onEdit?: () => void;
-  onStatusChange?: (id: string, status: Product['productStatus']) => Promise<void>;
-}> = ({ product }) => {
+  onUpdate?: () => Promise<void>;
+}
+
+export const ProductCard = ({ 
+  product, 
+  onUpdate 
+}: ProductCardProps) => {
   const { t } = useTranslation("products");
+  const [isEditing, setIsEditing] = useState(false);
+
+  if (isEditing) {
+    return (
+      <ProductEditCard
+        product={product}
+        onSave={async () => {
+          setIsEditing(false);
+          if (onUpdate) {
+            await onUpdate();
+          }
+        }}
+        onCancel={() => setIsEditing(false)}
+      />
+    );
+  }
 
   return (
     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
@@ -84,9 +82,24 @@ export const ProductCard: React.FC<{
           )}
         </Box>
         
-        <Typography variant="caption" color="text.secondary">
-          {t('created')} {formatDistance(new Date(product.createdAt), new Date(), { addSuffix: true })}
-        </Typography>
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between',
+          alignItems: 'flex-end',
+          mt: 2
+        }}>
+          <Typography variant="caption" color="text.secondary">
+            {t('created')} {formatDistance(new Date(product.createdAt), new Date(), { addSuffix: true })}
+          </Typography>
+          
+          <Button
+            startIcon={<Edit2 size={16} />}
+            onClick={() => setIsEditing(true)}
+            size="small"
+          >
+            {t('edit')}
+          </Button>
+        </Box>
       </CardContent>
     </Card>
   );

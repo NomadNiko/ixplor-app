@@ -86,6 +86,7 @@ export default function ProductsPageContent() {
     }
   };
 
+
   const handleDelete = async (id: string) => {
     try {
       const tokensInfo = getTokensInfo();
@@ -195,7 +196,7 @@ export default function ProductsPageContent() {
                 product={product}
                 onDelete={handleDelete}
                 onStatusChange={handleStatusChange}
-                onEdit={() => router.push(`/products/edit/${product._id}`)}
+                onUpdate={loadProducts}
               />
             </Grid>
           ))
