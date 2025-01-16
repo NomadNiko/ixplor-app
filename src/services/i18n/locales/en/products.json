@@ -94,7 +94,15 @@
     "deleted": "Product deleted successfully",
     "published": "Product published",
     "draft": "Product saved as draft",
-    "archived": "Product archived"
+    "archived": "Product archived",
+    "status": {
+      "productCreated": "Product created successfully",
+      "updated": "Product updated successfully",
+      "deleted": "Product deleted successfully",
+      "published": "Product published",
+      "draft": "Product saved as draft",
+      "archived": "Product archived"
+    }
   },
 
   "errors": {

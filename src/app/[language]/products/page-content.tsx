@@ -246,7 +246,7 @@ export default function ProductsPageContent() {
             startIcon={showFilters ? <ChevronUp /> : <ChevronDown />}
           >
             <Filter className="mr-2" size={16} />
-            {t("filters")}
+            {t("filters.title")}
           </Button>
 
           <Button

@@ -104,14 +104,14 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({ onFilterChange, cities 
         <Box className="space-y-6">
           <TextField
             fullWidth
-            placeholder={t("searchProducts")}
+            placeholder={t("filters.search")}
             value={filters.search}
             onChange={handleSearchChange}
             className="bg-background-glass backdrop-blur-md"
           />
           <Box>
             <Typography variant="subtitle2" className="mb-2">
-              {t("filters.productType")}
+              {t("filters.type")}
             </Typography>
             <ToggleButtonGroup
               value={filters.types}
