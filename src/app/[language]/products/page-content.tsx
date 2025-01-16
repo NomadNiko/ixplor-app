@@ -62,7 +62,7 @@ export default function ProductsPageContent() {
         return;
       }
   
-      const response = await fetch(`${API_URL}/products`, {
+      const response = await fetch(`${API_URL}/products/admin/all`, {
         headers: {
           'Authorization': `Bearer ${tokensInfo.token}`
         }
