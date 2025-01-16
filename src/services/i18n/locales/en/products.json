@@ -26,7 +26,7 @@
   },
 
   "cities": {
-      "selectCity": "Select City",
+      "selectCities": "Select Cities",
       "allCities": "All Cities"
   },
 

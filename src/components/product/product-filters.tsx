@@ -111,7 +111,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({ onFilterChange, cities 
           />
           <Box>
             <Typography variant="subtitle2" className="mb-2">
-              {t("productType")}
+              {t("filters.productType")}
             </Typography>
             <ToggleButtonGroup
               value={filters.types}
@@ -138,7 +138,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({ onFilterChange, cities 
           </Box>
           <Box>
             <Typography variant="subtitle2" className="mb-2">
-              {t("status.title")}
+              {t("filters.status")}
             </Typography>
             <ToggleButtonGroup
               value={filters.statuses}
@@ -161,7 +161,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({ onFilterChange, cities 
           </Box>
           <Box>
             <Typography variant="subtitle2" className="mb-2">
-              {t("cities")}
+              {t("filters.city")}
             </Typography>
             <Autocomplete
               multiple
@@ -171,7 +171,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({ onFilterChange, cities 
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  placeholder={t("selectCities")}
+                  placeholder={t("cities.selectCities")}
                 />
               )}
               className="bg-background-glass backdrop-blur-md"
@@ -179,7 +179,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({ onFilterChange, cities 
           </Box>
           <Box>
             <Typography variant="subtitle2" gutterBottom>
-              {t("priceRange")}
+              {t("filters.priceRange")}
             </Typography>
             <Box sx={{ px: 4, mt: 3, mb: 1 }}>
               <Slider
