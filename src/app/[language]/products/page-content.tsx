@@ -63,7 +63,7 @@ export default function ProductsPageContent() {
         return;
       }
   
-      const response = await fetch(`${API_URL}/api/products`, {
+      const response = await fetch(`${API_URL}/products`, {
         headers: {
           'Authorization': `Bearer ${tokensInfo.token}`
         }
@@ -99,7 +99,7 @@ export default function ProductsPageContent() {
         return;
       }
 
-      const response = await fetch(`${API_URL}/api/products/${id}`, {
+      const response = await fetch(`${API_URL}/products/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${tokensInfo.token}`
@@ -126,7 +126,7 @@ export default function ProductsPageContent() {
         return;
       }
 
-      const response = await fetch(`${API_URL}/api/products/${id}/status`, {
+      const response = await fetch(`${API_URL}/products/${id}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
