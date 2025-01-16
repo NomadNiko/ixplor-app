@@ -1,8 +1,8 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import { Controller } from 'react-hook-form';
 import InputAdornment from '@mui/material/InputAdornment';
+import { Controller } from 'react-hook-form';
 import { StepProps } from './product-form-types';
 
 export const PricingStep: React.FC<StepProps> = ({ control, t }) => {
@@ -11,11 +11,24 @@ export const PricingStep: React.FC<StepProps> = ({ control, t }) => {
       <Controller
         name="productPrice"
         control={control}
-        render={({ field, fieldState: { error } }) => (
+        defaultValue={0}
+        render={({ field: { onChange, value, ...field }, fieldState: { error } }) => (
           <TextField
             {...field}
+            value={value}
+            onChange={(e) => {
+              // Convert the string value to a number and handle empty/invalid inputs
+              const newValue = e.target.value === '' ? 0 : parseFloat(e.target.value);
+              if (!isNaN(newValue)) {
+                onChange(newValue);
+              }
+            }}
             fullWidth
             type="number"
+            inputProps={{
+              min: 0,
+              step: "0.01"
+            }}
             label={t("productPrice")}
             error={!!error}
             helperText={error?.message}
@@ -28,3 +41,5 @@ export const PricingStep: React.FC<StepProps> = ({ control, t }) => {
     </Grid>
   );
 };
+
+export default PricingStep;
