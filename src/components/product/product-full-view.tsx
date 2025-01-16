@@ -4,13 +4,8 @@ import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import { useState, useRef, useEffect } from "react";
-import { Edit2, Trash2, MoreVertical, Clock, DollarSign, Calendar, Clock3, Clock4 } from 'lucide-react';
-import useConfirmDialog from "@/components/confirm-dialog/use-confirm-dialog";
-import { Product, ProductStatusEnum } from './types/product';
+import { Edit2, Clock, DollarSign, Calendar, Clock3, Clock4 } from 'lucide-react';
+import { Product } from './types/product';
 import { useTranslation } from "react-i18next";
 import CardMedia from "@mui/material/CardMedia";
 import { ProductStatusBadge } from './product-status-badge';
@@ -20,93 +15,20 @@ import ClickAwayListener from "@mui/material/ClickAwayListener";
 
 interface ProductFullViewProps {
     product: Product;
-    onStatusChange: (id: string, status: ProductStatusEnum) => Promise<void>;
-    onDelete: (id: string) => Promise<void>;
     onEdit: () => void;
     onClose: () => void;
-    onUpdate?: () => Promise<void>;
 }
 
 export const ProductFullView = ({
   product,
-  onStatusChange,
-  onDelete,
   onEdit,
   onClose,
-  onUpdate
 }: ProductFullViewProps) => {
   const { t } = useTranslation("products");
-  const { confirmDialog } = useConfirmDialog();
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = (event?: React.MouseEvent<HTMLElement>) => {
-    if (event) {
-      event.stopPropagation();
-    }
-    setAnchorEl(null);
-  };
-
-  const handleDelete = async (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-    const confirmed = await confirmDialog({
-      title: t('deleteConfirm.title'),
-      message: t('deleteConfirm.message'),
-      successButtonText: t('deleteConfirm.confirm'),
-      cancelButtonText: t('deleteConfirm.cancel'),
-    });
-    if (confirmed) {
-      setIsSubmitting(true);
-      await onDelete(product._id);
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleStatusChange = async (newStatus: ProductStatusEnum) => {
-    if (isSubmitting) return;
-    handleMenuClose();
-    
-    try {
-      setIsSubmitting(true);
-      await onStatusChange(product._id, newStatus);
-      
-      if (onUpdate) {
-        await onUpdate();
-      }
-    } catch (error) {
-      console.error('Error updating product status:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleEditClick = (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-    onEdit();
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
-        onClose();
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [onClose]);
-
+  
   return (
     <ClickAwayListener onClickAway={onClose}>
-      <Card ref={cardRef} sx={{ 
+      <Card sx={{ 
         height: '100%', 
         display: 'flex', 
         flexDirection: 'column', 
@@ -116,6 +38,15 @@ export const ProductFullView = ({
         overflow: 'auto'
       }}>
         <ProductStatusBadge status={product.productStatus} />
+        
+        <CardActions sx={{ p: 2, justifyContent: 'flex-end', position: 'absolute', right: 0, zIndex: 1 }}>
+          <Button
+            startIcon={<Edit2 size={16} />}
+            onClick={onEdit}
+          >
+            {t('edit')}
+          </Button>
+        </CardActions>
         
         {product.productImageURL && (
           <CardMedia
@@ -158,7 +89,6 @@ export const ProductFullView = ({
                 </Typography>
               </Box>
             )}
-
             {product.productDate && (
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Calendar size={20} />
@@ -167,7 +97,6 @@ export const ProductFullView = ({
                 </Typography>
               </Box>
             )}
-
             {product.productStartTime && (
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Clock3 size={20} />
@@ -176,7 +105,6 @@ export const ProductFullView = ({
                 </Typography>
               </Box>
             )}
-
             {product.productEndTime && (
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Clock4 size={20} />
@@ -186,7 +114,6 @@ export const ProductFullView = ({
               </Box>
             )}
           </Box>
-
           <Divider sx={{ my: 3 }} />
           
           {product.productRequirements && product.productRequirements.length > 0 && (
@@ -203,7 +130,7 @@ export const ProductFullView = ({
               </Box>
             </>
           )}
-
+          
           {product.productWaiver && (
             <>
               <Typography variant="h6" gutterBottom>
@@ -214,7 +141,7 @@ export const ProductFullView = ({
               </Typography>
             </>
           )}
-
+          
           {product.productAdditionalInfo && (
             <>
               <Typography variant="h6" gutterBottom>
@@ -225,7 +152,7 @@ export const ProductFullView = ({
               </Typography>
             </>
           )}
-
+          
           <Box sx={{ mt: 3 }}>
             <Typography variant="body2" color="text.secondary">
               {t('created')}: {format(new Date(product.createdAt), 'PPP')}
@@ -235,58 +162,6 @@ export const ProductFullView = ({
             </Typography>
           </Box>
         </CardContent>
-        
-        <CardActions sx={{ p: 2, justifyContent: 'flex-end' }}>
-          <Button
-            startIcon={<Edit2 size={16} />}
-            onClick={handleEditClick}
-            disabled={isSubmitting}
-          >
-            {t('edit')}
-          </Button>
-          
-          <Button
-            color="error"
-            startIcon={<Trash2 size={16} />}
-            onClick={handleDelete}
-            disabled={isSubmitting}
-          >
-            {t('delete')}
-          </Button>
-          
-          <IconButton
-            onClick={handleMenuOpen}
-            disabled={isSubmitting}
-          >
-            <MoreVertical size={16} />
-          </IconButton>
-          
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={() => handleMenuClose()}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <MenuItem
-              onClick={() => handleStatusChange(ProductStatusEnum.PUBLISHED)}
-              disabled={product.productStatus === ProductStatusEnum.PUBLISHED}
-            >
-              {t('publish')}
-            </MenuItem>
-            <MenuItem
-              onClick={() => handleStatusChange(ProductStatusEnum.DRAFT)}
-              disabled={product.productStatus === ProductStatusEnum.DRAFT}
-            >
-              {t('draft')}
-            </MenuItem>
-            <MenuItem
-              onClick={() => handleStatusChange(ProductStatusEnum.ARCHIVED)}
-              disabled={product.productStatus === ProductStatusEnum.ARCHIVED}
-            >
-              {t('archive')}
-            </MenuItem>
-          </Menu>
-        </CardActions>
       </Card>
     </ClickAwayListener>
   );

@@ -3,15 +3,14 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import { formatDistance } from 'date-fns';
 import { useTranslation } from "@/services/i18n/client";
-import { Clock, DollarSign, Edit2 } from 'lucide-react';
+import { Clock, DollarSign } from 'lucide-react';
 import { Product, ProductStatusEnum } from '@/app/[language]/types/product';
 import { ProductStatusBadge } from './product-status-badge';
 import { useState } from 'react';
-import { ProductEditCard } from './product-edit-card';
 import { ProductFullView } from './product-full-view';
+import { ProductEditCard } from './product-edit-card';
 
 interface ProductCardProps {
   product: Product;
@@ -27,13 +26,8 @@ export const ProductCard = ({
   onUpdate 
 }: ProductCardProps) => {
   const { t } = useTranslation("products");
-  const [isEditing, setIsEditing] = useState(false);
   const [showFullView, setShowFullView] = useState(false);
-
-  const handleEdit = (event: React.MouseEvent) => {
-    event.stopPropagation(); // Prevent card click when clicking edit
-    setIsEditing(true);
-  };
+  const [isEditing, setIsEditing] = useState(false);
 
   if (isEditing) {
     return (
@@ -46,6 +40,8 @@ export const ProductCard = ({
           }
         }}
         onCancel={() => setIsEditing(false)}
+        onDelete={onDelete}
+        onStatusChange={onStatusChange}
       />
     );
   }
@@ -54,8 +50,6 @@ export const ProductCard = ({
     return (
       <ProductFullView
         product={product}
-        onStatusChange={onStatusChange || (() => Promise.resolve())}
-        onDelete={onDelete || (() => Promise.resolve())}
         onEdit={() => setIsEditing(true)}
         onClose={() => setShowFullView(false)}
       />
@@ -94,7 +88,7 @@ export const ProductCard = ({
           {product.productName}
         </Typography>
         
-        <Typography color="text.secondary" sx={{ mb: 2 }}>
+        <Typography color="text.secondary" noWrap sx={{ mb: 2 }}>
           {product.productDescription}
         </Typography>
         
@@ -116,24 +110,9 @@ export const ProductCard = ({
           )}
         </Box>
         
-        <Box sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between',
-          alignItems: 'flex-end',
-          mt: 2
-        }}>
-          <Typography variant="caption" color="text.secondary">
-            {t('created')} {formatDistance(new Date(product.createdAt), new Date(), { addSuffix: true })}
-          </Typography>
-          
-          <Button
-            startIcon={<Edit2 size={16} />}
-            onClick={handleEdit}
-            size="small"
-          >
-            {t('edit')}
-          </Button>
-        </Box>
+        <Typography variant="caption" color="text.secondary">
+          {t('updated')} {formatDistance(new Date(product.updatedAt), new Date(), { addSuffix: true })}
+        </Typography>
       </CardContent>
     </Card>
   );
