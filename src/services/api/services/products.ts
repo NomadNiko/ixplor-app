@@ -10,7 +10,7 @@ export function useGetProductsService() {
   const fetch = useFetch();
   
   return useCallback(async (requestConfig?: RequestConfigType) => {
-    const response = await fetch(`${API_URL}/v1/products`, {
+    const response = await fetch(`${API_URL}/products`, {
       method: 'GET',
       ...requestConfig,
     });
@@ -24,7 +24,7 @@ export function useGetAllProductsService() {
   const fetch = useFetch();
   
   return useCallback(async (requestConfig?: RequestConfigType) => {
-    const response = await fetch(`${API_URL}/v1/products/admin/all`, {
+    const response = await fetch(`${API_URL}/products/admin/all`, {
       method: 'GET',
       ...requestConfig,
     });
@@ -38,7 +38,7 @@ export function useCreateProductService() {
   const fetch = useFetch();
   
   return useCallback(async (data: CreateProductDto, requestConfig?: RequestConfigType) => {
-    const response = await fetch(`${API_URL}/v1/products`, {
+    const response = await fetch(`${API_URL}/products`, {
       method: 'POST',
       body: JSON.stringify(data),
       ...requestConfig,
@@ -53,7 +53,7 @@ export function useUpdateProductService() {
   const fetch = useFetch();
   
   return useCallback(async (id: string, data: UpdateProductDto, requestConfig?: RequestConfigType) => {
-    const response = await fetch(`${API_URL}/v1/products/${id}`, {
+    const response = await fetch(`${API_URL}/products/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
       ...requestConfig,
@@ -68,7 +68,7 @@ export function useDeleteProductService() {
   const fetch = useFetch();
   
   return useCallback(async (id: string, requestConfig?: RequestConfigType) => {
-    const response = await fetch(`${API_URL}/v1/products/${id}`, {
+    const response = await fetch(`${API_URL}/products/${id}`, {
       method: 'DELETE',
       ...requestConfig,
     });
@@ -82,7 +82,7 @@ export function useUpdateProductStatusService() {
   const fetch = useFetch();
   
   return useCallback(async (id: string, status: string, requestConfig?: RequestConfigType) => {
-    const response = await fetch(`${API_URL}/v1/products/${id}/status`, {
+    const response = await fetch(`${API_URL}/products/${id}/status`, {
       method: 'PUT',
       body: JSON.stringify({ status }),
       ...requestConfig,
