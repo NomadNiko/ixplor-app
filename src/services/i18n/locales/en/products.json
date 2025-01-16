@@ -2,7 +2,7 @@
   "title": "Products",
   "subtitle": "Manage your products",
   "addProduct": "Add Product",
-  "noProducts": "No products found",
+  "noProductsFound": "No products found",
   "tryAdjustingFilters": "Try adjusting your filters or adding new products",
   "showing": "Showing",
   "of": "of",
