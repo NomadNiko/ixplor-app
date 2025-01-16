@@ -20,14 +20,16 @@ interface ProductFullViewProps {
     onStatusChange: (id: string, status: ProductStatusEnum) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
     onEdit: () => void;
-    onClose: () => void;  // Add this to support closing
-  }
+    onClose: () => void;
+    onUpdate?: () => Promise<void>; // Added as optional prop
+}
 
 export const ProductFullView = ({
   product,
   onStatusChange,
   onDelete,
   onEdit,
+  onUpdate
 }: ProductFullViewProps) => {
   const { t } = useTranslation("products");
   const { confirmDialog } = useConfirmDialog();
@@ -59,9 +61,20 @@ export const ProductFullView = ({
   const handleStatusChange = async (newStatus: ProductStatusEnum) => {
     if (isSubmitting) return;
     handleMenuClose();
-    setIsSubmitting(true);
-    await onStatusChange(product._id, newStatus);
-    setIsSubmitting(false);
+    
+    try {
+      setIsSubmitting(true);
+      await onStatusChange(product._id, newStatus);
+      
+      // If onUpdate callback is provided, call it after successful status change
+      if (onUpdate) {
+        await onUpdate();
+      }
+    } catch (error) {
+      console.error('Error updating product status:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -104,7 +117,7 @@ export const ProductFullView = ({
             </Box>
           )}
         </Box>
-
+        
         {product.productRequirements && product.productRequirements.length > 0 && (
           <Box sx={{ mt: 2 }}>
             <Typography variant="subtitle2" gutterBottom>
