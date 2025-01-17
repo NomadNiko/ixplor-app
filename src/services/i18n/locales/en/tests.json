@@ -49,5 +49,13 @@
   "fieldRequired": "This field is required",
   "validationMin": "Minimum value is {{min}}",
   "validationMax": "Maximum value is {{max}}",
-  "validationPattern": "Invalid format"
+  "validationPattern": "Invalid format",
+  "createCardTest": "Create Card Component Test",
+  "createCardTestDescription": "Test the create card component for adding new vendors and products",
+  "createProduct": "Create Product",
+  "createVendor": "Create Vendor",
+  "canceled": "Creation cancelled",
+  "create": "Create",
+  "requirements": "Requirements",
+  "waiver": "Waiver"
 }
