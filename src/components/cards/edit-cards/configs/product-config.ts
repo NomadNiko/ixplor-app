@@ -98,7 +98,8 @@ export const productConfig: EditCardConfig = {
             label: 'address',
             type: 'address',
             required: true,
-            fullWidth: true
+            fullWidth: true,
+            prefilled: true
           }
         ]
       }

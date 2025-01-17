@@ -76,7 +76,8 @@ export const vendorConfig: EditCardConfig = {
             label: 'address',
             type: 'address',
             required: true,
-            fullWidth: true
+            fullWidth: true,
+            prefilled: true
           }
         ]
       }

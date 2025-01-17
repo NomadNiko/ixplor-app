@@ -95,7 +95,8 @@ export const vendorConfig: CreateCardConfig = {
           label: 'address',
           type: 'address',
           required: true,
-          fullWidth: true
+          fullWidth: true,
+          prefilled: true
         }
       ]
     }
