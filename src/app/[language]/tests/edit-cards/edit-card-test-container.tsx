@@ -17,12 +17,14 @@ export default function EditCardTestContainer() {
   const { enqueueSnackbar } = useSnackbar();
   const [editType, setEditType] = useState<'vendor' | 'product'>('vendor');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [currentFormData, setCurrentFormData] = useState<FormData>({});
 
   const handleSave = async (data: FormData) => {
     setIsSubmitting(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
       console.log('Saving data:', data);
+      setCurrentFormData(data);
       enqueueSnackbar(t('success.saved'), { variant: 'success' });
     } catch (error) {
       console.error('Error saving:', error);
@@ -31,8 +33,9 @@ export default function EditCardTestContainer() {
       setIsSubmitting(false);
     }
   };
-  
+
   const handleCancel = () => {
+    setCurrentFormData(editType === 'vendor' ? mockVendorData : mockProductData);
     enqueueSnackbar(t('canceled'), { variant: 'error' });
   };
 
@@ -40,7 +43,7 @@ export default function EditCardTestContainer() {
     setIsSubmitting(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Deleted');
+      setCurrentFormData({});
       enqueueSnackbar(t('success.deleted'), { variant: 'success' });
     } catch (error) {
       console.error('Error deleting:', error);
@@ -51,33 +54,43 @@ export default function EditCardTestContainer() {
   };
 
   const mockVendorData = {
-    businessName: 'Test Business',
-    description: 'A test business description',
-    vendorType: 'tours',
-    email: 'test@example.com',
-    phone: '123-456-7890',
-    website: 'https://example.com',
-    logoUrl: 'https://example.com/logo.png',
-    address: '123 Test St',
-    city: 'Test City',
-    state: 'TS',
-    postalCode: '12345'
+    businessName: '',
+    description: '',
+    vendorType: '',
+    email: '',
+    phone:'',
+    website:'',
+    logoUrl: '',
+    address: '',
+    city: '',
+    state:'',
+    postalCode: ''
   };
 
   const mockProductData = {
-    productName: 'Test Product',
-    productDescription: 'A test product description',
-    productType: 'tours',
-    productPrice: 99.99,
-    productDuration: 120,
-    productDate: '2024-01-16',
-    productStartTime: '09:00',
-    productEndTime: '11:00',
-    productImageURL: 'https://example.com/product.jpg'
+    productName: '',
+    productDescription: '',
+    productType: '',
+    productPrice: '',
+    productDuration: '',
+    productDate: '',
+    productStartTime: '',
+    productEndTime: '',
+    productImageURL: ''
+  };
+
+  const handleTypeChange = (_: React.MouseEvent<HTMLElement>, value: 'vendor' | 'product' | null) => {
+    if (value) {
+      setEditType(value);
+      setCurrentFormData(value === 'vendor' ? mockVendorData : mockProductData);
+    }
   };
 
   const currentConfig = editType === 'vendor' ? vendorConfig : productConfig;
-  const currentData = editType === 'vendor' ? mockVendorData : mockProductData;
+
+  const handleFormChange = (data: FormData) => {
+    setCurrentFormData(data);
+  };
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -94,7 +107,7 @@ export default function EditCardTestContainer() {
         <ToggleButtonGroup
           value={editType}
           exclusive
-          onChange={(_, value) => value && setEditType(value)}
+          onChange={handleTypeChange}
           aria-label="edit type"
           fullWidth
         >
@@ -109,11 +122,12 @@ export default function EditCardTestContainer() {
 
       <EditCard
         config={currentConfig}
-        initialData={currentData}
+        initialData={currentFormData}
         onSave={handleSave}
         onCancel={handleCancel}
         onDelete={handleDelete}
         isSubmitting={isSubmitting}
+        onChange={handleFormChange}
       />
 
       <Paper sx={{ p: 3, mt: 4 }}>
@@ -130,7 +144,7 @@ export default function EditCardTestContainer() {
             overflow: 'auto'
           }}
         >
-          {JSON.stringify(currentData, null, 2)}
+          {JSON.stringify(currentFormData, null, 2)}
         </Box>
       </Paper>
     </Container>

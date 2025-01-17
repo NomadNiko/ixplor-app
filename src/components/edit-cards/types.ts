@@ -57,4 +57,5 @@ export interface EditCardProps {
   onDelete?: () => Promise<void>;
   customActions?: ReactNode;
   isSubmitting?: boolean;
+  onChange?: (data: FormData) => void;
 }
