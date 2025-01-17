@@ -1,20 +1,23 @@
 "use client";
-import { useState, useRef, useEffect, CSSProperties } from 'react';
-import Map, { MapRef, GeolocateControl, ViewState } from 'react-map-gl';
+import { useState, useRef, useEffect, CSSProperties } from "react";
+import Map, { MapRef, GeolocateControl, ViewState } from "react-map-gl";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import CircularProgress from "@mui/material/CircularProgress";
 import { SearchFilters } from "@/components/map/search-filters";
 import { BottomNav } from "@/components/map/bottom-nav";
-import { VendorShortView, VendorFullView } from "@/components/vendor/vendor-display";
+import {
+  VendorShortView,
+  VendorFullView,
+} from "@/components/vendor/vendor-display";
 import { ClusteredVendorMarkers } from "@/components/vendor/clustered-vendor-markers";
 import { useGetVendorsService } from "@/services/api/services/vendors";
-import { Vendor, VendorType } from '../types/vendor';
-import HTTP_CODES_ENUM from '@/services/api/types/http-codes';
-import { BBox } from 'geojson';
-import { useSnackbar } from '@/hooks/use-snackbar';
-import { useTranslation } from '@/services/i18n/client';
-import { useTheme } from '@mui/material/styles';
+import { Vendor, VendorType } from "../types/vendor";
+import HTTP_CODES_ENUM from "@/services/api/types/http-codes";
+import { BBox } from "geojson";
+import { useSnackbar } from "@/hooks/use-snackbar";
+import { useTranslation } from "@/services/i18n/client";
+import { useTheme } from "@mui/material/styles";
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -28,8 +31,8 @@ const DEFAULT_VIEW_STATE: ViewState = {
     top: 0,
     bottom: 0,
     left: 0,
-    right: 0
-  }
+    right: 0,
+  },
 };
 
 const MapHomeLayout = () => {
@@ -42,11 +45,9 @@ const MapHomeLayout = () => {
   const [showFullView, setShowFullView] = useState(false);
   const [filterType, setFilterType] = useState<VendorType[]>([]);
   const [bounds, setBounds] = useState<BBox | undefined>();
-
   const mapRef = useRef<MapRef>(null);
   const getVendors = useGetVendorsService();
 
-   
   const theme = useTheme();
 
   const controlStyle: CSSProperties = {
@@ -67,12 +68,14 @@ const MapHomeLayout = () => {
         if (response.status === HTTP_CODES_ENUM.OK && response.data) {
           setVendors(response.data.data);
         } else {
-          enqueueSnackbar(t('errors.failedToLoadVendors'), { variant: 'error' });
-          console.error('Failed to fetch vendors:', response);
+          enqueueSnackbar(t("errors.failedToLoadVendors"), {
+            variant: "error",
+          });
+          console.error("Failed to fetch vendors:", response);
         }
       } catch (error) {
-        enqueueSnackbar(t('errors.failedToLoadVendors'), { variant: 'error' });
-        console.error('Error fetching vendors:', error);
+        enqueueSnackbar(t("errors.failedToLoadVendors"), { variant: "error" });
+        console.error("Error fetching vendors:", error);
       } finally {
         setLoading(false);
       }
@@ -88,8 +91,9 @@ const MapHomeLayout = () => {
     setFilterType(newFilterTypes);
   };
 
-  const filteredVendors = vendors.filter(vendor =>
-    filterType.length === 0 || filterType.includes(vendor.vendorType)
+  const filteredVendors = vendors.filter(
+    (vendor) =>
+      filterType.length === 0 || filterType.includes(vendor.vendorType)
   );
 
   const updateBounds = () => {
@@ -101,7 +105,7 @@ const MapHomeLayout = () => {
           bounds.getWest(),
           bounds.getSouth(),
           bounds.getEast(),
-          bounds.getNorth()
+          bounds.getNorth(),
         ]);
       }
     }
@@ -110,32 +114,31 @@ const MapHomeLayout = () => {
   const handleVendorClick = (vendor: Vendor) => {
     setSelectedVendor(vendor);
     setShowFullView(false);
-    
+
     // Center map on selected vendor
     if (mapRef.current) {
-      setViewState(prev => ({
+      setViewState((prev) => ({
         ...prev,
         longitude: vendor.location.coordinates[0],
         latitude: vendor.location.coordinates[1],
-        zoom: Math.max(prev.zoom, 15) // Ensure we're zoomed in enough
+        zoom: Math.max(prev.zoom, 15), // Ensure we're zoomed in enough
       }));
     }
   };
 
   const handleGeolocate = () => {
-    // Optional: Add any special handling when user location is obtained
     updateBounds();
   };
 
   if (loading) {
     return (
-      <Box 
-        sx={{ 
-          height: "calc(100vh - 64px)", 
-          width: "100%", 
-          display: "flex", 
-          alignItems: "center", 
-          justifyContent: "center" 
+      <Box
+        sx={{
+          height: "calc(100vh - 64px)",
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         <CircularProgress />
@@ -144,10 +147,12 @@ const MapHomeLayout = () => {
   }
 
   return (
-    <Box sx={{ height: "calc(100vh - 64px)", width: "100%", position: "relative" }}>
+    <Box
+      sx={{ height: "calc(100vh - 64px)", width: "100%", position: "relative" }}
+    >
       <Map
         {...viewState}
-        onMove={evt => setViewState(evt.viewState)}
+        onMove={(evt) => setViewState(evt.viewState)}
         mapStyle="mapbox://styles/mapbox/dark-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
         style={{ width: "100%", height: "100%" }}
@@ -157,7 +162,7 @@ const MapHomeLayout = () => {
         maxZoom={20}
         minZoom={3}
       >
-        <GeolocateControl 
+        <GeolocateControl
           position="top-right"
           positionOptions={{ enableHighAccuracy: true }}
           trackUserLocation
@@ -165,7 +170,7 @@ const MapHomeLayout = () => {
           onGeolocate={handleGeolocate}
           style={controlStyle}
         />
-        
+
         <ClusteredVendorMarkers
           vendors={filteredVendors}
           onClick={handleVendorClick}
@@ -173,15 +178,18 @@ const MapHomeLayout = () => {
           zoom={viewState.zoom}
         />
 
-        <Container maxWidth="md" sx={{
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          pointerEvents: "none",
-          "& > *": { pointerEvents: "auto" },
-        }}>
-          <SearchFilters 
+        <Container
+          maxWidth="md"
+          sx={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            pointerEvents: "none",
+            "& > *": { pointerEvents: "auto" },
+          }}
+        >
+          <SearchFilters
             filterType={filterType}
             onFilterChange={handleFilterChange}
           />
@@ -196,7 +204,7 @@ const MapHomeLayout = () => {
           onClose={() => setSelectedVendor(null)}
         />
       )}
-      
+
       {selectedVendor && showFullView && (
         <VendorFullView
           vendor={selectedVendor}

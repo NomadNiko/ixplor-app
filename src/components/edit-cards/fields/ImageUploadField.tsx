@@ -16,7 +16,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
 }) => {
   const { register } = useFormContext();
   const { errors } = useFormState();
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("tests");
   const theme = useTheme();
 
   const imageUrl = useWatch({
