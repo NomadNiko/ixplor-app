@@ -1,5 +1,4 @@
-// /src/app/[language]/tests/create-cards/create-card-test-container.tsx
-
+"use client";
 import { useState } from 'react';
 import { CreateCard } from '@/components/cards/create-cards/CreateCard';
 import { vendorConfig, productConfig } from '@/components/cards/create-cards/configs';
