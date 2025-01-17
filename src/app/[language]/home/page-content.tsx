@@ -1,3 +1,4 @@
+"use client";
 import { useState, useRef, useEffect } from "react";
 import Map, { MapRef, GeolocateControl, ViewState } from "react-map-gl";
 import Box from "@mui/material/Box";
