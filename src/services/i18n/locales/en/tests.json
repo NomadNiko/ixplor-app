@@ -1,18 +1,45 @@
 {
-    "editCardTest": "Edit Card Component Test",
-    "editCardTestDescription": "Test the edit card component with different configurations and data types.",
-    "vendor": "Vendor",
-    "product": "Product",
-    "console": "Data Preview",
-    "success": {
-      "saved": "Successfully saved",
-      "deleted": "Successfully deleted"
-    },
-    "errors": {
-      "saveFailed": "Failed to save",
-      "deleteFailed": "Failed to delete"
-    },
-    "info": {
-      "cancelled": "Operation cancelled"
-    }
-  }
+  "editCardTest": "Edit Card Component Test",
+  "editCardTestDescription": "Test the edit card component with different configurations and data types.",
+  "vendor": "Vendor",
+  "product": "Product",
+  "console": "Data Preview",
+  "success": {
+    "saved": "Successfully saved",
+    "deleted": "Successfully deleted"
+  },
+  "errors": {
+    "saveFailed": "Failed to save",
+    "deleteFailed": "Failed to delete"
+  },
+  "info": {
+    "cancelled": "Operation cancelled"
+  },
+  "editProduct": "Edit Product",
+  "editVendor": "Edit Vendor",
+  "basicInfo": "Basic Information",
+  "details": "Details",
+  "media": "Media",
+  "duration": "Duration",
+  "date": "Date",
+  "startTime": "Start Time", 
+  "endTime": "End Time",
+  "imageUrl": "Image URL",
+  "businessName": "Business Name",
+  "description": "Description",
+  "email": "Email",
+  "phone": "Phone",
+  "website": "Website",
+  "logoUrl": "Logo URL",
+  "address": "Address",
+  "city": "City",
+  "state": "State",
+  "postalCode": "Postal Code",
+  "productName": "Product Name",
+  "productDescription": "Product Description",
+  "productType": "Product Type",
+  "productPrice": "Price",
+  "preview": "Preview",
+  "contact": "Contact Information",
+  "location": "Location Information"
+}
