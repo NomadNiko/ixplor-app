@@ -8,14 +8,30 @@ import { ImageUploadField } from './ImageUploadField';
 import { useTranslation } from "@/services/i18n/client";
 import FormDatePickerInput from "@/components/form/date-pickers/date-picker";
 import FormTimePickerInput from "@/components/form/date-pickers/time-picker";
+import CurrencyInput from './CurrencyInput';
 
 export const CardField: React.FC<CardFieldProps> = ({ 
   field,
-  mode = 'edit'
+  mode = 'edit'  // Now TypeScript knows about this prop
 }) => {
-  const { register } = useFormContext<FormData>();
+  const { register, control } = useFormContext<FormData>();
   const { errors } = useFormState();
   const { t } = useTranslation('tests');
+
+
+  // Handle currency field type
+  if (field.name === 'productPrice') {
+    return (
+      <CurrencyInput
+        name={field.name}
+        label={t(field.label)}
+        control={control}
+        error={errors[field.name]?.message as string}
+        required={field.required}
+      />
+    );
+  }
+
 
   if (field.type === 'address') {
     return <AddressField field={field} mode={mode} />;
@@ -75,19 +91,7 @@ export const CardField: React.FC<CardFieldProps> = ({
     fullWidth: true,
     error: !!errors[field.name],
     helperText: errors[field.name]?.message as string,
-    InputLabelProps: { 
-      shrink: true,
-      sx: {
-        transform: 'translate(14px, -9px) scale(0.75)'
-      }
-    },
-    sx: {
-      mb: 3,
-      mt: 1,
-      '& .MuiInputBase-root': {
-        height: field.type === 'textarea' ? 'auto' : '56px'
-      }
-    }
+    InputLabelProps: field.prefilled ? { shrink: true } : undefined,
   };
 
   if (field.type === 'select') {

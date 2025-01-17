@@ -43,7 +43,7 @@ export const useGooglePlaces = () => {
     try {
       const response = await autocompleteService.current.getPlacePredictions({
         input,
-        types: ['geocode', 'address', 'sublocality']
+        types: ['geocode']
       });
       return response.predictions;
     } catch (error) {
