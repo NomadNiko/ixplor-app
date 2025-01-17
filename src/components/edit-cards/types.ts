@@ -32,6 +32,7 @@ export interface FieldConfig {
   fullWidth?: boolean;
   rows?: number;
   gridWidth?: 1 | 2 | 3 | 4 | 6 | 12; // Column width in 12-column grid
+  prefilled?: boolean;
 }
 
 export interface SectionConfig {

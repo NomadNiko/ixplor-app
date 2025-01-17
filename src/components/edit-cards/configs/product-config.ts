@@ -58,19 +58,22 @@ export const productConfig: EditCardConfig = {
             name: 'productDate',
             label: 'date',
             type: 'date',
-            gridWidth: 6
+            gridWidth: 6,
+            prefilled: true
           },
           {
             name: 'productStartTime',
             label: 'startTime',
             type: 'time',
-            gridWidth: 6
+            gridWidth: 6,
+            prefilled: true
           },
           {
             name: 'productEndTime',
             label: 'endTime',
             type: 'time',
-            gridWidth: 6
+            gridWidth: 6,
+            prefilled: true
           }
         ]
       },

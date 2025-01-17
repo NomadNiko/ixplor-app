@@ -54,7 +54,8 @@ export const EditCardField: React.FC<EditCardFieldProps> = ({ field }) => {
     label: t(field.label),
     fullWidth: true,
     error: !!errors[field.name],
-    helperText: errors[field.name]?.message as string
+    helperText: errors[field.name]?.message as string,
+    InputLabelProps: field.prefilled ? { shrink: true } : undefined,
   };
 
   if (field.type === 'select') {
