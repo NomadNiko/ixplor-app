@@ -11,6 +11,8 @@ import ToggleButton from '@mui/material/ToggleButton';
 import Paper from '@mui/material/Paper';
 import { useTranslation } from "@/services/i18n/client";
 import { useSnackbar } from "@/hooks/use-snackbar";
+import { ProductStatusEnum } from '@/app/[language]/types/product';
+import { VendorStatusEnum } from '@/app/[language]/types/vendor';
 
 export default function EditCardTestContainer() {
   const { t } = useTranslation("tests");
@@ -18,6 +20,9 @@ export default function EditCardTestContainer() {
   const [editType, setEditType] = useState<'vendor' | 'product'>('vendor');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentFormData, setCurrentFormData] = useState<FormData>({});
+  const [currentStatus, setCurrentStatus] = useState<ProductStatusEnum | VendorStatusEnum>(
+    editType === 'vendor' ? VendorStatusEnum.SUBMITTED : ProductStatusEnum.DRAFT
+  );
 
   const handleSave = async (data: FormData) => {
     setIsSubmitting(true);
@@ -28,6 +33,20 @@ export default function EditCardTestContainer() {
       enqueueSnackbar(t('success.saved'), { variant: 'success' });
     } catch (error) {
       console.error('Error saving:', error);
+      enqueueSnackbar(t('errors.saveFailed'), { variant: 'error' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleStatusChange = async (status: ProductStatusEnum | VendorStatusEnum) => {
+    setIsSubmitting(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setCurrentStatus(status);
+      enqueueSnackbar(t('success.saved'), { variant: 'success' });
+    } catch (error) {
+      console.error('Error changing status:', error);
       enqueueSnackbar(t('errors.saveFailed'), { variant: 'error' });
     } finally {
       setIsSubmitting(false);
@@ -58,12 +77,12 @@ export default function EditCardTestContainer() {
     description: '',
     vendorType: '',
     email: '',
-    phone:'',
-    website:'',
+    phone: '',
+    website: '',
     logoUrl: '',
     address: '',
     city: '',
-    state:'',
+    state: '',
     postalCode: ''
   };
 
@@ -83,10 +102,18 @@ export default function EditCardTestContainer() {
     if (value) {
       setEditType(value);
       setCurrentFormData(value === 'vendor' ? mockVendorData : mockProductData);
+      setCurrentStatus(value === 'vendor' ? VendorStatusEnum.SUBMITTED : ProductStatusEnum.DRAFT);
     }
   };
 
-  const currentConfig = editType === 'vendor' ? vendorConfig : productConfig;
+  const currentConfig = {
+    ...(editType === 'vendor' ? vendorConfig : productConfig),
+    approvalButtons: {
+      type: editType,
+      currentStatus: currentStatus,
+      onStatusChange: handleStatusChange
+    }
+  };
 
   const handleFormChange = (data: FormData) => {
     setCurrentFormData(data);
@@ -102,7 +129,7 @@ export default function EditCardTestContainer() {
           {t('editCardTestDescription')}
         </Typography>
       </Box>
-
+      
       <Paper sx={{ p: 2, mb: 4 }}>
         <ToggleButtonGroup
           value={editType}
@@ -144,7 +171,10 @@ export default function EditCardTestContainer() {
             overflow: 'auto'
           }}
         >
-          {JSON.stringify(currentFormData, null, 2)}
+          {JSON.stringify({
+            formData: currentFormData,
+            status: currentStatus
+          }, null, 2)}
         </Box>
       </Paper>
     </Container>
