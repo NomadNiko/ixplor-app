@@ -19,6 +19,13 @@ declare module "@mui/material/styles" {
       buttonWarning: string;
     };
   }
+  interface TypographyVariants {
+    logo: React.CSSProperties;
+  }
+
+  interface TypographyVariantsOptions {
+    logo?: React.CSSProperties;
+  }
 
   interface PaletteOptions {
     customGradients?: {
@@ -36,6 +43,12 @@ declare module "@mui/material/styles/createPalette" {
   interface TypeBackground {
     glass: string;
     glassHover: string;
+  }
+}
+
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    logo: true;
   }
 }
 
@@ -114,12 +127,16 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
             background: "linear-gradient(to bottom, #0F172A, #1E293B)",
             buttonMain: "linear-gradient(to right, #1E40AF,rgb(71, 26, 145))", // Dark blue to dark purple
             buttonSecondary: "linear-gradient(to right, #059669, #065F46)", // Green to dark green
-            buttonWarning: "linear-gradient(to right, #DC2626,rgb(126, 23, 23))", // Red to dark red
+            buttonWarning:
+              "linear-gradient(to right, #DC2626,rgb(126, 23, 23))", // Red to dark red
           },
         },
         typography: {
           fontFamily:
             '"Orbitron Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+          logo: {
+            fontFamily: '"New Tegomin", serif',
+          },
           h1: {
             fontSize: "2.5rem",
             fontWeight: 600,

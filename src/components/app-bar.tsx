@@ -4,7 +4,7 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
+import Typography, { TypographyProps } from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
@@ -20,6 +20,27 @@ import Link from "@/components/link";
 import { RoleEnum } from "@/services/api/types/role";
 import Divider from "@mui/material/Divider";
 import { IS_SIGN_UP_ENABLED } from "@/services/auth/config";
+import { styled } from '@mui/material/styles';
+
+// Define the props type for the LogoTypography component
+type LogoTypographyProps = TypographyProps<
+  'a',
+  { component: 'a' }
+>;
+
+// Create the styled LogoTypography component
+const LogoTypography = styled(Typography)<LogoTypographyProps>(({ theme }) => ({
+  marginRight: theme.spacing(2),
+  display: 'none',
+  fontWeight: 700,
+  fontFamily: 'New Tegomin, serif',
+  letterSpacing: '.3rem',
+  color: 'inherit',
+  textDecoration: 'none',
+  [theme.breakpoints.up('md')]: {
+    display: 'flex',
+  },
+}));
 
 function ResponsiveAppBar() {
   const { t } = useTranslation("common");
@@ -37,11 +58,9 @@ function ResponsiveAppBar() {
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElementUser(event.currentTarget);
   };
-
   const handleCloseNavMenu = () => {
     setAnchorElementNav(null);
   };
-
   const handleCloseUserMenu = () => {
     setAnchorElementUser(null);
   };
@@ -50,23 +69,14 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Typography
+          <LogoTypography
             variant="h6"
             noWrap
             component="a"
             href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontWeight: 700,
-              fontFamily: "New Tegomin",
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
           >
             {t("common:app-name")}
-          </Typography>
+          </LogoTypography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -180,7 +190,6 @@ function ResponsiveAppBar() {
                     </Typography>
                   </MenuItem>,
                 ]}
-              {/* mobile-menu-items */}
               {isLoaded &&
                 !user && [
                   <Divider key="divider" />,
@@ -209,6 +218,7 @@ function ResponsiveAppBar() {
                 ]}
             </Menu>
           </Box>
+
           <Typography
             variant="h5"
             noWrap
@@ -218,6 +228,7 @@ function ResponsiveAppBar() {
               mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
+              fontFamily: 'New Tegomin, serif',
               fontWeight: 700,
               letterSpacing: ".3rem",
               color: "inherit",
@@ -226,6 +237,7 @@ function ResponsiveAppBar() {
           >
             {t("common:app-name")}
           </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Button
               onClick={handleCloseNavMenu}
@@ -235,7 +247,6 @@ function ResponsiveAppBar() {
             >
               {t("common:navigation.home")}
             </Button>
-
             {!!user?.role &&
               [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
                 <>
@@ -249,7 +260,6 @@ function ResponsiveAppBar() {
                   </Button>
                 </>
               )}
-
             {!!user?.role &&
               [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
                 <>
@@ -263,7 +273,6 @@ function ResponsiveAppBar() {
                   </Button>
                 </>
               )}
-
             {!!user?.role &&
               [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
                 <>
@@ -277,7 +286,6 @@ function ResponsiveAppBar() {
                   </Button>
                 </>
               )}
-
             {!!user?.role &&
               [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
                 <>
@@ -291,7 +299,6 @@ function ResponsiveAppBar() {
                   </Button>
                 </>
               )}
-
             {!!user?.role &&
               [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
                 <>
@@ -305,7 +312,6 @@ function ResponsiveAppBar() {
                   </Button>
                 </>
               )}
-
             {!!user?.role &&
               [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
                 <>
@@ -317,7 +323,6 @@ function ResponsiveAppBar() {
                   >
                     {t("common:navigation.users")}
                   </Button>
-                  {/* desktop-menu-items */}
                 </>
               )}
           </Box>
@@ -328,7 +333,6 @@ function ResponsiveAppBar() {
               mr: 1,
             }}
           ></Box>
-
           {!isLoaded ? (
             <CircularProgress color="inherit" />
           ) : user ? (
@@ -413,4 +417,5 @@ function ResponsiveAppBar() {
     </AppBar>
   );
 }
+
 export default ResponsiveAppBar;
