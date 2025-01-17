@@ -11,7 +11,7 @@ import FormTimePickerInput from "@/components/form/date-pickers/time-picker";
 
 export const CardField: React.FC<CardFieldProps> = ({ 
   field,
-  mode = 'edit'  // Now TypeScript knows about this prop
+  mode = 'edit'
 }) => {
   const { register } = useFormContext<FormData>();
   const { errors } = useFormState();
@@ -75,7 +75,19 @@ export const CardField: React.FC<CardFieldProps> = ({
     fullWidth: true,
     error: !!errors[field.name],
     helperText: errors[field.name]?.message as string,
-    InputLabelProps: field.prefilled ? { shrink: true } : undefined,
+    InputLabelProps: { 
+      shrink: true,
+      sx: {
+        transform: 'translate(14px, -9px) scale(0.75)'
+      }
+    },
+    sx: {
+      mb: 3,
+      mt: 1,
+      '& .MuiInputBase-root': {
+        height: field.type === 'textarea' ? 'auto' : '56px'
+      }
+    }
   };
 
   if (field.type === 'select') {
