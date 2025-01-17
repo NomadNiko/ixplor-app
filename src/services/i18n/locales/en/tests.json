@@ -2,6 +2,7 @@
   "editCardTest": "Edit Card Component Test",
   "editCardTestDescription": "Test the edit card component with different configurations and data types.",
   "vendor": "Vendor",
+  "vendortype": "Vendor Type",
   "product": "Product",
   "console": "Data Preview",
   "success": {
@@ -41,5 +42,12 @@
   "productPrice": "Price",
   "preview": "Preview",
   "contact": "Contact Information",
-  "location": "Location Information"
+  "location": "Location Information",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "fieldRequired": "This field is required",
+  "validationMin": "Minimum value is {{min}}",
+  "validationMax": "Maximum value is {{max}}",
+  "validationPattern": "Invalid format"
 }

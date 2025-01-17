@@ -85,6 +85,19 @@ export const productConfig: EditCardConfig = {
             fullWidth: true
           }
         ]
+      },
+      {
+        id: 'location',
+        title: 'location',
+        fields: [
+          {
+            name: 'address',
+            label: 'address',
+            type: 'address',
+            required: true,
+            fullWidth: true
+          }
+        ]
       }
     ]
   };
