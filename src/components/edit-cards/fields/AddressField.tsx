@@ -12,7 +12,7 @@ interface AddressFieldProps {
 export const AddressField: React.FC<AddressFieldProps> = ({ field }) => {
   const { register } = useFormContext<FormData>();
   const { errors } = useFormState();
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('tests');
 
   return (
     <Grid container spacing={2}>

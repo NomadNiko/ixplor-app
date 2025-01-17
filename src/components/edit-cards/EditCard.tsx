@@ -20,7 +20,7 @@ export const EditCard: React.FC<EditCardProps> = ({
   customActions,
   isSubmitting = false
 }) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('tests');
   const methods = useForm<FormData>({ defaultValues: initialData });
 
   const handleSubmit = async (data: FormData) => {

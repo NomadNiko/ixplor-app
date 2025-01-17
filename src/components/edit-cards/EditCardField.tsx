@@ -14,7 +14,7 @@ interface EditCardFieldProps {
 export const EditCardField: React.FC<EditCardFieldProps> = ({ field }) => {
   const { register } = useFormContext<FormData>();
   const { errors } = useFormState();
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('tests');
 
   if (field.type === 'address') {
     return <AddressField field={field} />;
