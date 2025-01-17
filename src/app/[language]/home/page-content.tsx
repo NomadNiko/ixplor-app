@@ -71,6 +71,7 @@ const MapHomeLayout = () => {
     backdropFilter: "blur(10px)",
     color: theme.palette.primary.main,
     borderRadius: theme.shape.borderRadius,
+    height: "14px",
     zIndex: 0,
   };
 
@@ -169,7 +170,7 @@ const MapHomeLayout = () => {
       ...viewState,
       longitude: vendor.location.coordinates[0],
       latitude: vendor.location.coordinates[1],
-      zoom: 15
+      zoom: 16
     });
     setSelectedVendor(vendor);
     setShowFullView(false);
@@ -186,7 +187,7 @@ const MapHomeLayout = () => {
           ...viewState,
           latitude: details.latitude,
           longitude: details.longitude,
-          zoom: 15
+          zoom: 16
         });
         setShowResults(false);
         setSearchQuery('');
@@ -285,7 +286,10 @@ const MapHomeLayout = () => {
             <Box sx={{ position: 'relative' }}>
               <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
                 <TextField
-                  fullWidth
+                  sx={{
+                    width: { xs: "85%", md: "95%" },
+                    alignSelf: "flex-start",
+                  }}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={searchMode === 'vendor' ? t('searchPlaceholder.vendor') : t('searchPlaceholder.location')}

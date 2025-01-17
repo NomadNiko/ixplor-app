@@ -33,7 +33,7 @@ export const SearchFilters = ({ filterType, onFilterChange }: SearchFiltersProps
           startAdornment: <Search size={22} />,
         }}
         sx={{
-          width: { xs: "85%", md: "95%" },
+          width: { xs: "70%", md: "95%" },
           alignSelf: "flex-start",
         }}
       />
