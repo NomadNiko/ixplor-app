@@ -8,111 +8,138 @@ export interface PlaceResult {
   postalCode: string;
   latitude: number;
   longitude: number;
+  businessName?: string;
+  phoneNumber?: string;
+  website?: string;
+  placeTypes?: string[];
 }
 
 export const useGooglePlaces = () => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null);
-  const placesService = useRef<google.maps.places.PlacesService | null>(null);
-  const geocoder = useRef<google.maps.Geocoder | null>(null);
+  const placesInstance = useRef<google.maps.places.PlacesService | null>(null);
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    // Load Google Maps JavaScript API
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`;
-    script.async = true;
-    script.onload = () => {
-      autocompleteService.current = new google.maps.places.AutocompleteService();
-      placesService.current = new google.maps.places.PlacesService(document.createElement('div'));
-      geocoder.current = new google.maps.Geocoder();
-      setIsLoaded(true);
-    };
-    document.head.appendChild(script);
+    const initPlaces = async () => {
+      if (!window.google) {
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places&v=3`;
+        script.async = true;
+        script.defer = true;
+        
+        script.onload = () => {
+          const dummyDiv = document.createElement('div');
+          placesInstance.current = new google.maps.places.PlacesService(dummyDiv);
+          setIsLoaded(true);
+        };
 
-    return () => {
-      document.head.removeChild(script);
+        document.head.appendChild(script);
+      } else {
+        const dummyDiv = document.createElement('div');
+        placesInstance.current = new google.maps.places.PlacesService(dummyDiv);
+        setIsLoaded(true);
+      }
     };
+
+    initPlaces();
   }, []);
 
-  const getPlacePredictions = async (input: string): Promise<google.maps.places.AutocompletePrediction[]> => {
-    if (!autocompleteService.current) {
+  const searchPlaces = async (query: string): Promise<google.maps.places.AutocompletePrediction[]> => {
+    if (!window.google || !placesInstance.current) {
       return [];
     }
 
     try {
-      const response = await autocompleteService.current.getPlacePredictions({
-        input,
-        types: ['geocode']
+      return new Promise((resolve, reject) => {
+        const sessionToken = new google.maps.places.AutocompleteSessionToken();
+        const autocompleteService = new google.maps.places.AutocompleteService();
+        
+        autocompleteService.getPlacePredictions(
+          {
+            input: query,
+            sessionToken,
+            types: ['establishment', 'geocode', 'address'],
+          },
+          (predictions, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+              resolve(predictions);
+            } else {
+              reject(new Error(`Places search failed with status: ${status}`));
+            }
+          }
+        );
       });
-      return response.predictions;
     } catch (error) {
-      console.error('Error fetching place predictions:', error);
-      enqueueSnackbar('Error fetching address suggestions', { variant: 'error' });
+      console.error('Error searching places:', error);
+      enqueueSnackbar('Error searching for places', { variant: 'error' });
       return [];
     }
   };
 
   const getPlaceDetails = async (placeId: string): Promise<PlaceResult | null> => {
-    if (!placesService.current || !geocoder.current) {
+    if (!window.google || !placesInstance.current) {
       return null;
     }
 
     try {
-      const place = await new Promise<google.maps.places.PlaceResult>((resolve, reject) => {
-        placesService.current!.getDetails(
-          { placeId, fields: ['address_components', 'geometry'] },
-          (result, status) => {
-            if (status === google.maps.places.PlacesServiceStatus.OK && result) {
+      return new Promise((resolve, reject) => {
+        placesInstance.current!.getDetails(
+          {
+            placeId,
+            fields: [
+              'name',
+              'formatted_address',
+              'address_components',
+              'geometry',
+              'formatted_phone_number',
+              'website',
+              'types',
+              'business_status',
+              'opening_hours',
+              'rating',
+              'user_ratings_total'
+            ]
+          },
+          (place, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK && place) {
+              const result: PlaceResult = {
+                address: place.formatted_address || '',
+                city: '',
+                state: '',
+                postalCode: '',
+                latitude: place.geometry?.location?.lat() || 0,
+                longitude: place.geometry?.location?.lng() || 0,
+                businessName: place.name,
+                phoneNumber: place.formatted_phone_number,
+                website: place.website,
+                placeTypes: place.types
+              };
+
+              // Process address components
+              place.address_components?.forEach(component => {
+                const type = component.types[0];
+                if (type === 'locality') result.city = component.long_name;
+                if (type === 'administrative_area_level_1') result.state = component.short_name;
+                if (type === 'postal_code') result.postalCode = component.long_name;
+              });
+
               resolve(result);
             } else {
-              reject(new Error('Failed to get place details'));
+              reject(new Error(`Place details failed with status: ${status}`));
             }
           }
         );
       });
-
-      const addressComponents = place.address_components || [];
-      const result: PlaceResult = {
-        address: '',
-        city: '',
-        state: '',
-        postalCode: '',
-        latitude: place.geometry?.location?.lat() || 0,
-        longitude: place.geometry?.location?.lng() || 0
-      };
-
-      // Parse address components
-      addressComponents.forEach(component => {
-        const type = component.types[0];
-        if (type === 'street_number') {
-          result.address = component.long_name;
-        }
-        if (type === 'route') {
-          result.address += (result.address ? ' ' : '') + component.long_name;
-        }
-        if (type === 'locality') {
-          result.city = component.long_name;
-        }
-        if (type === 'administrative_area_level_1') {
-          result.state = component.short_name;
-        }
-        if (type === 'postal_code') {
-          result.postalCode = component.long_name;
-        }
-      });
-
-      return result;
     } catch (error) {
       console.error('Error fetching place details:', error);
-      enqueueSnackbar('Error fetching address details', { variant: 'error' });
+      enqueueSnackbar('Error fetching place details', { variant: 'error' });
       return null;
     }
   };
 
   return {
     isLoaded,
-    getPlacePredictions,
+    searchPlaces,
     getPlaceDetails
   };
 };
