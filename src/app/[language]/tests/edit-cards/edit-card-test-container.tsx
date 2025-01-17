@@ -1,8 +1,8 @@
 "use client";
 import { useState } from 'react';
-import { EditCard } from '@/components/edit-cards/EditCard';
-import { vendorConfig, productConfig } from '@/components/edit-cards/configs';
-import { FormData } from '@/components/edit-cards/types';
+import { EditCard } from '@/components/cards/edit-cards/EditCard';
+import { vendorConfig, productConfig } from '@/components/cards/edit-cards/configs';
+import { FormData } from '@/components/cards/edit-cards/types';
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";

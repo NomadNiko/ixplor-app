@@ -1,5 +1,6 @@
-// src/components/edit-cards/types.ts
 import { ReactNode } from 'react';
+import { ProductStatusEnum } from '@/app/[language]/types/product';
+import { VendorStatusEnum } from '@/app/[language]/types/vendor';
 
 export type FieldType = 
   | 'text'
@@ -31,7 +32,7 @@ export interface FieldConfig {
   defaultValue?: BaseFieldValue;
   fullWidth?: boolean;
   rows?: number;
-  gridWidth?: 1 | 2 | 3 | 4 | 6 | 12; // Column width in 12-column grid
+  gridWidth?: 1 | 2 | 3 | 4 | 6 | 12;
   prefilled?: boolean;
 }
 
@@ -44,6 +45,11 @@ export interface SectionConfig {
 export interface EditCardConfig {
   title: string;
   sections: SectionConfig[];
+  approvalButtons?: {
+    type: 'vendor' | 'product';
+    currentStatus: ProductStatusEnum | VendorStatusEnum;
+    onStatusChange: (status: ProductStatusEnum | VendorStatusEnum) => Promise<void>;
+  };
 }
 
 export interface FormData {

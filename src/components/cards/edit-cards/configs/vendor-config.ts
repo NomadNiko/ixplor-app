@@ -80,5 +80,6 @@ export const vendorConfig: EditCardConfig = {
           }
         ]
       }
-    ]
+    ],
+    
   };
