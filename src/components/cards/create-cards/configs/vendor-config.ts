@@ -1,6 +1,6 @@
-import { CreateCardConfig } from "../types";
+import { CardConfig } from "../../shared/types";
 
-export const vendorConfig: CreateCardConfig = {
+export const vendorConfig: CardConfig = {
   title: 'createVendor',
   type: 'vendor',
   sections: [

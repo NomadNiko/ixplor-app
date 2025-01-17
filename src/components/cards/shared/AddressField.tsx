@@ -3,14 +3,10 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import { useFormContext, useFormState } from 'react-hook-form';
 import { useTranslation } from '@/services/i18n/client';
-import { FieldConfig, FormData } from '../types';
+import { FormData, AddressFieldProps } from './types';
 import { useGooglePlaces } from '@/hooks/use-google-places';
 
-interface AddressFieldProps {
-  field: FieldConfig;
-}
-
-export const AddressField: React.FC<AddressFieldProps> = () => {
+export const AddressField: React.FC<AddressFieldProps> = ({ field, mode = 'edit' }) => {
   const { register, setValue } = useFormContext<FormData>();
   const { errors } = useFormState();
   const { t } = useTranslation('tests');
@@ -50,6 +46,7 @@ export const AddressField: React.FC<AddressFieldProps> = () => {
           onChange={handleAddressChange}
           error={!!errors.address}
           helperText={errors.address?.message as string}
+          disabled={mode === 'edit' && field.prefilled}
         />
         {predictions.length > 0 && (
           <div className="absolute z-10 w-full bg-white shadow-lg rounded-b border">
@@ -73,6 +70,7 @@ export const AddressField: React.FC<AddressFieldProps> = () => {
           error={!!errors.city}
           helperText={errors.city?.message as string}
           InputProps={{ readOnly: true }}
+          disabled={mode === 'edit' && field.prefilled}
         />
       </Grid>
       <Grid item xs={12} sm={3}>
@@ -83,6 +81,7 @@ export const AddressField: React.FC<AddressFieldProps> = () => {
           error={!!errors.state}
           helperText={errors.state?.message as string}
           InputProps={{ readOnly: true }}
+          disabled={mode === 'edit' && field.prefilled}
         />
       </Grid>
       <Grid item xs={12} sm={3}>
@@ -93,6 +92,7 @@ export const AddressField: React.FC<AddressFieldProps> = () => {
           error={!!errors.postalCode}
           helperText={errors.postalCode?.message as string}
           InputProps={{ readOnly: true }}
+          disabled={mode === 'edit' && field.prefilled}
         />
       </Grid>
     </Grid>

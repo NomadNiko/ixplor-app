@@ -1,17 +1,12 @@
-// /src/components/cards/create-cards/CreateCard.tsx
+import React from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
+import { BaseCard } from '../shared/BaseCard';
+import { FormValuesMonitor } from '../shared/FormValuesMonitor';
+import { SharedCardActions } from '../shared/SharedCardActions';
+import { BaseCardProps, FormData } from '../shared/types';
+import CardSection from '../shared/CardSection';
 
-import React, { useEffect } from 'react';
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import { useForm, FormProvider, useWatch, useFormContext } from "react-hook-form";
-import { BaseFieldValue, CreateCardProps, FormData } from './types';
-import { CreateCardSection } from './CreateCardSection';
-import { CreateCardActions } from './CreateCardActions';
-import { useTranslation } from "@/services/i18n/client";
-
-export const CreateCard: React.FC<CreateCardProps> = ({
+export const CreateCard: React.FC<BaseCardProps> = ({
   config,
   initialData,
   onSave,
@@ -20,54 +15,35 @@ export const CreateCard: React.FC<CreateCardProps> = ({
   isSubmitting = false,
   onChange
 }) => {
-  const { t } = useTranslation('tests');
   const methods = useForm<FormData>({ defaultValues: initialData });
-  
+
   return (
     <FormProvider {...methods}>
-      <Card>
-        <CardContent>
-          <Typography variant="h5" gutterBottom>
-            {t(config.title)}
-          </Typography>
-          <CreateCardFormValues onChange={onChange} />
-          
-          {config.sections.map((section, index) => (
-            <React.Fragment key={section.id}>
-              {index > 0 && <Divider sx={{ my: 2 }} />}
-              <CreateCardSection section={section} />
-            </React.Fragment>
-          ))}
-          
-          <CreateCardActions
-            onSave={onSave}
-            onCancel={onCancel}
-            isSubmitting={isSubmitting}
-            methods={methods}
-            customActions={customActions}
-            t={t}
-            type={config.type}
-          />
-        </CardContent>
-      </Card>
+      <BaseCard
+        config={config}
+        initialData={initialData}
+        onSave={onSave}
+        onCancel={onCancel}
+        customActions={customActions}
+        isSubmitting={isSubmitting}
+        onChange={onChange}
+        mode="create"
+      >
+        <FormValuesMonitor onChange={onChange} />
+        {config.sections.map((section) => (
+          <CardSection key={section.id} section={section} mode="create" />
+        ))}
+        <SharedCardActions
+          onSave={onSave}
+          onCancel={onCancel}
+          isSubmitting={isSubmitting}
+          methods={methods}
+          customActions={customActions}
+          t={(key) => key}
+          type={config.type}
+          mode="create"
+        />
+      </BaseCard>
     </FormProvider>
   );
-};
-
-const CreateCardFormValues: React.FC<{ onChange?: (data: FormData) => void }> = ({ onChange }) => {
-  const formValues = useWatch({ control: useFormContext().control });
-  
-  useEffect(() => {
-    if (onChange) {
-      const cleanedValues = Object.entries(formValues).reduce((acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = value as BaseFieldValue;
-        }
-        return acc;
-      }, {} as FormData);
-      onChange(cleanedValues);
-    }
-  }, [onChange, formValues]);
-  
-  return null;
 };

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { EditCard } from '@/components/cards/edit-cards/EditCard';
 import { vendorConfig, productConfig } from '@/components/cards/edit-cards/configs';
-import { FormData } from '@/components/cards/edit-cards/types';
+import { FormData } from '@/components/cards/shared/types';
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -109,10 +109,11 @@ export default function EditCardTestContainer() {
   const currentConfig = {
     ...(editType === 'vendor' ? vendorConfig : productConfig),
     approvalButtons: {
-      type: editType,
+      type: editType, // Add the 'type' property here
       currentStatus: currentStatus,
       onStatusChange: handleStatusChange
-    }
+    },
+    type: editType // Add the 'type' property to the config object
   };
 
   const handleFormChange = (data: FormData) => {

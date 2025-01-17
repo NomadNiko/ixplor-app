@@ -1,7 +1,8 @@
-import { EditCardConfig } from "../types";
+import { CardConfig } from "../../shared/types";
 
-export const productConfig: EditCardConfig = {
+export const productConfig: CardConfig = {
     title: 'editProduct',
+    type: 'product',
     sections: [
       {
         id: 'basic',

@@ -1,33 +1,23 @@
 import React from 'react';
-import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import { Save, X, Trash2 } from "lucide-react";
-import { FormData } from './types';
-import { UseFormReturn } from 'react-hook-form';
-import { ReactNode } from 'react';
+import Button from "@mui/material/Button";
+import { Save, X, Trash2 } from 'lucide-react';
 import { useTheme } from '@mui/material/styles';
+import { SharedCardActionsProps, FormData} from './types';
 
-interface EditCardActionsProps {
-  onSave: (data: FormData) => Promise<void>;
-  onCancel: () => void;
-  onDelete?: () => void;
-  isSubmitting: boolean;
-  methods: UseFormReturn<FormData>;
-  customActions?: ReactNode;
-  t: (key: string) => string;
-}
-
-export const EditCardActions: React.FC<EditCardActionsProps> = ({
+export const SharedCardActions: React.FC<SharedCardActionsProps> = ({
   onSave,
   onCancel,
   onDelete,
   isSubmitting,
   methods,
   customActions,
-  t
+  t,
+  type,
+  mode = 'edit'
 }) => {
   const theme = useTheme();
-
+  
   const handleSubmit = async (data: FormData) => {
     try {
       await onSave(data);
@@ -43,7 +33,7 @@ export const EditCardActions: React.FC<EditCardActionsProps> = ({
       mt: 3,
       gap: 2 
     }}>
-      {onDelete && (
+      {mode === 'edit' && onDelete && (
         <Button
           variant="contained"
           sx={{
@@ -60,8 +50,11 @@ export const EditCardActions: React.FC<EditCardActionsProps> = ({
           {t('delete')}
         </Button>
       )}
-
-      <Box sx={{ display: "flex", gap: 2, ml: 'auto' }}>
+      <Box sx={{ 
+        display: "flex", 
+        gap: 2, 
+        ml: mode === 'edit' ? 'auto' : undefined 
+      }}>
         {customActions}
         <Button
           variant="contained"
@@ -91,9 +84,11 @@ export const EditCardActions: React.FC<EditCardActionsProps> = ({
           onClick={methods.handleSubmit(handleSubmit)}
           disabled={isSubmitting}
         >
-          {t('save')}
+          {mode === 'edit' ? t('save') : t(`create${type.charAt(0).toUpperCase() + type.slice(1)}`)}
         </Button>
       </Box>
     </Box>
   );
 };
+
+export default SharedCardActions;

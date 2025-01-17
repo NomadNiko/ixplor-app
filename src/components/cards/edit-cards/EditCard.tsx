@@ -1,16 +1,12 @@
-import React, { useEffect } from 'react';
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import { useForm, FormProvider, useWatch, useFormContext } from "react-hook-form";
-import { BaseFieldValue, EditCardProps, FormData } from './types';
-import { EditCardSection } from './EditCardSection';
-import { EditCardActions } from './EditCardActions';
-import { ApprovalButtons } from '@/components/cards/buttons/ApprovalButtons';
-import { useTranslation } from "@/services/i18n/client";
+import React from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
+import { BaseCard } from '../shared/BaseCard';
+import { FormValuesMonitor } from '../shared/FormValuesMonitor';
+import { SharedCardActions } from '../shared/SharedCardActions';
+import { BaseCardProps, FormData, SectionConfig } from '../shared/types';
+import CardSection from '../shared/CardSection';
 
-export const EditCard: React.FC<EditCardProps> = ({
+export const EditCard: React.FC<BaseCardProps> = ({
   config,
   initialData,
   onSave,
@@ -20,65 +16,37 @@ export const EditCard: React.FC<EditCardProps> = ({
   isSubmitting = false,
   onChange
 }) => {
-  const { t } = useTranslation('tests');
   const methods = useForm<FormData>({ defaultValues: initialData });
 
   return (
     <FormProvider {...methods}>
-      <Card>
-        <CardContent>
-          <Typography variant="h5" gutterBottom>
-            {t(config.title)}
-          </Typography>
-
-          <EditCardFormValues onChange={onChange} />
-
-          {config.sections.map((section, index) => (
-            <React.Fragment key={section.id}>
-              {index > 0 && <Divider sx={{ my: 2 }} />}
-              <EditCardSection section={section} />
-            </React.Fragment>
-          ))}
-
-          {config.approvalButtons && (
-            <ApprovalButtons
-              type={config.approvalButtons.type}
-              currentStatus={config.approvalButtons.currentStatus}
-              onStatusChange={config.approvalButtons.onStatusChange}
-              isSubmitting={isSubmitting}
-            />
-          )}
-
-          <EditCardActions
-            onSave={onSave}
-            onCancel={onCancel}
-            onDelete={onDelete}
-            isSubmitting={isSubmitting}
-            methods={methods}
-            customActions={customActions}
-            t={t}
-          />
-        </CardContent>
-      </Card>
+      <BaseCard
+        config={{ ...config, type: config.type }}
+        initialData={initialData}
+        onSave={onSave}
+        onCancel={onCancel}
+        onDelete={onDelete}
+        customActions={customActions}
+        isSubmitting={isSubmitting}
+        onChange={onChange}
+        mode="edit"
+      >
+        <FormValuesMonitor onChange={onChange} />
+        {config.sections.map((section: SectionConfig) => (
+          <CardSection key={section.id} section={section} mode="edit" />
+        ))}
+        <SharedCardActions
+          onSave={onSave}
+          onCancel={onCancel}
+          onDelete={onDelete}
+          isSubmitting={isSubmitting}
+          methods={methods}
+          customActions={customActions}
+          t={(key) => key}
+          type={config.type}
+          mode="edit"
+        />
+      </BaseCard>
     </FormProvider>
   );
-};
-
-const EditCardFormValues: React.FC<{ onChange?: (data: FormData) => void }> = ({ onChange }) => {
-  const formValues = useWatch({ control: useFormContext().control });
-
-  useEffect(() => {
-    if (onChange) {
-      const cleanedValues = Object.entries(formValues).reduce((acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = value as BaseFieldValue;
-        }
-        return acc;
-      }, {} as FormData);
-
-      onChange(cleanedValues);
-    }
-  }, [onChange, formValues]);
-
-  return null;
 };

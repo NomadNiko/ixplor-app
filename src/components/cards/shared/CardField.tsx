@@ -2,28 +2,27 @@ import React from 'react';
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import { useFormContext, useFormState, RegisterOptions } from "react-hook-form";
-import { FieldConfig, FormData } from './types';
-import { AddressField } from '../edit-cards/fields/AddressField';
-import { ImageUploadField } from '../edit-cards/fields/ImageUploadField';
+import { FormData, CardFieldProps } from './types';
+import { AddressField } from './AddressField';
+import { ImageUploadField } from './ImageUploadField';
 import { useTranslation } from "@/services/i18n/client";
 import FormDatePickerInput from "@/components/form/date-pickers/date-picker";
 import FormTimePickerInput from "@/components/form/date-pickers/time-picker";
 
-interface CardFieldProps {
-  field: FieldConfig;
-}
-
-export const CardField: React.FC<CardFieldProps> = ({ field }) => {
+export const CardField: React.FC<CardFieldProps> = ({ 
+  field,
+  mode = 'edit'  // Now TypeScript knows about this prop
+}) => {
   const { register } = useFormContext<FormData>();
   const { errors } = useFormState();
   const { t } = useTranslation('tests');
 
   if (field.type === 'address') {
-    return <AddressField field={field} />;
+    return <AddressField field={field} mode={mode} />;
   }
 
   if (field.type === 'image') {
-    return <ImageUploadField field={field} />;
+    return <ImageUploadField field={field} mode={mode} />;
   }
 
   if (field.type === 'date') {

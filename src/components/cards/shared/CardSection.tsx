@@ -1,15 +1,14 @@
 import React from 'react';
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import { SectionConfig } from '../shared/types';
-import { CardField } from '../shared/CardField';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "@/services/i18n/client";
+import { CardSectionProps } from './types';
+import { CardField } from './CardField';
 
-interface CreateCardSectionProps {
-  section: SectionConfig;
-}
-
-export const CreateCardSection: React.FC<CreateCardSectionProps> = ({ section }) => {
+export const CardSection: React.FC<CardSectionProps> = ({ 
+  section,
+  mode = 'edit'
+}) => {
   const { t } = useTranslation('tests');
   
   return (
@@ -27,10 +26,15 @@ export const CreateCardSection: React.FC<CreateCardSectionProps> = ({ section })
             md={field.gridWidth || (field.fullWidth ? 12 : 6)} 
             key={field.name}
           >
-            <CardField field={field} />
+            <CardField 
+              field={field}
+              mode={mode}
+            />
           </Grid>
         ))}
       </Grid>
     </div>
   );
 };
+
+export default CardSection;

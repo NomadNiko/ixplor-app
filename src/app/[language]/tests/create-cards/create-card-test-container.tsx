@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { CreateCard } from '@/components/cards/create-cards/CreateCard';
 import { vendorConfig, productConfig } from '@/components/cards/create-cards/configs';
-import { FormData } from '@/components/cards/create-cards/types';
+import { FormData } from '@/components/cards/shared/types';
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
