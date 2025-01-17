@@ -3,15 +3,17 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import { useFormContext, useFormState, RegisterOptions } from "react-hook-form";
 import { FieldConfig, FormData } from './types';
-import { AddressField } from './fields/AddressField';
-import { ImageUploadField } from './fields/ImageUploadField';
+import { AddressField } from '../edit-cards/fields/AddressField';
+import { ImageUploadField } from '../edit-cards/fields/ImageUploadField';
 import { useTranslation } from "@/services/i18n/client";
+import FormDatePickerInput from "@/components/form/date-pickers/date-picker";
+import FormTimePickerInput from "@/components/form/date-pickers/time-picker";
 
-interface EditCardFieldProps {
+interface CardFieldProps {
   field: FieldConfig;
 }
 
-export const EditCardField: React.FC<EditCardFieldProps> = ({ field }) => {
+export const CardField: React.FC<CardFieldProps> = ({ field }) => {
   const { register } = useFormContext<FormData>();
   const { errors } = useFormState();
   const { t } = useTranslation('tests');
@@ -22,6 +24,25 @@ export const EditCardField: React.FC<EditCardFieldProps> = ({ field }) => {
 
   if (field.type === 'image') {
     return <ImageUploadField field={field} />;
+  }
+
+  if (field.type === 'date') {
+    return (
+      <FormDatePickerInput
+        name={field.name}
+        label={t(field.label)}
+      />
+    );
+  }
+
+  if (field.type === 'time') {
+    return (
+      <FormTimePickerInput
+        name={field.name}
+        label={t(field.label)}
+        format="HH:mm"
+      />
+    );
   }
 
   const validationRules: RegisterOptions = {
@@ -90,3 +111,5 @@ export const EditCardField: React.FC<EditCardFieldProps> = ({ field }) => {
     />
   );
 };
+
+export default CardField;

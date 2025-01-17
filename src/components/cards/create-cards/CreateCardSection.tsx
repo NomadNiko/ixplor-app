@@ -1,10 +1,8 @@
-// /src/components/cards/create-cards/CreateCardSection.tsx
-
 import React from 'react';
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import { SectionConfig } from './types';
-import { CreateCardField } from './CreateCardField';
+import { SectionConfig } from '../shared/types';
+import { CardField } from '../shared/CardField';
 import { useTranslation } from 'react-i18next';
 
 interface CreateCardSectionProps {
@@ -29,7 +27,7 @@ export const CreateCardSection: React.FC<CreateCardSectionProps> = ({ section })
             md={field.gridWidth || (field.fullWidth ? 12 : 6)} 
             key={field.name}
           >
-            <CreateCardField field={field} />
+            <CardField field={field} />
           </Grid>
         ))}
       </Grid>

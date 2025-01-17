@@ -1,8 +1,8 @@
 import React from 'react';
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import { SectionConfig } from './types';
-import { EditCardField } from './EditCardField';
+import { SectionConfig } from '../shared/types';
+import { CardField } from '../shared/CardField';
 import { useTranslation } from 'react-i18next';
 
 interface EditCardSectionProps {
@@ -11,7 +11,7 @@ interface EditCardSectionProps {
 
 export const EditCardSection: React.FC<EditCardSectionProps> = ({ section }) => {
   const { t } = useTranslation('tests');
-
+  
   return (
     <div>
       {section.title && (
@@ -27,7 +27,7 @@ export const EditCardSection: React.FC<EditCardSectionProps> = ({ section }) => 
             md={field.gridWidth || (field.fullWidth ? 12 : 6)} 
             key={field.name}
           >
-            <EditCardField field={field} />
+            <CardField field={field} />
           </Grid>
         ))}
       </Grid>
