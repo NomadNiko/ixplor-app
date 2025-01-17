@@ -1,0 +1,18 @@
+{
+    "editCardTest": "Edit Card Component Test",
+    "editCardTestDescription": "Test the edit card component with different configurations and data types.",
+    "vendor": "Vendor",
+    "product": "Product",
+    "console": "Data Preview",
+    "success": {
+      "saved": "Successfully saved",
+      "deleted": "Successfully deleted"
+    },
+    "errors": {
+      "saveFailed": "Failed to save",
+      "deleteFailed": "Failed to delete"
+    },
+    "info": {
+      "cancelled": "Operation cancelled"
+    }
+  }
