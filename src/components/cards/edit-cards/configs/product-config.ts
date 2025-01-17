@@ -85,7 +85,11 @@ export const productConfig: EditCardConfig = {
             name: 'productImageURL',
             label: 'imageUrl',
             type: 'image',
-            fullWidth: true
+            fullWidth: true,
+            validation: {
+              pattern: '^https?:\\/\\/.*\\.(png|jpg|jpeg|gif|svg)$',
+              message: 'Invalid image URL'
+            }
           }
         ]
       },

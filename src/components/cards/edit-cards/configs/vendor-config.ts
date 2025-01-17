@@ -62,8 +62,12 @@ export const vendorConfig: EditCardConfig = {
           {
             name: 'logoUrl',
             label: 'logoUrl',
-            type: 'url',
-            fullWidth: true
+            type: 'image',
+            fullWidth: true,
+            validation: {
+              pattern: '^https?:\\/\\/.*\\.(png|jpg|jpeg|gif|svg)$',
+              message: 'Invalid image URL'
+            }
           }
         ]
       },

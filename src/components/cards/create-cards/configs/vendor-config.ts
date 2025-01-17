@@ -77,7 +77,7 @@ export const vendorConfig: CreateCardConfig = {
         {
           name: 'logoUrl',
           label: 'logoUrl',
-          type: 'url',
+          type: 'image',
           fullWidth: true,
           validation: {
             pattern: '^https?:\\/\\/.*\\.(png|jpg|jpeg|gif|svg)$',
