@@ -10,7 +10,7 @@ interface EditCardSectionProps {
 }
 
 export const EditCardSection: React.FC<EditCardSectionProps> = ({ section }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('tests');
 
   return (
     <div>
