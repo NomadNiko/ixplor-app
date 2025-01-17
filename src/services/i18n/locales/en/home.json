@@ -1,6 +1,9 @@
 {
   "title": "iXplor - Find Your Adventure",
-  "searchPlaceholder": "Find Your Next Adventure...",
+  "searchPlaceholder": {
+    "vendor": "  Search for a Vendor...",
+    "location": "  Search for an Address..."
+  },,
   "learnMore": "Learn More",
   "filters": {
     "tours": "Tours",
