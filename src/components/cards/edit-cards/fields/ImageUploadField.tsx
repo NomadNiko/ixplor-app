@@ -3,9 +3,8 @@ import TextField from "@mui/material/TextField";
 import { useFormContext, useFormState, useWatch } from "react-hook-form";
 import { useTranslation } from "@/services/i18n/client";
 import { FieldConfig } from "../types";
-import Image from "next/image";
-import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
+import { Image } from "@nextui-org/react";
 
 interface ImageUploadFieldProps {
   field: FieldConfig;
@@ -17,8 +16,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
   const { register } = useFormContext();
   const { errors } = useFormState();
   const { t } = useTranslation("tests");
-  const theme = useTheme();
-
+  
   const imageUrl = useWatch({
     name: field.name,
   });
@@ -33,16 +31,15 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
         helperText={errors[field.name]?.message as string}
       />
       {imageUrl && (
-        <Box sx={{ mt: theme.spacing(1) }}>
+        <Box sx={{ mt: 2, maxWidth: '100%', overflow: 'hidden' }}>
           <Image
             src={imageUrl}
             alt={t("preview")}
-            width={400}
-            height={200}
             style={{
-              maxWidth: "100%",
-              height: "auto",
-              objectFit: "contain",
+              maxWidth: '400px',
+              height: 'auto',
+              objectFit: 'contain',
+              borderRadius: '4px'
             }}
           />
         </Box>
