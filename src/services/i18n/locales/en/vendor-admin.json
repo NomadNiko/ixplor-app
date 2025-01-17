@@ -2,109 +2,53 @@
   "title": "Vendor Administration",
   "subtitle": "Review and manage Active Vendors",
   "noVendors": "No vendors could be loaded. Please troubleshoot further as this should not happen.",
-  
-  "filters": {
-      "title": "Filters",
-      "search": "Search vendors...",
-      "type": "Vendor Type",
-      "status": "Status",
-      "city": "City",
-      "clearAll": "Clear All",
-      "apply": "Apply Filters",
-      "noResults": "No vendors match your filters"
-  },
+  "contact": "Contact Information",
+  "location": "Location",
+  "status": "Vendor Status",
+  "adminNotes": "Admin Notes",
+  "notesPlaceholder": "Add notes about this vendor (required for Reject or Needs Action)",
+  "approve": "Activate",
+  "reject": "Reject",
+  "needsAction": "Disable",
+  "edit": "Edit",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "noAdminNotes": "Such Empty...",
 
-  "dates": {
-      "created": "Created",
-      "lastUpdated": "Last Updated",
-      "approved": "Approved Date",
-      "rejected": "Rejected Date"
-  },
+  "editVendor": "Edit Vendor",
+  "businessName": "Business Name",
+  "description": "Description",
+  "vendorType": "Business Type",
+  "email": "Email",
+  "phone": "Phone",
+  "website": "Website",
+  "logoUrl": "Logo URL",
+  "address": "Address",
+  "city": "City",
+  "state": "State",
+  "postalCode": "Postal Code",
 
-  "information": {
-      "contact": "Contact Information",
-      "location": "Location",
-      "status": "Vendor Status",
-      "adminNotes": "Admin Notes",
-      "businessDetails": "Business Details"
-  },
-
-  "placeholders": {
-      "notesPlaceholder": "Add notes about this vendor (required for Reject or Needs Action)",
-      "noAdminNotes": "No admin notes available",
-      "searchVendors": "Search vendors..."
-  },
-
-  "actions": {
-      "approve": "Activate",
-      "reject": "Reject",
-      "needsAction": "Disable",
-      "edit": "Edit",
-      "save": "Save",
-      "cancel": "Cancel",
-      "delete": "Delete",
-      "viewDetails": "View Details",
-      "exportData": "Export Data"
-  },
-
-  "labels": {
-      "editVendor": "Edit Vendor",
-      "businessName": "Business Name",
-      "description": "Description",
-      "vendorType": "Business Type",
-      "email": "Email",
-      "phone": "Phone",
-      "website": "Website",
-      "logoUrl": "Logo URL",
-      "address": "Address",
-      "city": "City",
-      "state": "State",
-      "postalCode": "Postal Code"
-  },
-
-  "confirmations": {
-      "deleteConfirm": {
-          "title": "Delete Vendor",
-          "message": "Are you sure you want to delete this vendor? This action cannot be undone.",
-          "confirm": "Delete",
-          "cancel": "Cancel"
-      },
-      "statusChange": {
-          "title": "Change Vendor Status",
-          "message": "Are you sure you want to change the status of this vendor?",
-          "confirm": "Change Status",
-          "cancel": "Cancel"
-      }
+  "deleteConfirm": {
+    "title": "Delete Vendor",
+    "message": "Are you sure you want to delete this vendor? This action cannot be undone.",
+    "confirm": "Delete",
+    "cancel": "Cancel"
   },
 
   "success": {
-      "approved": "Vendor has been approved",
-      "rejected": "Vendor has been rejected",
-      "action_needed": "Vendor disabled and marked as needing action",
-      "deleted": "Vendor has been deleted",
-      "updated": "Vendor has been updated successfully",
-      "created": "Vendor has been created successfully",
-      "exported": "Vendor data exported successfully"
+    "approved": "Vendor has been approved",
+    "rejected": "Vendor has been rejected",
+    "action_needed": "Vendor disabled and marked as needing action",
+    "deleted": "Vendor has been deleted",
+    "updated": "Vendor has been updated successfully"
   },
 
   "errors": {
-      "failedToLoadVendors": "Failed to load vendors. Please try again.",
-      "updateFailed": "Failed to update vendor status",
-      "deleteFailed": "Failed to delete vendor",
-      "unauthorized": "You are not authorized to perform this action",
-      "notesRequired": "Notes are required to Reject or Disable Vendor",
-      "invalidData": "Invalid vendor data provided",
-      "networkError": "Network connection error",
-      "exportFailed": "Failed to export vendor data"
-  },
-
-  "validation": {
-      "required": "This field is required",
-      "invalidEmail": "Please enter a valid email address",
-      "invalidPhone": "Please enter a valid phone number",
-      "invalidUrl": "Please enter a valid URL",
-      "invalidPostalCode": "Please enter a valid postal code",
-      "maxLength": "Maximum length exceeded",
-      "minLength": "Minimum length required"
+    "failedToLoadVendors": "Failed to load vendors. Please try again.",
+    "updateFailed": "Failed to update vendor status",
+    "deleteFailed": "Failed to delete vendor",
+    "unauthorized": "You are not authorized to perform this action",
+    "notesRequired": "Notes are required to Reject or Disable Vendor"
   }
 }
