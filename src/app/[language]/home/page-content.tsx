@@ -71,7 +71,6 @@ const MapHomeLayout = () => {
     backdropFilter: "blur(10px)",
     color: theme.palette.primary.main,
     borderRadius: theme.shape.borderRadius,
-    height: "14px",
     zIndex: 0,
   };
 
@@ -287,7 +286,7 @@ const MapHomeLayout = () => {
               <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
                 <TextField
                   sx={{
-                    width: { xs: "85%", md: "95%" },
+                    width: { xs: "87%", md: "94%" },
                     alignSelf: "flex-start",
                   }}
                   value={searchQuery}
