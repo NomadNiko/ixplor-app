@@ -84,6 +84,22 @@ const MapHomeLayout = () => {
     fetchVendors();
   }, [getVendors, enqueueSnackbar, t]);
 
+  useEffect(() => {
+    // Get the user's location when the component mounts
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setViewState({
+          ...DEFAULT_VIEW_STATE,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      },
+      (error) => {
+        console.error("Error getting user location:", error);
+      }
+    );
+  }, []);
+
   const handleFilterChange = (
     event: React.MouseEvent<HTMLElement>,
     newFilterTypes: VendorType[]
@@ -126,10 +142,6 @@ const MapHomeLayout = () => {
     }
   };
 
-  const handleGeolocate = () => {
-    updateBounds();
-  };
-
   if (loading) {
     return (
       <Box
@@ -157,7 +169,7 @@ const MapHomeLayout = () => {
         mapboxAccessToken={MAPBOX_TOKEN}
         style={{ width: "100%", height: "100%" }}
         ref={mapRef}
-        onLoad={updateBounds}
+        onLoad={updateBounds} // Call updateBounds when map loads
         onMoveEnd={updateBounds}
         maxZoom={20}
         minZoom={3}
@@ -167,8 +179,12 @@ const MapHomeLayout = () => {
           positionOptions={{ enableHighAccuracy: true }}
           trackUserLocation
           showUserHeading
-          onGeolocate={handleGeolocate}
           style={controlStyle}
+          // onGeolocate prop to trigger actions after geolocation
+          onGeolocate={(e) => {
+            console.log("Geolocation successful:", e);
+            // Add any actions you want to perform after geolocation here
+          }}
         />
 
         <ClusteredVendorMarkers
