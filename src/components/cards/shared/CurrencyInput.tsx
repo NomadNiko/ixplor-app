@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import { Controller, Control } from "react-hook-form";
-import { BaseFieldValue, FormData } from './types';
+import { FormData } from './types';
 
 interface CurrencyInputProps {
   name: string;
@@ -10,7 +10,6 @@ interface CurrencyInputProps {
   control: Control<FormData>;
   error?: string;
   required?: boolean;
-  disabled?: boolean;
 }
 
 const CurrencyInput: React.FC<CurrencyInputProps> = ({
@@ -19,46 +18,20 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
   control,
   error,
   required = false,
-  disabled = false
 }) => {
-  // Get user's locale and currency formatting options
-  const locale = navigator.language;
-  const formatter = useMemo(() => {
-    return new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency: getCurrencyCode(locale),
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-  }, [locale]);
-
-  // Get currency symbol for the current locale
-  const currencySymbol = useMemo(() => {
-    return formatter.format(0).replace(/[\d.,\s]/g, '');
-  }, [formatter]);
-
-  const formatCurrency = (value: string): string => {
-    // Remove all non-digit characters except decimal point
-    const digits = value.replace(/[^\d.]/g, '');
+  const formatAsCurrency = (val: string): string => {
+    // Remove all non-digits/dots
+    const digits = val.replace(/[^\d.]/g, '');
     
-    // Handle multiple decimal points
+    // Ensure only one decimal point
     const parts = digits.split('.');
-    if (parts.length > 2) return parts[0] + '.' + parts[1];
+    const cleanNum = parts[0] + (parts[1] ? '.' + parts[1].slice(0, 2) : '');
     
-    // Don't enforce decimal places during input
-    const number = Number(digits);
-    if (isNaN(number)) return '';
+    // Convert to number and format
+    const num = parseFloat(cleanNum);
+    if (isNaN(num)) return '';
     
-    return digits;
-  };
-
-  const displayValue = (value: BaseFieldValue): string => {
-    if (value === null || value === '' || value === 0) return '';
-    const numValue = Number(value);
-    if (isNaN(numValue)) return '';
-    
-    // Format with fixed decimal places only when displaying
-    return numValue.toFixed(2);
+    return num.toFixed(2);
   };
 
   return (
@@ -66,91 +39,26 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
       name={name}
       control={control}
       rules={{ required }}
-      render={({ field: { onChange, value, onBlur, ...field } }) => (
+      render={({ field: { onChange, value, ...field } }) => (
         <TextField
           {...field}
-          value={displayValue(value)}
+          value={value ? formatAsCurrency(value.toString()) : ''}
           onChange={(e) => {
-            const formatted = formatCurrency(e.target.value);
-            onChange(formatted ? Number(formatted) : '');
-          }}
-          onBlur={() => {  // Removed unused 'e' parameter
-            // Format with fixed decimal places on blur
-            if (value !== '' && value !== null) {
-              const numValue = Number(value);
-              if (!isNaN(numValue)) {
-                onChange(Number(numValue.toFixed(2)));
-              }
-            }
-            onBlur();
+            const formatted = formatAsCurrency(e.target.value);
+            onChange(formatted ? parseFloat(formatted) : '');
           }}
           label={label}
           fullWidth
           error={!!error}
           helperText={error}
-          disabled={disabled}
           InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">{currencySymbol}</InputAdornment>
-            ),
+            startAdornment: <InputAdornment position="start">$</InputAdornment>
           }}
-          InputLabelProps={{ 
-            shrink: true,
-            sx: {
-              transform: 'translate(28px, -9px) scale(0.75)'
-            }
-          }}
-          sx={{
-            mb: 3,
-            mt: 1,
-            '& .MuiInputBase-root': {
-              height: '56px'
-            }
-          }}
+          sx={{ mb: 2 }}
         />
       )}
     />
   );
 };
-
-// Helper function to determine currency code based on locale
-function getCurrencyCode(locale: string): string {
-  const region = new Intl.Locale(locale).region;
-  
-  const currencyMap: { [key: string]: string } = {
-    'US': 'USD',
-    'GB': 'GBP',
-    'EU': 'EUR',
-    'DE': 'EUR',
-    'FR': 'EUR',
-    'IT': 'EUR',
-    'ES': 'EUR',
-    'NL': 'EUR',
-    'BE': 'EUR',
-    'AT': 'EUR',
-    'IE': 'EUR',
-    'FI': 'EUR',
-    'GR': 'EUR',
-    'PT': 'EUR',
-    'CA': 'CAD',
-    'AU': 'AUD',
-    'JP': 'JPY',
-    'CN': 'CNY',
-    'IN': 'INR',
-    'BR': 'BRL',
-    'RU': 'RUB',
-    'KR': 'KRW',
-    'CH': 'CHF',
-    'SE': 'SEK',
-    'NO': 'NOK',
-    'DK': 'DKK',
-    'NZ': 'NZD',
-    'SG': 'SGD',
-    'HK': 'HKD',
-    'MX': 'MXN'
-  };
-
-  return region ? currencyMap[region] || 'USD' : 'USD';
-}
 
 export default CurrencyInput;
