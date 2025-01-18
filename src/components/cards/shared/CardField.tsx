@@ -1,4 +1,5 @@
-import React from 'react';
+"use client";
+import React, { useState } from 'react';
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import { useFormContext, useFormState, RegisterOptions } from "react-hook-form";
@@ -15,9 +16,10 @@ export const CardField: React.FC<CardFieldProps> = ({
   field,
   mode = 'edit'
 }) => {
-  const { register, control } = useFormContext<FormData>();
+  const { register, control, setValue } = useFormContext<FormData>();
   const { errors } = useFormState();
   const { t } = useTranslation('tests');
+  const [incrementType, setIncrementType] = useState<'5mins' | '15mins' | 'hours' | 'days'>('15mins');
 
   if (field.name === 'productPrice') {
     return (
@@ -30,19 +32,23 @@ export const CardField: React.FC<CardFieldProps> = ({
       />
     );
   }
-
-    // Handle custom input types
-    if (field.type === 'duration') {
-      return (
-        <DurationInput
-          name={field.name}
-          label={t(field.label)}
-          control={control}
-          error={errors[field.name]?.message as string}
-          required={field.required}
-        />
-      );
-    }
+ // Handle custom input types
+ if (field.type === 'duration') {
+  return (
+    <DurationInput
+      name={field.name}
+      label={t(field.label)}
+      control={control}
+      required={field.required}
+      incrementType={incrementType}
+      onIncrementChange={(type) => {
+        setIncrementType(type);
+        // Reset value when increment type changes
+        setValue(field.name, '');
+      }}
+    />
+  );
+}
 
   if (field.type === 'address') {
     return <AddressField field={field} mode={mode} />;
