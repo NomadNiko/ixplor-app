@@ -16,7 +16,7 @@ export const CardSection: React.FC<CardSectionProps> = ({
     <Box sx={{ mb: 2 }}>
       {section.title && (
         <Typography 
-          variant="h6" 
+          variant="h5" 
           gutterBottom
           sx={{ 
             mb: 2,
