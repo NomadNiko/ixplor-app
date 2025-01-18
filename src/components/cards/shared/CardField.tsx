@@ -21,7 +21,7 @@ export const CardField: React.FC<CardFieldProps> = ({
   const { t } = useTranslation('tests');
   const [incrementType, setIncrementType] = useState<'5mins' | '15mins' | 'hours' | 'days'>('15mins');
 
-  if (field.name === 'productPrice') {
+  if (field.name === 'price') {
     return (
       <CurrencyInput
         name={field.name}

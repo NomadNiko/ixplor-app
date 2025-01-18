@@ -48,7 +48,7 @@ export const productConfig: CardConfig = {
         {
           name: "productPrice",
           label: "productPrice",
-          type: "number",
+          type: "price",
           required: true,
           validation: {
             min: 0,

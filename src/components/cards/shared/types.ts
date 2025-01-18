@@ -6,6 +6,7 @@ import { VendorStatusEnum } from '@/app/[language]/types/vendor';
 export type FieldType = 
   | 'text'
   | 'number' 
+  | 'price' 
   | 'email'
   | 'tel'
   | 'url'

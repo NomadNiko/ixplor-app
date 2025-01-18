@@ -10392,6 +10392,11 @@ react-map-gl@^7.1.8:
     "@maplibre/maplibre-gl-style-spec" "^19.2.1"
     "@types/mapbox-gl" ">=1.0.0"
 
+react-mobile-picker@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-mobile-picker/-/react-mobile-picker-1.0.1.tgz#498db6196082e546e85ad6eaf710695370007a41"
+  integrity sha512-rUbAiEAXC2/Kvnc4iBnchEf6Fzj/ymL1xiDTsPPhUBY1akB84NGRpIdgE9DQeB+mCLGIKuSEIJpMA3Zg1AUL0g==
+
 react-refresh@^0.14.0:
   version "0.14.2"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.14.2.tgz#3833da01ce32da470f1f936b9d477da5c7028bf9"
