@@ -19,14 +19,27 @@ const DurationInput: React.FC<DurationInputProps> = ({
   error,
   required = false
 }) => {
-  // Generate duration options in 15-minute intervals (up to 8 hours)
-  const durationOptions = Array.from({ length: 32 }, (_, i) => i * 15);
+  // Generate duration options from 0 to 8 hours (480 minutes) in 15-minute increments
+  const durationOptions = Array.from({ length: 33 }, (_, i) => i * 15);
 
   const formatDuration = (minutes: number): string => {
+    if (minutes === 0) return "No duration";
+    
     const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    if (hours === 0) return `${mins} minutes`;
-    return mins === 0 ? `${hours} hours` : `${hours} hours ${mins} minutes`;
+    const remainingMinutes = minutes % 60;
+    
+    let durationString = "";
+    
+    if (hours > 0) {
+      durationString += `${hours} hour${hours > 1 ? 's' : ''}`;
+    }
+    
+    if (remainingMinutes > 0) {
+      if (hours > 0) durationString += " ";
+      durationString += `${remainingMinutes} minute${remainingMinutes > 1 ? 's' : ''}`;
+    }
+    
+    return durationString;
   };
 
   return (

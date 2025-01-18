@@ -9,6 +9,7 @@ import { useTranslation } from "@/services/i18n/client";
 import FormDatePickerInput from "@/components/form/date-pickers/date-picker";
 import FormTimePickerInput from "@/components/form/date-pickers/time-picker";
 import CurrencyInput from './CurrencyInput';
+import DurationInput from './DurationInput';
 
 export const CardField: React.FC<CardFieldProps> = ({ 
   field,
@@ -29,6 +30,19 @@ export const CardField: React.FC<CardFieldProps> = ({
       />
     );
   }
+
+    // Handle custom input types
+    if (field.type === 'duration') {
+      return (
+        <DurationInput
+          name={field.name}
+          label={t(field.label)}
+          control={control}
+          error={errors[field.name]?.message as string}
+          required={field.required}
+        />
+      );
+    }
 
   if (field.type === 'address') {
     return <AddressField field={field} mode={mode} />;
