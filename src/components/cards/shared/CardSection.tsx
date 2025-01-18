@@ -13,14 +13,14 @@ export const CardSection: React.FC<CardSectionProps> = ({
   const { t } = useTranslation('tests');
   
   return (
-    <Box sx={{ mb: 4 }}>
+    <Box sx={{ mb: 2 }}>
       {section.title && (
         <Typography 
           variant="h6" 
           gutterBottom
           sx={{ 
-            mb: 3,
-            mt: 2
+            mb: 2,
+            mt: 1
           }}
         >
           {t(section.title)}
@@ -29,10 +29,10 @@ export const CardSection: React.FC<CardSectionProps> = ({
       
       <Grid 
         container 
-        spacing={2}
+        spacing={1.2}
         sx={{
-          mb: 2,
-          mt: 1
+          mb: 1,
+          mt: 0.8
         }}
       >
         {section.fields.map((field) => (
