@@ -19,7 +19,6 @@ const CURRENCY_OPTIONS: CurrencyOption[] = [
   { code: 'GBP', symbol: '£', label: 'British Pound' },
 ];
 
-// Base presentational component
 interface BaseCurrencyInputProps {
   name: string;
   label: string;
@@ -47,6 +46,9 @@ const BaseCurrencyInput = ({
 }: BaseCurrencyInputProps) => {
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyOption>(CURRENCY_OPTIONS[0]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [displayValue, setDisplayValue] = useState<string>(
+    value !== null ? value.toString() : ''
+  );
   
   const handleCurrencyClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -65,8 +67,19 @@ const BaseCurrencyInput = ({
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value === '' ? null : parseFloat(e.target.value);
+    const inputValue = e.target.value;
+    setDisplayValue(inputValue);
+    const newValue = inputValue === '' ? null : parseFloat(inputValue);
     onChange(isNaN(newValue as number) ? null : newValue);
+  };
+
+  const handleInputBlur = () => {
+    if (value !== null) {
+      const formattedValue = Number(value).toFixed(2);
+      setDisplayValue(formattedValue);
+      onChange(parseFloat(formattedValue));
+    }
+    onBlur();
   };
 
   return (
@@ -76,9 +89,9 @@ const BaseCurrencyInput = ({
         fullWidth
         label={label}
         type="number"
-        value={value ?? ''}
+        value={displayValue}
         onChange={handleChange}
-        onBlur={onBlur}
+        onBlur={handleInputBlur}
         error={error}
         helperText={helperText}
         required={required}
@@ -155,7 +168,6 @@ const BaseCurrencyInput = ({
   );
 };
 
-// Form wrapper component
 interface FormCurrencyInputProps {
   name: string;
   label: string;
