@@ -29,6 +29,7 @@ type DateTimePickerFieldProps = {
   error?: string;
   defaultValue?: ValueDateType;
 };
+
 const DateTimePickerInput = forwardRef(DateTimePickerInputRaw) as never as (
   props: DateTimePickerFieldProps & {
     name: string;
@@ -70,6 +71,9 @@ function DateTimePickerInputRaw(
             InputProps: {
               readOnly: props.readOnly,
             },
+            InputLabelProps: {
+              shrink: true
+            }
           },
         }}
         onAccept={props.onChange}
@@ -81,6 +85,7 @@ function DateTimePickerInputRaw(
     </LocalizationProvider>
   );
 }
+
 function FormDateTimePickerInput<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,

@@ -29,6 +29,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
         fullWidth
         error={!!errors[field.name]}
         helperText={errors[field.name]?.message as string}
+        InputLabelProps={{ shrink: true }}
       />
       {imageUrl && (
         <Box sx={{ mt: 2, maxWidth: '100%', overflow: 'hidden' }}>
@@ -47,3 +48,5 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
     </div>
   );
 };
+
+export default ImageUploadField;

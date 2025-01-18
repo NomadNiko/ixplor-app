@@ -22,14 +22,11 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
   disabled = false
 }) => {
   const formatCurrency = (value: string): string => {
-    // Remove all non-digit characters except decimal point
     const digits = value.replace(/[^\d.]/g, '');
     
-    // Ensure only one decimal point
     const parts = digits.split('.');
     if (parts.length > 2) return parts[0] + '.' + parts[1];
     
-    // Format to 2 decimal places
     const number = Number(digits);
     if (isNaN(number)) return '';
     
@@ -62,7 +59,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
           InputLabelProps={{ 
             shrink: true,
             sx: {
-              transform: 'translate(14px, -9px) scale(0.75)'
+              transform: 'translate(28px, -9px) scale(0.75)'
             }
           }}
           sx={{

@@ -12,14 +12,12 @@ import CurrencyInput from './CurrencyInput';
 
 export const CardField: React.FC<CardFieldProps> = ({ 
   field,
-  mode = 'edit'  // Now TypeScript knows about this prop
+  mode = 'edit'
 }) => {
   const { register, control } = useFormContext<FormData>();
   const { errors } = useFormState();
   const { t } = useTranslation('tests');
 
-
-  // Handle currency field type
   if (field.name === 'productPrice') {
     return (
       <CurrencyInput
@@ -31,7 +29,6 @@ export const CardField: React.FC<CardFieldProps> = ({
       />
     );
   }
-
 
   if (field.type === 'address') {
     return <AddressField field={field} mode={mode} />;

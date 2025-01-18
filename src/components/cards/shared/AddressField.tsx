@@ -19,6 +19,7 @@ export const AddressField: React.FC<AddressFieldProps> = ({ field, mode = 'edit'
   const { getPlacePredictions, getPlaceDetails } = useGooglePlaces();
   const { t } = useTranslation('tests');
   const theme = useTheme();
+
   const [predictions, setPredictions] = useState<google.maps.places.AutocompletePrediction[]>([]);
   const [isSearching, setIsSearching] = useState(true);
 
@@ -76,6 +77,7 @@ export const AddressField: React.FC<AddressFieldProps> = ({ field, mode = 'edit'
             placeholder={t('startTypingAddress')}
             onChange={handleAddressChange}
             disabled={mode === 'edit' && field.prefilled}
+            InputLabelProps={{ shrink: true }}
             InputProps={{
               startAdornment: (
                 <MapPin 
