@@ -75,6 +75,12 @@ export const productConfig: CardConfig = {
           name: "productDuration",
           label: "duration",
           type: "duration",
+          gridWidth: 6,
+        },
+        {
+          name: "break",
+          label: "break",
+          type: "break",
           gridWidth: 12,
         },
         {

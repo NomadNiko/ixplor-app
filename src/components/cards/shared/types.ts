@@ -17,6 +17,7 @@ export type FieldType =
   | 'image'
   | 'address'
   | 'duration'
+  | 'break'
   | 'requirements';
 
 export type BaseFieldValue = string | number | Date | string[] | null;

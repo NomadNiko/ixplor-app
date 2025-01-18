@@ -12,6 +12,7 @@ import FormTimePickerInput from "@/components/form/date-pickers/time-picker";
 import BaseCurrencyInput from './CurrencyInput';
 import DurationInput from './DurationInput';
 import DynamicRequirementsField from './DynamicRequirementsField';
+import Grid from '@mui/material/Grid';
 
 export const CardField: React.FC<CardFieldProps> = ({ 
   field,
@@ -23,6 +24,10 @@ export const CardField: React.FC<CardFieldProps> = ({
   const [incrementType, setIncrementType] = useState<'5mins' | '15mins' | 'hours' | 'days'>('15mins');
 
  // Handle custom input types
+
+ if (field.type === 'break') {
+  return <Grid item xs={12} />; // Forces line break
+}
 
   if (field.type === 'price') {
     return (
