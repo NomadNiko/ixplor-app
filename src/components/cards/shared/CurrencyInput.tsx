@@ -43,19 +43,21 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
     
     // Handle multiple decimal points
     const parts = digits.split('.');
-    const cleanValue = parts[0] + (parts.length > 1 ? '.' + parts[1] : '');
+    if (parts.length > 2) return parts[0] + '.' + parts[1];
     
-    const number = Number(cleanValue);
+    // Don't enforce decimal places during input
+    const number = Number(digits);
     if (isNaN(number)) return '';
     
-    // Format the number without the currency symbol
-    return number.toFixed(2);
+    return digits;
   };
 
   const displayValue = (value: BaseFieldValue): string => {
-    if (value === null || value === '') return '';
+    if (value === null || value === '' || value === 0) return '';
     const numValue = Number(value);
     if (isNaN(numValue)) return '';
+    
+    // Format with fixed decimal places only when displaying
     return numValue.toFixed(2);
   };
 
@@ -64,14 +66,23 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
       name={name}
       control={control}
       rules={{ required }}
-      render={({ field: { onChange, value, ...field } }) => (
+      render={({ field: { onChange, value, onBlur, ...field } }) => (
         <TextField
           {...field}
           value={displayValue(value)}
           onChange={(e) => {
-            const rawValue = e.target.value.replace(/[^\d.]/g, '');
-            const formatted = formatCurrency(rawValue);
+            const formatted = formatCurrency(e.target.value);
             onChange(formatted ? Number(formatted) : '');
+          }}
+          onBlur={() => {  // Removed unused 'e' parameter
+            // Format with fixed decimal places on blur
+            if (value !== '' && value !== null) {
+              const numValue = Number(value);
+              if (!isNaN(numValue)) {
+                onChange(Number(numValue.toFixed(2)));
+              }
+            }
+            onBlur();
           }}
           label={label}
           fullWidth
@@ -110,7 +121,6 @@ function getCurrencyCode(locale: string): string {
     'US': 'USD',
     'GB': 'GBP',
     'EU': 'EUR',
-    // Add more country-to-currency mappings as needed
     'DE': 'EUR',
     'FR': 'EUR',
     'IT': 'EUR',
