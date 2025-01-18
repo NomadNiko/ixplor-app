@@ -49,7 +49,6 @@ export const productConfig: CardConfig = {
           name: "productPrice",
           label: "productPrice",
           type: "price",
-          required: true,
           fullWidth: true,
         },
       ],

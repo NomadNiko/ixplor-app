@@ -61,14 +61,14 @@ export const productConfig: CardConfig = {
           name: "productDate",
           label: "date",
           type: "date",
-          gridWidth: 6,
+          gridWidth: 3,
           prefilled: true,
         },
         {
           name: "productStartTime",
           label: "startTime",
           type: "time",
-          gridWidth: 6,
+          gridWidth: 3,
           prefilled: true,
         },
         {
