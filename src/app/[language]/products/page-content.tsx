@@ -197,11 +197,11 @@ export default function ProductsPageContent() {
 
   useEffect(() => {
     loadProducts();
-  }, [loadProducts]);
+  }, []);
 
   useEffect(() => {
     handleFilterChange(filters);
-  }, [products, filters, handleFilterChange]);
+  }, [products, filters]);
 
   if (loading) {
     return (

@@ -181,7 +181,7 @@ export default function ApprovalsPage() {
 
   useEffect(() => {
     loadData();
-  }, [loadData]);
+  }, []);
 
   if (loading) {
     return (

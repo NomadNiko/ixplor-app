@@ -162,7 +162,7 @@ const MapHomeLayout = () => {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchQuery, searchMode, handleLocationSearch]);
+  }, [searchQuery, searchMode]);
 
   const handleVendorSelect = (vendor: Vendor) => {
     setViewState({
