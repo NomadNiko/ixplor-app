@@ -24,7 +24,7 @@ export const CardField: React.FC<CardFieldProps> = ({
 
  // Handle custom input types
 
-  if (field.name === 'price') {
+  if (field.type === 'price') {
     return (
       <CurrencyInput
         name={field.name}
