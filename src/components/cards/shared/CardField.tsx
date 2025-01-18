@@ -91,7 +91,7 @@ export const CardField: React.FC<CardFieldProps> = ({
     fullWidth: true,
     error: !!errors[field.name],
     helperText: errors[field.name]?.message as string,
-    InputLabelProps: field.prefilled ? { shrink: true } : undefined,
+    InputLabelProps: { shrink: true },
   };
 
   if (field.type === 'select') {
