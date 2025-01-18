@@ -14,7 +14,7 @@ import { MapPin, X } from 'lucide-react';
 import { useTheme } from '@mui/material/styles';
 import { FormData, AddressFieldProps } from './types';
 
-export const AddressField: React.FC<AddressFieldProps> = ({ field, mode = 'edit' }) => {
+export const AddressField: React.FC<AddressFieldProps> = ({ field }) => {
   const { register, setValue, control } = useFormContext<FormData>();
   const { getPlacePredictions, getPlaceDetails } = useGooglePlaces();
   const { t } = useTranslation('tests');
@@ -76,7 +76,6 @@ export const AddressField: React.FC<AddressFieldProps> = ({ field, mode = 'edit'
             label={t(field.label)}
             placeholder={t('startTypingAddress')}
             onChange={handleAddressChange}
-            disabled={mode === 'edit' && field.prefilled}
             InputLabelProps={{ shrink: true }}
             InputProps={{
               startAdornment: (

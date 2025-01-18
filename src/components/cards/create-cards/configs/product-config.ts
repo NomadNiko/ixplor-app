@@ -119,8 +119,7 @@ export const productConfig: CardConfig = {
           label: 'address',
           type: 'address',
           required: true,
-          fullWidth: true,
-          prefilled: true
+          fullWidth: true
         }
       ]
     }

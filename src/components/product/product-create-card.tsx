@@ -33,7 +33,6 @@ interface ProductFormData {
   productDuration: number | "";
   productDate: Date | null;
   productStartTime: Date | null;
-  productEndTime: Date | null;
   productAdditionalInfo: string;
   productRequirements: string[];
   productImageURL: string;
@@ -53,7 +52,6 @@ function ProductFormFields() {
       productDuration: '',
       productDate: null,
       productStartTime: null,
-      productEndTime: null,
       productAdditionalInfo: '',
       productRequirements: [],
       productImageURL: '',
@@ -223,7 +221,6 @@ export default function ProductCreateCard() {
       productDuration: '',
       productDate: null,
       productStartTime: null,
-      productEndTime: null,
       productAdditionalInfo: '',
       productRequirements: [],
       productImageURL: '',
@@ -245,7 +242,6 @@ export default function ProductCreateCard() {
         ...data,
         productDate: data.productDate ? format(data.productDate, "yyyy-MM-dd") : undefined,
         productStartTime: data.productStartTime ? format(data.productStartTime, "HH:mm") : undefined,
-        productEndTime: data.productEndTime ? format(data.productEndTime, "HH:mm") : undefined,
         productStatus: 'DRAFT',
         latitude: DEFAULT_LATITUDE,
         longitude: DEFAULT_LONGITUDE,

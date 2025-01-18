@@ -13,7 +13,6 @@ export interface Product {
   productDuration?: number;
   productDate?: string;
   productStartTime?: string;
-  productEndTime?: string;
   productAdditionalInfo?: string;
   productRequirements?: string[];
   productWaiver?: string;
