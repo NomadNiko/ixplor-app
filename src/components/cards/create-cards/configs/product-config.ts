@@ -23,6 +23,16 @@ export const productConfig: CardConfig = {
           fullWidth: true,
         },
         {
+          name: "productImageURL",
+          label: "imageUrl",
+          type: "image",
+          fullWidth: true,
+          validation: {
+            pattern: "^https?:\\/\\/.*\\.(png|jpg|jpeg|gif|svg)$",
+            message: "Invalid image URL",
+          },
+        },
+        {
           name: "productType",
           label: "productType",
           type: "select",
@@ -85,28 +95,6 @@ export const productConfig: CardConfig = {
           rows: 3,
           fullWidth: true,
         },
-      ],
-    },
-    {
-      id: "media",
-      title: "media",
-      fields: [
-        {
-          name: "productImageURL",
-          label: "imageUrl",
-          type: "image",
-          fullWidth: true,
-          validation: {
-            pattern: "^https?:\\/\\/.*\\.(png|jpg|jpeg|gif|svg)$",
-            message: "Invalid image URL",
-          },
-        },
-      ],
-    },
-    {
-      id: "location",
-      title: "location",
-      fields: [
         {
           name: "address",
           label: "address",

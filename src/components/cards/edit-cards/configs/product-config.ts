@@ -23,9 +23,20 @@ export const productConfig: CardConfig = {
           fullWidth: true,
         },
         {
+          name: "productImageURL",
+          label: "imageUrl",
+          type: "image",
+          fullWidth: true,
+          validation: {
+            pattern: "^https?:\\/\\/.*\\.(png|jpg|jpeg|gif|svg)$",
+            message: "Invalid image URL",
+          },
+        },
+        {
           name: "productType",
           label: "productType",
           type: "select",
+          required: true,
           options: [
             { value: "tours", label: "Tours" },
             { value: "lessons", label: "Lessons" },
@@ -38,6 +49,7 @@ export const productConfig: CardConfig = {
           name: "productPrice",
           label: "productPrice",
           type: "number",
+          required: true,
           validation: {
             min: 0,
           },
@@ -69,28 +81,20 @@ export const productConfig: CardConfig = {
           type: "number",
           gridWidth: 6,
         },
-      ],
-    },
-    {
-      id: "media",
-      title: "media",
-      fields: [
         {
-          name: "productImageURL",
-          label: "imageUrl",
-          type: "image",
+          name: "productRequirements",
+          label: "requirements",
+          type: "textarea",
+          rows: 3,
           fullWidth: true,
-          validation: {
-            pattern: "^https?:\\/\\/.*\\.(png|jpg|jpeg|gif|svg)$",
-            message: "Invalid image URL",
-          },
         },
-      ],
-    },
-    {
-      id: "location",
-      title: "location",
-      fields: [
+        {
+          name: "productWaiver",
+          label: "waiver",
+          type: "textarea",
+          rows: 3,
+          fullWidth: true,
+        },
         {
           name: "address",
           label: "address",
