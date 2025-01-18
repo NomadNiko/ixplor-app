@@ -41,9 +41,6 @@ export function ProductEditCard({
       productStartTime: product.productStartTime 
         ? new Date(`1970-01-01T${product.productStartTime}:00.000Z`)
         : null,
-      productEndTime: product.productEndTime
-        ? new Date(`1970-01-01T${product.productEndTime}:00.000Z`)
-        : null,
       productAdditionalInfo: product.productAdditionalInfo || "",
       productRequirements: product.productRequirements || [],
       productImageURL: product.productImageURL || "",
