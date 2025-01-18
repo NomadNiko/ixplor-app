@@ -57,5 +57,7 @@
   "canceled": "Creation cancelled",
   "create": "Create",
   "requirements": "Requirements",
-  "waiver": "Waiver"
+  "waiver": "Waiver",
+  "clear": "Try Again?",
+  "startTypingAddress": "Start typing..."
 }
