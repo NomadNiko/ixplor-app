@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Control, Controller } from "react-hook-form";
 import { FormData } from './types';
 import TextField from '@mui/material/TextField';
@@ -32,6 +32,11 @@ interface BaseCurrencyInputProps {
   onCurrencyChange?: (currency: string) => void;
 }
 
+const formatValue = (value: number | null): string => {
+  if (value === null || value === undefined) return '';
+  return value.toString();
+};
+
 const BaseCurrencyInput = ({
   name,
   label,
@@ -46,9 +51,7 @@ const BaseCurrencyInput = ({
 }: BaseCurrencyInputProps) => {
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyOption>(CURRENCY_OPTIONS[0]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [displayValue, setDisplayValue] = useState<string>(
-    value !== null ? value.toString() : ''
-  );
+  const [displayValue, setDisplayValue] = useState<string>(formatValue(value));
   
   const handleCurrencyClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -74,13 +77,18 @@ const BaseCurrencyInput = ({
   };
 
   const handleInputBlur = () => {
-    if (value !== null) {
+    if (value !== null && value !== undefined) {
       const formattedValue = Number(value).toFixed(2);
       setDisplayValue(formattedValue);
       onChange(parseFloat(formattedValue));
     }
     onBlur();
   };
+
+  // Update display value when controlled value changes
+  useEffect(() => {
+    setDisplayValue(formatValue(value));
+  }, [value]);
 
   return (
     <>
