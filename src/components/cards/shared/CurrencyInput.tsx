@@ -1,8 +1,162 @@
+import { useState } from 'react';
 import { Control, Controller } from "react-hook-form";
-import { FormData, BaseFieldValue } from './types';
-import { BaseCurrencyInput } from './utils/currency';
+import { FormData } from './types';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import InputAdornment from '@mui/material/InputAdornment';
 
-interface CurrencyInputProps {
+interface CurrencyOption {
+  code: string;
+  symbol: string;
+  label: string;
+}
+
+const CURRENCY_OPTIONS: CurrencyOption[] = [
+  { code: 'USD', symbol: '$', label: 'US Dollar' },
+  { code: 'EUR', symbol: '€', label: 'Euro' },
+  { code: 'GBP', symbol: '£', label: 'British Pound' },
+];
+
+// Base presentational component
+interface BaseCurrencyInputProps {
+  name: string;
+  label: string;
+  value: number | null;
+  onChange: (value: number | null) => void;
+  onBlur: () => void;
+  error?: boolean;
+  helperText?: string;
+  required?: boolean;
+  disabled?: boolean;
+  onCurrencyChange?: (currency: string) => void;
+}
+
+const BaseCurrencyInput = ({
+  name,
+  label,
+  value,
+  onChange,
+  onBlur,
+  error,
+  helperText,
+  required = false,
+  disabled = false,
+  onCurrencyChange
+}: BaseCurrencyInputProps) => {
+  const [selectedCurrency, setSelectedCurrency] = useState<CurrencyOption>(CURRENCY_OPTIONS[0]);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  
+  const handleCurrencyClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleCurrencySelect = (currency: CurrencyOption) => {
+    setSelectedCurrency(currency);
+    if (onCurrencyChange) {
+      onCurrencyChange(currency.code);
+    }
+    handleMenuClose();
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value === '' ? null : parseFloat(e.target.value);
+    onChange(isNaN(newValue as number) ? null : newValue);
+  };
+
+  return (
+    <>
+      <TextField
+        name={name}
+        fullWidth
+        label={label}
+        type="number"
+        value={value ?? ''}
+        onChange={handleChange}
+        onBlur={onBlur}
+        error={error}
+        helperText={helperText}
+        required={required}
+        disabled={disabled}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <IconButton
+                onClick={handleCurrencyClick}
+                size="small"
+                sx={{ 
+                  fontSize: '0.875rem',
+                  color: 'text.secondary',
+                  '&:hover': {
+                    backgroundColor: 'background.glassHover'
+                  }
+                }}
+              >
+                {selectedCurrency.symbol}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            backgroundColor: 'background.glass',
+            backdropFilter: 'blur(10px)',
+            '&:hover': {
+              backgroundColor: 'background.glassHover',
+            },
+            '&.Mui-focused': {
+              backgroundColor: 'background.glass',
+              boxShadow: (theme) => `0 0 0 2px ${theme.palette.primary.main}`,
+            }
+          }
+        }}
+      />
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+        sx={{
+          '& .MuiPaper-root': {
+            backgroundColor: 'background.glass',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid',
+            borderColor: 'divider'
+          }
+        }}
+      >
+        {CURRENCY_OPTIONS.map((currency) => (
+          <MenuItem
+            key={currency.code}
+            onClick={() => handleCurrencySelect(currency)}
+            selected={currency.code === selectedCurrency.code}
+            sx={{
+              '&:hover': {
+                backgroundColor: 'background.glassHover'
+              },
+              '&.Mui-selected': {
+                backgroundColor: 'primary.main',
+                color: 'primary.contrastText',
+                '&:hover': {
+                  backgroundColor: 'primary.dark'
+                }
+              }
+            }}
+          >
+            {currency.symbol} - {currency.label}
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
+  );
+};
+
+// Form wrapper component
+interface FormCurrencyInputProps {
   name: string;
   label: string;
   control: Control<FormData>;
@@ -12,7 +166,7 @@ interface CurrencyInputProps {
   onCurrencyChange?: (currency: string) => void;
 }
 
-const CurrencyInput: React.FC<CurrencyInputProps> = ({
+const FormCurrencyInput = ({
   name,
   label,
   control,
@@ -20,17 +174,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
   required = false,
   disabled = false,
   onCurrencyChange
-}) => {
-  const convertValue = (value: BaseFieldValue): number | null => {
-    if (value === null) return null;
-    if (typeof value === 'number') return value;
-    if (typeof value === 'string') {
-      const num = parseFloat(value);
-      return isNaN(num) ? null : num;
-    }
-    return null;
-  };
-
+}: FormCurrencyInputProps) => {
   return (
     <Controller
       name={name}
@@ -39,9 +183,9 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
       render={({ field: { onChange, value, ...field } }) => (
         <BaseCurrencyInput
           {...field}
-          value={convertValue(value)}
-          onChange={onChange}
           label={label}
+          value={value as number | null}
+          onChange={onChange}
           error={!!error}
           helperText={error}
           required={required}
@@ -53,4 +197,5 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
   );
 };
 
-export default CurrencyInput;
+export { BaseCurrencyInput };
+export default FormCurrencyInput;

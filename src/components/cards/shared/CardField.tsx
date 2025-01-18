@@ -9,7 +9,7 @@ import { ImageUploadField } from './ImageUploadField';
 import { useTranslation } from "@/services/i18n/client";
 import FormDatePickerInput from "@/components/form/date-pickers/date-picker";
 import FormTimePickerInput from "@/components/form/date-pickers/time-picker";
-import CurrencyInputField from './CurrencyInput';
+import FormCurrencyInput from './CurrencyInput';
 import DurationInput from './DurationInput';
 import DynamicRequirementsField from './DynamicRequirementsField';
 
@@ -26,7 +26,7 @@ export const CardField: React.FC<CardFieldProps> = ({
 
   if (field.type === 'price') {
     return (
-      <CurrencyInputField
+      <FormCurrencyInput
         name={field.name}
         label={t(field.label)}
         control={control}
