@@ -101,7 +101,7 @@ export default function VendorAdminPage() {
 
   useEffect(() => {
     loadVendors();
-  }, []);
+  }, [loadVendors]);
 
   if (loading) {
     return (

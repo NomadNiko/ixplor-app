@@ -74,7 +74,7 @@ export default function EnhancedSearchBar({
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchQuery, searchMode]);
+  }, [searchQuery, searchMode, handleLocationSearch]);
 
   const handleLocationSelect = async (placeId: string) => {
     setIsLoading(true);
