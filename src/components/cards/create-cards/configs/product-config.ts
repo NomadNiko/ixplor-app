@@ -1,127 +1,120 @@
 import { CardConfig } from "../../shared/types";
 
 export const productConfig: CardConfig = {
-  title: 'createProduct',
-  type: 'product',
+  title: "createProduct",
+  type: "product",
   sections: [
     {
-      id: 'basic',
-      title: 'basicInfo',
+      id: "basic",
+      title: "basicInfo",
       fields: [
         {
-          name: 'productName',
-          label: 'productName',
-          type: 'text',
+          name: "productName",
+          label: "productName",
+          type: "text",
           required: true,
-          fullWidth: true
+          fullWidth: true,
         },
         {
-          name: 'productDescription',
-          label: 'productDescription',
-          type: 'textarea',
+          name: "productDescription",
+          label: "productDescription",
+          type: "textarea",
           rows: 3,
-          fullWidth: true
+          fullWidth: true,
         },
         {
-          name: 'productType',
-          label: 'productType',
-          type: 'select',
+          name: "productType",
+          label: "productType",
+          type: "select",
           required: true,
           options: [
-            { value: 'tours', label: 'Tours' },
-            { value: 'lessons', label: 'Lessons' },
-            { value: 'rentals', label: 'Rentals' },
-            { value: 'tickets', label: 'Tickets' }
+            { value: "tours", label: "Tours" },
+            { value: "lessons", label: "Lessons" },
+            { value: "rentals", label: "Rentals" },
+            { value: "tickets", label: "Tickets" },
           ],
-          fullWidth: true
+          fullWidth: true,
         },
         {
-          name: 'productPrice',
-          label: 'productPrice',
-          type: 'number',
+          name: "productPrice",
+          label: "productPrice",
+          type: "number",
           required: true,
           validation: {
-            min: 0
+            min: 0,
           },
-          fullWidth: true
-        }
-      ]
+          fullWidth: true,
+        },
+      ],
     },
     {
-      id: 'details',
-      title: 'details',
+      id: "details",
+      title: "details",
       fields: [
         {
-          name: 'productDuration',
-          label: 'duration',
-          type: 'number',
-          gridWidth: 6
-        },
-        {
-          name: 'productDate',
-          label: 'date',
-          type: 'date',
+          name: "productDate",
+          label: "date",
+          type: "date",
           gridWidth: 6,
-          prefilled: true
+          prefilled: true,
         },
         {
-          name: 'productStartTime',
-          label: 'startTime',
-          type: 'time',
+          name: "productStartTime",
+          label: "startTime",
+          type: "time",
           gridWidth: 6,
-          prefilled: true
+          prefilled: true,
         },
         {
-          name: 'productEndTime',
-          label: 'endTime',
-          type: 'time',
+          name: "productDuration",
+          label: "duration",
+          type: "number",
           gridWidth: 6,
-          prefilled: true
         },
         {
-          name: 'productRequirements',
-          label: 'requirements',
-          type: 'textarea',
+          name: "productRequirements",
+          label: "requirements",
+          type: "textarea",
           rows: 3,
-          fullWidth: true
+          fullWidth: true,
         },
         {
-          name: 'productWaiver',
-          label: 'waiver',
-          type: 'textarea',
+          name: "productWaiver",
+          label: "waiver",
+          type: "textarea",
           rows: 3,
-          fullWidth: true
-        }
-      ]
+          fullWidth: true,
+        },
+      ],
     },
     {
-      id: 'media',
-      title: 'media',
+      id: "media",
+      title: "media",
       fields: [
         {
-          name: 'productImageURL',
-          label: 'imageUrl',
-          type: 'image',
+          name: "productImageURL",
+          label: "imageUrl",
+          type: "image",
           fullWidth: true,
           validation: {
-            pattern: '^https?:\\/\\/.*\\.(png|jpg|jpeg|gif|svg)$',
-            message: 'Invalid image URL'
-          }
-        }
-      ]
+            pattern: "^https?:\\/\\/.*\\.(png|jpg|jpeg|gif|svg)$",
+            message: "Invalid image URL",
+          },
+        },
+      ],
     },
     {
-      id: 'location',
-      title: 'location',
+      id: "location",
+      title: "location",
       fields: [
         {
-          name: 'address',
-          label: 'address',
-          type: 'address',
+          name: "address",
+          label: "address",
+          type: "address",
           required: true,
-          fullWidth: true
-        }
-      ]
-    }
-  ]
+          fullWidth: true,
+        },
+      ],
+    },
+  ],
 };

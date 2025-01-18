@@ -124,8 +124,16 @@ function ProductFormFields() {
           startAdornment: <InputAdornment position="start">$</InputAdornment>,
         }}
       />
+      
+      <FormDatePickerInput name="productDate" label={t('fields.productDate')} />
+      
+      <FormTimePickerInput
+        name="productStartTime"
+        label={t('fields.productStartTime')}
+        format="HH:mm"
+      />
 
-      <TextField
+<TextField
         fullWidth
         type="number"
         name="productDuration"
@@ -135,20 +143,6 @@ function ProductFormFields() {
         InputProps={{
           endAdornment: <InputAdornment position="end">{t('hours')}</InputAdornment>,
         }}
-      />
-
-      <FormDatePickerInput name="productDate" label={t('fields.productDate')} />
-      
-      <FormTimePickerInput
-        name="productStartTime"
-        label={t('fields.productStartTime')}
-        format="HH:mm"
-      />
-
-      <FormTimePickerInput
-        name="productEndTime"
-        label={t('fields.productEndTime')}
-        format="HH:mm"
       />
 
       <TextField

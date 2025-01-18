@@ -9,7 +9,6 @@ import {
   DollarSign,
   Calendar,
   Clock3,
-  Clock4,
 } from "lucide-react";
 import { Product } from "./types/product";
 import { useTranslation } from "react-i18next";
@@ -113,7 +112,7 @@ const ProductFullView = ({
             )}
           </Box>
 
-          {(product.productStartTime || product.productEndTime) && (
+          {(product.productStartTime) && (
             <Box sx={{ mb: 3 }}>
               {product.productStartTime && (
                 <Box
@@ -122,14 +121,6 @@ const ProductFullView = ({
                   <Clock3 size={20} />
                   <Typography variant="body1">
                     {t("startTime")}: {product.productStartTime}
-                  </Typography>
-                </Box>
-              )}
-              {product.productEndTime && (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Clock4 size={20} />
-                  <Typography variant="body1">
-                    {t("endTime")}: {product.productEndTime}
                   </Typography>
                 </Box>
               )}

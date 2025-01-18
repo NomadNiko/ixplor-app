@@ -73,7 +73,6 @@ export default function CreateCardTestContainer() {
     productDuration: '',
     productDate: '',
     productStartTime: '',
-    productEndTime: '',
     productImageURL: ''
   };
 

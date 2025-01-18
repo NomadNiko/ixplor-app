@@ -94,7 +94,6 @@ export default function EditCardTestContainer() {
     productDuration: '',
     productDate: '',
     productStartTime: '',
-    productEndTime: '',
     productImageURL: ''
   };
 

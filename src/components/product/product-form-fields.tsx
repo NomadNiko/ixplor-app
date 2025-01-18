@@ -15,16 +15,21 @@ export function ProductFormFields() {
   const { t } = useTranslation("products");
   const { control, setValue } = useFormContext<ProductFormData>();
   const formData = useWatch({
-    control
+    control,
   });
 
-  const handleRequirementsChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleRequirementsChange = (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
     if (e.key === "Enter") {
       e.preventDefault();
       const target = e.target as HTMLInputElement;
       const value = target.value.trim();
       if (value) {
-        setValue("productRequirements", [...(formData.productRequirements || []), value]);
+        setValue("productRequirements", [
+          ...(formData.productRequirements || []),
+          value,
+        ]);
         target.value = "";
       }
     }
@@ -83,11 +88,12 @@ export function ProductFormFields() {
         value={formData.productPrice}
         onChange={(e) => setValue("productPrice", Number(e.target.value))}
         InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">$</InputAdornment>
-          ),
+          startAdornment: <InputAdornment position="start">$</InputAdornment>,
         }}
       />
+
+      <FormDatePickerInput name="productDate" label={t("fields.productDate")} />
+
       <TextField
         fullWidth
         type="number"
@@ -101,16 +107,10 @@ export function ProductFormFields() {
           ),
         }}
       />
-      <FormDatePickerInput name="productDate" label={t("fields.productDate")} />
-      
+
       <FormTimePickerInput
         name="productStartTime"
         label={t("fields.productStartTime")}
-        format="HH:mm"
-      />
-      <FormTimePickerInput
-        name="productEndTime"
-        label={t("fields.productEndTime")}
         format="HH:mm"
       />
       <TextField

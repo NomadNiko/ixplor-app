@@ -18,7 +18,6 @@ export interface Product {
   productDuration?: number;         // Duration in hours
   productDate?: string;            // ISO date string
   productStartTime?: string;       // Format: "HH:mm"
-  productEndTime?: string;         // Format: "HH:mm"
   productAdditionalInfo?: string;
   productRequirements?: string[];
   productWaiver?: string;

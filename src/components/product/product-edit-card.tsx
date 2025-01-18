@@ -106,9 +106,6 @@ export function ProductEditCard({
         productStartTime: data.productStartTime
           ? format(data.productStartTime, "HH:mm")
           : undefined,
-        productEndTime: data.productEndTime
-          ? format(data.productEndTime, "HH:mm")
-          : undefined,
         productStatus: product.productStatus,
       };
 

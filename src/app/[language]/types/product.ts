@@ -43,7 +43,6 @@ export interface CreateProductDto {
   productDuration?: number;
   productDate?: string;
   productStartTime?: string;
-  productEndTime?: string;
   productAdditionalInfo?: string;
   productRequirements?: string[];
   productWaiver?: string;

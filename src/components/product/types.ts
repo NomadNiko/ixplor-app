@@ -8,7 +8,6 @@ export interface ProductFormData {
   productDuration: number | "";
   productDate: Date | null;
   productStartTime: Date | null;
-  productEndTime: Date | null;
   productAdditionalInfo: string;
   productRequirements: string[];
   productImageURL: string;
