@@ -21,15 +21,13 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
   disabled = false,
   onCurrencyChange
 }) => {
-  // Convert BaseFieldValue to the type expected by BaseCurrencyInput
-  const convertValue = (value: BaseFieldValue): string | number | null => {
+  const convertValue = (value: BaseFieldValue): number | null => {
     if (value === null) return null;
     if (typeof value === 'number') return value;
     if (typeof value === 'string') {
       const num = parseFloat(value);
       return isNaN(num) ? null : num;
     }
-    // Handle Date or string[] by returning null
     return null;
   };
 
@@ -41,11 +39,12 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
       render={({ field: { onChange, value, ...field } }) => (
         <BaseCurrencyInput
           {...field}
-          label={label}
           value={convertValue(value)}
           onChange={onChange}
+          label={label}
           error={!!error}
           helperText={error}
+          required={required}
           disabled={disabled}
           onCurrencyChange={onCurrencyChange}
         />
