@@ -27,7 +27,7 @@ export const BaseCard: React.FC<BaseCardProps> = ({
     <FormProvider {...methods}>
       <Card>
         <CardContent>
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h4" gutterBottom>
             {t(config.title)}
           </Typography>
           
