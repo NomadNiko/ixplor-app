@@ -78,9 +78,18 @@ const BaseCurrencyInput = ({
 
   const handleInputBlur = () => {
     if (value !== null && value !== undefined) {
-      const formattedValue = Number(value).toFixed(2);
-      setDisplayValue(formattedValue);
-      onChange(parseFloat(formattedValue));
+      // Check if it's a valid number
+      const numValue = Number(value);
+      if (isNaN(numValue)) {
+        // If not a valid number, clear the field
+        setDisplayValue('');
+        onChange(null);
+      } else {
+        // If valid number, format to 2 decimal places
+        const formattedValue = numValue.toFixed(2);
+        setDisplayValue(formattedValue);
+        onChange(parseFloat(formattedValue));
+      }
     }
     onBlur();
   };
