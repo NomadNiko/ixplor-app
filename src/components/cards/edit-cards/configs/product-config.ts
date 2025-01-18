@@ -84,8 +84,7 @@ export const productConfig: CardConfig = {
         {
           name: "productRequirements",
           label: "requirements",
-          type: "textarea",
-          rows: 3,
+          type: "requirements",
           fullWidth: true,
         },
         {

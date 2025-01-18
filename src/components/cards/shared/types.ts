@@ -16,9 +16,10 @@ export type FieldType =
   | 'time'
   | 'image'
   | 'address'
-  | 'duration';
+  | 'duration'
+  | 'requirements';
 
-export type BaseFieldValue = string | number | Date | null;
+export type BaseFieldValue = string | number | Date | string[] | null;
 
 export interface FieldConfig {
   name: string;

@@ -11,6 +11,7 @@ import FormDatePickerInput from "@/components/form/date-pickers/date-picker";
 import FormTimePickerInput from "@/components/form/date-pickers/time-picker";
 import CurrencyInput from './CurrencyInput';
 import DurationInput from './DurationInput';
+import DynamicRequirementsField from './DynamicRequirementsField';
 
 export const CardField: React.FC<CardFieldProps> = ({ 
   field,
@@ -20,6 +21,8 @@ export const CardField: React.FC<CardFieldProps> = ({
   const { errors } = useFormState();
   const { t } = useTranslation('tests');
   const [incrementType, setIncrementType] = useState<'5mins' | '15mins' | 'hours' | 'days'>('15mins');
+
+ // Handle custom input types
 
   if (field.name === 'price') {
     return (
@@ -32,7 +35,7 @@ export const CardField: React.FC<CardFieldProps> = ({
       />
     );
   }
- // Handle custom input types
+
  if (field.type === 'duration') {
   return (
     <DurationInput
@@ -50,6 +53,9 @@ export const CardField: React.FC<CardFieldProps> = ({
   );
 }
 
+ if (field.type === 'requirements') {
+  return <DynamicRequirementsField field={field} mode={mode} />;
+}
   if (field.type === 'address') {
     return <AddressField field={field} mode={mode} />;
   }
