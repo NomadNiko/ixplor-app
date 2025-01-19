@@ -72,16 +72,16 @@ export const productConfig: CardConfig = {
           prefilled: true,
         },
         {
-          name: "productDuration",
-          label: "duration",
-          type: "duration",
-          gridWidth: 6,
-        },
-        {
           name: "break",
           label: "break",
           type: "break",
           gridWidth: 12,
+        },
+        {
+          name: "productDuration",
+          label: "duration",
+          type: "duration",
+          gridWidth: 6,
         },
         {
           name: "productRequirements",
