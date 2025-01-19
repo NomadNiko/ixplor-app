@@ -38,8 +38,9 @@ export const CardSection: React.FC<CardSectionProps> = ({
         {section.fields.map((field) => (
           <Grid 
             item 
-            xs={12} 
-            md={field.gridWidth || (field.fullWidth ? 12 : 6)} 
+            xs={field.gridWidth || (field.fullWidth ? 12 : 12)} // Allow gridWidth to work on mobile
+            sm={field.gridWidth || (field.fullWidth ? 12 : 6)}  // For tablets
+            md={field.gridWidth || (field.fullWidth ? 12 : 6)}  // For desktop
             key={field.name}
           >
             <CardField 

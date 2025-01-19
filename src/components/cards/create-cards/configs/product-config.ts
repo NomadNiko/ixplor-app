@@ -14,7 +14,7 @@ export const productConfig: CardConfig = {
           type: "text",
           required: true,
           fullWidth: true,
-          gridWidth: 4,
+          gridWidth: 12,
         },
         {
           name: "break",
@@ -33,13 +33,13 @@ export const productConfig: CardConfig = {
             { value: "rentals", label: "Rentals" },
             { value: "tickets", label: "Tickets" },
           ],
-          gridWidth: 2,
+          gridWidth: 6,
         },
         {
           name: "productPrice",
           label: "productPrice",
           type: "price",
-          gridWidth: 2,
+          gridWidth: 6,
         },
         {
           name: "break",
@@ -53,7 +53,7 @@ export const productConfig: CardConfig = {
           type: "textarea",
           rows: 3,
           fullWidth: true,
-          gridWidth: 4,
+          gridWidth: 12,
         },
         {
           name: "break",
@@ -70,7 +70,7 @@ export const productConfig: CardConfig = {
             pattern: "^https?:\\/\\/.*\\.(png|jpg|jpeg|gif|svg)$",
             message: "Invalid image URL",
           },
-          gridWidth: 4,
+          gridWidth: 12,
         },
         {
           name: "break",
@@ -88,14 +88,14 @@ export const productConfig: CardConfig = {
           name: "productDate",
           label: "date",
           type: "date",
-          gridWidth: 2,
+          gridWidth: 6,
           prefilled: true,
-        },
+        }, 
         {
           name: "productStartTime",
           label: "startTime",
           type: "time",
-          gridWidth: 2,
+          gridWidth: 6,
           prefilled: true,
         },
         {
@@ -108,7 +108,7 @@ export const productConfig: CardConfig = {
           name: "productDuration",
           label: "duration",
           type: "duration",
-          gridWidth: 4,
+          gridWidth: 12,
         },
         {
           name: "break",
@@ -120,7 +120,7 @@ export const productConfig: CardConfig = {
           name: "productRequirements",
           label: "requirements",
           type: "requirements",
-          gridWidth: 4,
+          gridWidth: 12,
         },
         {
           name: "break",
@@ -133,7 +133,7 @@ export const productConfig: CardConfig = {
           label: "waiver",
           type: "textarea",
           rows: 2,
-          gridWidth: 4,
+          gridWidth: 12,
         },
         {
           name: "break",
@@ -146,7 +146,7 @@ export const productConfig: CardConfig = {
           label: "address",
           type: "address",
           required: true,
-          gridWidth: 4,
+          gridWidth: 12,
         },
       ],
     },
