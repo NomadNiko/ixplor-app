@@ -11,6 +11,7 @@ export type FieldType =
   | 'tel'
   | 'url'
   | 'multiselect' 
+  | 'vendor'
   | 'textarea'
   | 'select'
   | 'date'

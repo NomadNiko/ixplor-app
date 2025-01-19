@@ -13,6 +13,7 @@ import BaseCurrencyInput from './CurrencyInput';
 import DurationInput from './DurationInput';
 import DynamicRequirementsField from './DynamicRequirementsField';
 import Grid from '@mui/material/Grid';
+import SearchAddVendor from './SearchAddVendor';
 
 export const CardField: React.FC<CardFieldProps> = ({ 
   field,
@@ -60,6 +61,10 @@ export const CardField: React.FC<CardFieldProps> = ({
     helperText: errors[field.name]?.message as string,
     InputLabelProps: { shrink: true },
   };
+
+  if (field.type === 'vendor') {
+    return <SearchAddVendor required={field.required} disabled={false} />;
+  }
 
   if (field.type === 'price') {
     return (

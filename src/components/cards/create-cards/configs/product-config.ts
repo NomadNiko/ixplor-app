@@ -9,6 +9,13 @@ export const productConfig: CardConfig = {
       title: "basicInfo",
       fields: [
         {
+          name: "vendorId",
+          label: "vendor",
+          type: "vendor",
+          required: true,
+          gridWidth: 12,
+        },
+        {
           name: "productName",
           label: "productName",
           type: "text",

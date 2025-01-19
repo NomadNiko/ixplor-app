@@ -2,6 +2,9 @@
   "editCardTest": "Edit Card Component Test",
   "editCardTestDescription": "Test the edit card component with different configurations and data types.",
   "vendor": "Vendor",
+  "fields": {
+    "vendor": "Select Vendor"},
+  "vendorHelp": "Search and select the vendor for this product",
   "vendorTypes": "Vendor Type",
   "product": "Product",
   "console": "Data Preview",
@@ -11,7 +14,8 @@
   },
   "errors": {
     "saveFailed": "Failed to save",
-    "deleteFailed": "Failed to delete"
+    "deleteFailed": "Failed to delete",
+    "failedToLoadVendors": "Failed to load vendors. Please try again."
   },
   "info": {
     "cancelled": "Operation cancelled"
