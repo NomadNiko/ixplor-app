@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
-import { useFormContext, useFormState, RegisterOptions } from "react-hook-form";
+import { useFormContext, useFormState } from "react-hook-form";
 import { FormData, CardFieldProps } from './types';
 import { AddressField } from './AddressField';
 import { ImageUploadField } from './ImageUploadField';
@@ -23,73 +23,11 @@ export const CardField: React.FC<CardFieldProps> = ({
   const { t } = useTranslation('tests');
   const [incrementType, setIncrementType] = useState<'5mins' | '15mins' | 'hours' | 'days'>('15mins');
 
- // Handle custom input types
-
- if (field.type === 'break') {
-  return <Grid item xs={12} />; // Forces line break
-}
-
-  if (field.type === 'price') {
-    return (
-      <BaseCurrencyInput
-        name={field.name}
-        label={t(field.label)}
-        control={control}
-        error={errors[field.name]?.message as string}
-        required={field.required}
-        onCurrencyChange={(currency) => console.log('Currency changed to:', currency)}
-      />
-    );
+  if (field.type === 'break') {
+    return <Grid item xs={12} />;
   }
 
- if (field.type === 'duration') {
-  return (
-    <DurationInput
-      name={field.name}
-      label={t(field.label)}
-      control={control}
-      required={field.required}
-      incrementType={incrementType}
-      onIncrementChange={(type) => {
-        setIncrementType(type);
-        // Reset value when increment type changes
-        setValue(field.name, '');
-      }}
-    />
-  );
-}
-
- if (field.type === 'requirements') {
-  return <DynamicRequirementsField field={field} mode={mode} />;
-}
-  if (field.type === 'address') {
-    return <AddressField field={field} mode={mode} />;
-  }
-
-  if (field.type === 'image') {
-    return <ImageUploadField field={field} mode={mode} />;
-  }
-
-  if (field.type === 'date') {
-    return (
-      <FormDatePickerInput
-        name={field.name}
-        label={t(field.label)}
-      />
-    );
-  }
-
-  if (field.type === 'time') {
-    return (
-      <FormTimePickerInput
-        name={field.name}
-        label={t(field.label)}
-        format="HH:mm"
-      />
-    );
-  }
-
-  const validationRules: RegisterOptions = {
+  const validationRules = {
     required: field.required && {
       value: true,
       message: t('fieldRequired')
@@ -122,6 +60,90 @@ export const CardField: React.FC<CardFieldProps> = ({
     helperText: errors[field.name]?.message as string,
     InputLabelProps: { shrink: true },
   };
+
+  if (field.type === 'price') {
+    return (
+      <BaseCurrencyInput
+        name={field.name}
+        label={t(field.label)}
+        control={control}
+        error={errors[field.name]?.message as string}
+        required={field.required}
+        onCurrencyChange={(currency) => console.log('Currency changed to:', currency)}
+      />
+    );
+  }
+
+  if (field.type === 'duration') {
+    return (
+      <DurationInput
+        name={field.name}
+        label={t(field.label)}
+        control={control}
+        required={field.required}
+        incrementType={incrementType}
+        onIncrementChange={(type) => {
+          setIncrementType(type);
+          setValue(field.name, '');
+        }}
+      />
+    );
+  }
+
+  if (field.type === 'requirements') {
+    return <DynamicRequirementsField field={field} mode={mode} />;
+  }
+
+  if (field.type === 'address') {
+    return <AddressField field={field} mode={mode} />;
+  }
+
+  if (field.type === 'image') {
+    return <ImageUploadField field={field} mode={mode} />;
+  }
+
+  if (field.type === 'date') {
+    return (
+      <FormDatePickerInput
+        name={field.name}
+        label={t(field.label)}
+      />
+    );
+  }
+
+  if (field.type === 'time') {
+    return (
+      <FormTimePickerInput
+        name={field.name}
+        label={t(field.label)}
+        format="HH:mm"
+      />
+    );
+  }
+
+  if (field.type === 'multiselect') {
+    return (
+      <TextField
+        select
+        SelectProps={{
+          multiple: true,
+          renderValue: (selected) => {
+            const selectedValues = selected as string[];
+            return selectedValues
+              .map(value => field.options?.find(opt => opt.value === value)?.label)
+              .join(', ');
+          }
+        }}
+        {...baseProps}
+      >
+        {field.options?.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {t(option.label)}
+          </MenuItem>
+        ))}
+      </TextField>
+    );
+  }
 
   if (field.type === 'select') {
     return (

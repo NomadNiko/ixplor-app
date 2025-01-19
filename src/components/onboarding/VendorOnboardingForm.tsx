@@ -24,7 +24,7 @@ import { API_URL } from '@/services/api/config';
 type VendorFormData = {
   businessName: string;
   description: string;
-  vendorType: 'tours' | 'lessons' | 'rentals' | 'tickets';
+  vendorTypes: 'tours' | 'lessons' | 'rentals' | 'tickets';
   email: string;
   phone: string;
   website?: string;
@@ -48,7 +48,7 @@ export default function VendorRegistrationForm() {
     defaultValues: {
       businessName: '',
       description: '',
-      vendorType: 'tours',
+      vendorTypes: 'tours',
       email: '',
       phone: '',
       website: '',
@@ -75,7 +75,7 @@ export default function VendorRegistrationForm() {
     let isStepValid = false;
     switch (activeStep) {
       case 0:
-        isStepValid = await trigger(['businessName', 'description', 'vendorType']);
+        isStepValid = await trigger(['businessName', 'description', 'vendorTypes']);
         break;
       case 1:
         isStepValid = await trigger(['email', 'phone', 'website', 'logoUrl']);

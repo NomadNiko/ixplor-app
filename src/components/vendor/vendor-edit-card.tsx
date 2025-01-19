@@ -29,7 +29,7 @@ export const VendorEditCard: React.FC<VendorEditCardProps> = ({
   const [formData, setFormData] = useState({
     businessName: vendor.businessName,
     description: vendor.description,
-    vendorType: vendor.vendorType,
+    vendorTypes: vendor.vendorTypes[0],
     email: vendor.email,
     phone: vendor.phone,
     website: vendor.website || '',
@@ -94,7 +94,7 @@ export const VendorEditCard: React.FC<VendorEditCardProps> = ({
           logoUrl={formData.logoUrl}
           businessName={formData.businessName}
           description={formData.description}
-          vendorType={formData.vendorType}
+          vendorTypes={formData.vendorTypes}
           onChange={handleInputChange}
           t={t}
         />

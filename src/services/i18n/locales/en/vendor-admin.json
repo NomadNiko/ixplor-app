@@ -19,7 +19,7 @@
   "editVendor": "Edit Vendor",
   "businessName": "Business Name",
   "description": "Description",
-  "vendorType": "Business Type",
+  "vendorTypes": "Business Type",
   "email": "Email",
   "phone": "Phone",
   "website": "Website",

@@ -40,6 +40,12 @@ export const productConfig: CardConfig = {
           label: "productPrice",
           type: "price",
           gridWidth: 6,
+          validation: {
+            pattern: '^\\d+(\\.\\d{0,2})?$',
+            message: "Please enter valid price",
+            min: 0,
+            max: 999999.99
+          }
         },
         {
           name: "break",

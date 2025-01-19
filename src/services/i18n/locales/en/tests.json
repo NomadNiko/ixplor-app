@@ -2,7 +2,7 @@
   "editCardTest": "Edit Card Component Test",
   "editCardTestDescription": "Test the edit card component with different configurations and data types.",
   "vendor": "Vendor",
-  "vendorType": "Vendor Type",
+  "vendorTypes": "Vendor Type",
   "product": "Product",
   "console": "Data Preview",
   "success": {

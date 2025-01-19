@@ -8,7 +8,7 @@ interface VendorEditHeaderProps {
   logoUrl: string;
   businessName: string;
   description: string;
-  vendorType: string;
+  vendorTypes: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   t: (key: string) => string;
 }
@@ -17,7 +17,7 @@ export const VendorEditHeader: React.FC<VendorEditHeaderProps> = ({
   logoUrl,
   businessName,
   description,
-  vendorType,
+  vendorTypes,
   onChange,
   t
 }) => (
@@ -73,9 +73,9 @@ export const VendorEditHeader: React.FC<VendorEditHeaderProps> = ({
         <TextField
           select
           fullWidth
-          label={t('vendorType')}
-          name="vendorType"
-          value={vendorType}
+          label={t('vendorTypes')}
+          name="vendorTypes"
+          value={vendorTypes}
           onChange={onChange}
         >
           {['tours', 'lessons', 'rentals', 'tickets'].map((type) => (
