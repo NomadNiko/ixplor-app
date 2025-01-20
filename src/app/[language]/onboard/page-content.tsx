@@ -9,7 +9,7 @@ export default function VendorOnboardingPage() {
   const { t } = useTranslation("onboard");
   
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="sm" sx={{ py: 4 }}>
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <Typography variant="h4" gutterBottom>

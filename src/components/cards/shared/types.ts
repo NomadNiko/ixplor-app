@@ -13,6 +13,7 @@ export type FieldType =
   | 'multiselect' 
   | 'vendor'
   | 'textarea'
+  | 'vendorTypes'
   | 'select'
   | 'date'
   | 'time'

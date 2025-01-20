@@ -33,9 +33,7 @@ export default function VendorCreateCard() {
         ...formData,
         vendorStatus: 'SUBMITTED',
         location: locationData,
-        vendorTypes: Array.isArray(formData.vendorTypes) 
-          ? formData.vendorTypes 
-          : [formData.vendorTypes]
+        vendorTypes: ['tours']
       };
 
       const response = await fetch(`${API_URL}/vendors`, {

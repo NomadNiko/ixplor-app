@@ -1,56 +1,60 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import { useFormContext, useFormState } from "react-hook-form";
-import { FormData, CardFieldProps } from './types';
-import { AddressField } from './AddressField';
-import { ImageUploadField } from './ImageUploadField';
+import { FormData, CardFieldProps } from "./types";
+import { AddressField } from "./AddressField";
+import { ImageUploadField } from "./ImageUploadField";
 import { useTranslation } from "@/services/i18n/client";
 import FormDatePickerInput from "@/components/form/date-pickers/date-picker";
 import FormTimePickerInput from "@/components/form/date-pickers/time-picker";
-import BaseCurrencyInput from './CurrencyInput';
-import DurationInput from './DurationInput';
-import DynamicRequirementsField from './DynamicRequirementsField';
-import Grid from '@mui/material/Grid';
-import SearchAddVendor from './SearchAddVendor';
+import BaseCurrencyInput from "./CurrencyInput";
+import DurationInput from "./DurationInput";
+import DynamicRequirementsField from "./DynamicRequirementsField";
+import Grid from "@mui/material/Grid";
+import SearchAddVendor from "./SearchAddVendor";
+import { UrlField } from './UrlField';
 
-export const CardField: React.FC<CardFieldProps> = ({ 
+
+export const CardField: React.FC<CardFieldProps> = ({
   field,
-  mode = 'edit'
+  mode = "edit",
 }) => {
   const { register, control, setValue } = useFormContext<FormData>();
   const { errors } = useFormState();
-  const { t } = useTranslation('tests');
-  const [incrementType, setIncrementType] = useState<'5mins' | '15mins' | 'hours' | 'days'>('15mins');
+  const { t } = useTranslation("tests");
+  const [incrementType, setIncrementType] = useState<
+    "5mins" | "15mins" | "hours" | "days"
+  >("15mins");
 
-  if (field.type === 'break') {
+  if (field.type === "break") {
     return <Grid item xs={12} />;
   }
 
   const validationRules = {
     required: field.required && {
       value: true,
-      message: t('fieldRequired')
+      message: t("fieldRequired"),
     },
-    ...((field.validation?.min !== undefined) && {
+    ...(field.validation?.min !== undefined && {
       min: {
         value: field.validation.min,
-        message: t('validationMin', { min: field.validation.min })
-      }
+        message: t("validationMin", { min: field.validation.min }),
+      },
     }),
-    ...((field.validation?.max !== undefined) && {
+    ...(field.validation?.max !== undefined && {
       max: {
         value: field.validation.max,
-        message: t('validationMax', { max: field.validation.max })
-      }
+        message: t("validationMax", { max: field.validation.max }),
+      },
     }),
-    ...((field.validation?.pattern !== undefined) && {
+    ...(field.validation?.pattern !== undefined && {
       pattern: {
         value: new RegExp(field.validation.pattern),
-        message: t('validationPattern')
-      }
-    })
+        message: t("validationPattern"),
+      },
+    }),
   };
 
   const baseProps = {
@@ -62,11 +66,16 @@ export const CardField: React.FC<CardFieldProps> = ({
     InputLabelProps: { shrink: true },
   };
 
-  if (field.type === 'vendor') {
+  if (field.type === "vendor") {
     return <SearchAddVendor required={field.required} disabled={false} />;
   }
 
-  if (field.type === 'price') {
+
+  if (field.type === 'url') {
+    return <UrlField field={field} mode={mode} />;
+  }
+
+  if (field.type === "price") {
     return (
       <BaseCurrencyInput
         name={field.name}
@@ -74,12 +83,14 @@ export const CardField: React.FC<CardFieldProps> = ({
         control={control}
         error={errors[field.name]?.message as string}
         required={field.required}
-        onCurrencyChange={(currency) => console.log('Currency changed to:', currency)}
+        onCurrencyChange={(currency) =>
+          console.log("Currency changed to:", currency)
+        }
       />
     );
   }
 
-  if (field.type === 'duration') {
+  if (field.type === "duration") {
     return (
       <DurationInput
         name={field.name}
@@ -89,34 +100,29 @@ export const CardField: React.FC<CardFieldProps> = ({
         incrementType={incrementType}
         onIncrementChange={(type) => {
           setIncrementType(type);
-          setValue(field.name, '');
+          setValue(field.name, "");
         }}
       />
     );
   }
 
-  if (field.type === 'requirements') {
+  if (field.type === "requirements") {
     return <DynamicRequirementsField field={field} mode={mode} />;
   }
 
-  if (field.type === 'address') {
+  if (field.type === "address") {
     return <AddressField field={field} mode={mode} />;
   }
 
-  if (field.type === 'image') {
+  if (field.type === "image") {
     return <ImageUploadField field={field} mode={mode} />;
   }
 
-  if (field.type === 'date') {
-    return (
-      <FormDatePickerInput
-        name={field.name}
-        label={t(field.label)}
-      />
-    );
+  if (field.type === "date") {
+    return <FormDatePickerInput name={field.name} label={t(field.label)} />;
   }
 
-  if (field.type === 'time') {
+  if (field.type === "time") {
     return (
       <FormTimePickerInput
         name={field.name}
@@ -126,7 +132,7 @@ export const CardField: React.FC<CardFieldProps> = ({
     );
   }
 
-  if (field.type === 'multiselect') {
+  if (field.type === "multiselect") {
     return (
       <TextField
         select
@@ -135,9 +141,12 @@ export const CardField: React.FC<CardFieldProps> = ({
           renderValue: (selected) => {
             const selectedValues = selected as string[];
             return selectedValues
-              .map(value => field.options?.find(opt => opt.value === value)?.label)
-              .join(', ');
-          }
+              .map(
+                (value) =>
+                  field.options?.find((opt) => opt.value === value)?.label
+              )
+              .join(", ");
+          },
         }}
         {...baseProps}
       >
@@ -150,12 +159,9 @@ export const CardField: React.FC<CardFieldProps> = ({
     );
   }
 
-  if (field.type === 'select') {
+  if (field.type === "select") {
     return (
-      <TextField
-        select
-        {...baseProps}
-      >
+      <TextField select {...baseProps}>
         {field.options?.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {t(option.label)}
@@ -165,22 +171,11 @@ export const CardField: React.FC<CardFieldProps> = ({
     );
   }
 
-  if (field.type === 'textarea') {
-    return (
-      <TextField
-        {...baseProps}
-        multiline
-        rows={field.rows || 4}
-      />
-    );
+  if (field.type === "textarea") {
+    return <TextField {...baseProps} multiline rows={field.rows || 4} />;
   }
 
-  return (
-    <TextField
-      {...baseProps}
-      type={field.type}
-    />
-  );
+  return <TextField {...baseProps} type={field.type} />;
 };
 
 export default CardField;

@@ -9,13 +9,13 @@ export enum VendorStatusEnum {
   REJECTED = 'REJECTED'
 }
 
-export type VendorTypes = 'tours' | 'lessons' | 'rentals' | 'tickets';
+export type VendorTypes = 'tours' | 'lessons' | 'rentals' | 'tickets' | '';
 
 export interface VendorProperties {
   _id: string;
   businessName: string;
   description: string;
-  vendorTypes: VendorTypes[];  // Changed from vendorType to vendorTypes
+  vendorTypes: VendorTypes[];
   website?: string;
   email: string;
   phone: string;
