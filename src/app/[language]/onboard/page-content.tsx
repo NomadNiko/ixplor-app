@@ -3,11 +3,11 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "@/services/i18n/client";
-import VendorOnboardingForm from "@/components/onboarding/VendorOnboardingForm";
+import VendorCreateCard from "@/components/cards/create-cards/VendorCreateCard";
 
 export default function VendorOnboardingPage() {
   const { t } = useTranslation("onboard");
-
+  
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Grid container spacing={4}>
@@ -21,7 +21,7 @@ export default function VendorOnboardingPage() {
         </Grid>
         
         <Grid item xs={12}>
-          <VendorOnboardingForm />
+          <VendorCreateCard />
         </Grid>
       </Grid>
     </Container>

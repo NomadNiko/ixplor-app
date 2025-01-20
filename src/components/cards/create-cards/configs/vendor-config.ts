@@ -54,7 +54,7 @@ export const vendorConfig: CardConfig = {
           required: true,
           gridWidth: 6,
           validation: {
-            pattern: '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$',
+            pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
             message: 'Invalid email address'
           }
         },
