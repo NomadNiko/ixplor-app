@@ -9,6 +9,12 @@ export const vendorConfig: CardConfig = {
       title: 'basicInfo',
       fields: [
         {
+          name: 'vendorType',
+          label: 'vendorName',
+          type: 'vendor',
+          gridWidth: 12,
+        },
+        {
           name: 'businessName',
           label: 'businessName',
           type: 'text',
