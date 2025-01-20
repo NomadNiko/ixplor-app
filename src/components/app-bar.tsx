@@ -113,7 +113,7 @@ function ResponsiveAppBar() {
                 </Typography>
               </MenuItem>
               {!!user?.role &&
-                [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
+                [RoleEnum.ADMIN, RoleEnum.USER, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
                     key="onboard"
                     onClick={handleCloseNavMenu}
@@ -126,7 +126,7 @@ function ResponsiveAppBar() {
                   </MenuItem>,
                 ]}
               {!!user?.role &&
-                [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
+                [RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
                     key="addProduct"
                     onClick={handleCloseNavMenu}
@@ -139,7 +139,7 @@ function ResponsiveAppBar() {
                   </MenuItem>,
                 ]}
               {!!user?.role &&
-                [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
+                [RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
                     key="products"
                     onClick={handleCloseNavMenu}
