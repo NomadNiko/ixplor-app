@@ -27,6 +27,7 @@ export interface VendorProperties {
   vendorStatus: VendorStatusEnum;
   actionNeeded?: string;
   adminNotes?: string;
+  ownerIds?: string[];
   createdAt: string;
   updatedAt: string;
   location: {

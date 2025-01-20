@@ -15,4 +15,5 @@ export type User = {
   provider?: UserProviderEnum;
   socialId?: string;
   role?: Role;
+  vendorProfileIds?: string[]; 
 };

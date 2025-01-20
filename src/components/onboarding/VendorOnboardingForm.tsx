@@ -24,7 +24,7 @@ import { API_URL } from '@/services/api/config';
 type VendorFormData = {
   businessName: string;
   description: string;
-  vendorTypes: 'tours' | 'lessons' | 'rentals' | 'tickets';
+  vendorTypes: ('tours' | 'lessons' | 'rentals' | 'tickets')[];
   email: string;
   phone: string;
   website?: string;
@@ -48,7 +48,7 @@ export default function VendorRegistrationForm() {
     defaultValues: {
       businessName: '',
       description: '',
-      vendorTypes: 'tours',
+      vendorTypes: ['tours'],
       email: '',
       phone: '',
       website: '',
@@ -111,17 +111,26 @@ export default function VendorRegistrationForm() {
         return;
       }
 
-      // Submit data directly with latitude and longitude
+      // Create the location object in the format expected by the backend
+      const locationData = {
+        type: 'Point' as const,
+        coordinates: [formData.longitude, formData.latitude] as [number, number]
+      };
+
+      // Prepare the submission data
+      const submissionData = {
+        ...formData,
+        location: locationData,
+        vendorStatus: 'SUBMITTED'
+      };
+
       const vendorResponse = await fetch(`${API_URL}/vendors`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${tokensInfo.token}`
         },
-        body: JSON.stringify({
-          ...formData,
-          vendorStatus: 'SUBMITTED'
-        })
+        body: JSON.stringify(submissionData)
       });
 
       if (vendorResponse.ok) {
@@ -136,6 +145,7 @@ export default function VendorRegistrationForm() {
     }
   };
 
+  
   const renderStepContent = (step: number) => {
     switch (step) {
       case 0:

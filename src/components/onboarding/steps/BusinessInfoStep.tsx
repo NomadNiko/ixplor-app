@@ -1,9 +1,17 @@
+// src/components/onboarding/steps/BusinessInfoStep.tsx
 import React from 'react';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { Controller } from 'react-hook-form';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import Chip from '@mui/material/Chip';
+import Box from '@mui/material/Box';
 import { StepProps } from '../types';
+
+const VENDOR_TYPES = ['tours', 'lessons', 'rentals', 'tickets'] as const;
 
 export const BusinessInfoStep: React.FC<StepProps> = ({ control, t }) => {
   return (
@@ -45,20 +53,30 @@ export const BusinessInfoStep: React.FC<StepProps> = ({ control, t }) => {
           name="vendorTypes"
           control={control}
           render={({ field, fieldState: { error } }) => (
-            <TextField
-              {...field}
-              fullWidth
-              select
-              label={t("vendorTypes")}
-              error={!!error}
-              helperText={error?.message}
-            >
-              {['tours', 'lessons', 'rentals', 'tickets'].map((type) => (
-                <MenuItem key={type} value={type}>
-                  {type.charAt(0).toUpperCase() + type.slice(1)}
-                </MenuItem>
-              ))}
-            </TextField>
+            <FormControl fullWidth error={!!error}>
+              <InputLabel>{t("vendorTypes")}</InputLabel>
+              <Select
+                {...field}
+                multiple
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {(selected as string[]).map((value) => (
+                      <Chip 
+                        key={value} 
+                        label={t(`vendorTypes.${value}`)} 
+                        size="small" 
+                      />
+                    ))}
+                  </Box>
+                )}
+              >
+                {VENDOR_TYPES.map((type) => (
+                  <MenuItem key={type} value={type}>
+                    {t(`vendorTypes.${type}`)}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           )}
         />
       </Grid>
