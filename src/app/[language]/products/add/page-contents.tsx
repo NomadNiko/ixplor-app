@@ -1,24 +1,22 @@
-"use client";
-
+'use client';
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useTranslation } from "@/services/i18n/client";
-import ProductCreateCard from "@/components/product/product-create-card";
+import ProductCreateCard from '@/components/cards/create-cards/ProductCreateCard';
 
-
-export default function ProductCreationPageContent() {
+export default function ProductCreationPage() {
   const { t } = useTranslation("products");
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="sm" sx={{ py: 4 }}>
       <Typography variant="h4" gutterBottom>
-        {t("productCreation")}
+        {t("productCreation")} 
       </Typography>
-      
+
       <Typography color="text.secondary" paragraph>
-        {t("subtitle")}
+        {t("subtitle")}  
       </Typography>
-      
+
       <ProductCreateCard />
     </Container>
   );

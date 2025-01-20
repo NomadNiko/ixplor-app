@@ -2,6 +2,9 @@ import { ReactNode } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { ProductStatusEnum } from '@/app/[language]/types/product';
 import { VendorStatusEnum } from '@/app/[language]/types/vendor';
+import { Vendor } from '@/app/[language]/types/vendor';
+import { PlaceResult } from '@/hooks/use-google-places';
+
 
 export type FieldType = 
   | 'text'
@@ -13,7 +16,6 @@ export type FieldType =
   | 'multiselect' 
   | 'vendor'
   | 'textarea'
-  | 'vendorTypes'
   | 'select'
   | 'date'
   | 'time'
@@ -23,7 +25,8 @@ export type FieldType =
   | 'break'
   | 'requirements';
 
-export type BaseFieldValue = string | number | Date | string[] | null;
+
+  export type BaseFieldValue = string | number | boolean | Date | string[] | null;
 
 export interface FieldConfig {
   name: string;
@@ -74,6 +77,9 @@ export interface BaseCardProps {
   customActions?: ReactNode;
   isSubmitting?: boolean;
   onChange?: (data: FormData) => void;
+  onVendorSelect?: (vendor: Vendor) => void;
+  onAddressSelect?: (place: PlaceResult) => Promise<void>;
+  loadVendors?: () => Promise<Vendor[]>;
   mode?: 'edit' | 'create';
   children?: ReactNode;
 }

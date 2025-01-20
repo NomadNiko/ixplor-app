@@ -11,7 +11,7 @@ export const productConfig: CardConfig = {
         {
           name: "vendorId",
           label: "vendor",
-          type: "vendor",  // Add this as a new field type
+          type: "text",  // Add this as a new field type
           required: true,
           gridWidth: 12,
         },
