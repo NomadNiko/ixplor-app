@@ -54,7 +54,7 @@ export default function CreateCardTestContainer() {
   const mockVendorData = {
     businessName: '',
     description: '',
-    vendorType: '',
+    vendorTypes: '[]',
     email: '',
     phone: '',
     website: '',

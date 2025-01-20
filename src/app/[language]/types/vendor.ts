@@ -9,13 +9,13 @@ export enum VendorStatusEnum {
   REJECTED = 'REJECTED'
 }
 
-export type VendorType = 'tours' | 'lessons' | 'rentals' | 'tickets';
+export type VendorTypes = 'tours' | 'lessons' | 'rentals' | 'tickets';
 
 export interface VendorProperties {
   _id: string;
   businessName: string;
   description: string;
-  vendorType: VendorType;
+  vendorTypes: VendorTypes[];  // Changed from vendorType to vendorTypes
   website?: string;
   email: string;
   phone: string;
@@ -47,4 +47,5 @@ export interface Vendor extends Omit<VendorProperties, 'location'> {
 export interface VendorResponse {
   data: Vendor[];
 }
+
 export type VendorApiResponse = FetchJsonResponse<VendorResponse>;

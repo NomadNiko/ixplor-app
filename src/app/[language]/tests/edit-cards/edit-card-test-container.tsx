@@ -75,7 +75,7 @@ export default function EditCardTestContainer() {
   const mockVendorData = {
     businessName: '',
     description: '',
-    vendorType: '',
+    vendorTypes: [],
     email: '',
     phone: '',
     website: '',

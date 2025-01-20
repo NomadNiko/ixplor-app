@@ -10,6 +10,8 @@ export type FieldType =
   | 'email'
   | 'tel'
   | 'url'
+  | 'multiselect' 
+  | 'vendor'
   | 'textarea'
   | 'select'
   | 'date'

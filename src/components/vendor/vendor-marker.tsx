@@ -1,9 +1,9 @@
 import { Marker } from 'react-map-gl';
 import Chip from '@mui/material/Chip';
-import { VendorLocation, VendorType } from '@/components/mock-data/vendor-location';
+import { VendorLocation, VendorTypes } from '@/components/mock-data/vendor-location';
 import { Binoculars, GraduationCap, Timer, Ticket } from 'lucide-react';
 
-const getVendorIcon = (type: VendorType) => {
+const getVendorIcon = (type: VendorTypes) => {
   switch (type) {
     case 'tours':
       return <Binoculars size={14} />;
@@ -21,7 +21,7 @@ export const VendorMarker: React.FC<{
   onClick: () => void;
 }> = ({ vendor, onClick }) => {
   const { coordinates } = vendor.geometry;
-  const { businessName, vendorType } = vendor.properties;
+  const { businessName, vendorTypes } = vendor.properties;
 
   return (
     <Marker
@@ -30,7 +30,7 @@ export const VendorMarker: React.FC<{
       anchor="bottom"
     >
       <Chip
-        icon={getVendorIcon(vendorType)}
+        icon={getVendorIcon(vendorTypes)}
         label={businessName}
         onClick={onClick}
         className="bg-background-glass backdrop-blur-md hover:bg-background-glassHover cursor-pointer"

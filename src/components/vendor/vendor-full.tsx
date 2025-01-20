@@ -82,7 +82,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
                   {vendor.businessName}
                 </Typography>
                 <Chip
-                  label={t(`vendorTypes.${vendor.vendorType}`)}
+                  label={t(`vendorTypes.${vendor.vendorTypes?.[0] || 'tours'}`)}
                   size="small"
                   color="primary"
                 />

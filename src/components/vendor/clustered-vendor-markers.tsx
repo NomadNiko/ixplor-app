@@ -3,7 +3,7 @@ import { Marker } from 'react-map-gl';
 import useSupercluster from 'use-supercluster';
 import Chip from '@mui/material/Chip';
 import { Binoculars, GraduationCap, Timer, Ticket, Users } from 'lucide-react';
-import { Vendor, VendorType } from '@/app/[language]/types/vendor';
+import { Vendor, VendorTypes } from '@/app/[language]/types/vendor';
 import { BBox, Feature, Point, GeoJsonProperties } from 'geojson';
 
 export interface ClusteredVendorMarkersProps {
@@ -13,17 +13,21 @@ export interface ClusteredVendorMarkersProps {
   zoom: number;
 }
 
-const getVendorIcon = (type: VendorType) => {
-  switch (type) {
-    case 'tours':
-      return <Binoculars size={14} />;
-    case 'lessons':
-      return <GraduationCap size={14} />;
-    case 'rentals':
-      return <Timer size={14} />;
-    case 'tickets':
-      return <Ticket size={14} />;
-  }
+const getVendorIcon = (types: VendorTypes[]) => {
+  // Prefer tours over other types
+  if (types.includes('tours')) return <Binoculars size={14} />;
+  
+  // If no tours, prefer lessons
+  if (types.includes('lessons')) return <GraduationCap size={14} />;
+  
+  // If no lessons, prefer rentals
+  if (types.includes('rentals')) return <Timer size={14} />;
+  
+  // If no rentals, use tickets
+  if (types.includes('tickets')) return <Ticket size={14} />;
+  
+  // Fallback to a generic icon if no types match
+  return <Users size={14} />;
 };
 
 export const ClusteredVendorMarkers = ({
@@ -94,7 +98,7 @@ export const ClusteredVendorMarkers = ({
             anchor="bottom"
           >
             <Chip
-              icon={getVendorIcon(vendor.vendorType)}
+              icon={getVendorIcon(vendor.vendorTypes)}
               label={vendor.businessName}
               onClick={() => onClick(vendor)}
               className="bg-background-glass backdrop-blur-md hover:bg-background-glassHover cursor-pointer"

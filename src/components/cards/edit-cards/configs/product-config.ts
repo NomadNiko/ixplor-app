@@ -9,6 +9,13 @@ export const productConfig: CardConfig = {
       title: "basicInfo",
       fields: [
         {
+          name: "vendorId",
+          label: "vendor",
+          type: "vendor",  // Add this as a new field type
+          required: true,
+          gridWidth: 12,
+        },
+        {
           name: "productName",
           label: "productName",
           type: "text",
@@ -40,6 +47,12 @@ export const productConfig: CardConfig = {
           label: "productPrice",
           type: "price",
           gridWidth: 6,
+          validation: {
+            pattern: '^\\d+(\\.\\d{0,2})?$',
+            message: "Please enter valid price",
+            min: 0,
+            max: 999999.99
+          }
         },
         {
           name: "break",

@@ -8,10 +8,10 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useTheme } from "@mui/material/styles";
-import { VendorLocation, VendorType } from '@/components/mock-data/vendor-location';
+import { VendorLocation, VendorTypes } from '@/components/mock-data/vendor-location';
 import { X, Binoculars, GraduationCap, Timer, Ticket } from 'lucide-react';
 
-const VendorIcon = ({ type }: { type: VendorType }) => {
+const VendorIcon = ({ type }: { type: VendorTypes }) => {
   const theme = useTheme();
   const iconSize = theme.spacing(2.5); // 20px equivalent
 
@@ -92,11 +92,11 @@ export const VendorListView: React.FC<{
                 }}
               >
                 <ListItemIcon sx={{ minWidth: theme.spacing(5) }}>
-                  <VendorIcon type={vendor.properties.vendorType} />
+                  <VendorIcon type={vendor.properties.vendorTypes} />
                 </ListItemIcon>
                 <ListItemText 
                   primary={vendor.properties.businessName}
-                  secondary={vendor.properties.vendorType.charAt(0).toUpperCase() + vendor.properties.vendorType.slice(1)}
+                  secondary={vendor.properties.vendorTypes.charAt(0).toUpperCase() + vendor.properties.vendorTypes.slice(1)}
                   primaryTypographyProps={{
                     variant: 'body2',
                     fontWeight: 500

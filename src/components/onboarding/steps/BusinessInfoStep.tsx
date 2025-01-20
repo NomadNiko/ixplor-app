@@ -42,14 +42,14 @@ export const BusinessInfoStep: React.FC<StepProps> = ({ control, t }) => {
       </Grid>
       <Grid item xs={12}>
         <Controller
-          name="vendorType"
+          name="vendorTypes"
           control={control}
           render={({ field, fieldState: { error } }) => (
             <TextField
               {...field}
               fullWidth
               select
-              label={t("vendorType")}
+              label={t("vendorTypes")}
               error={!!error}
               helperText={error?.message}
             >

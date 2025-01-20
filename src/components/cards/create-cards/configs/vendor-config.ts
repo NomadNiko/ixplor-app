@@ -5,25 +5,6 @@ export const vendorConfig: CardConfig = {
   type: 'vendor',
   sections: [
     {
-      id: '',
-      title: '',
-      fields: [
-        {
-          name: 'vendorType',
-          label: 'vendorType',
-          type: 'select',
-          required: true,
-          options: [
-            { value: 'tours', label: 'Tours' },
-            { value: 'lessons', label: 'Lessons' },
-            { value: 'rentals', label: 'Rentals' },
-            { value: 'tickets', label: 'Tickets' }
-          ],
-          gridWidth: 6,
-        }
-      ]
-    },
-    {
       id: 'header',
       title: 'basicInfo',
       fields: [

@@ -10,7 +10,7 @@ const vendorLocations = {
         properties: {
           businessName: 'Moku Hawaii',
           description: 'Surfing Lessons - Provides surfboard, bodyboard & stand-up paddleboard rentals, plus lessons & gear.',
-          vendorType: 'lessons',
+          vendorTypes: 'lessons',
           website: 'https://www.mokuhawaii.surf/',
           email: 'lesson@mokuhawaii.surf',
           phone: '808-230-9889',
@@ -30,7 +30,7 @@ const vendorLocations = {
         properties: {
           businessName: 'Beach Candy Waikiki',
           description: 'Find everything from surfing rentals, stand-up paddle board rentals, or just the beach day basics like chairs and beach umbrellas right next to the best spot in Waikiki!',
-          vendorType: 'rentals',
+          vendorTypes: 'rentals',
           website: 'https://www.jobschoolofsurf.com/waikiki-beach-rentals/',
           email: 'surfwaikiki@jobschoolofsurf.com',
           phone: '808-583-0178',
@@ -50,7 +50,7 @@ const vendorLocations = {
         properties: {
           businessName: 'Hawaii Adventours',
           description: 'Spend the day climbing stunning cliffs with panoramic ocean views on Oahu. Includes hotel pick-up, gear (helmets, harnesses, ropes, and shoes), and guided toprope climbing.',
-          vendorType: 'tours',
+          vendorTypes: 'tours',
           website: 'https://www.hawaiiadventours.com/',
           email: 'hawaiiadventours@gmail.com',
           phone: '808-509-6246',
@@ -70,7 +70,7 @@ const vendorLocations = {
         properties: {
           businessName: 'Hawaii Tickets For Less',
           description: 'Tickets for Tours and Adventures all over the Hawaiian Islands. Did you know that by taking one of our Hawaii Tours you are also helping the environment? It\'s true! Each of our mini buses removes almost 12 cars from the Island\'s roadways.',
-          vendorType: 'tickets',
+          vendorTypes: 'tickets',
           website: 'https://alohasunshinetours.com/',
           email: 'reservations@alohasunshinetours.com',
           phone: '808-824-3995',
@@ -90,7 +90,7 @@ const vendorLocations = {
         properties: {
           businessName: 'The Pineapple EXP',
           description: 'Exclusive Circle Island Tour on Oahu. Embark on an unforgettable journey with The Pineapple EXP. Our Circle Island Tour promises an adventure of a lifetime as we explore the natural beauty, historical significance, and cultural richness of Oahu.',
-          vendorType: 'tours',
+          vendorTypes: 'tours',
           website: 'https://thepineappleexp.com/',
           email: 'info@thepineappleexp.com',
           phone: '808-213-6646',
@@ -110,7 +110,7 @@ const vendorLocations = {
         properties: {
           businessName: 'Honolulu Zoo',
           description: 'There are approximately 900 different animals from the tropics that now reside at the Honolulu Zoo. Komodo Dragons, orangutans, elephants, primates, birds, reptiles, amphibians, and a variety of African animals.',
-          vendorType: 'tickets',
+          vendorTypes: 'tickets',
           website: 'https://www8.honolulu.gov/des/zoo/',
           email: 'info@honzoosoc.org',
           phone: '808-768-5400',
@@ -130,7 +130,7 @@ const vendorLocations = {
         properties: {
           businessName: 'Oahu Surf School',
           description: 'Whether you\'re a beginner eager to ride your first wave or an experienced surfer looking to refine your technique, I\'m committed to helping you achieve your goals!',
-          vendorType: 'lessons',
+          vendorTypes: 'lessons',
           website: 'https://oahusurfschool.com/',
           email: 'isaiah.moniz@gmail.com',
           phone: '808-259-1879',
@@ -150,7 +150,7 @@ const vendorLocations = {
         properties: {
           businessName: 'Koa Board Sports',
           description: 'KOA Board Sports gives you the best surf experience ever. Come to our store, choose the best surf board for you!',
-          vendorType: 'rentals',
+          vendorTypes: 'rentals',
           website: 'https://koaboardsports.com/',
           email: 'koaboardsports2420@hotmail.com',
           phone: '808-923-0189',
@@ -166,7 +166,7 @@ const vendorLocations = {
   
   export type VendorLocation = typeof vendorLocations.features[number];
   export type VendorProperties = VendorLocation['properties'];
-  export type VendorType = VendorProperties['vendorType'];
+  export type VendorTypes = VendorProperties['vendorTypes'];
   
   export default vendorLocations;
 
