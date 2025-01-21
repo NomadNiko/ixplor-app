@@ -38,7 +38,17 @@ export default function GoogleAuth() {
 
   return (
     <>
-      <GoogleLogin onSuccess={onSuccess} locale={language} />
+      <GoogleLogin
+        onError={() => {
+          console.log("Login Failed");
+        }}
+        theme="filled_blue"
+        width="400"
+        onSuccess={onSuccess} 
+        locale={language}
+        text="continue_with"
+        useOneTap
+      />
       <FullPageLoader isLoading={isLoading} />
     </>
   );

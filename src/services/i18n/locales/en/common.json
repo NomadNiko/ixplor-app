@@ -12,12 +12,12 @@
       "signIn": "Sign In",
       "signUp": "Sign Up",
       "profile": "Profile",
-      "users": "Users",
+      "users": "User Admin",
       "logout": "Logout",
-      "onboard": "Add Vendor",
+      "onboard": "Onboard",
       "addProduct": "Add Product",
       "approvals": "Approve",
-      "vendor-admin": "Vendors",
+      "vendor-admin": "Vendor Admin",
       "products": "Products",
       "cart": "Cart",
       "orders": "Orders",
@@ -153,7 +153,7 @@
 
   "auth": {
       "facebook": {
-          "action": "Login with Facebook"
+          "action": "Continue with Facebook"
       },
       "google": {
           "action": "Login with Google"
