@@ -151,19 +151,7 @@ function ResponsiveAppBar() {
                     </Typography>
                   </MenuItem>,
                 ]}
-              {!!user?.role &&
-                [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
-                  <MenuItem
-                    key="approvals"
-                    onClick={handleCloseNavMenu}
-                    component={Link}
-                    href="/approvals"
-                  >
-                    <Typography textAlign="center">
-                      {t("common:navigation.approvals")}
-                    </Typography>
-                  </MenuItem>,
-                ]}
+              
               {!!user?.role &&
                 [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
                   <MenuItem
@@ -187,6 +175,19 @@ function ResponsiveAppBar() {
                   >
                     <Typography textAlign="center">
                       {t("common:navigation.users")}
+                    </Typography>
+                  </MenuItem>,
+                ]}
+                {!!user?.role &&
+                [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
+                  <MenuItem
+                    key="approvals"
+                    onClick={handleCloseNavMenu}
+                    component={Link}
+                    href="/approvals"
+                  >
+                    <Typography textAlign="center">
+                      {t("common:navigation.approvals")}
                     </Typography>
                   </MenuItem>,
                 ]}
@@ -248,7 +249,7 @@ function ResponsiveAppBar() {
               {t("common:navigation.home")}
             </Button>
             {!!user?.role &&
-              [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
+              [RoleEnum.ADMIN, RoleEnum.USER, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
@@ -261,7 +262,7 @@ function ResponsiveAppBar() {
                 </>
               )}
             {!!user?.role &&
-              [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
+              [RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
@@ -274,7 +275,7 @@ function ResponsiveAppBar() {
                 </>
               )}
             {!!user?.role &&
-              [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
+              [RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
@@ -286,19 +287,7 @@ function ResponsiveAppBar() {
                   </Button>
                 </>
               )}
-            {!!user?.role &&
-              [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
-                <>
-                  <Button
-                    onClick={handleCloseNavMenu}
-                    sx={{ my: 2, color: "white", display: "block" }}
-                    component={Link}
-                    href="/approvals"
-                  >
-                    {t("common:navigation.approvals")}
-                  </Button>
-                </>
-              )}
+            
             {!!user?.role &&
               [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
                 <>
@@ -322,6 +311,19 @@ function ResponsiveAppBar() {
                     href="/admin-panel/users"
                   >
                     {t("common:navigation.users")}
+                  </Button>
+                </>
+              )}
+              {!!user?.role &&
+              [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
+                <>
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                    component={Link}
+                    href="/approvals"
+                  >
+                    {t("common:navigation.approvals")}
                   </Button>
                 </>
               )}
