@@ -135,7 +135,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           fontFamily:
             '"Orbitron Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
           logo: {
-            fontFamily: '"New Tegomin", serif',
+            fontFamily: '"Audiowide", serif',
           },
           h1: {
             fontSize: "2.5rem",

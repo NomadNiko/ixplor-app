@@ -43,7 +43,7 @@ export default function GoogleAuth() {
           console.log("Login Failed");
         }}
         theme="filled_blue"
-        width="400"
+        width="398"
         onSuccess={onSuccess} 
         locale={language}
         text="continue_with"
