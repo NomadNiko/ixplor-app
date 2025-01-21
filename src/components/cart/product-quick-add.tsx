@@ -16,7 +16,11 @@ import { ProductStatusEnum } from '@/app/[language]/types/product';
 import { ShoppingCart } from 'lucide-react';
 import HTTP_CODES_ENUM from '@/services/api/types/http-codes';
 
-export default function ProductQuickAdd() {
+interface ProductQuickAddProps {
+  onUpdate: () => void; // Add this prop to refresh cart
+}
+
+export default function ProductQuickAdd({ onUpdate }: ProductQuickAddProps) {
   const { t } = useTranslation('cart');
   const { enqueueSnackbar } = useSnackbar();
   const [products, setProducts] = useState<Product[]>([]);
@@ -55,6 +59,7 @@ export default function ProductQuickAdd() {
         quantity: 1,
       });
       enqueueSnackbar(t('success.addedToCart'), { variant: 'success' });
+      onUpdate(); // Call onUpdate after successful cart addition
     } catch (error) {
       console.error('Error adding to cart:', error);
       enqueueSnackbar(t('errors.failedToAddToCart'), { variant: 'error' });
@@ -62,6 +67,7 @@ export default function ProductQuickAdd() {
       setAddingToCart(null);
     }
   };
+
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" p={4}>

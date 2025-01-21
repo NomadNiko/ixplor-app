@@ -76,7 +76,7 @@ export default function CartPage() {
         {t("title")}
       </Typography>
 
-      <ProductQuickAdd />
+      <ProductQuickAdd onUpdate={loadCart} />
       
       <Grid container spacing={4}>
         <Grid item xs={12} md={8}>
