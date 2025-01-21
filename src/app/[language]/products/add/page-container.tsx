@@ -11,8 +11,17 @@ export default function ProductCreationPageContainer() {
   const { user, isLoaded } = useAuth();
   
   useEffect(() => {
-    if (isLoaded && (!user?.role || Number(user.role.id) !== RoleEnum.ADMIN)) {
-      router.replace('/');
+    if (isLoaded) {
+      if (!user) {
+        // Not logged in - redirect to login
+        router.replace('/login');
+      } else if (
+        Number(user.role?.id) !== RoleEnum.ADMIN && 
+        Number(user.role?.id) !== RoleEnum.VENDOR
+      ) {
+        // Logged in but not ADMIN or VENDOR - redirect to home
+        router.replace('/');
+      }
     }
   }, [user, isLoaded, router]);
 
@@ -20,7 +29,11 @@ export default function ProductCreationPageContainer() {
     return null;
   }
 
-  if (!user?.role || Number(user.role.id) !== RoleEnum.ADMIN) {
+  // Only show content if user is logged in and has appropriate role
+  if (!user || (
+    Number(user.role?.id) !== RoleEnum.ADMIN && 
+    Number(user.role?.id) !== RoleEnum.VENDOR
+  )) {
     return null;
   }
 

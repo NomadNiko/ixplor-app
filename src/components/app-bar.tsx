@@ -20,26 +20,26 @@ import Link from "@/components/link";
 import { RoleEnum } from "@/services/api/types/role";
 import Divider from "@mui/material/Divider";
 import { IS_SIGN_UP_ENABLED } from "@/services/auth/config";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
+import { ShoppingCart } from "lucide-react";
+import { useCartQuery } from "@/hooks/use-cart-query";
+import Badge from "@mui/material/Badge";
 
 // Define the props type for the LogoTypography component
-type LogoTypographyProps = TypographyProps<
-  'a',
-  { component: 'a' }
->;
+type LogoTypographyProps = TypographyProps<"a", { component: "a" }>;
 
 // Create the styled LogoTypography component
 const LogoTypography = styled(Typography)<LogoTypographyProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
-  display: 'none',
+  display: "none",
   fontWeight: 700,
-  fontFamily: 'Iceland, serif',
+  fontFamily: "Iceland, serif",
   fontSize: "1.5rem",
   //letterSpacing: '.3rem',
-  color: 'inherit',
-  textDecoration: 'none',
-  [theme.breakpoints.up('md')]: {
-    display: 'flex',
+  color: "inherit",
+  textDecoration: "none",
+  [theme.breakpoints.up("md")]: {
+    display: "flex",
   },
 }));
 
@@ -47,6 +47,7 @@ function ResponsiveAppBar() {
   const { t } = useTranslation("common");
   const { user, isLoaded } = useAuth();
   const { logOut } = useAuthActions();
+  const { data: cartData, isLoading: isCartLoading } = useCartQuery();
   const [anchorElementNav, setAnchorElementNav] = useState<null | HTMLElement>(
     null
   );
@@ -70,12 +71,7 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <LogoTypography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-          >
+          <LogoTypography variant="h6" noWrap component="a" href="/">
             {t("common:app-name")}
           </LogoTypography>
 
@@ -114,7 +110,9 @@ function ResponsiveAppBar() {
                 </Typography>
               </MenuItem>
               {!!user?.role &&
-                [RoleEnum.ADMIN, RoleEnum.USER, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
+                [RoleEnum.ADMIN, RoleEnum.USER, RoleEnum.VENDOR].includes(
+                  Number(user?.role?.id)
+                ) && [
                   <MenuItem
                     key="onboard"
                     onClick={handleCloseNavMenu}
@@ -127,7 +125,9 @@ function ResponsiveAppBar() {
                   </MenuItem>,
                 ]}
               {!!user?.role &&
-                [RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
+                [RoleEnum.ADMIN, RoleEnum.VENDOR].includes(
+                  Number(user?.role?.id)
+                ) && [
                   <MenuItem
                     key="addProduct"
                     onClick={handleCloseNavMenu}
@@ -140,7 +140,9 @@ function ResponsiveAppBar() {
                   </MenuItem>,
                 ]}
               {!!user?.role &&
-                [RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
+                [RoleEnum.ADMIN, RoleEnum.VENDOR].includes(
+                  Number(user?.role?.id)
+                ) && [
                   <MenuItem
                     key="products"
                     onClick={handleCloseNavMenu}
@@ -152,7 +154,7 @@ function ResponsiveAppBar() {
                     </Typography>
                   </MenuItem>,
                 ]}
-              
+
               {!!user?.role &&
                 [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
                   <MenuItem
@@ -179,7 +181,7 @@ function ResponsiveAppBar() {
                     </Typography>
                   </MenuItem>,
                 ]}
-                {!!user?.role &&
+              {!!user?.role &&
                 [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
                   <MenuItem
                     key="approvals"
@@ -231,7 +233,7 @@ function ResponsiveAppBar() {
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
               fontSize: "1.5rem",
-              fontFamily: 'Iceland, serif',
+              fontFamily: "Iceland, serif",
               fontWeight: 700,
               //letterSpacing: ".3rem",
               color: "inherit",
@@ -251,7 +253,9 @@ function ResponsiveAppBar() {
               {t("common:navigation.home")}
             </Button>
             {!!user?.role &&
-              [RoleEnum.ADMIN, RoleEnum.USER, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+              [RoleEnum.ADMIN, RoleEnum.USER, RoleEnum.VENDOR].includes(
+                Number(user?.role?.id)
+              ) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
@@ -264,7 +268,9 @@ function ResponsiveAppBar() {
                 </>
               )}
             {!!user?.role &&
-              [RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+              [RoleEnum.ADMIN, RoleEnum.VENDOR].includes(
+                Number(user?.role?.id)
+              ) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
@@ -277,7 +283,9 @@ function ResponsiveAppBar() {
                 </>
               )}
             {!!user?.role &&
-              [RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+              [RoleEnum.ADMIN, RoleEnum.VENDOR].includes(
+                Number(user?.role?.id)
+              ) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
@@ -289,7 +297,7 @@ function ResponsiveAppBar() {
                   </Button>
                 </>
               )}
-            
+
             {!!user?.role &&
               [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
                 <>
@@ -316,7 +324,7 @@ function ResponsiveAppBar() {
                   </Button>
                 </>
               )}
-              {!!user?.role &&
+            {!!user?.role &&
               [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
@@ -337,6 +345,35 @@ function ResponsiveAppBar() {
               mr: 1,
             }}
           ></Box>
+          {user && (
+            <Box sx={{ mr: 2 }}>
+              <Tooltip title={t("common:navigation.cart")}>
+                {isCartLoading ? (
+                  <CircularProgress size={40} color="inherit" />
+                ) : (
+                  <IconButton
+                    component={Link}
+                    href="/cart"
+                    sx={{ p: 0 }}
+                    data-testid="cart-button"
+                  >
+                    <Badge
+                      badgeContent={cartData?.items?.length || 0}
+                      color="primary"
+                      sx={{
+                        "& .MuiBadge-badge": {
+                          right: -3,
+                          top: 3,
+                        },
+                      }}
+                    >
+                      <ShoppingCart size={40} />
+                    </Badge>
+                  </IconButton>
+                )}
+              </Tooltip>
+            </Box>
+          )}
           {!isLoaded ? (
             <CircularProgress color="inherit" />
           ) : user ? (
