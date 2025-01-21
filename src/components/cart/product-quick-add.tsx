@@ -58,8 +58,8 @@ export default function ProductQuickAdd({ onUpdate }: ProductQuickAddProps) {
         productId: product._id,
         quantity: 1,
       });
+      onUpdate(); // This will now just refresh the cart data
       enqueueSnackbar(t('success.addedToCart'), { variant: 'success' });
-      onUpdate(); // Call onUpdate after successful cart addition
     } catch (error) {
       console.error('Error adding to cart:', error);
       enqueueSnackbar(t('errors.failedToAddToCart'), { variant: 'error' });
