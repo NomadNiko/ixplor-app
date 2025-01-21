@@ -90,27 +90,56 @@ export default function ApprovalsPage() {
       enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
       return;
     }
-
+  
     try {
-      const updateData = {
-        vendorStatus: action,
-        ...(action === VendorStatusEnum.ACTION_NEEDED ? { actionNeeded: notes } : {}),
-        ...(notes ? { adminNotes: notes } : {})
-      };
-
-      const response = await fetch(`${API_URL}/vendors/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${tokensInfo.token}`
-        },
-        body: JSON.stringify(updateData)
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update vendor');
+      if (action === VendorStatusEnum.APPROVED) {
+        // For approval, we need to get the vendor first to get the owner ID
+        const vendorResponse = await fetch(`${API_URL}/vendors/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${tokensInfo.token}`
+          }
+        });
+        
+        if (!vendorResponse.ok) {
+          throw new Error('Failed to fetch vendor details');
+        }
+        
+        const vendorData = await vendorResponse.json();
+        const ownerId = vendorData.data.ownerIds[0]; // Assuming we're approving for the first owner
+        
+        // Use the new approval endpoint
+        const response = await fetch(`${API_URL}/vendors/admin/approve/${id}/${ownerId}`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${tokensInfo.token}`
+          }
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to approve vendor');
+        }
+      } else {
+        // For other status updates, use the existing update endpoint
+        const updateData = {
+          vendorStatus: action,
+          ...(action === VendorStatusEnum.ACTION_NEEDED ? { actionNeeded: notes } : {}),
+          ...(notes ? { adminNotes: notes } : {})
+        };
+  
+        const response = await fetch(`${API_URL}/vendors/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${tokensInfo.token}`
+          },
+          body: JSON.stringify(updateData)
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to update vendor');
+        }
       }
-
+  
       enqueueSnackbar(t(`success.${action.toLowerCase()}`), { variant: 'success' });
       await loadData();
     } catch (error) {
