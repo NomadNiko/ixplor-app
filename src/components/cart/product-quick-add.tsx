@@ -8,7 +8,7 @@ import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useTranslation } from '@/services/i18n/client';
 import { useAddToCartService } from '@/services/api/services/cart';
-import { useGetAllProductsService } from '@/services/api/services/products';
+import { useGetProductsService } from '@/services/api/services/products';
 import { useEffect } from 'react';
 import { useSnackbar } from '@/hooks/use-snackbar';
 import { Product } from '@/app/[language]/types/product';
@@ -27,7 +27,7 @@ export default function ProductQuickAdd({ onUpdate }: ProductQuickAddProps) {
   const [loading, setLoading] = useState(true);
   const [addingToCart, setAddingToCart] = useState<string | null>(null);
 
-  const getAllProducts = useGetAllProductsService();
+  const getAllProducts = useGetProductsService();
   const addToCart = useAddToCartService();
 
   useEffect(() => {
