@@ -1,11 +1,19 @@
 export type CartItemType = {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    quantity: number;
-    image: string;
-    type: "tour" | "rental";
-    date?: string; // For tours
-    duration?: string; // For tours/rentals
-  };
+  productId: string;
+  productName: string;
+  productDescription?: string;
+  price: number;
+  quantity: number;
+  productImageURL?: string;
+  productType: "tours" | "lessons" | "rentals" | "tickets";
+  productDate?: string;
+  productStartTime?: string;
+};
+
+export interface CartResponse {
+  userId: string;
+  items: CartItemType[];
+  total: number;
+  createdAt: string;
+  updatedAt: string;
+}

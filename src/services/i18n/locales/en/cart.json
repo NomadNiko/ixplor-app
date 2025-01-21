@@ -1,4 +1,18 @@
 {
+
+    "emptyCart": "Your cart is empty",
+    "noAdditionalFees": "No additional fees or taxes will be added",
+    "time": "Time",
+    "quickAdd": {
+      "title": "Quick Add Products",
+      "addToCart": "Add to Cart",
+      "adding": "Adding..."
+    },
+    "success": {
+      "addedToCart": "Product added to cart",
+      "quantityUpdated": "Quantity updated",
+      "itemRemoved": "Item removed from cart"
+    },
   "title": "Shopping Cart",
   "orderSummary": "Order Summary",
   "subtotal": "Subtotal",
@@ -97,6 +111,9 @@
       "checkoutFailed": "Checkout failed",
       "paymentFailed": "Payment processing failed",
       "invalidQuantity": "Invalid quantity specified",
-      "insufficientStock": "Insufficient stock available"
+      "insufficientStock": "Insufficient stock available",
+      "loadCartFailed": "Failed to load cart",
+      "failedToLoadProducts": "Failed to load products",
+      "failedToAddToCart": "Failed to add item to cart"
   }
 }
