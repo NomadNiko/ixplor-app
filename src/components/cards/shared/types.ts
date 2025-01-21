@@ -17,6 +17,7 @@ export type FieldType =
   | 'vendor'
   | 'textarea'
   | 'select'
+  | 'vendorSelect'
   | 'date'
   | 'time'
   | 'image'

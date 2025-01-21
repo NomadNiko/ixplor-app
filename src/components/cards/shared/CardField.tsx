@@ -15,6 +15,7 @@ import DynamicRequirementsField from "./DynamicRequirementsField";
 import Grid from "@mui/material/Grid";
 import SearchAddVendor from "./SearchAddVendor";
 import { UrlField } from './UrlField';
+import { VendorSelect } from "./VendorSelect";
 
 
 export const CardField: React.FC<CardFieldProps> = ({
@@ -70,6 +71,15 @@ export const CardField: React.FC<CardFieldProps> = ({
     return <SearchAddVendor required={field.required} disabled={false} />;
   }
 
+  if (field.type === 'vendorSelect') {
+    return <VendorSelect
+      name={field.name}
+      label={t(field.label)}
+      required={field.required}
+      disabled={mode === 'edit' && field.prefilled}
+    />;
+  }
+  
 
   if (field.type === 'url') {
     return <UrlField field={field} mode={mode} />;
