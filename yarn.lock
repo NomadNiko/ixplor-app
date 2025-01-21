@@ -1360,6 +1360,16 @@
   resolved "https://registry.yarnpkg.com/@fontsource/audiowide/-/audiowide-5.1.1.tgz#7dd179d9d01768c6e05f94cdb6f51b8be4e4fc6c"
   integrity sha512-Jb2X0h1TQ+TIfjquviRMxVLMrilq4G8OaUdBNjURDospyrEa3kk5xOYNALAUzjnJHRPtTFHhzOmykV7xlGHEKA==
 
+"@fontsource/bahianita@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@fontsource/bahianita/-/bahianita-5.1.1.tgz#a929445a6d04e920d1c3f12cf8e3fe663e12fc8a"
+  integrity sha512-J4VE4eY5/tHTKjTB4inuR+fpZnfaaJxB9L34xJ6Xy1IAGyp/v0oS8EQNAEtXVp20z0wJUEbCMitnEre/rFiC9Q==
+
+"@fontsource/iceland@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@fontsource/iceland/-/iceland-5.1.1.tgz#ffa8b9261e53eb209288619ba2a06d390cd7d119"
+  integrity sha512-qVa3pY5MTNUrM/4Gnxvpkw92THDXOMld+ygc2y7k7dB3e6yxSEbvVK8cAVJuKN2UVOfnkbOLyX8xGbqLLknUZg==
+
 "@fontsource/new-tegomin@^5.1.1":
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/@fontsource/new-tegomin/-/new-tegomin-5.1.1.tgz#41ad7fc5aed320c4ad7f097760bc1fe0e46883b8"

@@ -21,6 +21,8 @@
     "@faker-js/faker": "^9.0.0",
     "@fontsource-variable/orbitron": "^5.1.1",
     "@fontsource/audiowide": "^5.1.1",
+    "@fontsource/bahianita": "^5.1.1",
+    "@fontsource/iceland": "^5.1.1",
     "@fontsource/new-tegomin": "^5.1.1",
     "@fontsource/roboto": "^5.0.8",
     "@hookform/resolvers": "^3.10.0",

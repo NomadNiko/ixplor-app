@@ -122,9 +122,9 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           },
           divider: "rgba(255, 255, 255, 0.12)",
           customGradients: {
-            primary: "linear-gradient(to right, #3B82F6, #8B5CF6)",
-            secondary: "linear-gradient(to right, #8B5CF6, #D946EF)",
-            background: "linear-gradient(to bottom, #0F172A, #1E293B)",
+            primary: "linear-gradient(to right, #1E40AF,rgb(71, 26, 145))",
+            secondary: "linear-gradient(to right,rgb(108, 73, 190),rgb(146, 48, 161))",
+            background: "linear-gradient(to bottom,rgb(28, 38, 63),rgb(21, 29, 43))",
             buttonMain: "linear-gradient(to right, #1E40AF,rgb(71, 26, 145))", // Dark blue to dark purple
             buttonSecondary: "linear-gradient(to right, #059669, #065F46)", // Green to dark green
             buttonWarning:
@@ -135,7 +135,7 @@ function ThemeProvider(props: PropsWithChildren<{}>) {
           fontFamily:
             '"Orbitron Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
           logo: {
-            fontFamily: '"Audiowide", serif',
+            fontFamily: '"Iceland", serif',
           },
           h1: {
             fontSize: "2.5rem",
