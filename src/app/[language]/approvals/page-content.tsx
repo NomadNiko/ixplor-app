@@ -93,21 +93,14 @@ export default function ApprovalsPage() {
   
     try {
       if (action === VendorStatusEnum.APPROVED) {
-        // For approval, we need to get the vendor first to get the owner ID
-        const vendorResponse = await fetch(`${API_URL}/vendors/${id}`, {
-          headers: {
-            'Authorization': `Bearer ${tokensInfo.token}`
-          }
-        });
-        
-        if (!vendorResponse.ok) {
-          throw new Error('Failed to fetch vendor details');
+        // Since the vendor data is already in our state, we can use it directly
+        const vendor = vendors.find(v => v._id === id);
+        if (!vendor || !vendor.ownerIds || vendor.ownerIds.length === 0) {
+          throw new Error('Vendor or owner information not found');
         }
+  
+        const ownerId = vendor.ownerIds[0]; // Assuming we're approving for the first owner
         
-        const vendorData = await vendorResponse.json();
-        const ownerId = vendorData.data.ownerIds[0]; // Assuming we're approving for the first owner
-        
-        // Use the new approval endpoint
         const response = await fetch(`${API_URL}/vendors/admin/approve/${id}/${ownerId}`, {
           method: 'POST',
           headers: {
