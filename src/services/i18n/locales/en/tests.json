@@ -63,5 +63,9 @@
   "requirements": "Requirements",
   "waiver": "Waiver",
   "clear": "Try Again?",
-  "startTypingAddress": "Start typing..."
+  "startTypingAddress": "Start typing...",
+  "uploading": "Uploading...",
+  "selectImage": "Select Image",
+  "dragAndDropImage": "Or drag and drop an image here",
+  "dropImageHere": "Drop the image here ...",
 }
