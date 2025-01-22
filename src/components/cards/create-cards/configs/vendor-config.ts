@@ -73,11 +73,7 @@ export const vendorConfig: CardConfig = {
           name: "website",
           label: "website",
           type: "url",
-          gridWidth: 12,
-          validation: {
-            pattern: "^(?:https?:\\/\\/)?(?:www\\.)?[\\w-]+(?:\\.[\\w-]+)*\\.[a-zA-Z]{2,4}(?:\\/[\\w-\\.~:/?#\\[\\]@!\\$&'\\(\\)\\*\\+,;=]*)?$",
-            message: "Invalid URL"
-          }
+          gridWidth: 12
         },
         {
           name: "break",

@@ -79,10 +79,6 @@ export const productConfig: CardConfig = {
           label: "imageUrl",
           type: "fileUpload",
           fullWidth: true,
-          validation: {
-            pattern: "^https?:\\/\\/.*\\.(png|jpg|jpeg|gif|svg)$",
-            message: "Invalid image URL",
-          },
           gridWidth: 12,
         },
         {

@@ -89,11 +89,7 @@ export const vendorConfig: CardConfig = {
             name: 'logoUrl',
             label: 'logoUrl',
             type: 'fileUpload',
-            gridWidth: 12,
-            validation: {
-              pattern: '^https?:\\/\\/.*\\.(png|jpg|jpeg|gif|svg)$',
-              message: 'Invalid image URL'
-            }
+            gridWidth: 12
           }
         ]
       },
