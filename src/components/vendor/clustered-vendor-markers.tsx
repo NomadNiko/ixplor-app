@@ -14,27 +14,24 @@ interface ClusteredVendorMarkersProps {
   zoom: number;
 }
 
-// Define base properties that both cluster and point features will have
 interface BaseProperties {
+  cluster?: boolean;
   vendors: Vendor[];
 }
 
-// Specific properties for cluster points
 interface ClusterProperties extends BaseProperties {
   cluster: true;
   cluster_id: number;
   point_count: number;
 }
 
-// Specific properties for single points
 interface PointProperties extends BaseProperties {
   cluster: false;
 }
 
 type FeatureProperties = ClusterProperties | PointProperties;
 
-const getVendorIcon = (types: VendorTypes[] | undefined) => {
-  if (!types || !Array.isArray(types)) return <Users size={14} />;
+const getVendorIcon = (types: VendorTypes[]) => {
   if (types.includes('tours')) return <Binoculars size={14} />;
   if (types.includes('lessons')) return <GraduationCap size={14} />;
   if (types.includes('rentals')) return <Timer size={14} />;
@@ -48,14 +45,21 @@ const SingleVendorChip: React.FC<{
 }> = ({ vendor, onClick }) => {
   if (!vendor?._id || !vendor?.businessName) return null;
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClick(vendor);
+  };
+  
   return (
-    <Chip
-      icon={getVendorIcon(vendor.vendorTypes)}
-      label={vendor.businessName}
-      onClick={() => onClick(vendor)}
-      className="bg-background-glass backdrop-blur-md hover:bg-background-glassHover cursor-pointer"
-      size="small"
-    />
+    <div onClick={handleClick} role="button" style={{ cursor: 'pointer' }}>
+      <Chip
+        icon={getVendorIcon(vendor.vendorTypes)}
+        label={vendor.businessName}
+        className="bg-background-glass backdrop-blur-md hover:bg-background-glassHover"
+        size="small"
+      />
+    </div>
   );
 };
 
@@ -81,10 +85,7 @@ export const ClusteredVendorMarkers: React.FC<ClusteredVendorMarkersProps> = ({
         },
         geometry: {
           type: 'Point',
-          coordinates: [
-            vendor.location.coordinates[0],
-            vendor.location.coordinates[1]
-          ]
+          coordinates: vendor.location.coordinates
         }
       }));
   }, [vendors]);
@@ -114,11 +115,9 @@ export const ClusteredVendorMarkers: React.FC<ClusteredVendorMarkersProps> = ({
         const [longitude, latitude] = cluster.geometry.coordinates;
         const properties = cluster.properties as FeatureProperties;
         
-        // Handle clustered points
         if (properties.cluster) {
           const clusterVendors = properties.vendors;
           
-          // Small clusters (≤ 3)
           if (clusterVendors.length <= 3) {
             return (
               <Marker
@@ -127,14 +126,18 @@ export const ClusteredVendorMarkers: React.FC<ClusteredVendorMarkersProps> = ({
                 latitude={latitude}
                 anchor="bottom"
               >
-                <Box sx={{
-                  position: 'absolute',
-                  transform: 'translate(-50%, -100%)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 0.5,
-                  alignItems: 'center'
-                }}>
+                <Box 
+                  sx={{
+                    position: 'absolute',
+                    transform: 'translate(-50%, -100%)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 0.5,
+                    alignItems: 'center',
+                    zIndex: 1
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
                   {clusterVendors.map((vendor) => (
                     <SingleVendorChip
                       key={vendor._id}
@@ -147,7 +150,12 @@ export const ClusteredVendorMarkers: React.FC<ClusteredVendorMarkersProps> = ({
             );
           }
 
-          // Large clusters
+          const handleClusterClick = (e: React.MouseEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // Handle cluster click if needed
+          };
+
           return (
             <Marker
               key={`cluster-${properties.cluster_id}`}
@@ -155,19 +163,21 @@ export const ClusteredVendorMarkers: React.FC<ClusteredVendorMarkersProps> = ({
               latitude={latitude}
               anchor="bottom"
             >
-              <Chip
-                icon={<Users size={14} />}
-                label={`${properties.point_count} Vendors`}
-                sx={{
-                  backgroundColor: 'primary.main',
-                  color: 'primary.contrastText'
-                }}
-              />
+              <div onClick={handleClusterClick}>
+                <Chip
+                  icon={<Users size={14} />}
+                  label={`${properties.point_count} Vendors`}
+                  sx={{
+                    backgroundColor: 'primary.main',
+                    color: 'primary.contrastText',
+                    zIndex: 1
+                  }}
+                />
+              </div>
             </Marker>
           );
         }
 
-        // Single vendor point
         const vendor = properties.vendors[0];
         if (!vendor?._id) return null;
 
@@ -188,5 +198,3 @@ export const ClusteredVendorMarkers: React.FC<ClusteredVendorMarkersProps> = ({
     </>
   );
 };
-
-export default ClusteredVendorMarkers;

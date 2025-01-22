@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect } from "react";
 import { ViewState } from "react-map-gl";
 import { Search, Store, MapPin } from "lucide-react";
@@ -13,9 +12,14 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Paper from "@mui/material/Paper";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Product, ProductStatusEnum } from "@/app/[language]/types/product";
 import { useTranslation } from "@/services/i18n/client";
 import { useGooglePlaces } from "@/hooks/use-google-places";
-import { Vendor } from "@/app/[language]/types/vendor";
+import { Vendor, VendorStatusEnum } from "@/app/[language]/types/vendor";
+import { useGetProductsService } from "@/services/api/services/products";
+import HTTP_CODES_ENUM from "@/services/api/types/http-codes";
+
+type SearchMode = "vendor" | "map";
 
 interface SearchControlsProps {
   vendors: Vendor[];
@@ -23,25 +27,57 @@ interface SearchControlsProps {
   setViewState: (viewState: ViewState) => void;
 }
 
+interface SearchResult {
+  type: 'vendor' | 'product';
+  id: string;
+  name: string;
+  description?: string;
+  location: {
+    coordinates: [number, number];
+  };
+}
+
 export const SearchControls = ({ vendors, viewState, setViewState }: SearchControlsProps) => {
   const { t } = useTranslation("home");
   const { getPlacePredictions, getPlaceDetails } = useGooglePlaces();
-
-  const [searchMode, setSearchMode] = useState<"vendor" | "map">("vendor");
+  const getProducts = useGetProductsService();
+  
+  const [searchMode, setSearchMode] = useState<SearchMode>("vendor");
   const [searchQuery, setSearchQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
-  const [searchResults, setSearchResults] = useState<Vendor[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [locationResults, setLocationResults] = useState<google.maps.places.AutocompletePrediction[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  // Fetch products on component mount
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await getProducts();
+        if (response.status === HTTP_CODES_ENUM.OK && response.data) {
+          const publishedProducts = response.data.data.filter(
+            product => product.productStatus === ProductStatusEnum.PUBLISHED
+          );
+          setProducts(publishedProducts);
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+    fetchProducts();
+  }, [getProducts]);
 
   const handleSearchModeChange = (
     event: React.MouseEvent<HTMLElement>,
-    newMode: "vendor" | "map" | null
+    newMode: SearchMode | null
   ) => {
     if (newMode) {
       setSearchMode(newMode);
       setSearchQuery("");
       setShowResults(false);
+      setSearchResults([]);
+      setLocationResults([]);
     }
   };
 
@@ -49,18 +85,46 @@ export const SearchControls = ({ vendors, viewState, setViewState }: SearchContr
     if (searchMode === "vendor" && searchQuery) {
       setIsSearching(true);
       const lowercaseQuery = searchQuery.toLowerCase();
-      const filtered = vendors.filter(
-        (vendor) =>
-          vendor.businessName.toLowerCase().includes(lowercaseQuery) ||
-          vendor.description.toLowerCase().includes(lowercaseQuery)
-      );
-      setSearchResults(filtered);
+      
+      // Search in vendors
+      const vendorResults: SearchResult[] = vendors
+        .filter(vendor => 
+          vendor.vendorStatus === VendorStatusEnum.APPROVED &&
+          (vendor.businessName.toLowerCase().includes(lowercaseQuery) ||
+          vendor.description.toLowerCase().includes(lowercaseQuery))
+        )
+        .map(vendor => ({
+          type: 'vendor',
+          id: vendor._id,
+          name: vendor.businessName,
+          description: vendor.description,
+          location: vendor.location
+        }));
+
+      // Search in products
+      const productResults: SearchResult[] = products
+        .filter(product =>
+          product.productName.toLowerCase().includes(lowercaseQuery) ||
+          (product.productDescription && 
+           product.productDescription.toLowerCase().includes(lowercaseQuery))
+        )
+        .map(product => ({
+          type: 'product',
+          id: product._id,
+          name: product.productName,
+          description: product.productDescription,
+          location: product.location
+        }));
+
+      // Combine and sort results
+      const combinedResults = [...vendorResults, ...productResults];
+      setSearchResults(combinedResults);
       setShowResults(true);
       setIsSearching(false);
     } else {
       setSearchResults([]);
     }
-  }, [searchQuery, searchMode, vendors]);
+  }, [searchQuery, searchMode, vendors, products]);
 
   const handleLocationSearch = async (query: string) => {
     if (!query || searchMode !== "map") return;
@@ -82,15 +146,14 @@ export const SearchControls = ({ vendors, viewState, setViewState }: SearchContr
         handleLocationSearch(searchQuery);
       }
     }, 300);
-
     return () => clearTimeout(timer);
   }, [searchQuery, searchMode]);
 
-  const handleVendorSelect = (vendor: Vendor) => {
+  const handleResultSelect = (result: SearchResult) => {
     setViewState({
       ...viewState,
-      longitude: vendor.location.coordinates[0],
-      latitude: vendor.location.coordinates[1],
+      longitude: result.location.coordinates[0],
+      latitude: result.location.coordinates[1],
       zoom: 18,
     });
     setShowResults(false);
@@ -165,7 +228,6 @@ export const SearchControls = ({ vendors, viewState, setViewState }: SearchContr
           }}
         />
       </Box>
-
       {showResults && searchQuery && (
         <Paper
           sx={{
@@ -176,7 +238,7 @@ export const SearchControls = ({ vendors, viewState, setViewState }: SearchContr
             mt: 1,
             maxHeight: "400px",
             overflow: "auto",
-            zIndex: 1000,
+            zIndex: 2,
             backgroundColor: "background.glass",
             backdropFilter: "blur(10px)",
           }}
@@ -184,24 +246,24 @@ export const SearchControls = ({ vendors, viewState, setViewState }: SearchContr
           <List>
             {searchMode === "vendor" ? (
               searchResults.length > 0 ? (
-                searchResults.map((vendor) => (
-                  <ListItem key={vendor._id} disablePadding>
+                searchResults.map((result) => (
+                  <ListItem key={result.id} disablePadding>
                     <ListItemButton
-                      onClick={() => handleVendorSelect(vendor)}
+                      onClick={() => handleResultSelect(result)}
                     >
                       <ListItemIcon>
                         <Store size={20} />
                       </ListItemIcon>
                       <ListItemText
-                        primary={vendor.businessName}
-                        secondary={vendor.description}
+                        primary={`${result.name} (${result.type})`}
+                        secondary={result.description}
                       />
                     </ListItemButton>
                   </ListItem>
                 ))
               ) : (
                 <ListItem>
-                  <ListItemText primary={t("noVendorsFound")} />
+                  <ListItemText primary={t("noResults")} />
                 </ListItem>
               )
             ) : (
