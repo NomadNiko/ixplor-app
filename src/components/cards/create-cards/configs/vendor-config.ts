@@ -88,7 +88,7 @@ export const vendorConfig: CardConfig = {
         {
           name: "logoUrl",
           label: "logoUrl",
-          type: "image",
+          type: "fileUpload",
           gridWidth: 12,
           validation: {
             pattern: "^(?:https?:\\/\\/)?(?:www\\.)?[\\w-]+(?:\\.[\\w-]+)*\\.[a-zA-Z]{2,4}(?:\\/[\\w-\\.~:/?#\\[\\]@!\\$&'\\(\\)\\*\\+,;=]*)?$",

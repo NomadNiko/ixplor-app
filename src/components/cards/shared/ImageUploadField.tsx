@@ -1,75 +1,187 @@
-// ImageUploadField.tsx
-import React from "react";
-import TextField from "@mui/material/TextField";
-import { useFormContext, useFormState, useWatch } from "react-hook-form";
-import { useTranslation } from "@/services/i18n/client";
-import { ImageUploadFieldProps } from './types';
+import React, { useState, useCallback } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { useFileUploadService } from "@/services/api/services/files";
+import { FileEntity } from "@/services/api/types/file-entity";
+import HTTP_CODES_ENUM from "@/services/api/types/http-codes";
 import Box from "@mui/material/Box";
-import { Image } from "@nextui-org/react";
-import InputAdornment from "@mui/material/InputAdornment";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import CircularProgress from "@mui/material/CircularProgress";
+import { X, Upload } from 'lucide-react';
+import { useDropzone } from "react-dropzone";
+import { useSnackbar } from "@/hooks/use-snackbar";
+import { useTranslation } from "@/services/i18n/client";
+import { FormData, ImageUploadFieldProps } from './types';
 
 export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
   field,
   mode = 'edit'
 }) => {
-  const { register, setValue } = useFormContext();
-  const { errors } = useFormState();
   const { t } = useTranslation("tests");
-  
-  const imageUrl = useWatch({
+  const { enqueueSnackbar } = useSnackbar();
+  const [isLoading, setIsLoading] = useState(false);
+  const { setValue, control } = useFormContext<FormData>();
+  const fetchFileUpload = useFileUploadService();
+
+  const imageFile = useWatch({
+    control,
     name: field.name,
+  }) as FileEntity | undefined;
+
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    if (isLoading) return;
+    
+    setIsLoading(true);
+    try {
+      const file = acceptedFiles[0];
+      const { status, data } = await fetchFileUpload(file);
+      
+      if (status === HTTP_CODES_ENUM.CREATED) {
+        setValue(field.name, data.file);
+        enqueueSnackbar(t('success.imageUploaded'), { variant: 'success' });
+      } else {
+        throw new Error('Upload failed');
+      }
+    } catch (error) {
+      console.error('File upload failed:', error);
+      enqueueSnackbar(t('errors.uploadFailed'), { variant: 'error' });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [fetchFileUpload, setValue, field.name, isLoading, enqueueSnackbar, t]);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'image/*': [],
+    },
+    maxFiles: 1,
+    maxSize: 1024 * 1024 * 5, // 5MB
+    disabled: isLoading || (mode === 'edit' && field.prefilled)
   });
 
-  const formatUrl = (value: string) => {
-    if (!value) return value;
-    const cleanUrl = value.trim().replace(/^(https?:\/\/)?/, '');
-    return cleanUrl ? `https://${cleanUrl}` : cleanUrl;
-  };
-
-
-  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formattedValue = formatUrl(e.target.value);
-    setValue(field.name, formattedValue);
+  const handleRemove = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.stopPropagation();
+    setValue(field.name, undefined);
   };
 
   return (
-    <div>
-      <TextField
-        {...register(field.name, { 
-          required: field.required,
-          disabled: mode === 'edit' && field.prefilled 
-        })}
-        label={t(field.label)}
-        fullWidth
-        error={!!errors[field.name]}
-        helperText={errors[field.name]?.message as string}
-        InputLabelProps={{ shrink: true }}
-        onChange={handleUrlChange}
-        placeholder=""
-        InputProps={{
-          startAdornment: imageUrl ? null : (
-            <InputAdornment position="start">
-              <Typography color="text.secondary">https://</Typography>
-            </InputAdornment>
-          ),
-        }}
-      />
-      {imageUrl && (
-        <Box sx={{ mt: 2, maxWidth: '100%', overflow: 'hidden' }}>
-          <Image
-            src={imageUrl}
-            alt={t("preview")}
-            style={{
-              maxWidth: '400px',
-              height: 'auto',
-              objectFit: 'contain',
-              borderRadius: '4px'
-            }}
-          />
+    <Box 
+      sx={{
+        width: '100%',
+        border: '1px dashed',
+        borderColor: 'divider',
+        borderRadius: 1,
+        p: 3,
+        position: 'relative',
+        '&:hover': {
+          borderColor: 'primary.main',
+        }
+      }}
+      {...getRootProps()}
+    >
+      <input {...getInputProps()} />
+      
+      {isDragActive && (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            bgcolor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1,
+            borderRadius: 1,
+          }}
+        >
+          <Typography variant="h6" color="white">
+            {t('dropImageHere')}
+          </Typography>
         </Box>
       )}
-    </div>
+
+      {isLoading && (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            bgcolor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1,
+            borderRadius: 1,
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
+
+      {imageFile ? (
+        <Box sx={{ position: 'relative' }}>
+          <Box
+            component="img"
+            src={imageFile.path}
+            alt="Uploaded image"
+            sx={{
+              width: '100%',
+              height: 'auto',
+              maxHeight: 300,
+              objectFit: 'contain',
+              borderRadius: 1,
+            }}
+          />
+          <IconButton
+            onClick={handleRemove}
+            sx={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              bgcolor: 'background.paper',
+              '&:hover': {
+                bgcolor: 'background.paper',
+              }
+            }}
+          >
+            <X size={20} />
+          </IconButton>
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 2,
+          }}
+        >
+          <Upload size={48} opacity={0.5} />
+          <Button 
+            variant="contained" 
+            component="span"
+            disabled={isLoading}
+          >
+            {isLoading ? t('uploading') : t('selectImage')}
+          </Button>
+          <Typography variant="body2" color="text.secondary" align="center">
+            {t('dragAndDropImage')}
+          </Typography>
+          {field.required && (
+            <Typography variant="caption" color="error">
+              {t('fieldRequired')}
+            </Typography>
+          )}
+        </Box>
+      )}
+    </Box>
   );
 };
 

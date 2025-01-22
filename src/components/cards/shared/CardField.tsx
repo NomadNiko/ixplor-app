@@ -132,6 +132,10 @@ export const CardField: React.FC<CardFieldProps> = ({
     return <FormDatePickerInput name={field.name} label={t(field.label)} />;
   }
 
+  if (field.type === "fileUpload") {
+    return <ImageUploadField field={field} mode={mode} />;
+  }
+
   if (field.type === "time") {
     return (
       <FormTimePickerInput

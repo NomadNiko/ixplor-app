@@ -4,6 +4,7 @@ import { ProductStatusEnum } from '@/app/[language]/types/product';
 import { VendorStatusEnum } from '@/app/[language]/types/vendor';
 import { Vendor } from '@/app/[language]/types/vendor';
 import { PlaceResult } from '@/hooks/use-google-places';
+import { FileEntity } from '@/services/api/types/file-entity';
 
 
 export type FieldType = 
@@ -24,10 +25,18 @@ export type FieldType =
   | 'address'
   | 'duration'
   | 'break'
+  | 'fileUpload'
   | 'requirements';
 
 
-  export type BaseFieldValue = string | number | boolean | Date | string[] | null;
+  export type BaseFieldValue =   | string 
+  | number 
+  | boolean 
+  | Date 
+  | string[] 
+  | FileEntity 
+  | null 
+  | undefined;
 
 export interface FieldConfig {
   name: string;

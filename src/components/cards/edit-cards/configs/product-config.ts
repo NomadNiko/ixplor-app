@@ -77,7 +77,7 @@ export const productConfig: CardConfig = {
         {
           name: "productImageURL",
           label: "imageUrl",
-          type: "image",
+          type: "fileUpload",
           fullWidth: true,
           validation: {
             pattern: "^https?:\\/\\/.*\\.(png|jpg|jpeg|gif|svg)$",
