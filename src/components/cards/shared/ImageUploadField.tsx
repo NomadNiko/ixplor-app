@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useFileUploadService } from "@/services/api/services/files";
-import { FileEntity } from "@/services/api/types/file-entity";
 import HTTP_CODES_ENUM from "@/services/api/types/http-codes";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -24,10 +23,10 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
   const { setValue, control } = useFormContext<FormData>();
   const fetchFileUpload = useFileUploadService();
 
-  const imageFile = useWatch({
+  const imageUrl = useWatch({
     control,
     name: field.name,
-  }) as FileEntity | undefined;
+  }) as string | undefined;
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (isLoading) return;
@@ -38,7 +37,8 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
       const { status, data } = await fetchFileUpload(file);
       
       if (status === HTTP_CODES_ENUM.CREATED) {
-        setValue(field.name, data.file);
+        // Only set the path/URL instead of the full FileEntity
+        setValue(field.name, data.file.path);
         enqueueSnackbar(t('success.imageUploaded'), { variant: 'success' });
       } else {
         throw new Error('Upload failed');
@@ -125,11 +125,11 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
         </Box>
       )}
 
-      {imageFile ? (
+      {imageUrl ? (
         <Box sx={{ position: 'relative' }}>
           <Box
             component="img"
-            src={imageFile.path}
+            src={imageUrl}
             alt="Uploaded image"
             sx={{
               width: '100%',
