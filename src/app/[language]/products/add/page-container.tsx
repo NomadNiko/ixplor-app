@@ -14,7 +14,7 @@ export default function ProductCreationPageContainer() {
     if (isLoaded) {
       if (!user) {
         // Not logged in - redirect to login
-        router.replace('/login');
+        router.replace('/sign-in');
       } else if (
         Number(user.role?.id) !== RoleEnum.ADMIN && 
         Number(user.role?.id) !== RoleEnum.VENDOR
