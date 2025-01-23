@@ -4,6 +4,8 @@
     "location": "Location", 
     "contact": "Contact",
     "visitWebsite": "Visit Website",
+    "availableProducts": "Available Products",
+    "addToCart": "Add to Cart",
     "vendorTypes": {
       "tours": "Tours",
       "lessons": "Lessons",
