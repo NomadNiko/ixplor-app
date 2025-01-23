@@ -4,12 +4,11 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
-import { Phone, X } from "lucide-react";
+import { Phone, X, Mail } from "lucide-react";
 import { Image } from "@nextui-org/react";
 import { useTranslation } from "@/services/i18n/client";
-//import { useTheme } from "@mui/material/styles";
-//import useMediaQuery from "@mui/material/useMediaQuery";
 import { Vendor } from "@/app/[language]/types/vendor";
+import Chip from "@mui/material/Chip";
 
 interface VendorShortViewProps {
   vendor: Vendor;
@@ -19,101 +18,135 @@ interface VendorShortViewProps {
 
 export const VendorShortView = ({ vendor, onViewMore, onClose }: VendorShortViewProps) => {
   const { t } = useTranslation("vendor");
-  //const theme = useTheme();
-  //const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   
   return (
-    <Box sx={{
-      width: "100%",
-      position: "fixed",
-      bottom: { xs: 0, md: 10 },
-      left: 0,
-      right: 0,
-      padding: theme => theme.spacing(2),
-      backgroundColor: theme => theme.palette.background.glass,
-      backdropFilter: "blur(10px)",
-      borderRadius: { xs: 0, md: 2 },
-      zIndex: 1000,
-    }}>
-      <Card sx={{ position: 'relative' }}>
-        <IconButton 
-          onClick={onClose}
-          sx={{ 
-            position: 'absolute',
-            top: 8,
-            left: 8,
-            color: 'text.secondary',
-            '&:hover': {
-              color: 'text.primary'
-            }
-          }}
-        >
-          <X size={20} />
-        </IconButton>
-        
-        <CardContent sx={{ pt: 6 }}>
+    <Box
+      sx={{
+        position: 'fixed',
+        bottom: { xs: 0, md: 4 },
+        left: { xs: 0, md: '50%' },
+        right: { xs: 0, md: 'auto' },
+        transform: { xs: 'none', md: 'translateX(-50%)' },
+        width: { xs: '100%', md: '600px' },
+        padding: theme => ({ 
+          xs: 0, 
+          md: theme.spacing(0, 2)
+        }),
+        zIndex: 1000
+      }}
+    >
+      <Card sx={{
+        background: 'rgba(17, 25, 40, 0.75)',
+        backdropFilter: 'blur(16px)',
+        border: '1px solid rgba(255, 255, 255, 0.125)',
+        borderRadius: { xs: '12px 12px 0 0', md: 2 },
+        overflow: 'visible',
+      }}>
+        <CardContent>
           <Box sx={{ 
-            display: 'flex',
-            flexDirection: { xs: 'column', sm: 'column' },
-            alignItems: { xs: 'center', sm: 'center' },
-            gap: 2
+            display: 'flex', 
+            alignItems: 'flex-start',
+            gap: 2,
+            position: 'relative',
+            pt: 1
           }}>
+            {/* Logo Section */}
             <Box sx={{ 
-              width: 64, 
-              height: 64, 
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              width: 80,
+              height: 80,
+              position: 'relative',
               flexShrink: 0
             }}>
               <Image 
                 src={vendor.logoUrl} 
                 alt={vendor.businessName}
                 style={{ 
-                  maxWidth: '100px',
-                  maxHeight: '100px',
+                  width: '100%',
+                  height: '100%',
                   objectFit: 'contain'
                 }}
               />
             </Box>
-            
-            <Box sx={{ 
-              flex: 1,
-              width: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 1
-            }}>
-              <Typography variant="h6">
-                {vendor.businessName}
-              </Typography>
-              <Typography 
-                variant="body2" 
-                color="text.secondary" 
-                sx={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: 1 
-                }}
-              >
-                <Phone size={14} /> 
-                {vendor.phone}
-              </Typography>
+
+            {/* Content Section */}
+            <Box sx={{ flex: 1 }}>
+              <Box sx={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'flex-start'
+              }}>
+                <Box>
+                  <Typography variant="h6" gutterBottom>
+                    {vendor.businessName}
+                  </Typography>
+                  <Chip
+                    label={t(`vendorTypes.${vendor.vendorTypes?.[0] || 'tours'}`)}
+                    size="small"
+                    color="primary"
+                    sx={{ mb: 1 }}
+                  />
+                </Box>
+                <IconButton 
+                  onClick={onClose}
+                  sx={{ 
+                    color: 'text.secondary',
+                    '&:hover': {
+                      color: 'text.primary'
+                    }
+                  }}
+                >
+                  <X size={20} />
+                </IconButton>
+              </Box>
+
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                <Typography 
+                  variant="body2" 
+                  color="text.secondary" 
+                  sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: 1 
+                  }}
+                >
+                  <Phone size={14} />
+                  {vendor.phone}
+                </Typography>
+                <Typography 
+                  variant="body2" 
+                  color="text.secondary" 
+                  sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: 1 
+                  }}
+                >
+                  <Mail size={14} />
+                  {vendor.email}
+                </Typography>
+              </Box>
+
+              <Box sx={{ 
+                display: 'flex',
+                justifyContent: 'flex-end',
+                mt: 2
+              }}>
+                <Button 
+                  variant="contained"
+                  onClick={onViewMore}
+                  size="small"
+                  sx={{
+                    background: theme => theme.palette.customGradients.buttonMain,
+                    '&:hover': {
+                      background: theme => theme.palette.customGradients.buttonMain,
+                      filter: 'brightness(0.9)',
+                    }
+                  }}
+                >
+                  {t("learnMore")}
+                </Button>
+              </Box>
             </Box>
-          </Box>
-          
-          <Box sx={{ 
-            display: 'flex',
-            justifyContent: 'flex-end',
-            mt: 2 
-          }}>
-            <Button 
-              variant="contained"
-              onClick={onViewMore}
-              size="small"
-            >
-              {t("learnMore")}
-            </Button>
           </Box>
         </CardContent>
       </Card>

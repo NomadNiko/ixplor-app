@@ -12,9 +12,9 @@ import { Phone, Mail, X, Globe, MapPin } from "lucide-react";
 import { Image } from "@nextui-org/react";
 import { useTranslation } from "@/services/i18n/client";
 import { Vendor } from "@/app/[language]/types/vendor";
+import { Product, ProductStatusEnum } from "@/app/[language]/types/product";
 import Map, { Marker } from 'react-map-gl';
 import { useGetProductsService } from "@/services/api/services/products";
-import { Product, ProductStatusEnum } from "@/app/[language]/types/product";
 import { useAddToCartService } from "@/services/api/services/cart";
 import { useSnackbar } from "@/hooks/use-snackbar";
 import Button from "@mui/material/Button";
@@ -77,11 +77,25 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
   };
 
   return (
-    <Card sx={{ 
-      width: "100%",
-      mt: 2,
-      mb: 2
-    }}>
+    <Box
+      sx={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        backdropFilter: 'blur(8px)',
+        zIndex: 9999,
+        padding: { xs: 0, sm: 4 },
+        overflow: 'auto'
+      }}
+    >
+      <Card sx={{
+        maxWidth: 1200,
+        margin: '0 auto',
+        minHeight: '100%'
+      }}>
         <CardContent>
           {/* Header Section */}
           <Box sx={{ 
@@ -91,15 +105,17 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
             mb: 3 
           }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Image 
-                src={vendor.logoUrl} 
-                alt={vendor.businessName}
-                style={{ 
-                  maxWidth: '80px',
-                  maxHeight: '80px',
-                  objectFit: 'contain'
-                }}
-              />
+              <Box sx={{ width: 80, height: 80, position: 'relative' }}>
+                <Image 
+                  src={vendor.logoUrl} 
+                  alt={vendor.businessName}
+                  style={{ 
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    objectFit: 'contain'
+                  }}
+                />
+              </Box>
               <Box>
                 <Typography variant="h4" gutterBottom>
                   {vendor.businessName}
@@ -219,16 +235,18 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
                       <CardContent>
                         <Box sx={{ display: 'flex', gap: 2 }}>
                           {product.productImageURL && (
-                            <Image
-                              src={product.productImageURL}
-                              alt={product.productName}
-                              style={{
-                                width: '80px',
-                                height: '80px',
-                                objectFit: 'cover',
-                                borderRadius: '4px'
-                              }}
-                            />
+                            <Box sx={{ width: 80, height: 80, position: 'relative' }}>
+                              <Image
+                                src={product.productImageURL}
+                                alt={product.productName}
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  objectFit: 'cover',
+                                  borderRadius: '4px'
+                                }}
+                              />
+                            </Box>
                           )}
                           <Box sx={{ flex: 1 }}>
                             <Typography variant="h6" gutterBottom>
@@ -265,6 +283,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
           </Grid>
         </CardContent>
       </Card>
+    </Box>
   );
 };
 

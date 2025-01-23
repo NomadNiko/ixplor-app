@@ -86,17 +86,15 @@ const MapHomeLayout = () => {
     );
   }, []);
 
-  const handleVendorSelect = (vendor: Vendor) => {
-    setViewState({
-      ...viewState,
-      longitude: vendor.location.coordinates[0],
-      latitude: vendor.location.coordinates[1],
-      zoom: 18,
-    });
+  const handleVendorSelect = (vendor: Vendor, e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setSelectedVendor(vendor);
     setShowFullView(false);
   };
-
+  
   const updateBounds = () => {
     const map = mapRef.current?.getMap();
     if (map) {
@@ -117,6 +115,13 @@ const MapHomeLayout = () => {
       filterTypes.length === 0 ||
       vendor.vendorTypes.some((type) => filterTypes.includes(type))
   );
+  useEffect(() => {
+    if (vendors.length > 0) {
+      // Preload by briefly showing and hiding the component
+      setSelectedVendor(vendors[0]);
+      setTimeout(() => setSelectedVendor(null), 100);
+    }
+  }, [vendors]);
 
   if (loading) {
     return (
@@ -131,6 +136,7 @@ const MapHomeLayout = () => {
       </Box>
     );
   }
+
 
   return (
     <Box sx={{ height: "calc(100vh - 64px)", width: "100%", position: "relative" }}>
