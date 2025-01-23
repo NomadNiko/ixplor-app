@@ -8,12 +8,11 @@ import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
-import { Phone, Mail, X, Globe, MapPin } from "lucide-react";
+import { Phone, Mail, X, Globe } from "lucide-react";
 import { Image } from "@nextui-org/react";
 import { useTranslation } from "@/services/i18n/client";
 import { Vendor } from "@/app/[language]/types/vendor";
 import { Product, ProductStatusEnum } from "@/app/[language]/types/product";
-import Map, { Marker } from 'react-map-gl';
 import { useGetProductsService } from "@/services/api/services/products";
 import { useAddToCartService } from "@/services/api/services/cart";
 import { useSnackbar } from "@/hooks/use-snackbar";
@@ -56,17 +55,13 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, [getProducts, vendor._id, enqueueSnackbar, t]);
 
   const handleAddToCart = async (productId: string) => {
     try {
       setAddingToCart(productId);
-      await addToCart({
-        productId,
-        quantity: 1,
-      });
+      await addToCart({ productId, quantity: 1 });
       enqueueSnackbar(t('success.addedToCart'), { variant: 'success' });
     } catch (error) {
       console.error('Error adding to cart:', error);
@@ -76,36 +71,44 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
     }
   };
 
+  const staticMapUrl = `https://api.mapbox.com/styles/v1/mapbox/dark-v11/static/pin-s+ff0000(${
+    vendor.location.coordinates[0]
+  },${
+    vendor.location.coordinates[1]
+  })/${
+    vendor.location.coordinates[0]
+  },${
+    vendor.location.coordinates[1]
+  },14,0/400x200@2x?access_token=${MAPBOX_TOKEN}`;
+
   return (
-    <Box
-      sx={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        backdropFilter: 'blur(8px)',
-        zIndex: 9999,
-        padding: { xs: 0, sm: 4 },
-        overflow: 'auto'
-      }}
-    >
+    <Box sx={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+      backdropFilter: 'blur(8px)',
+      zIndex: 9999,
+      padding: { xs: 1, sm: 2 },
+      overflow: 'auto'
+    }}>
       <Card sx={{
-        maxWidth: 1200,
+        maxWidth: 1000,
         margin: '0 auto',
         minHeight: '100%'
       }}>
-        <CardContent>
-          {/* Header Section */}
+        <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+          {/* Header */}
           <Box sx={{ 
             display: 'flex', 
             justifyContent: 'space-between', 
             alignItems: 'flex-start',
-            mb: 3 
+            mb: 2 
           }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box sx={{ width: 80, height: 80, position: 'relative' }}>
+              <Box sx={{ width: 60, height: 60 }}>
                 <Image 
                   src={vendor.logoUrl} 
                   alt={vendor.businessName}
@@ -117,7 +120,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
                 />
               </Box>
               <Box>
-                <Typography variant="h4" gutterBottom>
+                <Typography variant="h5" gutterBottom>
                   {vendor.businessName}
                 </Typography>
                 <Chip
@@ -127,61 +130,40 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
                 />
               </Box>
             </Box>
-            <IconButton 
-              onClick={onClose}
-              sx={{ color: 'text.secondary' }}
-            >
-              <X size={20} />
+            <IconButton onClick={onClose} size="small">
+              <X size={16} />
             </IconButton>
           </Box>
 
-          <Divider sx={{ mb: 3 }} />
+          <Divider sx={{ mb: 2 }} />
 
-          <Grid container spacing={3}>
+          <Grid container spacing={2}>
             {/* Left Column */}
             <Grid item xs={12} md={6}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom>
                 {t("about")}
               </Typography>
-              <Typography color="text.secondary" paragraph>
+              <Typography variant="body2" color="text.secondary" paragraph>
                 {vendor.description}
               </Typography>
 
-              <Box sx={{ mb: 4 }}>
-                <Typography variant="h6" gutterBottom>
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle1" gutterBottom>
                   {t("contact")}
                 </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  <Typography 
-                    color="text.secondary" 
-                    sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                  >
-                    <Phone size={16} />
-                    <Link href={`tel:${vendor.phone}`} color="inherit">
-                      {vendor.phone}
-                    </Link>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Phone size={14} />
+                    <Link href={`tel:${vendor.phone}`} color="inherit">{vendor.phone}</Link>
                   </Typography>
-                  <Typography 
-                    color="text.secondary" 
-                    sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                  >
-                    <Mail size={16} />
-                    <Link href={`mailto:${vendor.email}`} color="inherit">
-                      {vendor.email}
-                    </Link>
+                  <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Mail size={14} />
+                    <Link href={`mailto:${vendor.email}`} color="inherit">{vendor.email}</Link>
                   </Typography>
                   {vendor.website && (
-                    <Typography 
-                      color="text.secondary" 
-                      sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                    >
-                      <Globe size={16} />
-                      <Link 
-                        href={vendor.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        color="inherit"
-                      >
+                    <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Globe size={14} />
+                      <Link href={vendor.website} target="_blank" rel="noopener noreferrer" color="inherit">
                         {t("visitWebsite")}
                       </Link>
                     </Typography>
@@ -189,53 +171,43 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
                 </Box>
               </Box>
 
-              {/* Location Map */}
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom>
                 {t("location")}
               </Typography>
-              <Typography color="text.secondary" gutterBottom>
+              <Typography variant="body2" color="text.secondary" gutterBottom>
                 {vendor.address}<br />
                 {vendor.city}, {vendor.state} {vendor.postalCode}
               </Typography>
-              <Box sx={{ height: 200, mb: 3, borderRadius: 1, overflow: 'hidden' }}>
-                <Map
-                  mapboxAccessToken={MAPBOX_TOKEN}
-                  initialViewState={{
-                    longitude: vendor.location.coordinates[0],
-                    latitude: vendor.location.coordinates[1],
-                    zoom: 14
+              <Box sx={{ height: 200, mb: 2, borderRadius: 1, overflow: 'hidden' }}>
+                <img 
+                  src={staticMapUrl}
+                  alt="Location map"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
                   }}
-                  style={{ width: '100%', height: '100%' }}
-                  mapStyle="mapbox://styles/mapbox/dark-v11"
-                >
-                  <Marker
-                    longitude={vendor.location.coordinates[0]}
-                    latitude={vendor.location.coordinates[1]}
-                    anchor="bottom"
-                  >
-                    <MapPin color="red" />
-                  </Marker>
-                </Map>
+                />
               </Box>
             </Grid>
 
             {/* Right Column - Products */}
             <Grid item xs={12} md={6}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom>
                 {t("availableProducts")}
               </Typography>
               {loading ? (
-                <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
-                  <CircularProgress />
+                <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
+                  <CircularProgress size={24} />
                 </Box>
               ) : products.length > 0 ? (
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                   {products.map((product) => (
                     <Card key={product._id} variant="outlined">
-                      <CardContent>
-                        <Box sx={{ display: 'flex', gap: 2 }}>
+                      <CardContent sx={{ p: 1, '&:last-child': { pb: 1 } }}>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
                           {product.productImageURL && (
-                            <Box sx={{ width: 80, height: 80, position: 'relative' }}>
+                            <Box sx={{ width: 60, height: 60, flexShrink: 0 }}>
                               <Image
                                 src={product.productImageURL}
                                 alt={product.productName}
@@ -248,15 +220,23 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
                               />
                             </Box>
                           )}
-                          <Box sx={{ flex: 1 }}>
-                            <Typography variant="h6" gutterBottom>
+                          <Box sx={{ flex: 1, minWidth: 0 }}>
+                            <Typography variant="subtitle2" noWrap>
                               {product.productName}
                             </Typography>
-                            <Typography variant="body2" color="text.secondary" gutterBottom>
+                            <Typography variant="body2" color="text.secondary" 
+                              sx={{ 
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                mb: 1
+                              }}>
                               {product.productDescription}
                             </Typography>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
-                              <Typography variant="h6" color="primary">
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Typography variant="subtitle2" color="primary">
                                 ${product.productPrice.toFixed(2)}
                               </Typography>
                               <Button
@@ -264,6 +244,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
                                 onClick={() => handleAddToCart(product._id)}
                                 disabled={addingToCart === product._id}
                                 size="small"
+                                sx={{ minWidth: 'unset', px: 1, py: 0.5 }}
                               >
                                 {addingToCart === product._id ? t('addingToCart') : t('addToCart')}
                               </Button>
@@ -275,7 +256,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
                   ))}
                 </Box>
               ) : (
-                <Typography color="text.secondary">
+                <Typography variant="body2" color="text.secondary">
                   {t("noProducts")}
                 </Typography>
               )}
