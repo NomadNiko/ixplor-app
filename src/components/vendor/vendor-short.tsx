@@ -23,7 +23,7 @@ export const VendorShortView = ({ vendor, onViewMore, onClose }: VendorShortView
     <Box
       sx={{
         position: 'fixed',
-        bottom: { xs: 0, md: 4 },
+        bottom: { xs: 80, md: 4 }, // Updated to add space for bottom nav on mobile
         left: { xs: 0, md: '50%' },
         right: { xs: 0, md: 'auto' },
         transform: { xs: 'none', md: 'translateX(-50%)' },
@@ -32,7 +32,8 @@ export const VendorShortView = ({ vendor, onViewMore, onClose }: VendorShortView
           xs: 0, 
           md: theme.spacing(0, 2)
         }),
-        zIndex: 1000
+        zIndex: 1000,
+        transition: 'bottom 0.3s ease-in-out' // Smooth transition for position changes
       }}
     >
       <Card sx={{
@@ -50,7 +51,6 @@ export const VendorShortView = ({ vendor, onViewMore, onClose }: VendorShortView
             position: 'relative',
             pt: 1
           }}>
-            {/* Logo Section */}
             <Box sx={{ 
               width: 80,
               height: 80,
@@ -67,8 +67,6 @@ export const VendorShortView = ({ vendor, onViewMore, onClose }: VendorShortView
                 }}
               />
             </Box>
-
-            {/* Content Section */}
             <Box sx={{ flex: 1 }}>
               <Box sx={{ 
                 display: 'flex', 
@@ -98,7 +96,6 @@ export const VendorShortView = ({ vendor, onViewMore, onClose }: VendorShortView
                   <X size={20} />
                 </IconButton>
               </Box>
-
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                 <Typography 
                   variant="body2" 
@@ -125,7 +122,6 @@ export const VendorShortView = ({ vendor, onViewMore, onClose }: VendorShortView
                   {vendor.email}
                 </Typography>
               </Box>
-
               <Box sx={{ 
                 display: 'flex',
                 justifyContent: 'flex-end',

@@ -6,6 +6,8 @@
     "visitWebsite": "Visit Website",
     "availableProducts": "Available Products",
     "addToCart": "Add to Cart",
+    "addingToCart": "Adding to Cart...",
+    "noProducts": "This Vendor does not sell Products yet.",
     "vendorTypes": {
       "tours": "Tours",
       "lessons": "Lessons",
@@ -60,7 +62,11 @@
     "errors": {
       "notFound": "Vendor not found",
       "loadFailed": "Failed to load vendor information",
-      "locationUnavailable": "Location services unavailable"
+      "locationUnavailable": "Location services unavailable",
+      "addToCartFailed":"Add to Cart Failed. Try again later."
+    },
+    "success": {
+      "addedToCart": "Added to Cart"
     },
     "placeholders": {
       "searchVendors": "Search vendors...",
