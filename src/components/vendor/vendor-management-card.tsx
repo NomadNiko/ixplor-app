@@ -5,7 +5,7 @@ import Divider from "@mui/material/Divider";
 import { VendorHeader } from "./vendor-header";
 import { VendorInfoGrid } from "./vendor-info-grid";
 import { VendorActionSection } from "./vendor-action-section";
-import { VendorEditCard } from "./vendor-edit-card";
+import VendorEditCard from "../cards/edit-cards/VendorEditCard";
 import { Vendor, VendorStatusEnum } from "@/app/[language]/types/vendor";
 
 interface VendorManagementCardProps {

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import { useFormContext, useFormState } from "react-hook-form";
@@ -10,24 +10,21 @@ import { useTranslation } from "@/services/i18n/client";
 import FormDatePickerInput from "@/components/form/date-pickers/date-picker";
 import FormTimePickerInput from "@/components/form/date-pickers/time-picker";
 import BaseCurrencyInput from "./CurrencyInput";
-import DurationInput from "./DurationInput";
 import DynamicRequirementsField from "./DynamicRequirementsField";
 import Grid from "@mui/material/Grid";
-import SearchAddVendor from "./SearchAddVendor";
 import { UrlField } from './UrlField';
 import { VendorSelect } from "./VendorSelect";
-
+import GPSLocationField from "./GPSLocationField";
+import { DurationInputWrapper } from "./DurationInputWrapper";
+import ProductTypeToggle from "./ProductTypeToggle";
 
 export const CardField: React.FC<CardFieldProps> = ({
   field,
   mode = "edit",
 }) => {
-  const { register, control, setValue } = useFormContext<FormData>();
+  const { register, control } = useFormContext<FormData>();
   const { errors } = useFormState();
   const { t } = useTranslation("tests");
-  const [incrementType, setIncrementType] = useState<
-    "5mins" | "15mins" | "hours" | "days"
-  >("15mins");
 
   if (field.type === "break") {
     return <Grid item xs={12} />;
@@ -67,9 +64,6 @@ export const CardField: React.FC<CardFieldProps> = ({
     InputLabelProps: { shrink: true },
   };
 
-  if (field.type === "vendor") {
-    return <SearchAddVendor required={field.required} disabled={false} />;
-  }
 
   if (field.type === 'vendorSelect') {
     return <VendorSelect
@@ -79,7 +73,6 @@ export const CardField: React.FC<CardFieldProps> = ({
       disabled={mode === 'edit' && field.prefilled}
     />;
   }
-  
 
   if (field.type === 'url') {
     return <UrlField field={field} mode={mode} />;
@@ -102,16 +95,11 @@ export const CardField: React.FC<CardFieldProps> = ({
 
   if (field.type === "duration") {
     return (
-      <DurationInput
+      <DurationInputWrapper
         name={field.name}
         label={t(field.label)}
         control={control}
         required={field.required}
-        incrementType={incrementType}
-        onIncrementChange={(type) => {
-          setIncrementType(type);
-          setValue(field.name, "");
-        }}
       />
     );
   }
@@ -146,6 +134,28 @@ export const CardField: React.FC<CardFieldProps> = ({
     );
   }
 
+  if (field.type === "productTypeToggle") {
+    return (
+      <ProductTypeToggle
+        name={field.name}
+        label={field.label}
+        required={field.required}
+      />
+    );
+  }
+
+  if (field.type === "gpsLocation") {
+    return (
+      <GPSLocationField
+        name={{
+          latitude: `${field.name}_latitude`,
+          longitude: `${field.name}_longitude`
+        }}
+        label={t(field.label)}
+      />
+    );
+  }
+
   if (field.type === "multiselect") {
     return (
       <TextField
@@ -175,7 +185,10 @@ export const CardField: React.FC<CardFieldProps> = ({
 
   if (field.type === "select") {
     return (
-      <TextField select {...baseProps}>
+      <TextField 
+        select 
+        {...baseProps}
+      >
         {field.options?.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {t(option.label)}

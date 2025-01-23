@@ -10,7 +10,7 @@ import { Product, ProductStatusEnum } from '@/app/[language]/types/product';
 import { ProductStatusBadge } from './product-status-badge';
 import { useState } from 'react';
 import ProductFullView from "./product-full-view";
-import { ProductEditCard } from './product-edit-card';
+import ProductEditCard from "../cards/edit-cards/ProductEditCard";
 
 interface ProductCardProps {
   product: Product;

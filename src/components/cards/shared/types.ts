@@ -6,7 +6,6 @@ import { Vendor } from '@/app/[language]/types/vendor';
 import { PlaceResult } from '@/hooks/use-google-places';
 import { FileEntity } from '@/services/api/types/file-entity';
 
-
 export type FieldType = 
   | 'text'
   | 'number' 
@@ -26,15 +25,23 @@ export type FieldType =
   | 'duration'
   | 'break'
   | 'fileUpload'
-  | 'requirements';
+  | 'requirements'
+  | 'gpsLocation'
+  | 'productTypeToggle';
 
+export type LocationValue = {
+  latitude: number;
+  longitude: number;
+};
 
-  export type BaseFieldValue =   | string 
+export type BaseFieldValue = 
+  | string 
   | number 
   | boolean 
   | Date 
   | string[] 
   | FileEntity 
+  | LocationValue
   | null 
   | undefined;
 
@@ -63,15 +70,21 @@ export interface SectionConfig {
   fields: FieldConfig[];
 }
 
+export type ApprovalButtonsConfig = {
+  type: 'product';
+  currentStatus: ProductStatusEnum;
+  onStatusChange: (status: ProductStatusEnum) => Promise<void>;
+} | {
+  type: 'vendor';
+  currentStatus: VendorStatusEnum;
+  onStatusChange: (status: VendorStatusEnum) => Promise<void>;
+};
+
 export interface CardConfig {
   title: string;
   type: 'vendor' | 'product';
   sections: SectionConfig[];
-  approvalButtons?: {
-    type: 'vendor' | 'product';
-    currentStatus: ProductStatusEnum | VendorStatusEnum;
-    onStatusChange: (status: ProductStatusEnum | VendorStatusEnum) => Promise<void>;
-  };
+  approvalButtons?: ApprovalButtonsConfig;
 }
 
 export interface FormData {
@@ -120,13 +133,6 @@ export interface CardFieldProps {
   mode?: Mode;
 }
 
-export interface ApprovalButtonsProps {
-  type: 'vendor' | 'product';
-  currentStatus: ProductStatusEnum | VendorStatusEnum;
-  onStatusChange: (status: ProductStatusEnum | VendorStatusEnum) => Promise<void>;
-  isSubmitting: boolean;
-}
-
 export interface ImageUploadFieldProps {
   field: FieldConfig;
   mode?: 'edit' | 'create';
@@ -135,6 +141,13 @@ export interface ImageUploadFieldProps {
 export interface AddressFieldProps {
   field: FieldConfig;
   mode?: 'edit' | 'create';
+}
+
+export interface ApprovalButtonsProps {
+  type: 'vendor' | 'product';
+  currentStatus: ProductStatusEnum | VendorStatusEnum;
+  onStatusChange: (status: ProductStatusEnum | VendorStatusEnum) => Promise<void>;
+  isSubmitting: boolean;
 }
 
 export interface ValidationError {

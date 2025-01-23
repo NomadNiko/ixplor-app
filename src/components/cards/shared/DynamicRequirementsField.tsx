@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -23,15 +23,21 @@ export const DynamicRequirementsField: React.FC<DynamicRequirementsFieldProps> =
   const [inputValue, setInputValue] = useState('');
   const { setValue, control } = useFormContext<ExtendedFormData>();
 
-  // Use useWatch with explicit type and ensure default value
   const requirements = useWatch({
     control,
-    name: field.name,
-    defaultValue: [] as string[]
+    name: field.name
   });
 
-  // Ensure we always have an array
-  const currentRequirements = requirements || [];
+  // Initialize current requirements directly from form data
+  const [currentRequirements, setCurrentRequirements] = useState<string[]>(
+    field.defaultValue as string[] || []
+  );
+  // Keep local state in sync with form data
+  useEffect(() => {
+    if (Array.isArray(requirements)) {
+      setCurrentRequirements(requirements);
+    }
+  }, [requirements]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -39,15 +45,17 @@ export const DynamicRequirementsField: React.FC<DynamicRequirementsFieldProps> =
       const value = inputValue.trim();
       
       if (value) {
-        setValue(field.name, [...currentRequirements, value]);
+        const updatedRequirements = [...currentRequirements, value];
+        setCurrentRequirements(updatedRequirements);
+        setValue(field.name, updatedRequirements);
         setInputValue('');
       }
     }
   };
 
   const handleRemoveRequirement = (index: number) => {
-    const updatedRequirements = [...currentRequirements];
-    updatedRequirements.splice(index, 1);
+    const updatedRequirements = currentRequirements.filter((_, i) => i !== index);
+    setCurrentRequirements(updatedRequirements);
     setValue(field.name, updatedRequirements);
   };
 

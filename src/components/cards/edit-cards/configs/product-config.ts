@@ -9,13 +9,6 @@ export const productConfig: CardConfig = {
       title: "basicInfo",
       fields: [
         {
-          name: "vendorId",
-          label: "vendor",
-          type: "vendorSelect",
-          required: true,
-          gridWidth: 12,
-        },
-        {
           name: "productName",
           label: "productName",
           type: "text",
@@ -24,23 +17,11 @@ export const productConfig: CardConfig = {
           gridWidth: 12,
         },
         {
-          name: "break",
-          label: "break",
-          type: "break",
-          gridWidth: 12,
-        },
-        {
           name: "productType",
           label: "productType",
-          type: "select",
+          type: "productTypeToggle", // Changed from 'select'
           required: true,
-          options: [
-            { value: "tours", label: "Tours" },
-            { value: "lessons", label: "Lessons" },
-            { value: "rentals", label: "Rentals" },
-            { value: "tickets", label: "Tickets" },
-          ],
-          gridWidth: 6,
+          gridWidth: 12, // Changed to full width for better toggle button layout
         },
         {
           name: "productPrice",
@@ -151,13 +132,12 @@ export const productConfig: CardConfig = {
           gridWidth: 12,
         },
         {
-          name: "address",
-          label: "address",
-          type: "address",
-          required: true,
+          name: "location",
+          label: "location",
+          type: "gpsLocation",
           gridWidth: 12,
         },
-      ],
+      ],  
     },
   ],
 };
