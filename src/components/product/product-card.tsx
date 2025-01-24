@@ -8,7 +8,7 @@ import { useTranslation } from "@/services/i18n/client";
 import { Clock, DollarSign } from 'lucide-react';
 import { Product, ProductStatusEnum } from '@/app/[language]/types/product';
 import { ProductStatusBadge } from './product-status-badge';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProductFullView from "./product-full-view";
 import ProductEditCard from "../cards/edit-cards/ProductEditCard";
 
@@ -28,6 +28,12 @@ export const ProductCard = ({
   const { t } = useTranslation("products");
   const [showFullView, setShowFullView] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    setIsEditing(true);
+    setTimeout(() => setIsEditing(false), 100);
+  }, []);
+
 
   if (isEditing) {
     return (
