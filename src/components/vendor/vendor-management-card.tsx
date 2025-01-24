@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
@@ -24,6 +24,14 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
   const [notes, setNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  // preload edit cards to prevent page refreshes on first load
+  useEffect(() => {
+    setIsEditing(true);
+    setTimeout(() => setIsEditing(false), 100);
+  }, []);
+
+
 
   const handleAction = async (id: string, action: VendorStatusEnum, notes: string) => {
     setIsSubmitting(true);
