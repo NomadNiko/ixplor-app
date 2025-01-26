@@ -50,3 +50,18 @@ export interface VendorResponse {
 }
 
 export type VendorApiResponse = FetchJsonResponse<VendorResponse>;
+
+export enum VendorSortField {
+  NAME = 'businessName',
+  POSTCODE = 'postalCode',
+  CITY = 'city',
+  STATE = 'state',
+  STATUS = 'vendorStatus',
+  CREATED = 'createdAt',
+  UPDATED = 'updatedAt'
+}
+
+export enum SortOrder {
+  ASC = 'asc',
+  DESC = 'desc'
+}

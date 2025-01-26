@@ -50,5 +50,35 @@
     "deleteFailed": "Failed to delete vendor",
     "unauthorized": "You are not authorized to perform this action",
     "notesRequired": "Notes are required to Reject or Disable Vendor"
+  },
+  "pagination": {
+    "rowsPerPage": "Vendors per page",
+    "page": "Page {{current}} of {{total}}",
+    "nextPage": "Next page",
+    "previousPage": "Previous page",
+    "firstPage": "First page",
+    "lastPage": "Last page"
+  },
+  "filters": {
+    "title": "Filters",
+    "search": "Search vendors...",
+    "type": "Vendor Type",
+    "status": "Status",
+    "city": "City",
+    "state": "State",
+    "postalCode": "Postal Code",
+    "clearAll": "Clear Filters",
+    "apply": "Apply Filters",
+    "sorting": {
+      "label": "Sort by",
+      "name": "Name",
+      "status": "Status",
+      "city": "City",
+      "state": "State",
+      "created": "Created Date",
+      "updated": "Last Updated",
+      "asc": "Ascending",
+      "desc": "Descending"
+    }
   }
 }
