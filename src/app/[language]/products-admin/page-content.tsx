@@ -18,7 +18,6 @@ import ProductFilters, {
 } from "@/components/product/product-filters";
 import Collapse from "@mui/material/Collapse";
 import Paper from "@mui/material/Paper";
-import useAuth from '@/services/auth/use-auth';
 
 const defaultLocation = {
   type: "Point" as const,
@@ -29,7 +28,6 @@ export default function ProductsPageContent() {
   const { t } = useTranslation("products");
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
-  const { user } = useAuth();
 
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
@@ -55,7 +53,7 @@ export default function ProductsPageContent() {
         return;
       }
 
-      const response = await fetch(`${API_URL}/products/by-owner/${user?.id}`, {
+      const response = await fetch(`${API_URL}/products/admin/all`, {
         headers: {
           Authorization: `Bearer ${tokensInfo.token}`,
         },

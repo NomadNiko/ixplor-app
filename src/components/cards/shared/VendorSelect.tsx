@@ -41,7 +41,7 @@ export const VendorSelect: React.FC<VendorSelectProps> = ({
         }
 
         // Fetch vendors where user is an owner
-        const response = await fetch(`${API_URL}/vendors/user/${user?.id}/owned`, {
+        const response = await fetch(`${API_URL}/v1/vendors/user/${user?.id}/owned`, {
           headers: {
             'Authorization': `Bearer ${tokensInfo.token}`
           }

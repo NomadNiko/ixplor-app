@@ -1,0 +1,37 @@
+{
+  "title": "Vendor Status",
+  "status": {
+    "title": "Onboarding Progress",
+    "steps": {
+      "onboard": "Onboard with iXplor",
+      "onboardDesc": "Complete vendor registration and profile setup",
+      "stripe": "Connect Stripe Account",
+      "stripeDesc": "Set up payments to receive funds from bookings",
+      "products": "Add Products",
+      "productsDesc": "Create your first product listing",
+      "complete": "Onboarding Complete",
+      "completeDesc": "Your vendor account is fully set up and ready"
+    }
+  },
+  "stripe": {
+    "title": "Connect Your Stripe Account",
+    "description": "Set up secure payments by connecting your Stripe account. This is required to receive payments from bookings.",
+    "connect": "Connect Stripe"
+  },
+  "products": {
+    "title": "Add Your First Product",
+    "description": "Start creating product listings for your tours, lessons, rentals or tickets.",
+    "add": "Add Product"
+  },
+  "messages": {
+    "submitted": "Your vendor application is under review. We'll notify you once it's approved.",
+    "actionNeeded": "Action needed on your vendor application. Please address the following:",
+    "approved": "Your vendor account has been approved! Complete the remaining steps to start selling.",
+    "completed": "Congratulations! Your vendor account is fully set up and ready to accept bookings."
+  },
+  "errors": {
+    "fetchFailed": "Failed to fetch vendor status. Please try again.",
+    "unauthorized": "You are not authorized to view this page.",
+    "noVendor": "No vendor profile found."
+  }
+}
