@@ -43,31 +43,33 @@ export const StripeConnectOnboarding: React.FC<StripeConnectOnboardingProps> = (
       if (!tokensInfo?.token) {
         throw new Error('No authentication token');
       }
-
+  
       const response = await fetch(`${API_URL}/stripe-connect/update-vendor/${vendorId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${tokensInfo.token}`
         },
-        body: JSON.stringify(stripeAccount)
+        body: JSON.stringify({ id: stripeAccount.id })
       });
-
+  
       if (!response.ok) {
-        throw new Error('Failed to update vendor Stripe account');
+        const errorBody = await response.text();
+        throw new Error(`Failed to update vendor Stripe account: ${errorBody}`);
       }
-
-      await response.json(); // Consume the response to avoid linting errors
+  
+      // Consume the response to avoid ESLint warning
+      await response.json();
+  
       enqueueSnackbar(t('stripe.success'), { variant: 'success' });
       
-      // Optional: Trigger a page refresh or update to show next steps
       window.location.reload();
     } catch (error) {
       console.error('Error updating Stripe account:', error);
       enqueueSnackbar(t('stripe.updateFailed'), { variant: 'error' });
     }
   };
-
+  
   const handleStepChange = (change: StepChange) => {
     console.log('Current Stripe onboarding step:', change.step);
     
