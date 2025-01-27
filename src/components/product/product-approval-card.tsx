@@ -147,7 +147,7 @@ export const ProductApprovalCard: React.FC<ProductApprovalCardProps> = ({
             onClick={() => handleAction(ProductStatusEnum.PUBLISHED)}
             disabled={isSubmitting}
           >
-            {t("approve")}
+            {t("actions.approve")}
           </Button>
           <Button
             variant="contained"
@@ -156,7 +156,7 @@ export const ProductApprovalCard: React.FC<ProductApprovalCardProps> = ({
             onClick={() => handleAction(ProductStatusEnum.ARCHIVED)}
             disabled={isSubmitting}
           >
-            {t("reject")}
+            {t("actions.reject")}
           </Button>
           <Button
             variant="contained"
@@ -165,7 +165,7 @@ export const ProductApprovalCard: React.FC<ProductApprovalCardProps> = ({
             onClick={() => handleAction(ProductStatusEnum.DRAFT)}
             disabled={isSubmitting}
           >
-            {t("backToDraft")}
+            {t("actions.backToDraft")}
           </Button>
           <Button
             variant="contained"
@@ -175,7 +175,7 @@ export const ProductApprovalCard: React.FC<ProductApprovalCardProps> = ({
             disabled={isSubmitting}
             sx={{ ml: 'auto' }}
           >
-            {t("delete")}
+            {t("actions.delete")}
           </Button>
         </Box>
       </CardContent>

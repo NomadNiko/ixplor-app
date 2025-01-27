@@ -20,7 +20,7 @@
 
   "contact": "Contact Information",
   "location": "Location",
-  "notesPlaceholder": "Add notes about this vendor/product (required for rejection or action needed)",
+  "notesPlaceholder": "Action Notes (This is required for a reject)",
 
   "filters": "Filters",
   "searchProducts": "Search products...",

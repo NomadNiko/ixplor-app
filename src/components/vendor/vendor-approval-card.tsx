@@ -146,7 +146,7 @@ export const VendorApprovalCard: React.FC<VendorApprovalCardProps> = ({
             onClick={() => handleAction(VendorStatusEnum.APPROVED)}
             disabled={isSubmitting}
           >
-            {t("approve")}
+            {t("actions.approve")}
           </Button>
 
           <Button
@@ -156,7 +156,7 @@ export const VendorApprovalCard: React.FC<VendorApprovalCardProps> = ({
             onClick={() => handleAction(VendorStatusEnum.REJECTED)}
             disabled={isSubmitting}
           >
-            {t("reject")}
+            {t("actions.reject")}
           </Button>
 
           <Button
@@ -166,7 +166,7 @@ export const VendorApprovalCard: React.FC<VendorApprovalCardProps> = ({
             onClick={() => handleAction(VendorStatusEnum.ACTION_NEEDED)}
             disabled={isSubmitting}
           >
-            {t("needsAction")}
+            {t("actions.needsAction")}
           </Button>
 
           <Button
@@ -177,7 +177,7 @@ export const VendorApprovalCard: React.FC<VendorApprovalCardProps> = ({
             disabled={isSubmitting}
             sx={{ ml: 'auto' }}
           >
-            {t("delete")}
+            {t("actions.delete")}
           </Button>
         </Box>
       </CardContent>
