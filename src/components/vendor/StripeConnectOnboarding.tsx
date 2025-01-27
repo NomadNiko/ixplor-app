@@ -3,14 +3,27 @@ import { ConnectAccountOnboarding, ConnectComponentsProvider } from "@stripe/rea
 import { StepChange } from "@stripe/connect-js";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
+import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "@/services/i18n/client";
 import { useStripeConnect } from '@/hooks/use-stripe-connect';
+import { API_URL } from "@/services/api/config";
+import { getTokensInfo } from "@/services/auth/auth-tokens-info";
+import { useSnackbar } from "@/hooks/use-snackbar";
+
+// Define interfaces for type safety
+interface StripeAccountDetails {
+  id: string;
+  [key: string]: unknown;
+}
+
+interface StripeAccountResponse {
+  account: StripeAccountDetails;
+}
 
 interface StripeConnectOnboardingProps {
   vendorId: string;
@@ -20,12 +33,80 @@ export const StripeConnectOnboarding: React.FC<StripeConnectOnboardingProps> = (
   vendorId
 }) => {
   const { t } = useTranslation("vendor-status");
+  const { enqueueSnackbar } = useSnackbar();
   const [onboardingExited, setOnboardingExited] = useState(false);
   const { stripeConnectInstance, isLoading, error } = useStripeConnect(vendorId);
 
+  const updateVendorStripeAccount = async (stripeAccount: StripeAccountDetails) => {
+    try {
+      const tokensInfo = getTokensInfo();
+      if (!tokensInfo?.token) {
+        throw new Error('No authentication token');
+      }
+
+      const response = await fetch(`${API_URL}/stripe-connect/update-vendor/${vendorId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${tokensInfo.token}`
+        },
+        body: JSON.stringify(stripeAccount)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update vendor Stripe account');
+      }
+
+      await response.json(); // Consume the response to avoid linting errors
+      enqueueSnackbar(t('stripe.success'), { variant: 'success' });
+      
+      // Optional: Trigger a page refresh or update to show next steps
+      window.location.reload();
+    } catch (error) {
+      console.error('Error updating Stripe account:', error);
+      enqueueSnackbar(t('stripe.updateFailed'), { variant: 'error' });
+    }
+  };
+
   const handleStepChange = (change: StepChange) => {
-    // Log step changes for analytics
-    console.log('Current step:', change.step);
+    console.log('Current Stripe onboarding step:', change.step);
+    
+    // You might want to track specific steps or milestones here
+    if (change.step === 'summary') {
+      // This could be a good place to do additional checks
+    }
+  };
+
+  const handleExit = async () => {
+    setOnboardingExited(true);
+    
+    // Try to get the Stripe account details after exit
+    try {
+      // Fetch the Stripe account details 
+      const tokensInfo = getTokensInfo();
+      if (!tokensInfo?.token) {
+        throw new Error('No authentication token');
+      }
+
+      const response = await fetch(`${API_URL}/stripe-connect/account`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${tokensInfo.token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch Stripe account details');
+      }
+
+      const accountData: StripeAccountResponse = await response.json();
+      
+      // Update vendor with Stripe account details
+      await updateVendorStripeAccount(accountData.account);
+    } catch (error) {
+      console.error('Error on Stripe onboarding exit:', error);
+      enqueueSnackbar(t('stripe.exitError'), { variant: 'error' });
+    }
   };
 
   if (isLoading) {
@@ -112,7 +193,7 @@ export const StripeConnectOnboarding: React.FC<StripeConnectOnboardingProps> = (
           }}>
             <ConnectComponentsProvider connectInstance={stripeConnectInstance}>
               <ConnectAccountOnboarding
-                onExit={() => setOnboardingExited(true)}
+                onExit={handleExit}
                 onStepChange={handleStepChange}
               />
             </ConnectComponentsProvider>
