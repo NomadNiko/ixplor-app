@@ -1,3 +1,5 @@
+// In hooks/use-vendor-status.ts
+
 import { useState, useEffect } from 'react';
 import { useSnackbar } from '@/hooks/use-snackbar';
 import { useTranslation } from '@/services/i18n/client';
@@ -19,15 +21,34 @@ export function useVendorStatus(userId: string) {
         throw new Error('No auth token');
       }
 
-      const response = await fetch(`${API_URL}/v1/vendors/user/${userId}/owned`, {
+      // Get owned vendors
+      const vendorResponse = await fetch(`${API_URL}/v1/vendors/user/${userId}/owned`, {
         headers: {
           'Authorization': `Bearer ${tokensInfo.token}`
         }
       });
       
-      if (!response.ok) throw new Error('Failed to fetch vendor status');
-      const data = await response.json();
-      setVendor(data.data[0]);
+      if (!vendorResponse.ok) throw new Error('Failed to fetch vendor status');
+      const vendorData = await vendorResponse.json();
+
+      if (vendorData.data.length > 0) {
+        const currentVendor = vendorData.data[0];
+        
+        // Check for products
+        const productsResponse = await fetch(`${API_URL}/products/by-vendor/${currentVendor._id}`, {
+          headers: {
+            'Authorization': `Bearer ${tokensInfo.token}`
+          }
+        });
+
+        if (!productsResponse.ok) throw new Error('Failed to fetch products');
+        const productsData = await productsResponse.json();
+
+        setVendor({
+          ...currentVendor,
+          hasProducts: productsData.data.length > 0
+        });
+      }
       setError(null);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
@@ -42,7 +63,7 @@ export function useVendorStatus(userId: string) {
     if (userId) {
       loadVendorStatus();
     }
-  }, [userId, enqueueSnackbar, t]);
+  }, [userId]);
 
   const refreshStatus = async () => {
     setLoading(true);
