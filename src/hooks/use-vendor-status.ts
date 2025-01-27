@@ -12,36 +12,42 @@ export function useVendorStatus(userId: string) {
   const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslation("vendor-status");
 
-  useEffect(() => {
-    const loadVendorStatus = async () => {
-      try {
-        const tokensInfo = getTokensInfo();
-        if (!tokensInfo?.token) {
-          throw new Error('No auth token');
-        }
-
-        const response = await fetch(`${API_URL}/v1/vendors/user/${userId}/owned`, {
-          headers: {
-            'Authorization': `Bearer ${tokensInfo.token}`
-          }
-        });
-        
-        if (!response.ok) throw new Error('Failed to fetch vendor status');
-        const data = await response.json();
-        setVendor(data.data[0]);
-      } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-        setError(errorMessage);
-        enqueueSnackbar(t('errors.fetchFailed'), { variant: 'error' });
-      } finally {
-        setLoading(false);
+  const loadVendorStatus = async () => {
+    try {
+      const tokensInfo = getTokensInfo();
+      if (!tokensInfo?.token) {
+        throw new Error('No auth token');
       }
-    };
 
+      const response = await fetch(`${API_URL}/v1/vendors/user/${userId}/owned`, {
+        headers: {
+          'Authorization': `Bearer ${tokensInfo.token}`
+        }
+      });
+      
+      if (!response.ok) throw new Error('Failed to fetch vendor status');
+      const data = await response.json();
+      setVendor(data.data[0]);
+      setError(null);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      setError(errorMessage);
+      enqueueSnackbar(t('errors.fetchFailed'), { variant: 'error' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     if (userId) {
       loadVendorStatus();
     }
   }, [userId, enqueueSnackbar, t]);
 
-  return { vendor, loading, error };
+  const refreshStatus = async () => {
+    setLoading(true);
+    await loadVendorStatus();
+  };
+
+  return { vendor, loading, error, refreshStatus };
 }

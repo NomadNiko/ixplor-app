@@ -11,6 +11,37 @@ export enum VendorStatusEnum {
 
 export type VendorTypes = 'tours' | 'lessons' | 'rentals' | 'tickets' | '';
 
+// Stripe-related interfaces
+export interface StripeRequirement {
+  requirement: string;
+  dueDate?: Date;
+  error?: string;
+}
+
+export interface StripePendingVerification {
+  details: string;
+  dueBy?: Date;
+}
+
+export interface StripeAccountStatus {
+  chargesEnabled: boolean;
+  payoutsEnabled: boolean;
+  detailsSubmitted: boolean;
+  currentlyDue: string[];
+  eventuallyDue: string[];
+  pastDue: string[];
+  pendingVerification?: StripePendingVerification;
+  requirements: StripeRequirement[];
+}
+
+export interface StripeVendorInfo {
+  stripeConnectId?: string;
+  stripeAccountStatus?: StripeAccountStatus;
+  accountBalance?: number;
+  pendingBalance?: number;
+}
+
+// Base vendor properties interface
 export interface VendorProperties {
   _id: string;
   businessName: string;
@@ -34,10 +65,13 @@ export interface VendorProperties {
     type: 'Point';
     coordinates: [number, number];
   };
+  stripeInfo?: StripeVendorInfo;
 }
 
+// GeoJSON feature type for vendor
 export type VendorFeature = Feature<Point, VendorProperties>;
 
+// Main vendor interface
 export interface Vendor extends Omit<VendorProperties, 'location'> {
   location: {
     type: 'Point';
@@ -45,12 +79,14 @@ export interface Vendor extends Omit<VendorProperties, 'location'> {
   };
 }
 
+// API response types
 export interface VendorResponse {
   data: Vendor[];
 }
 
 export type VendorApiResponse = FetchJsonResponse<VendorResponse>;
 
+// Sorting enums
 export enum VendorSortField {
   NAME = 'businessName',
   POSTCODE = 'postalCode',

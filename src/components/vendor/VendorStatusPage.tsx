@@ -14,6 +14,7 @@ import { useTranslation } from "@/services/i18n/client";
 import useAuth from "@/services/auth/use-auth";
 import { useVendorStatus } from '@/hooks/use-vendor-status';
 import { styled } from '@mui/material/styles';
+import StripeConnectOnboarding from '@/components/vendor/StripeConnectOnboarding';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   backgroundColor: theme.palette.background.glass,
@@ -79,10 +80,11 @@ const VendorStatusPage: React.FC = () => {
       case 'onboard':
         return 'complete';
       case 'stripe':
-        return vendor.stripeConnectId ? 'complete' : 'in-progress';
+        return vendor.stripeConnectId ? 'complete' : 
+               vendor.vendorStatus === 'APPROVED' ? 'in-progress' : 'pending';
       case 'products':
         return vendor.hasProducts ? 'complete' : 
-               vendor.vendorStatus === 'APPROVED' ? 'in-progress' : 'pending';
+               vendor.vendorStatus === 'APPROVED' && vendor.stripeConnectId ? 'in-progress' : 'pending';
       case 'complete':
         return vendor.vendorStatus === 'APPROVED' && 
                vendor.stripeConnectId && 
@@ -148,15 +150,19 @@ const VendorStatusPage: React.FC = () => {
         </CardContent>
       </StyledCard>
 
-      {vendor && !vendor.stripeConnectId && (
-  <StyledCard sx={{ mb: 4 }}>
-    <CardHeader title={t("stripe.title")} />
-    <CardContent>
-    </CardContent>
-  </StyledCard>
-)}
+      {vendor && vendor.vendorStatus === 'APPROVED' && !vendor.stripeConnectId && (
+        <StyledCard sx={{ mb: 4 }}>
+          <CardHeader title={t("stripe.title")} />
+          <CardContent>
+            <Typography variant="body1" sx={{ mb: 3 }}>
+              {t("stripe.description")}
+            </Typography>
+            <StripeConnectOnboarding vendorId={vendor._id} />
+          </CardContent>
+        </StyledCard>
+      )}
 
-      {vendor && vendor.vendorStatus === 'APPROVED' && !vendor.hasProducts && (
+      {vendor && vendor.vendorStatus === 'APPROVED' && vendor.stripeConnectId && !vendor.hasProducts && (
         <StyledCard sx={{ mb: 4 }}>
           <CardHeader title={t("products.title")} />
           <CardContent>

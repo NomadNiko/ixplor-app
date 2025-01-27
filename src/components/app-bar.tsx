@@ -110,7 +110,7 @@ function ResponsiveAppBar() {
                 </Typography>
               </MenuItem>
               {!!user?.role &&
-                [RoleEnum.ADMIN, RoleEnum.USER, RoleEnum.VENDOR].includes(
+                [RoleEnum.USER].includes(
                   Number(user?.role?.id)
                 ) && [
                   <MenuItem
@@ -121,6 +121,21 @@ function ResponsiveAppBar() {
                   >
                     <Typography textAlign="center">
                       {t("common:navigation.onboard")}
+                    </Typography>
+                  </MenuItem>,
+                ]}
+              {!!user?.role &&
+                [RoleEnum.VENDOR].includes(
+                  Number(user?.role?.id)
+                ) && [
+                  <MenuItem
+                    key="vendor-status"
+                    onClick={handleCloseNavMenu}
+                    component={Link}
+                    href="/vendor-status"
+                  >
+                    <Typography textAlign="center">
+                      {t("common:navigation.vendor-status")}
                     </Typography>
                   </MenuItem>,
                 ]}
@@ -268,7 +283,7 @@ function ResponsiveAppBar() {
               {t("common:navigation.home")}
             </Button>
             {!!user?.role &&
-              [RoleEnum.ADMIN, RoleEnum.USER, RoleEnum.VENDOR].includes(
+              [RoleEnum.USER].includes(
                 Number(user?.role?.id)
               ) && (
                 <>
@@ -283,7 +298,22 @@ function ResponsiveAppBar() {
                 </>
               )}
             {!!user?.role &&
-              [RoleEnum.ADMIN, RoleEnum.VENDOR].includes(
+              [RoleEnum.VENDOR].includes(
+                Number(user?.role?.id)
+              ) && (
+                <>
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                    component={Link}
+                    href="/vendor-status"
+                  >
+                    {t("common:navigation.vendor-status")}
+                  </Button>
+                </>
+              )}
+            {!!user?.role &&
+              [RoleEnum.VENDOR].includes(
                 Number(user?.role?.id)
               ) && (
                 <>
