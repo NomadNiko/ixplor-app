@@ -20,7 +20,7 @@ export default function VendorAdminPageContainer() {
   }
 
   // Check if user has admin role before rendering the page
-  if (!user?.role || Number(user.role.id) !== RoleEnum.ADMIN) {
+  if (!user?.role || Number(user.role.id) !== RoleEnum.VENDOR) {
     return null;
   }
 

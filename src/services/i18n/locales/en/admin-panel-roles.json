@@ -2,6 +2,7 @@
   "role": {
     "1": "Admin",
     "2": "User",
-    "3": "Vendor"
+    "3": "Vendor",
+    "4": "PreVendor"
   }
 }
