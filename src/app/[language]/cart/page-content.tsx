@@ -1,16 +1,15 @@
+// src/app/[language]/cart/page-content.tsx
 "use client";
 import { useEffect } from "react";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "@/services/i18n/client";
 import CartItem from "@/components/cart/cart-item";
 import CartSummary from "@/components/cart/cart-summary";
-import BillingDetails from "@/components/cart/billing-details";
-import PaymentMethods from "@/components/cart/payment-methods";
-import ProductQuickAdd from "@/components/cart/product-quick-add";
 import useAuth from "@/services/auth/use-auth";
 import { useRouter } from "next/navigation";
 import { useCartQuery } from "@/hooks/use-cart-query";
@@ -51,40 +50,48 @@ export default function CartPage() {
     0
   ) ?? 0;
 
+  const handleCheckout = () => {
+    router.push('/checkout');
+  };
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Typography variant="h4" gutterBottom>
         {t("title")}
       </Typography>
-      <ProductQuickAdd onUpdate={refreshCart} />
       
       <Grid container spacing={4}>
         <Grid item xs={12} md={8}>
-          <Box mb={4}>
-            {!cartData?.items.length ? (
-              <Typography variant="h6" color="text.secondary" align="center" sx={{ py: 8 }}>
-                {t("emptyCart")}
-              </Typography>
-            ) : (
-              cartData.items.map((item: CartItemType) => (
-                <CartItem
-                  key={item.productId}
-                  item={item}
-                  onUpdate={refreshCart}
-                />
-              ))
-            )}
-          </Box>
-          
-          <BillingDetails />
+          {!cartData?.items.length ? (
+            <Typography variant="h6" color="text.secondary" align="center" sx={{ py: 8 }}>
+              {t("emptyCart")}
+            </Typography>
+          ) : (
+            cartData.items.map((item: CartItemType) => (
+              <CartItem
+                key={item.productId}
+                item={item}
+                onUpdate={refreshCart}
+              />
+            ))
+          )}
         </Grid>
         
         <Grid item xs={12} md={4}>
           <Box position="sticky" top={24}>
             <CartSummary total={subtotal} />
-            <Box mt={2}>
-              <PaymentMethods />
-            </Box>
+            {cartData?.items.length > 0 && (
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                size="large"
+                onClick={handleCheckout}
+                sx={{ mt: 2 }}
+              >
+                {t("actions.checkout")}
+              </Button>
+            )}
           </Box>
         </Grid>
       </Grid>
