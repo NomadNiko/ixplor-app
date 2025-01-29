@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Container from '@mui/material/Container';
@@ -9,25 +8,31 @@ import Button from '@mui/material/Button';
 import { CheckCircle, XCircle } from 'lucide-react';
 import { useSnackbar } from '@/hooks/use-snackbar';
 import { useTranslation } from '@/services/i18n/client';
+import { useCartQuery } from '@/hooks/use-cart-query';
 import { API_URL } from '@/services/api/config';
 import { getTokensInfo } from '@/services/auth/auth-tokens-info';
-import { useCartQuery } from '@/hooks/use-cart-query';
 
-export default function CheckoutReturnPageContent() {
+export default function CheckoutReturnPage() {
   const { t } = useTranslation('checkout');
   const router = useRouter();
   const searchParams = useSearchParams();
   const { refreshCart } = useCartQuery();
   const { enqueueSnackbar } = useSnackbar();
-  const [status, setStatus] = useState<'success' | 'failure' | null>(null);
+  const [status, setStatus] = useState<'complete' | 'open' | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasChecked, setHasChecked] = useState(false);
 
   useEffect(() => {
     const checkStatus = async () => {
+      if (hasChecked) return;
+
       try {
         const sessionId = searchParams.get('session_id');
+        
         if (!sessionId) {
-          throw new Error('No session ID found');
+          console.log('No session ID found, redirecting to cart');
+          router.push('/cart');
+          return;
         }
 
         const tokensInfo = getTokensInfo();
@@ -42,30 +47,34 @@ export default function CheckoutReturnPageContent() {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to verify payment status');
+          throw new Error('Failed to fetch session status');
         }
 
-        const { status } = await response.json();
-        
-        if (status === 'complete') {
-          setStatus('success');
+        const data = await response.json();
+        setStatus(data.status);
+
+        if (data.status === 'complete') {
           await refreshCart();
           enqueueSnackbar(t('success.paymentComplete'), { variant: 'success' });
-        } else {
-          setStatus('failure');
-          enqueueSnackbar(t('errors.paymentFailed'), { variant: 'error' });
         }
+
+        setHasChecked(true);
       } catch (error) {
-        console.error('Error checking payment status:', error);
-        setStatus('failure');
+        console.error('Error checking session status:', error);
         enqueueSnackbar(t('errors.statusCheckFailed'), { variant: 'error' });
+        router.push('/cart');
       } finally {
         setIsLoading(false);
       }
     };
 
     checkStatus();
-  }, [searchParams, enqueueSnackbar, t, refreshCart]);
+  }, [searchParams, hasChecked]);
+
+  if (status === 'open') {
+    router.push('/checkout');
+    return null;
+  }
 
   if (isLoading) {
     return (
@@ -89,7 +98,7 @@ export default function CheckoutReturnPageContent() {
         alignItems: 'center',
         gap: 3
       }}>
-        {status === 'success' ? (
+        {status === 'complete' ? (
           <>
             <CheckCircle size={64} color="success" />
             <Typography variant="h4" gutterBottom>
@@ -110,7 +119,7 @@ export default function CheckoutReturnPageContent() {
             </Typography>
           </>
         )}
-
+        
         <Box sx={{ mt: 4, display: 'flex', gap: 2 }}>
           <Button
             variant="contained"
@@ -118,7 +127,7 @@ export default function CheckoutReturnPageContent() {
           >
             {t('actions.backToHome')}
           </Button>
-          {status === 'failure' && (
+          {status !== 'complete' && (
             <Button
               variant="outlined"
               onClick={() => router.push('/cart')}
