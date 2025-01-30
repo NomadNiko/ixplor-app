@@ -12,6 +12,7 @@ import { useCartQuery } from '@/hooks/use-cart-query';
 import { API_URL } from '@/services/api/config';
 import { getTokensInfo } from '@/services/auth/auth-tokens-info';
 import PurchasedTickets from '@/components/tickets/PurchasedTicketsDisplay';
+import useAuth from '@/services/auth/use-auth';
 
 interface PurchasedTicket {
   _id: string;
@@ -49,6 +50,7 @@ export default function CheckoutReturnPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasChecked, setHasChecked] = useState(false);
   const [purchasedTickets, setPurchasedTickets] = useState<PurchasedTicket[]>([]);
+  const { user } = useAuth();
 
   useEffect(() => {
     const checkStatus = async () => {
@@ -96,8 +98,8 @@ export default function CheckoutReturnPage() {
 
           const transaction: Transaction = await transactionResponse.json();
 
-          // Get tickets for this customer
-          const ticketsResponse = await fetch(`${API_URL}/tickets/user/${transaction.customerId}`, {
+          // Get tickets for the current user
+          const ticketsResponse = await fetch(`${API_URL}/tickets/user/${user?.id}`, {
             headers: {
               'Authorization': `Bearer ${tokensInfo.token}`
             }

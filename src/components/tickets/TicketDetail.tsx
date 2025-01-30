@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import { Ticket as TicketIcon } from "lucide-react";
 import { format } from 'date-fns';
 import type { Ticket } from '@/hooks/use-tickets';
+import QRGenerator from "./QRGenerator";
 
 interface TicketDetailProps {
   ticket: Ticket;
@@ -20,24 +21,7 @@ export const TicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose }) =
       </Box>
 
       {/* QR Code Placeholder */}
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        mb: 4 
-      }}>
-        <Box sx={{ 
-          width: 200, 
-          height: 200, 
-          border: '2px dashed', 
-          borderColor: 'divider',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: 2,
-        }}>
-          <Typography color="text.secondary">QR Code</Typography>
-        </Box>
-      </Box>
+      <QRGenerator ticketId={ticket._id} transactionId={ticket.transactionId} />
 
       <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid item xs={6}>
