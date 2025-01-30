@@ -11,6 +11,33 @@ import { useTranslation } from '@/services/i18n/client';
 import { useCartQuery } from '@/hooks/use-cart-query';
 import { API_URL } from '@/services/api/config';
 import { getTokensInfo } from '@/services/auth/auth-tokens-info';
+import PurchasedTickets from '@/components/tickets/PurchasedTicketsDisplay';
+
+interface PurchasedTicket {
+  _id: string;
+  productName: string;
+  productDescription: string;
+  productDate?: string;
+  productStartTime?: string;
+  productImageURL?: string;
+  quantity: number;
+  price: number;
+  transactionId: string;
+}
+
+interface Transaction {
+  _id: string;
+  stripeCheckoutSessionId: string;
+  amount: number;
+  currency: string;
+  vendorId: string;
+  customerId: string;
+  productId: string;
+  status: string;
+  type: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export default function CheckoutReturnPage() {
   const { t } = useTranslation('checkout');
@@ -21,6 +48,7 @@ export default function CheckoutReturnPage() {
   const [status, setStatus] = useState<'complete' | 'open' | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasChecked, setHasChecked] = useState(false);
+  const [purchasedTickets, setPurchasedTickets] = useState<PurchasedTicket[]>([]);
 
   useEffect(() => {
     const checkStatus = async () => {
@@ -40,6 +68,7 @@ export default function CheckoutReturnPage() {
           throw new Error('No auth token available');
         }
 
+        // First check the session status
         const response = await fetch(`${API_URL}/stripe/session-status?session_id=${sessionId}`, {
           headers: {
             'Authorization': `Bearer ${tokensInfo.token}`
@@ -54,6 +83,38 @@ export default function CheckoutReturnPage() {
         setStatus(data.status);
 
         if (data.status === 'complete') {
+          // Get transaction details
+          const transactionResponse = await fetch(`${API_URL}/transactions/checkout/${sessionId}`, {
+            headers: {
+              'Authorization': `Bearer ${tokensInfo.token}`
+            }
+          });
+
+          if (!transactionResponse.ok) {
+            throw new Error('Failed to fetch transaction details');
+          }
+
+          const transaction: Transaction = await transactionResponse.json();
+
+          // Get tickets for this customer
+          const ticketsResponse = await fetch(`${API_URL}/tickets/user/${transaction.customerId}`, {
+            headers: {
+              'Authorization': `Bearer ${tokensInfo.token}`
+            }
+          });
+
+          if (ticketsResponse.ok) {
+            const ticketsData = await ticketsResponse.json();
+            // Filter tickets created around the same time as the transaction
+            const transactionTime = new Date(transaction.createdAt).getTime();
+            const relevantTickets = ticketsData.data.filter((ticket: PurchasedTicket) => {
+              const ticketTime = new Date(ticket.transactionId).getTime();
+              // Consider tickets created within 5 minutes of the transaction
+              return Math.abs(ticketTime - transactionTime) < 5 * 60 * 1000;
+            });
+            setPurchasedTickets(relevantTickets);
+          }
+
           await refreshCart();
           enqueueSnackbar(t('success.paymentComplete'), { variant: 'success' });
         }
@@ -90,7 +151,7 @@ export default function CheckoutReturnPage() {
   }
 
   return (
-    <Container maxWidth="sm" sx={{ py: 8 }}>
+    <Container maxWidth="md" sx={{ py: 8 }}>
       <Box sx={{
         textAlign: 'center',
         display: 'flex',
@@ -107,6 +168,9 @@ export default function CheckoutReturnPage() {
             <Typography color="text.secondary" paragraph>
               {t('success.message')}
             </Typography>
+            {purchasedTickets.length > 0 && (
+              <PurchasedTickets tickets={purchasedTickets} />
+            )}
           </>
         ) : (
           <>

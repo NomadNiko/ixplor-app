@@ -112,13 +112,13 @@ function ResponsiveAppBar() {
               {!!user?.role &&
                 [RoleEnum.USER].includes(Number(user?.role?.id)) && [
                   <MenuItem
-                    key="onboard"
+                    key="tickets"
                     onClick={handleCloseNavMenu}
                     component={Link}
-                    href="/onboard"
+                    href="/tickets"
                   >
                     <Typography textAlign="center">
-                      {t("common:navigation.onboard")}
+                      {t("common:navigation.tickets")}
                     </Typography>
                   </MenuItem>,
                 ]}
@@ -298,9 +298,9 @@ function ResponsiveAppBar() {
                     onClick={handleCloseNavMenu}
                     sx={{ my: 2, color: "white", display: "block" }}
                     component={Link}
-                    href="/onboard"
+                    href="/tickets"
                   >
-                    {t("common:navigation.onboard")}
+                    {t("common:navigation.tickets")}
                   </Button>
                 </>
               )}
