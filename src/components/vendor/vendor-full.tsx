@@ -61,7 +61,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
   const handleAddToCart = async (productId: string) => {
     try {
       setAddingToCart(productId);
-      await addToCart({ productId, quantity: 1 });
+      await addToCart({ productId, quantity: 1 , vendorId: vendor._id});
       enqueueSnackbar(t('success.addedToCart'), { variant: 'success' });
     } catch (error) {
       console.error('Error adding to cart:', error);
