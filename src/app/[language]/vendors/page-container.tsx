@@ -10,7 +10,7 @@ export default function VendorAdminPageContainer() {
   const { user, isLoaded } = useAuth();
   
   useEffect(() => {
-    if (isLoaded && (!user?.role || Number(user.role.id) !== RoleEnum.ADMIN)) {
+    if (isLoaded && (!user?.role || Number(user.role.id) !== RoleEnum.VENDOR)) {
       router.replace('/');
     }
   }, [user, isLoaded, router]);
