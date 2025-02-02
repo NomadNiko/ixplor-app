@@ -23,6 +23,7 @@ export interface StripePendingVerification {
   export interface VendorStatus {
     _id: string;
     businessName: string;
+    internalAccountBalance: number;
     stripeAccountStatus: StripeAccountStatus;
     accountBalance: number;
     pendingBalance: number;

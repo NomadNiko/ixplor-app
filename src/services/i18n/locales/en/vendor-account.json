@@ -1,0 +1,41 @@
+{
+    "title": "Vendor Account",
+    "balances": {
+      "title": "Account Balances",
+      "stripe": "Stripe Balance",
+      "internal": "iXplor Balance"
+    },
+    "actions": {
+      "triggerPayout": "Trigger Payout"
+    },
+    "sections": {
+      "transactions": "Transactions",
+      "tickets": "Tickets",
+      "payments": "Payments"
+    },
+    "fields": {
+      "amount": "Amount",
+      "status": "Status",
+      "date": "Date",
+      "product": "Product",
+      "quantity": "Quantity"
+    },
+    "noData": {
+      "transactions": "No transactions found",
+      "tickets": "No tickets found",
+      "payments": "No payments found"
+    },
+    "errors": {
+      "title": "Error",
+      "unauthorized": "Unauthorized access",
+      "loadFailed": "Failed to load vendor data",
+      "payoutFailed": "Failed to trigger payout"
+    },
+    "success": {
+      "payoutScheduled": "Payout scheduled successfully"
+    },
+    "noVendor": {
+      "title": "No Vendor Account",
+      "message": "You don't have any vendor accounts set up yet"
+    }
+  }
