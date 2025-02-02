@@ -1,10 +1,12 @@
+// TicketCard.tsx
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Calendar } from "lucide-react";
-import { format } from 'date-fns';
+import Chip from "@mui/material/Chip";
+import { Calendar, Clock, Hash } from "lucide-react";
+import { format, isValid } from 'date-fns';
 import { styled } from '@mui/material/styles';
 import type { Ticket } from '@/hooks/use-tickets';
 
@@ -29,40 +31,90 @@ interface TicketCardProps {
 }
 
 export const TicketCard: React.FC<TicketCardProps> = ({ ticket, onClick }) => {
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'ACTIVE': return 'success';
+      case 'REDEEMED': return 'info';
+      case 'CANCELLED': return 'error';
+      case 'REVOKED': return 'warning';
+      default: return 'default';
+    }
+  };
+
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return isValid(date) ? format(date, 'MMM d, yyyy') : '';
+  };
+
   return (
     <StyledCard onClick={onClick}>
       <Box sx={{
         position: 'absolute',
         top: 8,
         right: 8,
-        px: 1,
-        py: 0.5,
-        borderRadius: 1,
-        bgcolor: 'background.paper',
-        fontSize: '0.75rem',
+        zIndex: 1
       }}>
-        {ticket.status}
+        <Chip
+          label={ticket.status}
+          color={getStatusColor(ticket.status)}
+          size="small"
+        />
       </Box>
-      
+
       <CardMedia
         component="img"
         height="160"
         image={ticket.productImageURL || '/api/placeholder/400/320'}
         alt={ticket.productName}
+        sx={{ objectFit: 'cover' }}
       />
-      
+
       <CardContent>
         <Typography variant="h6" gutterBottom noWrap>
           {ticket.productName}
         </Typography>
-        {ticket.productDate && (
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+          {ticket.productDate && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Calendar size={16} />
+              <Typography variant="body2">
+                {formatDate(ticket.productDate)}
+              </Typography>
+            </Box>
+          )}
+
+          {ticket.productStartTime && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Clock size={16} />
+              <Typography variant="body2">
+                {ticket.productStartTime}
+              </Typography>
+            </Box>
+          )}
+
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Calendar size={16} />
-            <Typography variant="body2">
-              {format(new Date(ticket.productDate), 'MMM d, yyyy')}
+            <Hash size={16} />
+            <Typography variant="body2" color="text.secondary" noWrap>
+              {`ID: ${ticket._id.slice(-8)}`}
             </Typography>
           </Box>
-        )}
+        </Box>
+
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          mt: 2 
+        }}>
+          <Typography variant="subtitle1" color="primary">
+            {`Qty: ${ticket.quantity}`}
+          </Typography>
+          <Typography variant="subtitle1" color="primary">
+            ${ticket.productPrice.toFixed(2)}
+          </Typography>
+        </Box>
       </CardContent>
     </StyledCard>
   );

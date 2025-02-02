@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
@@ -12,7 +12,8 @@ import { useTranslation } from "@/services/i18n/client";
 import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
-import { BanknoteIcon, PiggyBank, CreditCardIcon } from 'lucide-react';
+import { BanknoteIcon, PiggyBank, RefreshCw, History } from 'lucide-react';
+import Alert from "@mui/material/Alert";
 
 interface VendorAccountBalancesProps {
   vendor: {
@@ -23,10 +24,18 @@ interface VendorAccountBalancesProps {
   };
 }
 
-const StyledCard = styled(Card)(({ theme }) => ({
-  backgroundColor: theme.palette.background.glass,
+interface Payout {
+  _id: string;
+  amount: number;
+  status: string;
+  createdAt: string;
+  processedAt?: string;
+}
+
+const StyledCard = styled(Card)(() => ({
+  backgroundColor: "rgb(28, 40, 58, 0.8)",
   backdropFilter: 'blur(10px)',
-  border: `1px solid ${theme.palette.divider}`,
+  border: `1px solid rgba(255, 255, 255, 0.1)`,
   transition: 'transform 0.2s ease-in-out',
   '&:hover': {
     transform: 'translateY(-2px)',
@@ -38,15 +47,81 @@ const BalanceBox = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   gap: theme.spacing(2),
   padding: theme.spacing(2),
-  backgroundColor: theme.palette.background.glassHover,
+  backgroundColor: "rgba(28, 40, 58, 0.9)",
   borderRadius: theme.shape.borderRadius,
   marginBottom: theme.spacing(2)
 }));
 
-export default function VendorAccountBalances({ vendor }: VendorAccountBalancesProps) {
+const PayoutItem = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  padding: theme.spacing(1.5),
+  backgroundColor: "rgba(28, 40, 58, 0.9)",
+  borderRadius: theme.shape.borderRadius,
+  marginBottom: theme.spacing(1)
+}));
+
+function VendorAccountBalances({ vendor }: VendorAccountBalancesProps) {
   const { t } = useTranslation("vendor-account");
   const { enqueueSnackbar } = useSnackbar();
   const [processingPayout, setProcessingPayout] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [payouts, setPayouts] = useState<Payout[]>([]);
+  const [internalBalance, setInternalBalance] = useState<number>(vendor.internalAccountBalance || 0);
+  const [loadingPayouts, setLoadingPayouts] = useState(true);
+
+  const fetchPayouts = useCallback(async () => {
+    try {
+      const tokensInfo = getTokensInfo();
+      if (!tokensInfo?.token) return;
+
+      const response = await fetch(`${API_URL}/payouts/vendor/${vendor._id}`, {
+        headers: {
+          'Authorization': `Bearer ${tokensInfo.token}`
+        }
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch payouts');
+      const data = await response.json();
+      setPayouts(data.data);
+    } catch (error) {
+      console.error('Error fetching payouts:', error);
+      enqueueSnackbar(t('errors.fetchPayoutsFailed'), { variant: 'error' });
+    } finally {
+      setLoadingPayouts(false);
+    }
+  }, [vendor._id, enqueueSnackbar, t]);
+
+  const refreshBalance = async () => {
+    try {
+      const tokensInfo = getTokensInfo();
+      if (!tokensInfo?.token) return;
+
+      const response = await fetch(`${API_URL}/vendors/${vendor._id}/balance`, {
+        headers: {
+          'Authorization': `Bearer ${tokensInfo.token}`
+        }
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch balance');
+      const data = await response.json();
+      setInternalBalance(data.internalBalance || 0);
+    } catch (error) {
+      console.error('Error refreshing balance:', error);
+      enqueueSnackbar(t('errors.refreshBalanceFailed'), { variant: 'error' });
+    }
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([fetchPayouts(), refreshBalance()]);
+    setRefreshing(false);
+  };
+
+  useEffect(() => {
+    fetchPayouts();
+  }, [fetchPayouts]);
 
   const handleTriggerPayout = async () => {
     try {
@@ -65,12 +140,12 @@ export default function VendorAccountBalances({ vendor }: VendorAccountBalancesP
         }
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to trigger payout');
-      }
-
-      await response.json(); // We still parse the response but don't store it
+      if (!response.ok) throw new Error('Failed to trigger payout');
+      
+      await response.json();
       enqueueSnackbar(t('success.payoutScheduled'), { variant: 'success' });
+      
+      await handleRefresh();
     } catch (error) {
       console.error('Error triggering payout:', error);
       enqueueSnackbar(t('errors.payoutFailed'), { variant: 'error' });
@@ -79,10 +154,18 @@ export default function VendorAccountBalances({ vendor }: VendorAccountBalancesP
     }
   };
 
-  // Convert pennies to dollars for display
-  const formatBalance = (pennies?: number) => {
-    if (pennies === null || pennies === undefined) return '0.00';
+  const formatBalance = (pennies: number): string => {
     return (pennies / 100).toFixed(2);
+  };
+
+  const getPayoutStatusColor = (status: string) => {
+    switch (status) {
+      case 'PENDING': return 'warning.main';
+      case 'PROCESSING': return 'info.main';
+      case 'SUCCEEDED': return 'success.main';
+      case 'FAILED': return 'error.main';
+      default: return 'text.secondary';
+    }
   };
 
   return (
@@ -90,23 +173,21 @@ export default function VendorAccountBalances({ vendor }: VendorAccountBalancesP
       <CardHeader 
         title={vendor.businessName}
         subheader={t('balances.title')}
+        action={
+          <Button
+            startIcon={refreshing ? <CircularProgress size={20} /> : <RefreshCw size={20} />}
+            onClick={handleRefresh}
+            disabled={refreshing}
+            variant="outlined"
+            size="small"
+          >
+            {t('actions.refresh')}
+          </Button>
+        }
       />
       <CardContent>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <BalanceBox>
-              <CreditCardIcon size={24} />
-              <Box>
-                <Typography variant="subtitle2" color="text.secondary">
-                  {t('balances.stripe')}
-                </Typography>
-                <Typography variant="h6">
-                  ${formatBalance(vendor.accountBalance)}
-                </Typography>
-              </Box>
-            </BalanceBox>
-          </Grid>
-          <Grid item xs={12} md={6}>
+        <Grid container spacing={3} className="mb-4">
+          <Grid item xs={12}>
             <BalanceBox>
               <BanknoteIcon size={24} />
               <Box>
@@ -114,23 +195,52 @@ export default function VendorAccountBalances({ vendor }: VendorAccountBalancesP
                   {t('balances.internal')}
                 </Typography>
                 <Typography variant="h6">
-                  ${formatBalance(vendor.internalAccountBalance)}
+                  ${formatBalance(internalBalance)}
                 </Typography>
               </Box>
             </BalanceBox>
           </Grid>
         </Grid>
 
+        <Box className="mb-4">
+          <Typography variant="h6" className="flex items-center gap-2 mb-3">
+            <History size={20} />
+            {t('payouts.history')}
+          </Typography>
+          
+          {loadingPayouts ? (
+            <Box className="flex justify-center p-4">
+              <CircularProgress />
+            </Box>
+          ) : payouts.length > 0 ? (
+            payouts.map(payout => (
+              <PayoutItem key={payout._id}>
+                <Box>
+                  <Typography>${formatBalance(payout.amount)}</Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    {new Date(payout.createdAt).toLocaleDateString()}
+                  </Typography>
+                </Box>
+                <Typography color={getPayoutStatusColor(payout.status)}>
+                  {payout.status}
+                </Typography>
+              </PayoutItem>
+            ))
+          ) : (
+            <Alert severity="info">{t('payouts.noneFound')}</Alert>
+          )}
+        </Box>
+
         <Button
           variant="contained"
           startIcon={processingPayout ? <CircularProgress size={20} /> : <PiggyBank size={20} />}
           onClick={handleTriggerPayout}
-          disabled={processingPayout || (vendor.internalAccountBalance || 0) <= 0}
+          disabled={processingPayout || internalBalance <= 0}
+          fullWidth
           sx={{
-            mt: 2,
-            background: theme => theme.palette.customGradients.buttonMain,
+            background: 'linear-gradient(to right, #1E40AF,rgb(71, 26, 145))',
             '&:hover': {
-              background: theme => theme.palette.customGradients.buttonMain,
+              background: 'linear-gradient(to right, #1E40AF,rgb(71, 26, 145))',
               filter: 'brightness(0.9)',
             }
           }}
@@ -141,3 +251,5 @@ export default function VendorAccountBalances({ vendor }: VendorAccountBalancesP
     </StyledCard>
   );
 }
+
+export default VendorAccountBalances;

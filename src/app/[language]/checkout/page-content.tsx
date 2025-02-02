@@ -1,19 +1,63 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
 import { useCartQuery } from '@/hooks/use-cart-query';
 import useAuth from '@/services/auth/use-auth';
 import { API_URL } from '@/services/api/config';
 import { getTokensInfo } from '@/services/auth/auth-tokens-info';
 import { useSnackbar } from '@/hooks/use-snackbar';
+import { styled } from '@mui/material/styles';
 
-// Initialize Stripe outside component
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
+// Styled container for the checkout form
+const CheckoutContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
+  minHeight: '600px',
+  position: 'relative',
+  '& .ElementsApp': {
+    backgroundColor: 'transparent',
+  },
+  // Custom styling for the embedded checkout iframe container
+  '& .EmbeddedCheckout': {
+    backgroundColor: theme.palette.background.paper,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadius,
+    padding: theme.spacing(2),
+    minHeight: '600px',
+    backdropFilter: 'blur(10px)',
+    boxShadow: theme.shadows[4],
+  },
+  // Apply custom styles to Stripe Elements
+  '& .StripeElement': {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(2),
+    borderRadius: theme.shape.borderRadius,
+    border: `1px solid ${theme.palette.divider}`,
+    transition: theme.transitions.create(['border-color', 'box-shadow']),
+    '&:hover': {
+      borderColor: theme.palette.primary.main,
+    },
+    '&--focus': {
+      borderColor: theme.palette.primary.main,
+      boxShadow: `0 0 0 2px ${theme.palette.primary.main}25`,
+    },
+  }
+}));
+
+const LoadingContainer = styled(Container)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  minHeight: 'calc(100vh - 64px)',
+  backgroundColor: theme.palette.background.default,
+}));
 
 export default function CheckoutPageContent() {
   const router = useRouter();
@@ -37,7 +81,6 @@ export default function CheckoutPageContent() {
 
     const createCheckoutSession = async () => {
       if (!cartData?.items.length) return;
-
       setIsLoadingPayment(true);
       setError(null);
 
@@ -70,7 +113,6 @@ export default function CheckoutPageContent() {
           throw new Error('No client secret received');
         }
 
-        console.log('Received client secret:', clientSecret); // Debug log
         setClientSecret(clientSecret);
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to initialize checkout';
@@ -86,14 +128,9 @@ export default function CheckoutPageContent() {
 
   if (isCartLoading || isLoadingPayment) {
     return (
-      <Container sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: 'calc(100vh - 64px)'
-      }}>
+      <LoadingContainer>
         <CircularProgress />
-      </Container>
+      </LoadingContainer>
     );
   }
 
@@ -112,17 +149,13 @@ export default function CheckoutPageContent() {
   }
 
   return (
-    <div id="checkout" style={{
-      width: '100%',
-      minHeight: '600px',
-      position: 'relative'
-    }}>
+    <CheckoutContainer>
       <EmbeddedCheckoutProvider
         stripe={stripePromise}
         options={{ clientSecret }}
       >
         <EmbeddedCheckout />
       </EmbeddedCheckoutProvider>
-    </div>
+    </CheckoutContainer>
   );
 }

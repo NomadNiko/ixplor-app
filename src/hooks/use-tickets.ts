@@ -17,11 +17,19 @@ export interface Ticket {
   productType: string;
   status: 'ACTIVE' | 'CANCELLED' | 'REDEEMED' | 'REVOKED';
   quantity: number;
-  createdAt: string;
-  updatedAt: string;
   productDate?: string;
   productStartTime?: string;
+  productDuration?: number;
+  productLocation?: {
+    type: 'Point';
+    coordinates: [number, number];
+  };
   productImageURL?: string;
+  productAdditionalInfo?: string;
+  productRequirements?: string[];
+  productWaiver?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface UseTicketsReturn {
