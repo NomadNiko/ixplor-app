@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ViewState } from "react-map-gl";
-import { Search, Store, MapPin } from "lucide-react";
+import { Search, Store, MapPin, Ticket } from "lucide-react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -18,6 +18,8 @@ import { useGooglePlaces } from "@/hooks/use-google-places";
 import { Vendor, VendorStatusEnum } from "@/app/[language]/types/vendor";
 import { useGetProductsService } from "@/services/api/services/products";
 import HTTP_CODES_ENUM from "@/services/api/types/http-codes";
+import { MapRef } from 'react-map-gl';
+import { BBox } from 'geojson';
 
 type SearchMode = "vendor" | "map";
 
@@ -25,10 +27,13 @@ interface SearchControlsProps {
   vendors: Vendor[];
   viewState: ViewState;
   setViewState: (viewState: ViewState) => void;
+  onVendorSelect: (vendor: Vendor) => void;
+  mapRef: React.RefObject<MapRef | null>; 
+  setBounds: (bounds: BBox) => void;
 }
 
 interface SearchResult {
-  type: 'vendor' | 'product';
+  type: "vendor" | "product";
   id: string;
   name: string;
   description?: string;
@@ -37,16 +42,25 @@ interface SearchResult {
   };
 }
 
-export const SearchControls = ({ vendors, viewState, setViewState }: SearchControlsProps) => {
+export const SearchControls = ({
+  vendors,
+  viewState,
+  setViewState,
+  onVendorSelect,
+  mapRef,
+  setBounds,
+}: SearchControlsProps) => {
   const { t } = useTranslation("home");
   const { getPlacePredictions, getPlaceDetails } = useGooglePlaces();
   const getProducts = useGetProductsService();
-  
+
   const [searchMode, setSearchMode] = useState<SearchMode>("vendor");
   const [searchQuery, setSearchQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [locationResults, setLocationResults] = useState<google.maps.places.AutocompletePrediction[]>([]);
+  const [locationResults, setLocationResults] = useState<
+    google.maps.places.AutocompletePrediction[]
+  >([]);
   const [isSearching, setIsSearching] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
 
@@ -57,12 +71,12 @@ export const SearchControls = ({ vendors, viewState, setViewState }: SearchContr
         const response = await getProducts();
         if (response.status === HTTP_CODES_ENUM.OK && response.data) {
           const publishedProducts = response.data.data.filter(
-            product => product.productStatus === ProductStatusEnum.PUBLISHED
+            (product) => product.productStatus === ProductStatusEnum.PUBLISHED
           );
           setProducts(publishedProducts);
         }
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
       }
     };
     fetchProducts();
@@ -85,35 +99,37 @@ export const SearchControls = ({ vendors, viewState, setViewState }: SearchContr
     if (searchMode === "vendor" && searchQuery) {
       setIsSearching(true);
       const lowercaseQuery = searchQuery.toLowerCase();
-      
+
       // Search in vendors
       const vendorResults: SearchResult[] = vendors
-        .filter(vendor => 
-          vendor.vendorStatus === VendorStatusEnum.APPROVED &&
-          (vendor.businessName.toLowerCase().includes(lowercaseQuery) ||
-          vendor.description.toLowerCase().includes(lowercaseQuery))
+        .filter(
+          (vendor) =>
+            vendor.vendorStatus === VendorStatusEnum.APPROVED &&
+            (vendor.businessName.toLowerCase().includes(lowercaseQuery) ||
+              vendor.description.toLowerCase().includes(lowercaseQuery))
         )
-        .map(vendor => ({
-          type: 'vendor',
+        .map((vendor) => ({
+          type: "vendor",
           id: vendor._id,
           name: vendor.businessName,
           description: vendor.description,
-          location: vendor.location
+          location: vendor.location,
         }));
 
       // Search in products
       const productResults: SearchResult[] = products
-        .filter(product =>
-          product.productName.toLowerCase().includes(lowercaseQuery) ||
-          (product.productDescription && 
-           product.productDescription.toLowerCase().includes(lowercaseQuery))
+        .filter(
+          (product) =>
+            product.productName.toLowerCase().includes(lowercaseQuery) ||
+            (product.productDescription &&
+              product.productDescription.toLowerCase().includes(lowercaseQuery))
         )
-        .map(product => ({
-          type: 'product',
+        .map((product) => ({
+          type: "product",
           id: product._id,
           name: product.productName,
           description: product.productDescription,
-          location: product.location
+          location: product.location,
         }));
 
       // Combine and sort results
@@ -149,7 +165,8 @@ export const SearchControls = ({ vendors, viewState, setViewState }: SearchContr
     return () => clearTimeout(timer);
   }, [searchQuery, searchMode]);
 
-  const handleResultSelect = (result: SearchResult) => {
+  const handleResultSelect = async (result: SearchResult) => {
+    // Update map location
     setViewState({
       ...viewState,
       longitude: result.location.coordinates[0],
@@ -158,6 +175,38 @@ export const SearchControls = ({ vendors, viewState, setViewState }: SearchContr
     });
     setShowResults(false);
     setSearchQuery("");
+  
+    // Allow time for the map to move, then update bounds
+    setTimeout(() => {
+      const map = mapRef.current?.getMap();
+      if (map) {
+        const bounds = map.getBounds();
+        if (bounds) {
+          setBounds([
+            bounds.getWest(),
+            bounds.getSouth(),
+            bounds.getEast(),
+            bounds.getNorth(),
+          ]);
+        }
+      }
+    }, 300);  // Wait for map movement to complete
+  
+    // Find and open the corresponding vendor
+    if (result.type === 'vendor') {
+      const vendor = vendors.find(v => v._id === result.id);
+      if (vendor) {
+        onVendorSelect(vendor);
+      }
+    } else {
+      const product = products.find(p => p._id === result.id);
+      if (product) {
+        const vendor = vendors.find(v => v._id === product.vendorId);
+        if (vendor) {
+          onVendorSelect(vendor);
+        }
+      }
+    }
   };
 
   const handleLocationSelect = async (placeId: string) => {
@@ -173,6 +222,21 @@ export const SearchControls = ({ vendors, viewState, setViewState }: SearchContr
         });
         setShowResults(false);
         setSearchQuery("");
+  
+        setTimeout(() => {
+          const map = mapRef.current?.getMap();
+          if (map) {
+            const bounds = map.getBounds();
+            if (bounds) {
+              setBounds([
+                bounds.getWest(),
+                bounds.getSouth(),
+                bounds.getEast(),
+                bounds.getNorth(),
+              ]);
+            }
+          }
+        }, 300); // Same timeout as in handleResultSelect
       }
     } catch (error) {
       console.error("Error fetching place details:", error);
@@ -199,13 +263,8 @@ export const SearchControls = ({ vendors, viewState, setViewState }: SearchContr
           InputProps={{
             startAdornment: <Search size={20} className="mr-2" />,
             endAdornment: (
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                {isSearching && (
-                  <CircularProgress
-                    size={20}
-                    sx={{ mr: 1 }}
-                  />
-                )}
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                {isSearching && <CircularProgress size={20} sx={{ mr: 1 }} />}
                 <ToggleButtonGroup
                   value={searchMode}
                   exclusive
@@ -248,14 +307,16 @@ export const SearchControls = ({ vendors, viewState, setViewState }: SearchContr
               searchResults.length > 0 ? (
                 searchResults.map((result) => (
                   <ListItem key={result.id} disablePadding>
-                    <ListItemButton
-                      onClick={() => handleResultSelect(result)}
-                    >
+                    <ListItemButton onClick={() => handleResultSelect(result)}>
                       <ListItemIcon>
-                        <Store size={20} />
+                        {result.type === "vendor" ? (
+                          <Store size={20} />
+                        ) : (
+                          <Ticket size={20} />
+                        )}
                       </ListItemIcon>
                       <ListItemText
-                        primary={`${result.name} (${result.type})`}
+                        primary={result.name}
                         secondary={result.description}
                       />
                     </ListItemButton>
