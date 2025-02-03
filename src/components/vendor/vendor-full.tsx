@@ -19,6 +19,7 @@ import { useSnackbar } from "@/hooks/use-snackbar";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import HTTP_CODES_ENUM from "@/services/api/types/http-codes";
+import { useCartQuery } from '@/hooks/use-cart-query';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -35,6 +36,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
   
   const getProducts = useGetProductsService();
   const addToCart = useAddToCartService();
+  const { refreshCart } = useCartQuery();
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -61,7 +63,8 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
   const handleAddToCart = async (productId: string) => {
     try {
       setAddingToCart(productId);
-      await addToCart({ productId, quantity: 1 , vendorId: vendor._id});
+      await addToCart({ productId, quantity: 1, vendorId: vendor._id });
+      await refreshCart(); // Refresh the cart count immediately after successful addition
       enqueueSnackbar(t('success.addedToCart'), { variant: 'success' });
     } catch (error) {
       console.error('Error adding to cart:', error);
