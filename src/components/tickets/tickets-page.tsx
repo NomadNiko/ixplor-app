@@ -50,7 +50,7 @@ export default function TicketsPage() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="sm" sx={{ py: 4 }}>
       {/* Active Tickets */}
       <Box sx={{ mb: 6 }}>
         <Typography variant="h4" gutterBottom>
@@ -63,7 +63,7 @@ export default function TicketsPage() {
         ) : (
           <Grid container spacing={3}>
             {activeTickets.map(ticket => (
-              <Grid item xs={12} sm={6} md={4} xl={3} key={ticket._id}>
+              <Grid item xs={12} sm={12} md={12} xl={6} key={ticket._id}>
                 <TicketCard
                   ticket={ticket}
                   onClick={() => setSelectedTicket(ticket)}
@@ -82,7 +82,7 @@ export default function TicketsPage() {
           </Typography>
           <Grid container spacing={3}>
             {oldTickets.map(ticket => (
-              <Grid item xs={12} sm={6} md={4} xl={3} key={ticket._id}>
+              <Grid item xs={12} sm={12} md={12} xl={6} key={ticket._id}>
                 <TicketCard
                   ticket={ticket}
                   onClick={() => setSelectedTicket(ticket)}
