@@ -2,12 +2,13 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
 import Alert from "@mui/material/Alert";
+import Paper from "@mui/material/Paper";
 import { Download, Ticket as TicketIcon, ExternalLink } from "lucide-react";
 import { format, isValid } from 'date-fns';
 import type { Ticket } from '@/hooks/use-tickets';
 import QRGenerator from "./QRGenerator";
+import html2canvas from 'html2canvas';
 
 interface TicketDetailProps {
   ticket: Ticket;
@@ -18,7 +19,7 @@ export const TicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose }) =
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
-    return isValid(date) ? format(date, 'MMMM d, yyyy') : 'N/A';
+    return isValid(date) ? format(date, "dd MMM ''yy") : 'N/A';
   };
 
   const getStatusColor = (status: string): "success" | "error" | "warning" | "info" => {
@@ -31,11 +32,49 @@ export const TicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose }) =
     }
   };
 
-  const handleExportTicket = () => {
-    // Implementation for exporting ticket details as PDF or similar format
-    console.log('Export ticket:', ticket._id);
+  const handleExportTicket = async () => {
+    const ticketEl = document.getElementById('ticket-content');
+    if (!ticketEl) return;
+
+    try {
+      // Create canvas with better quality settings
+      const canvas = await html2canvas(ticketEl, {
+        scale: 2, // Better quality for retina displays
+        useCORS: true,
+        backgroundColor: null,
+        windowWidth: ticketEl.scrollWidth + 50,
+        windowHeight: ticketEl.scrollHeight + 50
+      });
+
+      // Convert to blob
+      const blob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob((blob) => {
+          resolve(blob as Blob);
+        }, 'image/png', 1.0);
+      });
+
+    
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `ticket-${ticket._id}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error exporting ticket:', error);
+    }
   };
 
+  const formatDuration = (minutes?: number) => {
+    if (!minutes) return 'N/A';
+    const hours = minutes / 60;
+    return `${hours}h`;
+  };
+  
   const handleOpenMap = () => {
     if (ticket.productLocation) {
       const { coordinates } = ticket.productLocation;
@@ -47,129 +86,82 @@ export const TicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose }) =
   };
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-        <TicketIcon size={24} />
-        <Typography variant="h5">{ticket.productName}</Typography>
-      </Box>
+    <Paper sx={{ maxWidth: 500, width: '100%', mx: 'auto', p: 3 }}>
+      <Box id="ticket-content" sx={{ 
+        bgcolor: 'background.paper',
+        borderRadius: 1,
+        p: 3,
+        position: 'relative'
+      }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+          <TicketIcon size={24} />
+          <Typography variant="h6">{ticket.productName}</Typography>
+        </Box>
 
-      <Alert severity={getStatusColor(ticket.status)} sx={{ mb: 3 }}>
-        {`Ticket Status: ${ticket.status}`}
-      </Alert>
+        <Alert severity={getStatusColor(ticket.status)} sx={{ mb: 3 }}>
+          Ticket Status: {ticket.status}
+        </Alert>
 
-      <Box sx={{ mb: 4 }}>
-        <QRGenerator ticketId={ticket._id} transactionId={ticket.transactionId} />
-      </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+          <QRGenerator ticketId={ticket._id} transactionId={ticket.transactionId} />
+        </Box>
 
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={6} md={3}>
-          <Typography color="text.secondary" variant="caption" display="block">
-            Date
-          </Typography>
-          <Typography>{formatDate(ticket.productDate)}</Typography>
+        <Grid container spacing={2} sx={{ mb: 2 }}>
+          <Grid item xs={6} sm={6}>
+            <Typography color="text.secondary" variant="caption" display="block">
+              Date
+            </Typography>
+            <Typography>{formatDate(ticket.productDate)}</Typography>
+          </Grid>
+          <Grid item xs={6} sm={6}>
+            <Typography color="text.secondary" variant="caption" display="block">
+              Time
+            </Typography>
+            <Typography>{ticket.productStartTime || 'N/A'}</Typography>
+          </Grid>
+          <Grid item xs={6} sm={6}>
+            <Typography color="text.secondary" variant="caption" display="block">
+              Duration
+            </Typography>
+            <Typography>
+            {ticket.productDuration && ` (${formatDuration(ticket.productDuration)})`}
+            </Typography>
+          </Grid>
+          <Grid item xs={6} sm={6}>
+            <Typography color="text.secondary" variant="caption" display="block">
+              Quantity
+            </Typography>
+            <Typography>{ticket.quantity}</Typography>
+          </Grid>
         </Grid>
 
-        <Grid item xs={6} md={3}>
-          <Typography color="text.secondary" variant="caption" display="block">
-            Time
-          </Typography>
-          <Typography>{ticket.productStartTime || 'N/A'}</Typography>
-        </Grid>
-
-        <Grid item xs={6} md={3}>
-          <Typography color="text.secondary" variant="caption" display="block">
-            Duration
-          </Typography>
-          <Typography>
-            {ticket.productDuration ? `${ticket.productDuration} hours` : 'N/A'}
-          </Typography>
-        </Grid>
-
-        <Grid item xs={6} md={3}>
-          <Typography color="text.secondary" variant="caption" display="block">
-            Quantity
-          </Typography>
-          <Typography>{ticket.quantity}</Typography>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Typography color="text.secondary" variant="caption" display="block">
-            Location
-          </Typography>
-          {ticket.productLocation ? (
+        {ticket.productLocation && (
+          <Box sx={{ mb: 2, ml: 2 }}>
             <Button
               variant="text"
               size="small"
               onClick={handleOpenMap}
               endIcon={<ExternalLink size={16} />}
             >
-              View on Map
+              View Location
             </Button>
-          ) : (
-            <Typography>N/A</Typography>
-          )}
-        </Grid>
-      </Grid>
+          </Box>
+        )}
+      </Box>
 
-      <Divider sx={{ my: 3 }} />
-
-      <Typography variant="subtitle1" gutterBottom>
-        Additional Information
-      </Typography>
-      
-      {ticket.productAdditionalInfo && (
-        <Typography variant="body2" paragraph>
-          {ticket.productAdditionalInfo}
-        </Typography>
-      )}
-
-      {ticket.productRequirements && ticket.productRequirements.length > 0 && (
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="subtitle2" gutterBottom>
-            Requirements
-          </Typography>
-          <ul>
-            {ticket.productRequirements.map((req, index) => (
-              <li key={index}>
-                <Typography variant="body2">{req}</Typography>
-              </li>
-            ))}
-          </ul>
-        </Box>
-      )}
-
-      {ticket.productWaiver && (
-        <Alert severity="info" sx={{ mb: 3 }}>
-          <Typography variant="subtitle2" gutterBottom>
-            Waiver Notice
-          </Typography>
-          <Typography variant="body2">
-            {ticket.productWaiver}
-          </Typography>
-        </Alert>
-      )}
-
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'space-between',
-        gap: 2, 
-        mt: 4 
-      }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
         <Button
           variant="outlined"
           startIcon={<Download size={16} />}
           onClick={handleExportTicket}
         >
-          Export Ticket
+          Export
         </Button>
-        <Button
-          variant="contained"
-          onClick={onClose}
-        >
+        <Button variant="contained" onClick={onClose}>
           Close
         </Button>
       </Box>
-    </Box>
+    </Paper>
   );
 };
 

@@ -25,9 +25,6 @@ export interface Ticket {
     coordinates: [number, number];
   };
   productImageURL?: string;
-  productAdditionalInfo?: string;
-  productRequirements?: string[];
-  productWaiver?: string;
   createdAt: string;
   updatedAt: string;
 }

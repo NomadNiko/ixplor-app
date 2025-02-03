@@ -1,8 +1,7 @@
-// TicketCard.tsx
+import React from 'react';
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import { Calendar, Clock, Hash } from "lucide-react";
@@ -25,12 +24,22 @@ const StyledCard = styled(Card)(({ theme }) => ({
   cursor: 'pointer',
 }));
 
-interface TicketCardProps {
+const formatDuration = (minutes?: number) => {
+  if (!minutes) return 'N/A';
+  const hours = minutes / 60;
+  return `${hours}h`;
+};
+
+const formatDate = (dateString?: string) => {
+  if (!dateString) return 'N/A';
+  const date = new Date(dateString);
+  return isValid(date) ? format(date, "dd MMM ''yy") : 'N/A';
+};
+
+export const TicketCard: React.FC<{
   ticket: Ticket;
   onClick: () => void;
-}
-
-export const TicketCard: React.FC<TicketCardProps> = ({ ticket, onClick }) => {
+}> = ({ ticket, onClick }) => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'ACTIVE': return 'success';
@@ -39,12 +48,6 @@ export const TicketCard: React.FC<TicketCardProps> = ({ ticket, onClick }) => {
       case 'REVOKED': return 'warning';
       default: return 'default';
     }
-  };
-
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return isValid(date) ? format(date, 'MMM d, yyyy') : '';
   };
 
   return (
@@ -61,20 +64,10 @@ export const TicketCard: React.FC<TicketCardProps> = ({ ticket, onClick }) => {
           size="small"
         />
       </Box>
-
-      <CardMedia
-        component="img"
-        height="160"
-        image={ticket.productImageURL || '/api/placeholder/400/320'}
-        alt={ticket.productName}
-        sx={{ objectFit: 'cover' }}
-      />
-
       <CardContent>
         <Typography variant="h6" gutterBottom noWrap>
           {ticket.productName}
         </Typography>
-
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
           {ticket.productDate && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -84,16 +77,15 @@ export const TicketCard: React.FC<TicketCardProps> = ({ ticket, onClick }) => {
               </Typography>
             </Box>
           )}
-
           {ticket.productStartTime && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Clock size={16} />
               <Typography variant="body2">
                 {ticket.productStartTime}
+                {ticket.productDuration && ` (${formatDuration(ticket.productDuration)})`}
               </Typography>
             </Box>
           )}
-
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Hash size={16} />
             <Typography variant="body2" color="text.secondary" noWrap>
@@ -101,7 +93,6 @@ export const TicketCard: React.FC<TicketCardProps> = ({ ticket, onClick }) => {
             </Typography>
           </Box>
         </Box>
-
         <Box sx={{ 
           display: 'flex', 
           justifyContent: 'space-between', 

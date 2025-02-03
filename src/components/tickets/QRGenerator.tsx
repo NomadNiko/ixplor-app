@@ -1,4 +1,5 @@
-import { QRCodeCanvas } from 'qrcode.react';
+import React from 'react';
+import { QRCodeSVG } from 'qrcode.react';
 
 interface QRGeneratorProps {
   ticketId: string;
@@ -9,17 +10,22 @@ const QRGenerator = ({ ticketId, transactionId }: QRGeneratorProps) => {
   const validationUrl = `${window.location.origin}/validation?ticketId=${ticketId}&transactionId=${transactionId}`;
   
   return (
-    <div className="flex flex-col items-center justify-center">
-      <QRCodeCanvas 
-        value={validationUrl}
-        size={320}
-        level="H"
-        bgColor="#1b2739"
-        fgColor="#CCDAF7"
-        title={ticketId}
-      />
-      <p className="mt-2 text-sm text-gray-500">
-        Vendors - Scan to Verify Transaction
+    <div className="flex flex-col items-center justify-center w-full p-4 space-y-4">
+      <p className="text-sm text-gray-400 text-center">
+        Vendors Scan to Verify
+      </p>
+      <div className="flex justify-center items-center w-40 h-40 bg-slate-800 rounded-lg p-2">
+        <QRCodeSVG
+          value={validationUrl}
+          size={218}
+          level="H"
+          bgColor="#1C283A"
+          fgColor="#CDDAF7"
+          marginSize={4}
+        />
+      </div>
+      <p className="text-sm text-gray-400 text-center">
+        Vendors Scan to Verify
       </p>
     </div>
   );

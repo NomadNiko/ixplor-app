@@ -15,17 +15,20 @@ const StyledModal = styled(Modal)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  padding: theme.spacing(2),
   '& .MuiBox-root': {
-    background: theme.palette.background.glass,
-    backdropFilter: 'blur(16px)',
+    background: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadius * 2,
     border: `1px solid ${theme.palette.divider}`,
-    maxWidth: 600,
-    width: '100%',
-    maxHeight: '90vh',
-    overflow: 'auto',
     position: 'relative',
+    height: '90%',
+    maxHeight: '90vh',
+    width: '90%',
+    maxWidth: '420px',
+    margin: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      width: '95%',
+      margin: theme.spacing(1),
+    },
   },
 }));
 
@@ -96,7 +99,7 @@ export default function TicketsPage() {
         open={!!selectedTicket}
         onClose={() => setSelectedTicket(null)}
       >
-        <Box>
+        <Box sx={{justifyContent: 'center', alignItems: 'center', maxWidth: '350px'}}>
           {selectedTicket && (
             <TicketDetail
               ticket={selectedTicket}
