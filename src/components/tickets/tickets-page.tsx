@@ -13,20 +13,19 @@ import TicketDetail from './TicketDetail';
 
 const StyledModal = styled(Modal)(({ theme }) => ({
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   justifyContent: 'center',
+  overflowY: 'scroll',
   '& .MuiBox-root': {
     background: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadius * 2,
     border: `1px solid ${theme.palette.divider}`,
     position: 'relative',
-    height: '90%',
-    maxHeight: '90vh',
-    width: '90%',
-    maxWidth: '420px',
+    width: '95%',
+    maxWidth: '440px',
     margin: theme.spacing(2),
     [theme.breakpoints.down('sm')]: {
-      width: '95%',
+      width: '90%',
       margin: theme.spacing(1),
     },
   },

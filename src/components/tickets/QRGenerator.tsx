@@ -11,7 +11,7 @@ const QRGenerator = ({ ticketId, transactionId }: QRGeneratorProps) => {
   
   return (
     <div className="flex flex-col items-center justify-center w-full p-4 space-y-4">
-      <p className="text-sm text-gray-400 text-center">
+      <p className="text-xs text-gray-400 text-center w-full"> {/* Adjusted text size and width */}
         Vendors Scan to Verify
       </p>
       <div className="flex justify-center items-center w-40 h-40 bg-slate-800 rounded-lg p-2">
@@ -24,7 +24,7 @@ const QRGenerator = ({ ticketId, transactionId }: QRGeneratorProps) => {
           marginSize={4}
         />
       </div>
-      <p className="text-sm text-gray-400 text-center">
+      <p className="text-xs text-gray-400 text-center w-full"> {/* Adjusted text size and width */}
         Vendors Scan to Verify
       </p>
     </div>

@@ -42,15 +42,15 @@ export const TicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose }) =
         scale: 2, // Better quality for retina displays
         useCORS: true,
         backgroundColor: null,
-        windowWidth: ticketEl.scrollWidth + 50,
-        windowHeight: ticketEl.scrollHeight + 50
+        windowWidth: 440,
+        windowHeight: 1350
       });
 
       // Convert to blob
       const blob = await new Promise<Blob>((resolve) => {
         canvas.toBlob((blob) => {
           resolve(blob as Blob);
-        }, 'image/png', 1.0);
+        }, 'pdf', 1.0);
       });
 
     
