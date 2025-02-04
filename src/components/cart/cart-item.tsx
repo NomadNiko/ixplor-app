@@ -1,4 +1,3 @@
-// src/components/cart/cart-item.tsx
 import { useState } from 'react';
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -16,28 +15,40 @@ import { useSnackbar } from "@/hooks/use-snackbar";
 
 type CartItemProps = {
   item: CartItemType;
-  onUpdate: () => void;
+  onUpdate: (productId: string, quantity: number) => void;
+  onRemove?: (productId: string) => void;
+  isGuest?: boolean;
 };
 
-export default function CartItem({ item, onUpdate }: CartItemProps) {
+export default function CartItem({ 
+  item, 
+  onUpdate, 
+  onRemove,
+  isGuest = false 
+}: CartItemProps) {
   const { t } = useTranslation("cart");
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
-
+  
   const updateCartItem = useUpdateCartItemService();
   const removeFromCart = useRemoveFromCartService();
 
   const handleQuantityChange = async (newQuantity: number) => {
     try {
       setLoading(true);
-      await updateCartItem({
-        productId: item.productId,
-        quantity: newQuantity,
-      });
-      onUpdate();
-      enqueueSnackbar(t('success.quantityUpdated'), { variant: 'success' });
+      if (isGuest) {
+        onUpdate(item.productId, newQuantity);
+        enqueueSnackbar(t('success.quantityUpdated'), { variant: 'success' });
+      } else {
+        await updateCartItem({
+          productId: item.productId,
+          quantity: newQuantity,
+        });
+        onUpdate(item.productId, newQuantity);
+        enqueueSnackbar(t('success.quantityUpdated'), { variant: 'success' });
+      }
     } catch (error) {
       console.error('Error updating quantity:', error);
       enqueueSnackbar(t('errors.updateFailed'), { variant: 'error' });
@@ -49,9 +60,14 @@ export default function CartItem({ item, onUpdate }: CartItemProps) {
   const handleRemove = async () => {
     try {
       setLoading(true);
-      await removeFromCart(item.productId);
-      onUpdate();
-      enqueueSnackbar(t('success.itemRemoved'), { variant: 'success' });
+      if (isGuest && onRemove) {
+        onRemove(item.productId);
+        enqueueSnackbar(t('success.itemRemoved'), { variant: 'success' });
+      } else {
+        await removeFromCart(item.productId);
+        onUpdate(item.productId, 0);
+        enqueueSnackbar(t('success.itemRemoved'), { variant: 'success' });
+      }
     } catch (error) {
       console.error('Error removing item:', error);
       enqueueSnackbar(t('errors.removeFailed'), { variant: 'error' });
@@ -92,7 +108,7 @@ export default function CartItem({ item, onUpdate }: CartItemProps) {
             <CircularProgress />
           </Box>
         )}
-
+        
         {isMobile && (
           <IconButton 
             onClick={handleRemove}
@@ -174,7 +190,10 @@ export default function CartItem({ item, onUpdate }: CartItemProps) {
           </IconButton>
         </Box>
 
-        <Box sx={{ textAlign: isMobile ? "center" : "right", minWidth: isMobile ? "100%" : 100 }}>
+        <Box sx={{ 
+          textAlign: isMobile ? "center" : "right", 
+          minWidth: isMobile ? "100%" : 100 
+        }}>
           <Typography variant={isMobile ? "subtitle1" : "h6"}>
             ${(item.price * item.quantity).toFixed(2)}
           </Typography>

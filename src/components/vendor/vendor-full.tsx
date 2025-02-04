@@ -20,6 +20,8 @@ import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import HTTP_CODES_ENUM from "@/services/api/types/http-codes";
 import { useCartQuery } from '@/hooks/use-cart-query';
+import useGuestCart from '@/hooks/use-guest-cart';
+import useAuth from '@/services/auth/use-auth';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -38,6 +40,8 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
   const addToCart = useAddToCartService();
   const { refreshCart } = useCartQuery();
   const { enqueueSnackbar } = useSnackbar();
+  const { user } = useAuth();
+  const { addToGuestCart } = useGuestCart();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -60,11 +64,35 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
     fetchProducts();
   }, [getProducts, vendor._id, enqueueSnackbar, t]);
 
-  const handleAddToCart = async (productId: string) => {
+  const handleAddToCart = async (product: Product) => {
     try {
-      setAddingToCart(productId);
-      await addToCart({ productId, quantity: 1, vendorId: vendor._id });
-      await refreshCart(); // Refresh the cart count immediately after successful addition
+      setAddingToCart(product._id);
+
+      // If user is logged in, use regular cart service
+      if (user) {
+        await addToCart({ 
+          productId: product._id, 
+          quantity: 1, 
+          vendorId: vendor._id 
+        });
+        await refreshCart();
+      } 
+      // Otherwise use guest cart
+      else {
+        addToGuestCart({
+          productId: product._id,
+          productName: product.productName,
+          productDescription: product.productDescription,
+          price: product.productPrice,
+          quantity: 1,
+          productImageURL: product.productImageURL,
+          vendorId: vendor._id,
+          productType: product.productType,
+          productDate: product.productDate,
+          productStartTime: product.productStartTime
+        });
+      }
+      
       enqueueSnackbar(t('success.addedToCart'), { variant: 'success' });
     } catch (error) {
       console.error('Error adding to cart:', error);
@@ -181,6 +209,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
                 {vendor.address}<br />
                 {vendor.city}, {vendor.state} {vendor.postalCode}
               </Typography>
+
               <Box sx={{ height: 200, mb: 2, borderRadius: 1, overflow: 'hidden' }}>
                 <img 
                   src={staticMapUrl}
@@ -244,7 +273,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
                               </Typography>
                               <Button
                                 variant="contained"
-                                onClick={() => handleAddToCart(product._id)}
+                                onClick={() => handleAddToCart(product)}
                                 disabled={addingToCart === product._id}
                                 size="small"
                                 sx={{ minWidth: 'unset', px: 1, py: 0.5 }}
