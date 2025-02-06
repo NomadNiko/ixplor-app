@@ -1,11 +1,12 @@
 "use client";
+
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import useAuth from "@/services/auth/use-auth";
-import VendorAdminPage from "./page-content";
+import VendorAccountPageContent from "./page-content";
 import { RoleEnum } from "@/services/api/types/role";
 
-export default function VendorAdminPageContainer() {
+export default function VendorAccountPageContainer() {
   const router = useRouter();
   const { user, isLoaded } = useAuth();
   
@@ -19,10 +20,9 @@ export default function VendorAdminPageContainer() {
     return null;
   }
 
-  // Check if user has admin role before rendering the page
   if (!user?.role || Number(user.role.id) !== RoleEnum.VENDOR) {
     return null;
   }
 
-  return <VendorAdminPage />;
+  return <VendorAccountPageContent />;
 }

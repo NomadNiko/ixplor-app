@@ -60,7 +60,9 @@ const MapHomeLayout = () => {
         if (response.status === HTTP_CODES_ENUM.OK && response.data) {
           setVendors(response.data.data);
         } else {
-          enqueueSnackbar(t("errors.failedToLoadVendors"), { variant: "error" });
+          enqueueSnackbar(t("errors.failedToLoadVendors"), {
+            variant: "error",
+          });
         }
       } catch (error) {
         enqueueSnackbar(t("errors.failedToLoadVendors"), { variant: "error" });
@@ -94,7 +96,7 @@ const MapHomeLayout = () => {
     setSelectedVendor(vendor);
     setShowFullView(false);
   };
-  
+
   const updateBounds = () => {
     const map = mapRef.current?.getMap();
     if (map) {
@@ -125,21 +127,24 @@ const MapHomeLayout = () => {
 
   if (loading) {
     return (
-      <Box sx={{
-        height: "calc(100vh - 64px)",
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}>
+      <Box
+        sx={{
+          height: "calc(100vh - 64px)",
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <CircularProgress />
       </Box>
     );
   }
 
-
   return (
-    <Box sx={{ height: "calc(100vh - 64px)", width: "100%", position: "relative" }}>
+    <Box
+      sx={{ height: "calc(100vh - 64px)", width: "100%", position: "relative" }}
+    >
       <Map
         {...viewState}
         onMove={(evt) => setViewState(evt.viewState)}
@@ -181,6 +186,9 @@ const MapHomeLayout = () => {
               vendors={vendors}
               viewState={viewState}
               setViewState={setViewState}
+              onVendorSelect={handleVendorSelect}
+              mapRef={mapRef}
+              setBounds={setBounds}
             />
             <VendorTypeFilters
               filterTypes={filterTypes}

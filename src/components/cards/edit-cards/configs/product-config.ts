@@ -78,6 +78,7 @@ export const productConfig: CardConfig = {
           name: "productDate",
           label: "date",
           type: "date",
+          required: true,
           gridWidth: 6,
           prefilled: true,
         }, 
@@ -85,6 +86,7 @@ export const productConfig: CardConfig = {
           name: "productStartTime",
           label: "startTime",
           type: "time",
+          required: true,
           gridWidth: 6,
           prefilled: true,
         },
@@ -97,6 +99,7 @@ export const productConfig: CardConfig = {
         {
           name: "productDuration",
           label: "duration",
+          required: true,
           type: "duration",
           gridWidth: 12,
         },

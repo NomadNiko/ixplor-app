@@ -24,6 +24,8 @@ import { styled } from "@mui/material/styles";
 import { ShoppingCart } from "lucide-react";
 import { useCartQuery } from "@/hooks/use-cart-query";
 import Badge from "@mui/material/Badge";
+import { useGuestCart } from "@/hooks/use-guest-cart";
+
 
 // Define the props type for the LogoTypography component
 type LogoTypographyProps = TypographyProps<"a", { component: "a" }>;
@@ -47,7 +49,9 @@ function ResponsiveAppBar() {
   const { t } = useTranslation("common");
   const { user, isLoaded } = useAuth();
   const { logOut } = useAuthActions();
+  const { guestCart, isGuest } = useGuestCart();
   const { data: cartData, isLoading: isCartLoading } = useCartQuery();
+
   const [anchorElementNav, setAnchorElementNav] = useState<null | HTMLElement>(
     null
   );
@@ -110,18 +114,19 @@ function ResponsiveAppBar() {
                 </Typography>
               </MenuItem>
               {!!user?.role &&
-                [RoleEnum.USER].includes(Number(user?.role?.id)) && [
+                [RoleEnum.USER, RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
-                    key="onboard"
+                    key="tickets"
                     onClick={handleCloseNavMenu}
                     component={Link}
-                    href="/onboard"
+                    href="/tickets"
                   >
                     <Typography textAlign="center">
-                      {t("common:navigation.onboard")}
+                      {t("common:navigation.tickets")}
                     </Typography>
                   </MenuItem>,
                 ]}
+                
               {!!user?.role &&
                 [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
@@ -132,6 +137,20 @@ function ResponsiveAppBar() {
                   >
                     <Typography textAlign="center">
                       {t("common:navigation.vendor-status")}
+                    </Typography>
+                  </MenuItem>,
+                ]}
+
+              {!!user?.role &&
+                [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
+                  <MenuItem
+                    key="vendor-account"
+                    onClick={handleCloseNavMenu}
+                    component={Link}
+                    href="/vendor-account"
+                  >
+                    <Typography textAlign="center">
+                      {t("common:navigation.vendor-account")}
                     </Typography>
                   </MenuItem>,
                 ]}
@@ -292,18 +311,19 @@ function ResponsiveAppBar() {
               {t("common:navigation.home")}
             </Button>
             {!!user?.role &&
-              [RoleEnum.USER].includes(Number(user?.role?.id)) && (
+              [RoleEnum.USER,RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
                     sx={{ my: 2, color: "white", display: "block" }}
                     component={Link}
-                    href="/onboard"
+                    href="/tickets"
                   >
-                    {t("common:navigation.onboard")}
+                    {t("common:navigation.tickets")}
                   </Button>
                 </>
               )}
+
             {!!user?.role &&
               [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
                 <>
@@ -314,6 +334,20 @@ function ResponsiveAppBar() {
                     href="/vendor-status"
                   >
                     {t("common:navigation.vendor-status")}
+                  </Button>
+                </>
+              )}
+
+            {!!user?.role &&
+              [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+                <>
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                    component={Link}
+                    href="/vendor-account"
+                  >
+                    {t("common:navigation.vendor-account")}
                   </Button>
                 </>
               )}
@@ -421,34 +455,34 @@ function ResponsiveAppBar() {
               mr: 1,
             }}
           ></Box>
-          {user && (
-            <Box sx={{ mr: 2 }}>
-              <Tooltip title={t("common:navigation.cart")}>
-                {isCartLoading ? (
-                  <CircularProgress size={40} color="inherit" />
-                ) : (
-                  <IconButton
-                    component={Link}
-                    href="/cart"
-                    sx={{ p: 0 }}
-                    data-testid="cart-button"
-                  >
-                    <Badge
-                      badgeContent={cartData?.items?.length || 0}
-                      color="primary"
-                      sx={{
-                        "& .MuiBadge-badge": {
-                          right: -3,
-                          top: 3,
-                        },
-                      }}
-                    >
-                      <ShoppingCart size={40} />
-                    </Badge>
-                  </IconButton>
-                )}
-              </Tooltip>
-            </Box>
+          {(user || isGuest) && (
+             <Box sx={{ mr: 2 }}>
+             <Tooltip title={t("common:navigation.cart")}>
+               {isCartLoading ? (
+                 <CircularProgress size={40} color="inherit" />
+               ) : (
+                 <IconButton
+                   component={Link}
+                   href="/cart"
+                   sx={{ p: 0 }}
+                   data-testid="cart-button"
+                 >
+                   <Badge
+                     badgeContent={isGuest ? guestCart.length : cartData?.items?.length || 0}
+                     color="primary"
+                     sx={{
+                       "& .MuiBadge-badge": {
+                         right: -3,
+                         top: 3,
+                       },
+                     }}
+                   >
+                     <ShoppingCart size={40} />
+                   </Badge>
+                 </IconButton>
+               )}
+             </Tooltip>
+           </Box>
           )}
           {!isLoaded ? (
             <CircularProgress color="inherit" />

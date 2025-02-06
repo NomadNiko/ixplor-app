@@ -73,22 +73,24 @@ const VendorStatusPage: React.FC = () => {
   const { user } = useAuth();
   const { vendor, loading, error } = useVendorStatus(user?.id?.toString() || '');
 
+  const isStripeComplete = vendor?.stripeAccountStatus?.detailsSubmitted === true;
+
   const getStepStatus = (step: string): 'complete' | 'in-progress' | 'pending' => {
     if (!vendor) return 'pending';
     
     switch (step) {
       case 'onboard':
         return 'complete';
-      case 'stripe':
-        return vendor.stripeConnectId ? 'complete' : 
-               vendor.vendorStatus === 'APPROVED' ? 'in-progress' : 'pending';
       case 'products':
         return vendor.hasProducts ? 'complete' : 
-               vendor.vendorStatus === 'APPROVED' && vendor.stripeConnectId ? 'in-progress' : 'pending';
+               vendor.vendorStatus === 'APPROVED' ? 'in-progress' : 'pending';
+      case 'stripe':
+        return isStripeComplete ? 'complete' : 
+               vendor.vendorStatus === 'APPROVED' && vendor.hasProducts ? 'in-progress' : 'pending';
       case 'complete':
         return vendor.vendorStatus === 'APPROVED' && 
-               vendor.stripeConnectId && 
-               vendor.hasProducts ? 'complete' : 'pending';
+               vendor.hasProducts && 
+               isStripeComplete ? 'complete' : 'pending';
       default:
         return 'pending';
     }
@@ -133,14 +135,14 @@ const VendorStatusPage: React.FC = () => {
             description={t("status.steps.onboardDesc")}
           />
           <StatusStep 
-            status={getStepStatus('stripe')}
-            title={t("status.steps.stripe")}
-            description={t("status.steps.stripeDesc")}
-          />
-          <StatusStep 
             status={getStepStatus('products')}
             title={t("status.steps.products")}
             description={t("status.steps.productsDesc")}
+          />
+          <StatusStep 
+            status={getStepStatus('stripe')}
+            title={t("status.steps.stripe")}
+            description={t("status.steps.stripeDesc")}
           />
           <StatusStep 
             status={getStepStatus('complete')}
@@ -150,19 +152,7 @@ const VendorStatusPage: React.FC = () => {
         </CardContent>
       </StyledCard>
 
-      {vendor && vendor.vendorStatus === 'APPROVED' && !vendor.stripeConnectId && (
-        <StyledCard sx={{ mb: 4 }}>
-          <CardHeader title={t("stripe.title")} />
-          <CardContent>
-            <Typography variant="body1" sx={{ mb: 3 }}>
-              {t("stripe.description")}
-            </Typography>
-            <StripeConnectOnboarding vendorId={vendor._id} />
-          </CardContent>
-        </StyledCard>
-      )}
-
-      {vendor && vendor.vendorStatus === 'APPROVED' && vendor.stripeConnectId && !vendor.hasProducts && (
+      {vendor && vendor.vendorStatus === 'APPROVED' && !vendor.hasProducts && (
         <StyledCard sx={{ mb: 4 }}>
           <CardHeader title={t("products.title")} />
           <CardContent>
@@ -182,6 +172,18 @@ const VendorStatusPage: React.FC = () => {
             >
               {t("products.add")}
             </Button>
+          </CardContent>
+        </StyledCard>
+      )}
+
+      {vendor && vendor.vendorStatus === 'APPROVED' && vendor.hasProducts && !isStripeComplete && (
+        <StyledCard sx={{ mb: 4 }}>
+          <CardHeader title={t("stripe.title")} />
+          <CardContent>
+            <Typography variant="body1" sx={{ mb: 3 }}>
+              {t("stripe.description")}
+            </Typography>
+            <StripeConnectOnboarding vendorId={vendor._id} />
           </CardContent>
         </StyledCard>
       )}

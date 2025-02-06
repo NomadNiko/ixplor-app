@@ -13,6 +13,7 @@ export interface CartResponse {
 export interface AddToCartData {
   productId: string;
   quantity: number;
+  vendorId: string; 
   productDate?: string;
   productStartTime?: string;
 }

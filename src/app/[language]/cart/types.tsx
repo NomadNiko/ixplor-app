@@ -5,6 +5,7 @@ export type CartItemType = {
   price: number;
   quantity: number;
   productImageURL?: string;
+  vendorId?: string;
   productType: "tours" | "lessons" | "rentals" | "tickets";
   productDate?: string;
   productStartTime?: string;
