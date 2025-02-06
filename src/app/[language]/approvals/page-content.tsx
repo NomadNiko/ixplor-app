@@ -180,7 +180,7 @@ export default function ApprovalsPage() {
     }
   };
 
-  const handleDelete = async (type: 'vendor' | 'product', id: string) => {
+  const handleDelete = async (type: 'vendor' | 'product' | 'template', id: string) => {
     const tokensInfo = getTokensInfo();
     if (!tokensInfo?.token) {
       enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });

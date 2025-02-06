@@ -177,7 +177,7 @@ function ResponsiveAppBar() {
                     key="addProduct"
                     onClick={handleCloseNavMenu}
                     component={Link}
-                    href="/products/add"
+                    href="/templates"
                   >
                     <Typography textAlign="center">
                       {t("common:navigation.addProduct")}
@@ -190,7 +190,7 @@ function ResponsiveAppBar() {
                     key="products"
                     onClick={handleCloseNavMenu}
                     component={Link}
-                    href="/products"
+                    href="/product-items"
                   >
                     <Typography textAlign="center">
                       {t("common:navigation.products")}
@@ -204,7 +204,7 @@ function ResponsiveAppBar() {
                     key="products-admin"
                     onClick={handleCloseNavMenu}
                     component={Link}
-                    href="/products-admin"
+                    href="/product-items"
                   >
                     <Typography textAlign="center">
                       {t("common:navigation.products-admin")}
@@ -373,7 +373,7 @@ function ResponsiveAppBar() {
                     onClick={handleCloseNavMenu}
                     sx={{ my: 2, color: "white", display: "block" }}
                     component={Link}
-                    href="/products/add"
+                    href="/templates"
                   >
                     {t("common:navigation.addProduct")}
                   </Button>
@@ -386,7 +386,7 @@ function ResponsiveAppBar() {
                     onClick={handleCloseNavMenu}
                     sx={{ my: 2, color: "white", display: "block" }}
                     component={Link}
-                    href="/products"
+                    href="/product-items"
                   >
                     {t("common:navigation.products")}
                   </Button>
@@ -400,7 +400,7 @@ function ResponsiveAppBar() {
                     onClick={handleCloseNavMenu}
                     sx={{ my: 2, color: "white", display: "block" }}
                     component={Link}
-                    href="/products-admin"
+                    href="/product-items"
                   >
                     {t("common:navigation.products-admin")}
                   </Button>

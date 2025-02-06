@@ -10,7 +10,7 @@ import { useTheme } from "@mui/material/styles";
 export type ApprovalStatus = ProductStatusEnum | VendorStatusEnum;
 
 interface ApprovalButtonsProps {
-  type: 'vendor' | 'product';
+  type: 'vendor' | 'product' |  'template';
   currentStatus: ApprovalStatus;
   onStatusChange: (status: ApprovalStatus) => Promise<void>;
   isSubmitting: boolean;
