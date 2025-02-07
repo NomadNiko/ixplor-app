@@ -62,10 +62,16 @@ export const templateConfig: CardConfig = {
           }
         },
         {
+          name: "break",
+          label: "break",
+          type: "break",
+          gridWidth: 12,
+        },
+        {
           name: "defaultDuration",
           label: "defaultDuration",
           type: "duration",
-          gridWidth: 6,
+          gridWidth: 3,
         },
         {
           name: "imageURL",
@@ -99,9 +105,9 @@ export const templateConfig: CardConfig = {
       title: "location",
       fields: [
         {
-          name: "defaultLocation",
-          label: "defaultLocation",
-          type: "address",
+          name: "location",
+          label: "location",
+          type: "gpsLocation",
           gridWidth: 12,
         },
       ],

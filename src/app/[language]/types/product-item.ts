@@ -17,6 +17,10 @@ export enum ProductItemStatus {
     quantitySold: number;
     longitude: number;
     latitude: number;
+    location: {
+      type: 'Point';
+      coordinates: [number, number]; // [longitude, latitude]
+  };
     templateName: string;
     description: string;
     productType: 'tours' | 'lessons' | 'rentals' | 'tickets';

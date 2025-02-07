@@ -7,6 +7,7 @@ import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { CardConfig, FormData, FieldType } from '../cards/shared/types';
 import useConfirmDialog from '@/components/confirm-dialog/use-confirm-dialog';
 import { ProductItem, ProductItemStatus } from '@/app/[language]/types/product-item';
+import { format } from 'date-fns';
 
 interface ProductItemEditCardProps {
   item: ProductItem;
@@ -52,11 +53,23 @@ const enhancedProductItemConfig: CardConfig = {
           gridWidth: 6,
         },
         {
+          name: "break",
+          label: "break",
+          type: "break",
+          gridWidth: 12,
+        },
+        {
           name: "startTime",
           label: "startTime",
           type: "time" as FieldType,
           required: true,
           gridWidth: 6,
+        },
+        {
+          name: "break",
+          label: "break",
+          type: "break",
+          gridWidth: 12,
         },
         {
           name: "duration",
@@ -134,6 +147,12 @@ const enhancedProductItemConfig: CardConfig = {
           rows: 3,
           gridWidth: 12,
         },
+        {
+          name: "location",
+          label: "location",
+          type: "gpsLocation",
+          gridWidth: 12,
+        }
       ],
     },
   ],
@@ -154,8 +173,8 @@ export default function ProductItemEditCard({
   const initialData: FormData = {
     imageURL: item.imageURL || '',
     description: item.description || '',
-    productDate: item.productDate,
-    startTime: item.startTime,
+    productDate: new Date(item.productDate),
+    startTime: new Date(`1970-01-01T${item.startTime}:00.000Z`),
     duration: item.duration,
     price: item.price,
     quantityAvailable: item.quantityAvailable,
@@ -164,6 +183,8 @@ export default function ProductItemEditCard({
     equipmentSize: item.equipmentSize || '',
     notes: item.notes || '',
     productType: item.productType,
+    location_latitude: item.location?.coordinates[1],
+    location_longitude: item.location?.coordinates[0],
   };
 
   const handleSubmit = async (formData: FormData) => {
@@ -179,7 +200,7 @@ export default function ProductItemEditCard({
         imageURL: formData.imageURL as string,
         description: formData.description as string,
         productDate: formData.productDate as string,
-        startTime: formData.startTime as string,
+        startTime: formData.startTime ? format(new Date(formData.startTime as string), 'HH:mm') : undefined, 
         duration: Number(formData.duration),
         price: Number(formData.price),
         quantityAvailable: Number(formData.quantityAvailable),
@@ -187,6 +208,8 @@ export default function ProductItemEditCard({
         instructorName: formData.instructorName as string,
         tourGuide: formData.tourGuide as string,
         equipmentSize: formData.equipmentSize as string,
+        latitude: Number(formData.location_latitude),
+        longitude: Number(formData.location_longitude),
       };
 
       const response = await fetch(`${API_URL}/product-items/${item._id}`, {

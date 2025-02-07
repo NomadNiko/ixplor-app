@@ -15,8 +15,8 @@ import Grid from "@mui/material/Grid";
 import { UrlField } from './UrlField';
 import { VendorSelect } from "./VendorSelect";
 import GPSLocationField from "./GPSLocationField";
-import { DurationInputWrapper } from "./DurationInputWrapper";
 import ProductTypeToggle from "./ProductTypeToggle";
+import DurationPicker from "./DurationPicker";
 
 export const CardField: React.FC<CardFieldProps> = ({
   field,
@@ -95,7 +95,7 @@ export const CardField: React.FC<CardFieldProps> = ({
 
   if (field.type === "duration") {
     return (
-      <DurationInputWrapper
+      <DurationPicker
         name={field.name}
         label={t(field.label)}
         control={control}

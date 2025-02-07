@@ -33,16 +33,16 @@ export default function TemplateEditCard({
   const initialData: FormData = {
     templateName: template.templateName,
     description: template.description,
-    basePrice: template.basePrice,
-    productType: template.productType,
     vendorId: template.vendorId,
+    productType: template.productType,
+    basePrice: template.basePrice,
+    defaultDuration: template.defaultDuration || null,
     requirements: template.requirements || [],
     waiver: template.waiver || '',
     imageURL: template.imageURL || '',
-    defaultDuration: template.defaultDuration || null,
     additionalInfo: template.additionalInfo || '',
-    latitude: template.defaultLocation?.coordinates[1] || null,
-    longitude: template.defaultLocation?.coordinates[0] || null,
+    location_latitude: template.defaultLocation?.coordinates[1] || 21.2758128,
+    location_longitude: template.defaultLocation?.coordinates[0] || -157.8241926,
   };
 
   const handleSubmit = async (formData: FormData) => {
@@ -135,6 +135,7 @@ export default function TemplateEditCard({
   const editConfig = {
     ...templateConfig,
     type: 'template' as const,
+    title: 'editTemplate',
     approvalButtons: onStatusChange ? {
       type: 'template' as const,
       currentStatus: template.templateStatus,

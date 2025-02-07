@@ -1,55 +1,58 @@
 {
-    "title": "Product Items",
-    "subtitle": "Manage your product items and their availability",
-    "editItem": "Edit Item",
-    "editSubtitle": "Update your product item details",
-    "search": "Search items",
-    "filterType": "Filter by type",
-    "filterStatus": "Filter by status",
-    "sort": "Sort by",
-    "all": "All",
-    "types": {
-      "tours": "Tours",
-      "lessons": "Lessons",
-      "rentals": "Rentals",
-      "tickets": "Tickets"
-    },
-    "status": {
-      "active": "Active",
-      "completed": "Completed",
-      "draft": "Draft",
-      "cancelled": "Cancelled"
-    },
-    "sortOptions": {
-      "earliest": "Earliest first",
-      "latest": "Latest first"
-    },
-    "duration": "Duration",
-    "minutes": "minutes",
-    "hours": "hours",
-    "date": "Date",
-    "time": "Time",
-    "price": "Price",
-    "edit": "Edit",
-    "close": "Close",
-    "createProduct": "Create Product",
-    "statusTitle": "Status",
-    "available": "Available",
-    "updated": "Updated",
-    "instructorName": "Instructor Name",
-    "tourGuide": "Tour Guide",
-    "equipmentSize": "Equipment Size",
-    "actions": {
-      "cancel": "Cancel",
-      "reactivate": "Reactivate",
-      "edit": "Edit"
-    },
-    "success": {
-      "statusUpdated": "Status updated successfully"
-    },
-    "errors": {
-      "unauthorized": "You are not authorized to view this page",
-      "loadFailed": "Failed to load items",
-      "updateFailed": "Failed to update item status"
-    }
+  "title": "Product Items",
+  "subtitle": "Manage your product items and their availability",
+  "editItem": "Edit Item",
+  "editSubtitle": "Update your product item details",
+  "search": "Search items",
+  "filterType": "Filter by type",
+  "filterStatus": "Filter by status",
+  "sort": "Sort by",
+  "all": "All",
+  "types": {
+    "tours": "Tours",
+    "lessons": "Lessons",
+    "rentals": "Rentals",
+    "tickets": "Tickets"
+  },
+  "status": {
+    "active": "Active",
+    "completed": "Completed",
+    "draft": "Draft",
+    "cancelled": "Cancelled"
+  },
+  "sortOptions": {
+    "earliest": "Earliest first",
+    "latest": "Latest first"
+  },
+  "duration": "Duration",
+  "minutes": "Mins",
+  "hours": "Hrs",
+  "date": "Date",
+  "time": "Time",
+  "price": "Price",
+  "edit": "Edit",
+  "close": "Close",
+  "notes": "Notes",
+  "quantity": "Quanity",
+  "availablity": "Availability",
+  "createProduct": "Create Product",
+  "statusTitle": "Status",
+  "available": "Available",
+  "updated": "Updated",
+  "instructorName": "Instructor Name",
+  "tourGuide": "Tour Guide",
+  "equipmentSize": "Equipment Size",
+  "actions": {
+    "cancel": "Cancel",
+    "reactivate": "Reactivate",
+    "edit": "Edit"
+  },
+  "success": {
+    "statusUpdated": "Status updated successfully"
+  },
+  "errors": {
+    "unauthorized": "You are not authorized to view this page",
+    "loadFailed": "Failed to load items",
+    "updateFailed": "Failed to update item status"
   }
+}
