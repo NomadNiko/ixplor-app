@@ -118,13 +118,25 @@ export default function ProductItemsContent() {
     <Container maxWidth="xl" sx={{ py: 4 }}>
       <Box sx={{
         display: 'flex',
+        flexDirection: { xs: 'column', sm: 'row' },
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: { xs: 'stretch', sm: 'center' },
         mb: 4,
+        gap: { xs: 2, sm: 0 }
       }}>
-        <Typography variant="h4">{t("title")}</Typography>
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+        <Typography variant="h4" sx={{ mb: { xs: 2, sm: 0 } }}>{t("title")}</Typography>
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: { xs: 'column', sm: 'row' }, 
+          gap: 2, 
+          alignItems: { xs: 'stretch', sm: 'center' } 
+        }}>
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            mb: { xs: 2, sm: 0 }
+          }}>
             <IconButton onClick={previousWeek} size="small">
               <ChevronLeft />
             </IconButton>
@@ -144,6 +156,10 @@ export default function ProductItemsContent() {
             variant="contained"
             startIcon={<Plus />}
             onClick={() => router.push("/templates")}
+            fullWidth={false}
+            sx={{ 
+              alignSelf: { xs: 'stretch', sm: 'center' } 
+            }}
           >
             {t("createProduct")}
           </Button>

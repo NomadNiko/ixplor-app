@@ -122,7 +122,7 @@ export default function ProductItemDetailModal({
               </Grid>
 
               <Grid item xs={6}>
-                <Typography variant="subtitle2">{t('status')}</Typography>
+                <Typography variant="subtitle2">{t('statusTitle')}</Typography>
                 <Chip
                   size="small"
                   label={t(`status.${item.itemStatus.toLowerCase()}`)}
