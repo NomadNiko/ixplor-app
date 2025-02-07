@@ -9,7 +9,7 @@ import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import useAuth from '@/services/auth/use-auth';
-import { ProductItem, ProductItemStatus, FilterOptions } from './types/product-item.types';
+import { ProductItem, ProductItemStatus, FilterOptions } from '@/app/[language]/types/product-item';
 import { ProductItemCard } from './product-item-card';
 import { ProductItemFilters } from './product-item-filters';
 

@@ -5,7 +5,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { useTranslation } from "@/services/i18n/client";
-import { FilterOptions } from './types/product-item.types';
+import { FilterOptions } from '@/app/[language]/types/product-item';
 
 interface ProductItemFiltersProps {
   filters: FilterOptions;

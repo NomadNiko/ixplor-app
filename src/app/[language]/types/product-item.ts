@@ -50,3 +50,10 @@ export enum ProductItemStatus {
     data: ProductItem[];
     message?: string;
   }
+
+  export interface FilterOptions {
+    searchTerm: string;
+    filterType: string;
+    filterStatus: string;
+    sortOrder: 'asc' | 'desc';
+  }

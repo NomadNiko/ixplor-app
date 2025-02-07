@@ -1,3 +1,4 @@
+"use client";
 import { useRouter } from 'next/navigation';
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -7,20 +8,35 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
+import { X } from 'lucide-react';
 import { formatDistance, format } from 'date-fns';
 import { useTranslation } from "@/services/i18n/client";
-import { ProductItem, ProductItemStatus, StatusColor } from './types/product-item.types';
+import { ProductItem, ProductItemStatus } from '@/app/[language]/types/product-item';
 
 interface ProductItemCardProps {
   item: ProductItem;
-  onUpdateStatus: (itemId: string, newStatus: ProductItemStatus) => Promise<void>;
+  onUpdateStatus?: (itemId: string, newStatus: ProductItemStatus) => Promise<void>;
+  isModal?: boolean;
+  onClose?: () => void;
+  isVendorView?: boolean;
 }
 
-export const ProductItemCard: React.FC<ProductItemCardProps> = ({ item, onUpdateStatus }) => {
+export const ProductItemCard = ({ 
+  item, 
+  onUpdateStatus, 
+  isModal = false,
+  onClose,
+  isVendorView = false
+}: ProductItemCardProps) => {
   const { t } = useTranslation("product-items");
   const router = useRouter();
 
-  const getStatusColor = (status: string): StatusColor => {
+  const getStatusColor = (status: string): "success" | "error" | "default" => {
     switch (status) {
       case ProductItemStatus.ACTIVE:
         return 'success';
@@ -35,8 +51,8 @@ export const ProductItemCard: React.FC<ProductItemCardProps> = ({ item, onUpdate
     router.push(`/product-items/${item._id}/edit`);
   };
 
-  return (
-    <Card>
+  const content = (
+    <>
       {item.imageURL && (
         <CardMedia
           component="img"
@@ -51,11 +67,13 @@ export const ProductItemCard: React.FC<ProductItemCardProps> = ({ item, onUpdate
           <Typography variant="h6" gutterBottom>
             {item.templateName}
           </Typography>
-          <Chip
-            label={t(`status.${item.itemStatus.toLowerCase()}`)}
-            color={getStatusColor(item.itemStatus)}
-            size="small"
-          />
+          {isVendorView && (
+            <Chip
+              label={t(`status.${item.itemStatus.toLowerCase()}`)}
+              color={getStatusColor(item.itemStatus)}
+              size="small"
+            />
+          )}
         </Box>
 
         <Typography color="text.secondary" paragraph>
@@ -75,7 +93,7 @@ export const ProductItemCard: React.FC<ProductItemCardProps> = ({ item, onUpdate
             <Typography variant="subtitle2" color="text.secondary">
               {t('time')}
             </Typography>
-            <Typography>{item.startTime}</Typography>
+            <Typography>{format(new Date(`2000-01-01T${item.startTime}`), 'h:mm a')}</Typography>
           </Box>
           <Box>
             <Typography variant="subtitle2" color="text.secondary">
@@ -91,6 +109,16 @@ export const ProductItemCard: React.FC<ProductItemCardProps> = ({ item, onUpdate
             </Typography>
             <Typography>${item.price.toFixed(2)}</Typography>
           </Box>
+          {isVendorView && (
+            <Box>
+              <Typography variant="subtitle2" color="text.secondary">
+                {t('available')}
+              </Typography>
+              <Typography>
+                {item.quantityAvailable} / {item.quantityAvailable + (item.quantitySold || 0)}
+              </Typography>
+            </Box>
+          )}
         </Box>
 
         {(item.instructorName || item.tourGuide || item.equipmentSize) && (
@@ -123,34 +151,71 @@ export const ProductItemCard: React.FC<ProductItemCardProps> = ({ item, onUpdate
           {t('updated')} {formatDistance(new Date(item.updatedAt), new Date(), { addSuffix: true })}
         </Typography>
       </CardContent>
-      
-      <CardActions>
-        <Button
-          size="small"
-          color="primary"
-          onClick={handleEdit}
-        >
-          {t('actions.edit')}
-        </Button>
-        {item.itemStatus === ProductItemStatus.ACTIVE && (
+
+      {isVendorView && (
+        <CardActions>
           <Button
             size="small"
-            color="error"
-            onClick={() => onUpdateStatus(item._id, ProductItemStatus.CANCELLED)}
+            color="primary"
+            onClick={handleEdit}
           >
-            {t('actions.cancel')}
+            {t('actions.edit')}
           </Button>
-        )}
-        {item.itemStatus === ProductItemStatus.CANCELLED && (
-          <Button
-            size="small"
-            color="success"
-            onClick={() => onUpdateStatus(item._id, ProductItemStatus.ACTIVE)}
-          >
-            {t('actions.reactivate')}
-          </Button>
-        )}
-      </CardActions>
-    </Card>
+          {onUpdateStatus && item.itemStatus === ProductItemStatus.ACTIVE && (
+            <Button
+              size="small"
+              color="error"
+              onClick={() => onUpdateStatus(item._id, ProductItemStatus.CANCELLED)}
+            >
+              {t('actions.cancel')}
+            </Button>
+          )}
+          {onUpdateStatus && item.itemStatus === ProductItemStatus.CANCELLED && (
+            <Button
+              size="small"
+              color="success"
+              onClick={() => onUpdateStatus(item._id, ProductItemStatus.ACTIVE)}
+            >
+              {t('actions.reactivate')}
+            </Button>
+          )}
+        </CardActions>
+      )}
+    </>
   );
+
+  if (isModal) {
+    return (
+      <Dialog
+        open={true}
+        onClose={onClose}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography variant="h6">{item.templateName}</Typography>
+            <IconButton onClick={onClose} size="small">
+              <X size={20} />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          {content}
+        </DialogContent>
+        <DialogActions>
+          {isVendorView && (
+            <Button onClick={handleEdit} color="primary">
+              {t('actions.edit')}
+            </Button>
+          )}
+          <Button onClick={onClose}>
+            {t('actions.close')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
+
+  return <Card>{content}</Card>;
 };
