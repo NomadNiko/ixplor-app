@@ -27,7 +27,6 @@ export default function WeeklyCalendar({
     const itemMap = new Map<string, ProductItem[]>();
     
     items.forEach(item => {
-      // Convert ISO string date to yyyy-MM-dd format
       const dateKey = format(parseISO(item.productDate), 'yyyy-MM-dd');
       
       if (!itemMap.has(dateKey)) {
@@ -36,7 +35,6 @@ export default function WeeklyCalendar({
       itemMap.get(dateKey)?.push(item);
     });
 
-    // Sort items within each day by start time
     itemMap.forEach((dayItems, date) => {
       itemMap.set(date, dayItems.sort((a, b) => 
         a.startTime.localeCompare(b.startTime)
@@ -70,13 +68,26 @@ export default function WeeklyCalendar({
         borderColor: 'divider'
       }}>
         <Typography variant="h6">
-          {format(currentWeek.start, 'MMMM d')} - {format(currentWeek.end, 'MMMM d, yyyy')}
+          {`${format(currentWeek.start, 'MMMM d')} - ${format(currentWeek.end, 'MMMM d, yyyy')}`}
         </Typography>
       </Box>
+
       <Box sx={{ 
         display: 'flex',
         flex: 1,
-        overflow: 'hidden'
+        flexDirection: { xs: 'column', sm: 'row' },
+        overflow: 'auto',
+        '& > *': {
+          flex: { xs: '0 0 auto', sm: 1 },
+          minHeight: { xs: 300, sm: 'auto' },
+          borderRight: { xs: 0, sm: 1 },
+          borderBottom: { xs: 1, sm: 0 },
+          borderColor: 'divider',
+          '&:last-child': {
+            borderRight: 0,
+            borderBottom: 0
+          }
+        }
       }}>
         {weekDays.map(day => {
           const dateKey = format(day, 'yyyy-MM-dd');
