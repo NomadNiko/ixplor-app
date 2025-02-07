@@ -82,7 +82,7 @@ export default function ItemGeneratorCard({
           templateId: template._id,
           vendorId: template.vendorId,
           productDate: format(date, 'yyyy-MM-dd'),
-          startTime: data.startTime,
+          startTime: data.startTime ? format(new Date(data.startTime as string), 'HH:mm') : undefined,  
           duration: Number(data.duration),
           price: Number(data.price),
           quantityAvailable: Number(data.quantity),
