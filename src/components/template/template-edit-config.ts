@@ -1,7 +1,7 @@
 import { CardConfig } from "../cards/shared/types";
 
-export const templateConfig: CardConfig = {
-  title: "createTemplate",
+export const templateEditConfig: CardConfig = {
+  title: "editTemplate",
   type: "template",
   sections: [
     {
@@ -105,9 +105,9 @@ export const templateConfig: CardConfig = {
       title: "location",
       fields: [
         {
-          name: "defaultLocation",
-          label: "defaultLocation",
-          type: "address",
+          name: "location",
+          label: "location",
+          type: "gpsLocation",
           gridWidth: 12,
         },
       ],

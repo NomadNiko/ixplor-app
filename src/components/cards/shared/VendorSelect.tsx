@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -26,9 +26,15 @@ export const VendorSelect: React.FC<VendorSelectProps> = ({
   const { t } = useTranslation('products');
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuth();
-  const { register, setValue } = useFormContext();
+  const { register, setValue, control } = useFormContext();
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Watch the current value
+  const currentValue = useWatch({
+    control,
+    name,
+  });
 
   useEffect(() => {
     const fetchUserVendors = async () => {
@@ -40,7 +46,6 @@ export const VendorSelect: React.FC<VendorSelectProps> = ({
           return;
         }
 
-        // Fetch vendors where user is an owner
         const response = await fetch(`${API_URL}/v1/vendors/user/${user?.id}/owned`, {
           headers: {
             'Authorization': `Bearer ${tokensInfo.token}`
@@ -53,6 +58,15 @@ export const VendorSelect: React.FC<VendorSelectProps> = ({
 
         const data = await response.json();
         setVendors(data.data);
+
+        // Only set the first vendor if no value is currently selected
+        if (data.data && data.data.length > 0 && !currentValue) {
+          setValue(name, data.data[0]._id, {
+            shouldValidate: true,
+            shouldDirty: true,
+            shouldTouch: true
+          });
+        }
       } catch (error) {
         console.error('Error fetching vendors:', error);
         enqueueSnackbar(t('errors.failedToLoadVendors'), { variant: 'error' });
@@ -64,11 +78,7 @@ export const VendorSelect: React.FC<VendorSelectProps> = ({
     if (user?.id) {
       fetchUserVendors();
     }
-  }, [user?.id, enqueueSnackbar, t]);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(name, event.target.value);
-  };
+  }, [user?.id, enqueueSnackbar, t, setValue, name, currentValue]);
 
   return (
     <TextField
@@ -78,7 +88,14 @@ export const VendorSelect: React.FC<VendorSelectProps> = ({
       label={label}
       required={required}
       disabled={disabled || loading}
-      onChange={handleChange}
+      value={currentValue || ''}
+      onChange={(event) => {
+        setValue(name, event.target.value, {
+          shouldValidate: true,
+          shouldDirty: true,
+          shouldTouch: true
+        });
+      }}
       InputProps={{
         startAdornment: loading ? (
           <CircularProgress size={20} sx={{ mr: 1 }} />

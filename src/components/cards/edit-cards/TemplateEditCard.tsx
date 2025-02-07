@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSnackbar } from "@/hooks/use-snackbar";
 import { useTranslation } from "@/services/i18n/client";
 import { EditCard } from '@/components/cards/edit-cards/EditCard';
-import { templateConfig } from '@/components/template/template-form-config';
+import { templateEditConfig } from '@/components/template/template-edit-config';
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { FormData } from '../shared/types';
@@ -133,9 +133,8 @@ export default function TemplateEditCard({
   };
 
   const editConfig = {
-    ...templateConfig,
+    ...templateEditConfig,
     type: 'template' as const,
-    title: 'editTemplate',
     approvalButtons: onStatusChange ? {
       type: 'template' as const,
       currentStatus: template.templateStatus,

@@ -23,20 +23,20 @@ const enhancedProductItemConfig: CardConfig = {
   type: "productItem",
   sections: [
     {
-      id: "media",
-      title: "media",
+      id: "general",
+      title: "general",
       fields: [
-        {
-          name: "imageURL",
-          label: "imageUrl",
-          type: "fileUpload" as FieldType,
-          gridWidth: 12,
-        },
         {
           name: "description",
           label: "description",
           type: "textarea" as FieldType,
           rows: 3,
+          gridWidth: 12,
+        },
+        {
+          name: "imageURL",
+          label: "imageUrl",
+          type: "fileUpload" as FieldType,
           gridWidth: 12,
         },
       ],

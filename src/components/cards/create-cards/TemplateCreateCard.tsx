@@ -35,8 +35,8 @@ export default function TemplateCreateCard() {
         defaultDuration: formData.defaultDuration
           ? Number(formData.defaultDuration)
           : undefined,
-        latitude: formData.latitude as number,
-        longitude: formData.longitude as number,
+        latitude: Number(formData.location_latitude),
+        longitude: Number(formData.location_longitude),
         imageURL: (formData.imageURL as string) || "",
         templateStatus: "DRAFT",
       };
