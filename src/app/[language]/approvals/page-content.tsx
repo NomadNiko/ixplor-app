@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
 import { useTranslation } from "@/services/i18n/client";
-import { useGetAllVendorsService } from "@/services/api/services/vendors";
+import { useGetVendorService } from "@/services/api/services/vendors";
 import { useGetAllProductsService } from "@/services/api/services/products";
 import { useEffect, useState } from 'react';
 import { Vendor, VendorStatusEnum } from "@/app/[language]/types/vendor";
@@ -52,7 +52,7 @@ export default function ApprovalsPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
   
-  const getAllVendors = useGetAllVendorsService();
+  const getAllVendors = useGetVendorService();
   const getAllProducts = useGetAllProductsService();
 
   const loadData = async () => {

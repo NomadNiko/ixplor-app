@@ -25,6 +25,7 @@ type SelectInputProps<T extends object> = {
   options: T[];
   size?: "small" | "medium";
   renderOption: (option: T) => React.ReactNode;
+  multiple?: boolean;
 };
 
 function SelectInputRaw<T extends object>(

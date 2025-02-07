@@ -3,15 +3,15 @@ import { FetchJsonResponse } from '@/services/api/types/fetch-json-response';
 
 export enum VendorStatusEnum {
   SUBMITTED = 'SUBMITTED',
-  PENDING_APPROVAL = 'PENDING_APPROVAL',
+  PENDING_APPROVAL = 'PENDING_APPROVAL', 
   ACTION_NEEDED = 'ACTION_NEEDED',
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED'
 }
 
-export type VendorTypes = 'tours' | 'lessons' | 'rentals' | 'tickets' | '';
+export type VendorType = 'tours' | 'lessons' | 'rentals' | 'tickets';
+export type VendorTypes = VendorType | '';
 
-// Stripe-related interfaces
 export interface StripeRequirement {
   requirement: string;
   dueDate?: Date;
@@ -41,12 +41,11 @@ export interface StripeVendorInfo {
   pendingBalance?: number;
 }
 
-// Base vendor properties interface
 export interface VendorProperties {
   _id: string;
   businessName: string;
   description: string;
-  vendorTypes: VendorTypes[];
+  vendorTypes: VendorType[];
   website?: string;
   email: string;
   phone: string;
@@ -68,10 +67,8 @@ export interface VendorProperties {
   stripeInfo?: StripeVendorInfo;
 }
 
-// GeoJSON feature type for vendor
 export type VendorFeature = Feature<Point, VendorProperties>;
 
-// Main vendor interface
 export interface Vendor extends Omit<VendorProperties, 'location'> {
   location: {
     type: 'Point';
@@ -79,14 +76,40 @@ export interface Vendor extends Omit<VendorProperties, 'location'> {
   };
 }
 
-// API response types
 export interface VendorResponse {
   data: Vendor[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
 }
 
 export type VendorApiResponse = FetchJsonResponse<VendorResponse>;
 
-// Sorting enums
+export interface CreateVendorFormData {
+  businessName: string;
+  description: string;
+  vendorTypes: VendorType[];
+  website?: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  latitude: number;
+  longitude: number;
+  logoUrl?: { id: string; path: string };
+}
+
+export interface EditVendorFormData extends CreateVendorFormData {
+  vendorStatus: VendorStatusEnum;
+  actionNeeded?: string;
+  adminNotes?: string;
+}
+
 export enum VendorSortField {
   NAME = 'businessName',
   POSTCODE = 'postalCode',
@@ -100,4 +123,17 @@ export enum VendorSortField {
 export enum SortOrder {
   ASC = 'asc',
   DESC = 'desc'
+}
+
+export interface VendorFilterType {
+  status?: VendorStatusEnum;
+  type?: VendorType;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+}
+
+export interface VendorSortType {
+  orderBy: VendorSortField;
+  order: SortOrder;
 }

@@ -26,6 +26,7 @@ type TextInputProps = {
   multiline?: boolean;
   minRows?: number;
   maxRows?: number;
+  rows?: number;
   size?: "small" | "medium";
 };
 
