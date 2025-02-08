@@ -78,6 +78,29 @@ export const CardField: React.FC<CardFieldProps> = ({
     return <UrlField field={field} mode={mode} />;
   }
 
+  if (field.type === 'number') {
+    return (
+      <TextField
+        {...register(field.name, validationRules)}
+        type="number"
+        label={t(field.label)}
+        fullWidth
+        error={!!errors[field.name]}
+        helperText={errors[field.name]?.message as string}
+        InputProps={{
+          inputProps: {
+            min: 0,
+            step: 1,
+            onInput: (e) => {
+              e.currentTarget.value = e.currentTarget.value.replace('-', '');
+            }
+          }
+        }}
+        disabled={mode === 'edit' && field.prefilled}
+      />
+    );
+   }
+
   if (field.type === "price") {
     return (
       <BaseCurrencyInput

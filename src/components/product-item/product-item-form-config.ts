@@ -60,8 +60,8 @@ export const productItemConfig: CardConfig = {
           required: true,
           gridWidth: 6,
           validation: {
-            min: 1,
-            message: "Quantity must be at least 1"
+            min: 0,
+            message: "Quantity cannot be negative"
           }
         },
       ],

@@ -18,6 +18,8 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import { formatDistance } from 'date-fns';
 import useAuth from '@/services/auth/use-auth';
+import { formatDuration } from '../utils/duration-utils';
+
 
 interface Template {
     _id: string;
@@ -209,7 +211,7 @@ interface Template {
                     </Typography>
                     {template.defaultDuration && (
                       <Typography variant="body2">
-                        Duration: {template.defaultDuration}h
+                        Duration: {formatDuration(template.defaultDuration)}
                       </Typography>
                     )}
                   </Box>

@@ -38,28 +38,34 @@ export const templateConfig: CardConfig = {
           gridWidth: 12,
         },
         {
-            name: "productType",
-            label: "productType",
-            type: "select",
-            options: [
-              { value: "tours", label: "Tours" },
-              { value: "lessons", label: "Lessons" },
-              { value: "rentals", label: "Rentals" },
-              { value: "tickets", label: "Tickets" },
-            ],
-            gridWidth: 6,
-          },
+          name: "productType",
+          label: "productType",
+          type: "select",
+          options: [
+            { value: "tours", label: "Tours" },
+            { value: "lessons", label: "Lessons" },
+            { value: "rentals", label: "Rentals" },
+            { value: "tickets", label: "Tickets" },
+          ],
+          gridWidth: 6,
+        },
+        {
+          name: "break",
+          label: "break",
+          type: "break",
+          gridWidth: 12,
+        },
         {
           name: "basePrice",
           label: "basePrice",
           type: "price",
           gridWidth: 6,
           validation: {
-            pattern: '^\\d+(\\.\\d{0,2})?$',
+            pattern: "^\\d+(\\.\\d{0,2})?$",
             message: "Please enter valid price",
             min: 0,
-            max: 999999.99
-          }
+            max: 999999.99,
+          },
         },
         {
           name: "break",
@@ -71,7 +77,7 @@ export const templateConfig: CardConfig = {
           name: "defaultDuration",
           label: "defaultDuration",
           type: "duration",
-          gridWidth: 3,
+          gridWidth: 6,
         },
         {
           name: "imageURL",
@@ -112,6 +118,5 @@ export const templateConfig: CardConfig = {
         },
       ],
     },
-    
   ],
 };

@@ -43,6 +43,12 @@ export const templateEditConfig: CardConfig = {
           gridWidth: 6,
         },
         {
+          name: "break",
+          label: "break",
+          type: "break",
+          gridWidth: 12,
+        },
+        {
           name: "basePrice",
           label: "basePrice",
           type: "price",
@@ -64,7 +70,7 @@ export const templateEditConfig: CardConfig = {
           name: "defaultDuration",
           label: "defaultDuration",
           type: "duration",
-          gridWidth: 3,
+          gridWidth: 6,
         },
         {
           name: "imageURL",

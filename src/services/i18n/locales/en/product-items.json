@@ -29,6 +29,7 @@
   "hours": "Hrs",
   "date": "Date",
   "time": "Time",
+  "startTime": "Start Time",
   "price": "Price",
   "edit": "Edit",
   "close": "Close",

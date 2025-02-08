@@ -19,6 +19,7 @@ import CardMedia from "@mui/material/CardMedia";
 import { formatDistance } from 'date-fns';
 import useAuth from '@/services/auth/use-auth';
 import { Template } from '@/components/template/types/template.types';
+import { formatDuration } from '@/components/utils/duration-utils';
 
 export default function TemplatesPageContent() {
   const { user } = useAuth();
@@ -192,7 +193,7 @@ export default function TemplatesPageContent() {
                   </Typography>
                   {template.defaultDuration && (
                     <Typography variant="body2">
-                      Duration: {template.defaultDuration}h
+                      Duration: {formatDuration(template.defaultDuration)}
                     </Typography>
                   )}
                 </Box>
