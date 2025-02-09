@@ -1,8 +1,8 @@
-// PublicDayColumn.tsx
 import { format } from 'date-fns';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
+import Chip from "@mui/material/Chip";
 import { alpha } from '@mui/material/styles';
 import { ProductItem } from '@/app/[language]/types/product-item';
 import { useTranslation } from "@/services/i18n/client";
@@ -74,15 +74,37 @@ export default function PublicDayColumn({
               },
             }}
           >
-            <Typography
-              variant="subtitle2"
-              sx={{
-                wordBreak: 'break-word',
-                mb: 0.5,
-              }}
-            >
-              {item.templateName}
-            </Typography>
+            <Box sx={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'flex-start',
+              mb: 0.5
+            }}>
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  wordBreak: 'break-word',
+                  flex: 1,
+                  pr: 1
+                }}
+              >
+                {item.templateName}
+              </Typography>
+              {item.quantityAvailable === 0 && (
+                <Chip
+                  label={t('soldOut')}
+                  color="error"
+                  size="small"
+                  sx={{ 
+                    height: 20,
+                    '& .MuiChip-label': {
+                      px: 1,
+                      fontSize: '0.625rem'
+                    }
+                  }}
+                />
+              )}
+            </Box>
 
             <Typography
               variant="caption"
@@ -100,17 +122,29 @@ export default function PublicDayColumn({
               {formatDuration(item.duration)}
             </Typography>
 
-            <Typography
-              variant="caption"
-              color="primary"
-              sx={{ 
-                display: 'block',
-                mt: 0.5,
-                fontWeight: 'bold'
-              }}
-            >
-              ${item.price.toFixed(2)}
-            </Typography>
+            <Box sx={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              mt: 0.5 
+            }}>
+              <Typography
+                variant="caption"
+                color="primary"
+                sx={{ fontWeight: 'bold' }}
+              >
+                ${item.price.toFixed(2)}
+              </Typography>
+              {item.quantityAvailable > 0 && item.quantityAvailable <= 3 && (
+                <Typography
+                  variant="caption"
+                  color="warning.main"
+                  sx={{ fontWeight: 'medium' }}
+                >
+                  {t('onlyXLeft', { count: item.quantityAvailable })}
+                </Typography>
+              )}
+            </Box>
           </Paper>
         ))}
 
