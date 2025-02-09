@@ -47,7 +47,7 @@ export default function VendorCreateCard() {
 
       if (response.ok) {
         enqueueSnackbar(t('success.vendorCreated'), { variant: 'success' });
-        router.push('/');
+        router.push('/vendor-status');
       } else {
         throw new Error('Failed to create vendor profile');
       }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo, JSX } from 'react';
 import { format, isWithinInterval, eachDayOfInterval, isToday } from 'date-fns';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -15,10 +15,14 @@ interface PublicWeeklyCalendarProps {
   onItemClick: (item: ProductItem) => void;
 }
 
+interface GroupedItems {
+  [date: string]: ProductItem[];
+}
+
 export function PublicWeeklyCalendar({ 
   items, 
   onItemClick
-}: PublicWeeklyCalendarProps) {
+}: PublicWeeklyCalendarProps): JSX.Element {
   const { t } = useTranslation("product-items");
   const {
     currentWeek,
@@ -28,37 +32,38 @@ export function PublicWeeklyCalendar({
     canGoPrevious
   } = usePublicCalendarNavigation();
   
-  const [groupedItems, setGroupedItems] = useState<Map<string, ProductItem[]>>(new Map());
-
-  useEffect(() => {
-    const itemMap = new Map<string, ProductItem[]>();
+  // Memoize the grouping of items
+  const groupedItems = useMemo(() => {
+    const itemMap: GroupedItems = {};
     
     items.forEach(item => {
-      if (item.itemStatus !== 'PUBLISHED') return;
-      
       const itemDate = new Date(item.productDate);
-      if (!isWithinInterval(itemDate, { start: currentWeek.start, end: currentWeek.end })) return;
+      if (!isWithinInterval(itemDate, { start: currentWeek.start, end: currentWeek.end })) {
+        return;
+      }
       
       const dateKey = format(itemDate, 'yyyy-MM-dd');
-      if (!itemMap.has(dateKey)) {
-        itemMap.set(dateKey, []);
+      if (!itemMap[dateKey]) {
+        itemMap[dateKey] = [];
       }
-      itemMap.get(dateKey)?.push(item);
+      itemMap[dateKey].push(item);
     });
 
-    itemMap.forEach((dayItems, date) => {
-      itemMap.set(date, dayItems.sort((a, b) => 
-        a.startTime.localeCompare(b.startTime)
-      ));
+    // Sort items within each day by start time
+    Object.keys(itemMap).forEach(date => {
+      itemMap[date].sort((a, b) => a.startTime.localeCompare(b.startTime));
     });
 
-    setGroupedItems(itemMap);
-  }, [items, currentWeek]);
+    return itemMap;
+  }, [items, currentWeek.start, currentWeek.end]);
 
-  const weekDays = eachDayOfInterval({
-    start: currentWeek.start,
-    end: currentWeek.end
-  });
+  const weekDays = useMemo(() => 
+    eachDayOfInterval({
+      start: currentWeek.start,
+      end: currentWeek.end
+    }), 
+    [currentWeek]
+  );
 
   return (
     <Box sx={{ 
@@ -122,15 +127,18 @@ export function PublicWeeklyCalendar({
           }
         }
       }}>
-        {weekDays.map(day => (
-          <PublicDayColumn
-            key={format(day, 'yyyy-MM-dd')}
-            date={day}
-            items={groupedItems.get(format(day, 'yyyy-MM-dd')) || []}
-            onItemClick={onItemClick}
-            isToday={isToday(day)}
-          />
-        ))}
+        {weekDays.map(day => {
+          const dateKey = format(day, 'yyyy-MM-dd');
+          return (
+            <PublicDayColumn
+              key={dateKey}
+              date={day}
+              items={groupedItems[dateKey] || []}
+              onItemClick={onItemClick}
+              isToday={isToday(day)}
+            />
+          );
+        })}
       </Box>
     </Box>
   );

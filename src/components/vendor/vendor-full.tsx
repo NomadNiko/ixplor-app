@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, JSX } from 'react';
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -13,9 +13,8 @@ import { useTranslation } from "@/services/i18n/client";
 import PublicWeeklyCalendar from '../calendar/PublicWeeklyCalendar';
 import PublicItemDetailModal from '../calendar/PublicItemDetailModal';
 import { Vendor } from "@/app/[language]/types/vendor";
-import { ProductItem, ProductItemStatus } from "@/app/[language]/types/product-item";
+import { ProductItem, ProductItemStatus } from '@/app/[language]/types/product-item';
 import { API_URL } from "@/services/api/config";
-import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { useCartQuery } from '@/hooks/use-cart-query';
 import useGuestCart from '@/hooks/use-guest-cart';
 import useAuth from '@/services/auth/use-auth';
@@ -29,11 +28,16 @@ interface VendorFullViewProps {
   onClose: () => void;
 }
 
-export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
+interface PublicProductItemsResponse {
+  data: ProductItem[];
+  message?: string;
+}
+
+export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps): JSX.Element => {
   const addToCart = useAddToCartService();
   const { t } = useTranslation("vendor");
   const [items, setItems] = useState<ProductItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [selectedItem, setSelectedItem] = useState<ProductItem | null>(null);
   const [addingToCart, setAddingToCart] = useState<string | null>(null);
 
@@ -42,37 +46,40 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
   const { user } = useAuth();
   const { addToGuestCart } = useGuestCart();
 
-  useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        setLoading(true);
-        const tokensInfo = getTokensInfo();
-        if (!tokensInfo?.token) return;
-
-        const response = await fetch(`${API_URL}/product-items/by-vendor/${vendor._id}/public`);
-
-        if (!response.ok) throw new Error('Failed to fetch items');
-        const data = await response.json();
-        
-        // Filter for only active items
-        const activeItems = data.data.filter((item: ProductItem) => 
-          item.itemStatus === ProductItemStatus.PUBLISHED
-        );
-        setItems(activeItems);
-      } catch (error) {
-        console.error('Error fetching items:', error);
-        enqueueSnackbar(t('errors.loadFailed'), { variant: 'error' });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchItems();
+  const fetchItems = useCallback(async (): Promise<void> => {
+    try {
+      const response = await fetch(`${API_URL}/product-items/by-vendor/${vendor._id}/public`);
+      if (!response.ok) throw new Error('Failed to fetch items');
+      
+      const data: PublicProductItemsResponse = await response.json();
+      const activeItems = data.data.filter((item: ProductItem) => 
+        item.itemStatus === ProductItemStatus.PUBLISHED
+      );
+      setItems(activeItems);
+    } catch (error) {
+      console.error('Error fetching items:', error);
+      enqueueSnackbar(t('errors.loadFailed'), { variant: 'error' });
+    }
   }, [vendor._id, enqueueSnackbar, t]);
 
-  const handleAddToCart = async (item: ProductItem) => {
+  const refreshItems = useCallback(async (): Promise<void> => {
+    await fetchItems();
+  }, [fetchItems]);
+
+  useEffect(() => {
+    const loadInitialItems = async (): Promise<void> => {
+      setLoading(true);
+      await fetchItems();
+      setLoading(false);
+    };
+
+    loadInitialItems();
+  }, [fetchItems]);
+
+  const handleAddToCart = async (item: ProductItem): Promise<void> => {
     try {
       setAddingToCart(item._id);
+      
       if (user) {
         await addToCart({ 
           productItemId: item._id,
@@ -100,6 +107,9 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
       
       enqueueSnackbar(t('success.addedToCart'), { variant: 'success' });
       setSelectedItem(null);
+      
+      // Refresh items to update quantities
+      await refreshItems();
     } catch (error) {
       console.error('Error adding to cart:', error);
       enqueueSnackbar(t('errors.addToCartFailed'), { variant: 'error' });
@@ -146,15 +156,17 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
           }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Box sx={{ width: 60, height: 60 }}>
-                <Image 
-                  src={vendor.logoUrl} 
-                  alt={vendor.businessName}
-                  style={{ 
-                    maxWidth: '100%',
-                    maxHeight: '100%',
-                    objectFit: 'contain'
-                  }}
-                />
+                {vendor.logoUrl && (
+                  <Image 
+                    src={vendor.logoUrl} 
+                    alt={vendor.businessName}
+                    style={{ 
+                      maxWidth: '100%',
+                      maxHeight: '100%',
+                      objectFit: 'contain'
+                    }}
+                  />
+                )}
               </Box>
               <Box>
                 <Typography variant="h5" gutterBottom>
@@ -171,7 +183,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
           </Box>
 
           <Grid container spacing={3}>
-            {/* Left Column - Vendor Info */}
+            {/* Contact Info */}
             <Grid item xs={12}>
               <Box sx={{ mb: 3 }}>
                 <Typography variant="subtitle1" gutterBottom>
@@ -197,6 +209,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
                 </Box>
               </Box>
 
+              {/* Location Info */}
               <Typography variant="subtitle1" gutterBottom>
                 {t("location")}
               </Typography>
@@ -217,7 +230,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
               </Box>
             </Grid>
 
-            {/* Right Column - Calendar View */}
+            {/* Calendar/Products View */}
             <Grid item xs={12}>
               <Box sx={{ mb: 2 }}>
                 <Typography variant="h6" sx={{ mb: 2 }}>
@@ -244,13 +257,15 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
         </CardContent>
       </Card>
 
-      <PublicItemDetailModal
-        item={selectedItem}
-        open={!!selectedItem}
-        onClose={() => setSelectedItem(null)}
-        onAddToCart={handleAddToCart}
-        isAddingToCart={!!addingToCart}
-      />
+      {selectedItem && (
+        <PublicItemDetailModal
+          item={selectedItem}
+          open={true}
+          onClose={() => setSelectedItem(null)}
+          onAddToCart={handleAddToCart}
+          isAddingToCart={addingToCart === selectedItem._id}
+        />
+      )}
     </Box>
   );
 };
