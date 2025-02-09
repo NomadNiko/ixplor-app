@@ -1,4 +1,3 @@
-// vendor-full.tsx
 import { useState, useEffect } from 'react';
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -8,11 +7,9 @@ import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import CircularProgress from "@mui/material/CircularProgress";
-import Button from "@mui/material/Button";
-import { Phone, Mail, X, Globe, ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
+import { Phone, Mail, X, Globe } from "lucide-react";
 import { Image } from "@nextui-org/react";
 import { useTranslation } from "@/services/i18n/client";
-import { useCalendarNavigation } from '@/hooks/use-calendar-navigation';
 import PublicWeeklyCalendar from '../calendar/PublicWeeklyCalendar';
 import PublicItemDetailModal from '../calendar/PublicItemDetailModal';
 import { Vendor } from "@/app/[language]/types/vendor";
@@ -40,7 +37,6 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
   const [selectedItem, setSelectedItem] = useState<ProductItem | null>(null);
   const [addingToCart, setAddingToCart] = useState<string | null>(null);
 
-  const { currentWeek, nextWeek, previousWeek, goToToday } = useCalendarNavigation();
   const { refreshCart } = useCartQuery();
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuth();
@@ -228,32 +224,9 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
             {/* Right Column - Calendar View */}
             <Grid item xs={12} md={8}>
               <Box sx={{ mb: 2 }}>
-                <Box sx={{ 
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  mb: 2
-                }}>
-                  <Typography variant="h6">
-                    {t("availableProducts")}
-                  </Typography>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
-                    <IconButton onClick={previousWeek} size="small">
-                      <ChevronLeft />
-                    </IconButton>
-                    <Button
-                      variant="outlined"
-                      startIcon={<CalendarIcon />}
-                      onClick={goToToday}
-                      size="small"
-                    >
-                      {t("today")}
-                    </Button>
-                    <IconButton onClick={nextWeek} size="small">
-                      <ChevronRight />
-                    </IconButton>
-                  </Box>
-                </Box>
+                <Typography variant="h6" sx={{ mb: 2 }}>
+                  {t("availableProducts")}
+                </Typography>
 
                 {loading ? (
                   <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
@@ -263,7 +236,6 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
                   <PublicWeeklyCalendar
                     items={items}
                     onItemClick={setSelectedItem}
-                    currentWeek={currentWeek}
                   />
                 ) : (
                   <Typography variant="body2" color="text.secondary" align="center">

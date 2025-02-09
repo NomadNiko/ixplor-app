@@ -75,7 +75,7 @@ export default function ProductItemDetailModal({
             alt={item.templateName}
             sx={{
               width: '100%',
-              height: 200,
+              height: 300,
               objectFit: 'cover',
               borderRadius: 1,
               mb: 2
