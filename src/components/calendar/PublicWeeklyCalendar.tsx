@@ -1,36 +1,45 @@
-// PublicWeeklyCalendar.tsx
 import { useEffect, useState } from 'react';
-import { format, isWithinInterval, startOfDay, eachDayOfInterval, isToday } from 'date-fns';
+import { format, isWithinInterval, startOfDay, eachDayOfInterval, isToday, isBefore } from 'date-fns';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
 import { ProductItem } from '@/app/[language]/types/product-item';
+import { usePublicCalendarNavigation } from '@/hooks/use-public-calendar-navigation';
 import PublicDayColumn from './PublicDayColumn';
+import { useTranslation } from "@/services/i18n/client";
 
 interface PublicWeeklyCalendarProps {
   items: ProductItem[];
   onItemClick: (item: ProductItem) => void;
-  currentWeek: {
-    start: Date;
-    end: Date;
-  };
 }
 
 export function PublicWeeklyCalendar({ 
   items, 
-  onItemClick, 
-  currentWeek,
+  onItemClick
 }: PublicWeeklyCalendarProps) {
+  const { t } = useTranslation("product-items");
+  const {
+    currentWeek,
+    nextWeek,
+    previousWeek,
+    goToToday,
+    canGoPrevious
+  } = usePublicCalendarNavigation();
+  
   const [groupedItems, setGroupedItems] = useState<Map<string, ProductItem[]>>(new Map());
+  const today = startOfDay(new Date());
 
   useEffect(() => {
-    const now = new Date();
     const itemMap = new Map<string, ProductItem[]>();
     
     items.forEach(item => {
       if (item.itemStatus !== 'PUBLISHED') return;
       
       const itemDate = new Date(item.productDate);
-      if (startOfDay(itemDate) < startOfDay(now)) return;
+      // Skip items from the past
+      if (isBefore(startOfDay(itemDate), today)) return;
       
       if (!isWithinInterval(itemDate, { start: currentWeek.start, end: currentWeek.end })) return;
       
@@ -41,7 +50,6 @@ export function PublicWeeklyCalendar({
       itemMap.get(dateKey)?.push(item);
     });
 
-    // Sort items by time for each day
     itemMap.forEach((dayItems, date) => {
       itemMap.set(date, dayItems.sort((a, b) => 
         a.startTime.localeCompare(b.startTime)
@@ -49,7 +57,7 @@ export function PublicWeeklyCalendar({
     });
 
     setGroupedItems(itemMap);
-  }, [items, currentWeek]);
+  }, [items, currentWeek, today]);
 
   const weekDays = eachDayOfInterval({
     start: currentWeek.start,
@@ -77,8 +85,30 @@ export function PublicWeeklyCalendar({
         <Typography variant="h6">
           {`${format(currentWeek.start, 'MMMM d')} - ${format(currentWeek.end, 'MMMM d, yyyy')}`}
         </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <IconButton 
+            onClick={previousWeek} 
+            disabled={!canGoPrevious()}
+            size="small"
+          >
+            <ChevronLeft />
+          </IconButton>
+          <Button
+            variant="outlined"
+            startIcon={<Calendar />}
+            onClick={goToToday}
+            size="small"
+          >
+            {t('today')}
+          </Button>
+          <IconButton 
+            onClick={nextWeek}
+            size="small"
+          >
+            <ChevronRight />
+          </IconButton>
+        </Box>
       </Box>
-
       <Box sx={{ 
         display: 'flex',
         flex: 1,
@@ -97,6 +127,11 @@ export function PublicWeeklyCalendar({
         }
       }}>
         {weekDays.map(day => {
+          // Only render days from today onwards
+          if (isBefore(startOfDay(day), today)) {
+            return null;
+          }
+          
           const dateKey = format(day, 'yyyy-MM-dd');
           return (
             <PublicDayColumn
