@@ -49,11 +49,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
         const tokensInfo = getTokensInfo();
         if (!tokensInfo?.token) return;
 
-        const response = await fetch(`${API_URL}/product-items/by-vendor/${vendor._id}`, {
-          headers: {
-            Authorization: `Bearer ${tokensInfo.token}`
-          }
-        });
+        const response = await fetch(`${API_URL}/product-items/by-vendor/${vendor._id}/public`);
 
         if (!response.ok) throw new Error('Failed to fetch items');
         const data = await response.json();
@@ -136,7 +132,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
       overflow: 'auto'
     }}>
       <Card sx={{
-        maxWidth: 1200,
+        maxWidth: 'md',
         margin: '0 auto',
         minHeight: '100%'
       }}>
@@ -176,7 +172,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
 
           <Grid container spacing={3}>
             {/* Left Column - Vendor Info */}
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12}>
               <Box sx={{ mb: 3 }}>
                 <Typography variant="subtitle1" gutterBottom>
                   {t("contact")}
@@ -209,7 +205,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
                 {vendor.city}, {vendor.state} {vendor.postalCode}
               </Typography>
               <Box sx={{ height: 200, mb: 2, borderRadius: 1, overflow: 'hidden' }}>
-                <img 
+                <img
                   src={staticMapUrl}
                   alt="Location map"
                   style={{
@@ -222,7 +218,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
             </Grid>
 
             {/* Right Column - Calendar View */}
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12}>
               <Box sx={{ mb: 2 }}>
                 <Typography variant="h6" sx={{ mb: 2 }}>
                   {t("availableProducts")}

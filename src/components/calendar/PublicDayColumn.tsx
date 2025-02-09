@@ -2,7 +2,6 @@ import { format } from 'date-fns';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import Chip from "@mui/material/Chip";
 import { alpha } from '@mui/material/styles';
 import { ProductItem } from '@/app/[language]/types/product-item';
 import { useTranslation } from "@/services/i18n/client";
@@ -67,6 +66,8 @@ export default function PublicDayColumn({
               mb: 1,
               cursor: 'pointer',
               transition: 'transform 0.2s, box-shadow 0.2s',
+              position: 'relative',
+              overflow: 'hidden',
               '&:hover': {
                 transform: 'translateY(-2px)',
                 boxShadow: 2,
@@ -74,37 +75,46 @@ export default function PublicDayColumn({
               },
             }}
           >
-            <Box sx={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'flex-start',
-              mb: 0.5
-            }}>
-              <Typography
-                variant="subtitle2"
+            {item.quantityAvailable === 0 && (
+              <Box
                 sx={{
-                  wordBreak: 'break-word',
-                  flex: 1,
-                  pr: 1
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  bgcolor: 'rgba(0, 0, 0, 0.5)',
+                  backdropFilter: 'blur(2px)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 1,
                 }}
               >
-                {item.templateName}
-              </Typography>
-              {item.quantityAvailable === 0 && (
-                <Chip
-                  label={t('soldOut')}
-                  color="error"
-                  size="small"
-                  sx={{ 
-                    height: 20,
-                    '& .MuiChip-label': {
-                      px: 1,
-                      fontSize: '0.625rem'
-                    }
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    color: 'error.main',
+                    fontWeight: 'bold',
+                    textTransform: 'uppercase',
+                    letterSpacing: 1,
+                    textShadow: '0 0 4px rgba(0,0,0,0.3)'
                   }}
-                />
-              )}
-            </Box>
+                >
+                  {t('soldOut')}
+                </Typography>
+              </Box>
+            )}
+
+            <Typography
+              variant="subtitle2"
+              sx={{
+                wordBreak: 'break-word',
+                mb: 0.5
+              }}
+            >
+              {item.templateName}
+            </Typography>
 
             <Typography
               variant="caption"
@@ -141,7 +151,7 @@ export default function PublicDayColumn({
                   color="warning.main"
                   sx={{ fontWeight: 'medium' }}
                 >
-                  {t('onlyXLeft', { count: item.quantityAvailable })}
+                  {t('only')} {item.quantityAvailable} {t('left')}
                 </Typography>
               )}
             </Box>
