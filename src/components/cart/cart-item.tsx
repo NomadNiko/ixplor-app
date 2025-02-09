@@ -4,19 +4,29 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import { Minus, Plus, X } from "lucide-react";
-import { CartItemType } from "@/app/[language]/cart/types";
+import { Minus, Plus, X, Calendar, Clock } from "lucide-react";
 import { useTranslation } from "@/services/i18n/client";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useUpdateCartItemService, useRemoveFromCartService } from "@/services/api/services/cart";
 import { useSnackbar } from "@/hooks/use-snackbar";
+import { format } from 'date-fns';
+import { formatDuration } from '@/components/utils/duration-utils';
 
 type CartItemProps = {
-  item: CartItemType;
-  onUpdate: (productId: string, quantity: number) => void;
-  onRemove?: (productId: string) => void;
+  item: {
+    productItemId: string;
+    productName: string;
+    price: number;
+    quantity: number;
+    productDate: string;
+    productStartTime: string;
+    productDuration: number;
+    vendorId: string;
+  };
+  onUpdate: (productItemId: string, quantity: number) => void;
+  onRemove: (productItemId: string) => void;
   isGuest?: boolean;
 };
 
@@ -39,14 +49,14 @@ export default function CartItem({
     try {
       setLoading(true);
       if (isGuest) {
-        onUpdate(item.productId, newQuantity);
+        onUpdate(item.productItemId, newQuantity);
         enqueueSnackbar(t('success.quantityUpdated'), { variant: 'success' });
       } else {
         await updateCartItem({
-          productId: item.productId,
+          productItemId: item.productItemId,
           quantity: newQuantity,
         });
-        onUpdate(item.productId, newQuantity);
+        onUpdate(item.productItemId, newQuantity);
         enqueueSnackbar(t('success.quantityUpdated'), { variant: 'success' });
       }
     } catch (error) {
@@ -60,12 +70,12 @@ export default function CartItem({
   const handleRemove = async () => {
     try {
       setLoading(true);
-      if (isGuest && onRemove) {
-        onRemove(item.productId);
+      if (isGuest) {
+        onRemove(item.productItemId);
         enqueueSnackbar(t('success.itemRemoved'), { variant: 'success' });
       } else {
-        await removeFromCart(item.productId);
-        onUpdate(item.productId, 0);
+        await removeFromCart(item.productItemId);
+        onUpdate(item.productItemId, 0);
         enqueueSnackbar(t('success.itemRemoved'), { variant: 'success' });
       }
     } catch (error) {
@@ -123,21 +133,6 @@ export default function CartItem({
             <X size={16} />
           </IconButton>
         )}
-
-        {item.productImageURL && (
-          <Box
-            component="img"
-            src={item.productImageURL}
-            alt={item.productName}
-            sx={{
-              width: isMobile ? 80 : 100,
-              height: isMobile ? 80 : 100,
-              objectFit: "cover",
-              borderRadius: 1,
-              mb: isMobile ? 1 : 0
-            }}
-          />
-        )}
         
         <Box 
           flex={1} 
@@ -150,16 +145,30 @@ export default function CartItem({
           <Typography variant={isMobile ? "subtitle1" : "h6"}>
             {item.productName}
           </Typography>
-          {item.productDate && (
-            <Typography variant={isMobile ? "caption" : "body2"}>
-              {t("date")}: {new Date(item.productDate).toLocaleDateString()}
-            </Typography>
-          )}
-          {item.productStartTime && (
-            <Typography variant={isMobile ? "caption" : "body2"}>
-              {t("time")}: {item.productStartTime}
-            </Typography>
-          )}
+
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'column',
+            gap: 0.5,
+            mt: 1
+          }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Calendar size={16} />
+              <Typography variant="body2" color="text.secondary">
+                {format(new Date(item.productDate), 'PPP')}
+              </Typography>
+            </Box>
+            
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Clock size={16} />
+              <Typography variant="body2" color="text.secondary">
+                {format(new Date(`2000-01-01T${item.productStartTime}`), 'h:mm a')}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                ({formatDuration(item.productDuration)})
+              </Typography>
+            </Box>
+          </Box>
         </Box>
 
         <Box 

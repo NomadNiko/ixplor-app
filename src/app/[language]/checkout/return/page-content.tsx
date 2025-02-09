@@ -33,7 +33,7 @@ interface Transaction {
   currency: string;
   vendorId: string;
   customerId: string;
-  productId: string;
+  productItemId: string;
   status: string;
   type: string;
   createdAt: string;

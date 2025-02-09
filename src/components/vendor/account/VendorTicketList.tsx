@@ -17,7 +17,7 @@ interface Ticket {
   _id: string;
   userId: string;
   transactionId: string;
-  productId: string;
+  productItemId: string;
   productName: string;
   productDescription: string;
   productPrice: number;

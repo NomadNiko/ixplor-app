@@ -81,9 +81,12 @@ const VendorStatusPage: React.FC = () => {
     switch (step) {
       case 'onboard':
         return 'complete';
+      case 'templates':
+        return vendor.hasTemplates ? 'complete' : 
+               vendor.vendorStatus === 'APPROVED' ? 'in-progress' : 'pending';
       case 'products':
         return vendor.hasProducts ? 'complete' : 
-               vendor.vendorStatus === 'APPROVED' ? 'in-progress' : 'pending';
+               vendor.vendorStatus === 'APPROVED' && vendor.hasTemplates ? 'in-progress' : 'pending';
       case 'stripe':
         return isStripeComplete ? 'complete' : 
                vendor.vendorStatus === 'APPROVED' && vendor.hasProducts ? 'in-progress' : 'pending';
@@ -135,6 +138,11 @@ const VendorStatusPage: React.FC = () => {
             description={t("status.steps.onboardDesc")}
           />
           <StatusStep 
+            status={getStepStatus('templates')}
+            title={t("status.steps.templates")}
+            description={t("status.steps.templatesDesc")}
+          />
+          <StatusStep 
             status={getStepStatus('products')}
             title={t("status.steps.products")}
             description={t("status.steps.productsDesc")}
@@ -152,16 +160,17 @@ const VendorStatusPage: React.FC = () => {
         </CardContent>
       </StyledCard>
 
-      {vendor && vendor.vendorStatus === 'APPROVED' && !vendor.hasProducts && (
+        {/* Template Creation Card */}
+        {vendor && vendor.vendorStatus === 'APPROVED' && !vendor.hasTemplates && (
         <StyledCard sx={{ mb: 4 }}>
-          <CardHeader title={t("products.title")} />
+          <CardHeader title={t("templates.title")} />
           <CardContent>
             <Typography variant="body1" sx={{ mb: 3 }}>
-              {t("products.description")}
+              {t("templates.description")}
             </Typography>
             <Button
               variant="contained"
-              href="/products/add"
+              href="/templates/add"
               sx={{
                 background: theme => theme.palette.customGradients.buttonMain,
                 '&:hover': {
@@ -170,7 +179,35 @@ const VendorStatusPage: React.FC = () => {
                 }
               }}
             >
-              {t("products.add")}
+              {t("templates.add")}
+            </Button>
+          </CardContent>
+        </StyledCard>
+      )}
+
+
+      
+      {/* Product Generation Card */}
+      {vendor && vendor.vendorStatus === 'APPROVED' && 
+       vendor.hasTemplates && !vendor.hasProducts && (
+        <StyledCard sx={{ mb: 4 }}>
+          <CardHeader title={t("products.title")} />
+          <CardContent>
+            <Typography variant="body1" sx={{ mb: 3 }}>
+              {t("products.description")}
+            </Typography>
+            <Button
+              variant="contained"
+              href="/templates"
+              sx={{
+                background: theme => theme.palette.customGradients.buttonMain,
+                '&:hover': {
+                  background: theme => theme.palette.customGradients.buttonMain,
+                  filter: 'brightness(0.9)',
+                }
+              }}
+            >
+              {t("products.generate")}
             </Button>
           </CardContent>
         </StyledCard>

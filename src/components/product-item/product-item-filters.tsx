@@ -50,7 +50,7 @@ export const ProductItemFilters = ({ filters, onFilterChange }: ProductItemFilte
             onChange={(e) => onFilterChange('filterStatus', e.target.value)}
           >
             <MenuItem value="">{t('all')}</MenuItem>
-            <MenuItem value="ACTIVE">{t('status.active')}</MenuItem>
+            <MenuItem value="PUBLISHED">{t('status.active')}</MenuItem>
             <MenuItem value="CANCELLED">{t('status.cancelled')}</MenuItem>
             <MenuItem value="COMPLETED">{t('status.completed')}</MenuItem>
             <MenuItem value="DRAFT">{t('status.draft')}</MenuItem>

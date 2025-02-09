@@ -21,7 +21,7 @@ interface TicketData {
   userId: string;
   transactionId: string;
   vendorId: string;
-  productId: string;
+  productItemId: string;
   productName: string;
   productDescription: string;
   productPrice: number;

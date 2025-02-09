@@ -1,3 +1,4 @@
+// vendor-full.tsx
 import { useState, useEffect } from 'react';
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -7,21 +8,22 @@ import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import CircularProgress from "@mui/material/CircularProgress";
-import Divider from "@mui/material/Divider";
-import { Phone, Mail, X, Globe } from "lucide-react";
+import Button from "@mui/material/Button";
+import { Phone, Mail, X, Globe, ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
 import { Image } from "@nextui-org/react";
 import { useTranslation } from "@/services/i18n/client";
+import { useCalendarNavigation } from '@/hooks/use-calendar-navigation';
+import PublicWeeklyCalendar from '../calendar/PublicWeeklyCalendar';
+import PublicItemDetailModal from '../calendar/PublicItemDetailModal';
 import { Vendor } from "@/app/[language]/types/vendor";
-import { Product, ProductStatusEnum } from "@/app/[language]/types/product";
-import { useGetProductsService } from "@/services/api/services/products";
-import { useAddToCartService } from "@/services/api/services/cart";
-import { useSnackbar } from "@/hooks/use-snackbar";
-import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
-import HTTP_CODES_ENUM from "@/services/api/types/http-codes";
+import { ProductItem, ProductItemStatus } from "@/app/[language]/types/product-item";
+import { API_URL } from "@/services/api/config";
+import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { useCartQuery } from '@/hooks/use-cart-query';
 import useGuestCart from '@/hooks/use-guest-cart';
 import useAuth from '@/services/auth/use-auth';
+import { useSnackbar } from "@/hooks/use-snackbar";
+import { useAddToCartService } from '@/services/api/services/cart';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -31,69 +33,81 @@ interface VendorFullViewProps {
 }
 
 export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
-  const { t } = useTranslation("vendor");
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [addingToCart, setAddingToCart] = useState<string | null>(null);
-  
-  const getProducts = useGetProductsService();
   const addToCart = useAddToCartService();
+  const { t } = useTranslation("vendor");
+  const [items, setItems] = useState<ProductItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedItem, setSelectedItem] = useState<ProductItem | null>(null);
+  const [addingToCart, setAddingToCart] = useState<string | null>(null);
+
+  const { currentWeek, nextWeek, previousWeek, goToToday } = useCalendarNavigation();
   const { refreshCart } = useCartQuery();
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuth();
   const { addToGuestCart } = useGuestCart();
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchItems = async () => {
       try {
-        const response = await getProducts();
-        if (response.status === HTTP_CODES_ENUM.OK && response.data) {
-          const publishedProducts = response.data.data.filter(
-            product => product.vendorId === vendor._id &&
-                      product.productStatus === ProductStatusEnum.PUBLISHED
-          );
-          setProducts(publishedProducts);
-        }
+        setLoading(true);
+        const tokensInfo = getTokensInfo();
+        if (!tokensInfo?.token) return;
+
+        const response = await fetch(`${API_URL}/product-items/by-vendor/${vendor._id}`, {
+          headers: {
+            Authorization: `Bearer ${tokensInfo.token}`
+          }
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch items');
+        const data = await response.json();
+        
+        // Filter for only active items
+        const activeItems = data.data.filter((item: ProductItem) => 
+          item.itemStatus === ProductItemStatus.PUBLISHED
+        );
+        setItems(activeItems);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error('Error fetching items:', error);
         enqueueSnackbar(t('errors.loadFailed'), { variant: 'error' });
       } finally {
         setLoading(false);
       }
     };
-    fetchProducts();
-  }, [getProducts, vendor._id, enqueueSnackbar, t]);
 
-  const handleAddToCart = async (product: Product) => {
+    fetchItems();
+  }, [vendor._id, enqueueSnackbar, t]);
+
+  const handleAddToCart = async (item: ProductItem) => {
     try {
-      setAddingToCart(product._id);
-
-      // If user is logged in, use regular cart service
+      setAddingToCart(item._id);
       if (user) {
         await addToCart({ 
-          productId: product._id, 
-          quantity: 1, 
-          vendorId: vendor._id 
+          productItemId: item._id,
+          productDate: new Date(item.productDate),
+          quantity: 1,
+          vendorId: vendor._id,
+          templateId: item.templateId
         });
         await refreshCart();
-      } 
-      // Otherwise use guest cart
-      else {
+      } else {
         addToGuestCart({
-          productId: product._id,
-          productName: product.productName,
-          productDescription: product.productDescription,
-          price: product.productPrice,
+          productItemId: item._id,
+          templateId: item.templateId,
+          templateName: item.templateName,
+          productName: item.templateName,
           quantity: 1,
-          productImageURL: product.productImageURL,
+          price: item.price,
           vendorId: vendor._id,
-          productType: product.productType,
-          productDate: product.productDate,
-          productStartTime: product.productStartTime
+          productType: item.productType,
+          productDate: item.productDate,
+          productStartTime: item.startTime,
+          productDuration: item.duration
         });
       }
       
       enqueueSnackbar(t('success.addedToCart'), { variant: 'success' });
+      setSelectedItem(null);
     } catch (error) {
       console.error('Error adding to cart:', error);
       enqueueSnackbar(t('errors.addToCartFailed'), { variant: 'error' });
@@ -121,12 +135,12 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
       bottom: 0,
       backgroundColor: 'rgba(0, 0, 0, 0.8)',
       backdropFilter: 'blur(8px)',
-      zIndex: 9999,
+      zIndex: 200,
       padding: { xs: 1, sm: 2 },
       overflow: 'auto'
     }}>
       <Card sx={{
-        maxWidth: 1000,
+        maxWidth: 1200,
         margin: '0 auto',
         minHeight: '100%'
       }}>
@@ -154,11 +168,9 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
                 <Typography variant="h5" gutterBottom>
                   {vendor.businessName}
                 </Typography>
-                <Chip
-                  label={t(`vendorTypes.${vendor.vendorTypes?.[0] || 'tours'}`)}
-                  size="small"
-                  color="primary"
-                />
+                <Typography variant="body2" color="text.secondary">
+                  {vendor.description}
+                </Typography>
               </Box>
             </Box>
             <IconButton onClick={onClose} size="small">
@@ -166,19 +178,10 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
             </IconButton>
           </Box>
 
-          <Divider sx={{ mb: 2 }} />
-
-          <Grid container spacing={2}>
-            {/* Left Column */}
-            <Grid item xs={12} md={6}>
-              <Typography variant="subtitle1" gutterBottom>
-                {t("about")}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" paragraph>
-                {vendor.description}
-              </Typography>
-
-              <Box sx={{ mb: 2 }}>
+          <Grid container spacing={3}>
+            {/* Left Column - Vendor Info */}
+            <Grid item xs={12} md={4}>
+              <Box sx={{ mb: 3 }}>
                 <Typography variant="subtitle1" gutterBottom>
                   {t("contact")}
                 </Typography>
@@ -209,7 +212,6 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
                 {vendor.address}<br />
                 {vendor.city}, {vendor.state} {vendor.postalCode}
               </Typography>
-
               <Box sx={{ height: 200, mb: 2, borderRadius: 1, overflow: 'hidden' }}>
                 <img 
                   src={staticMapUrl}
@@ -223,79 +225,64 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps) => {
               </Box>
             </Grid>
 
-            {/* Right Column - Products */}
-            <Grid item xs={12} md={6}>
-              <Typography variant="subtitle1" gutterBottom>
-                {t("availableProducts")}
-              </Typography>
-              {loading ? (
-                <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
-                  <CircularProgress size={24} />
+            {/* Right Column - Calendar View */}
+            <Grid item xs={12} md={8}>
+              <Box sx={{ mb: 2 }}>
+                <Box sx={{ 
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  mb: 2
+                }}>
+                  <Typography variant="h6">
+                    {t("availableProducts")}
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <IconButton onClick={previousWeek} size="small">
+                      <ChevronLeft />
+                    </IconButton>
+                    <Button
+                      variant="outlined"
+                      startIcon={<CalendarIcon />}
+                      onClick={goToToday}
+                      size="small"
+                    >
+                      {t("today")}
+                    </Button>
+                    <IconButton onClick={nextWeek} size="small">
+                      <ChevronRight />
+                    </IconButton>
+                  </Box>
                 </Box>
-              ) : products.length > 0 ? (
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  {products.map((product) => (
-                    <Card key={product._id} variant="outlined">
-                      <CardContent sx={{ p: 1, '&:last-child': { pb: 1 } }}>
-                        <Box sx={{ display: 'flex', gap: 1 }}>
-                          {product.productImageURL && (
-                            <Box sx={{ width: 60, height: 60, flexShrink: 0 }}>
-                              <Image
-                                src={product.productImageURL}
-                                alt={product.productName}
-                                style={{
-                                  width: '100%',
-                                  height: '100%',
-                                  objectFit: 'cover',
-                                  borderRadius: '4px'
-                                }}
-                              />
-                            </Box>
-                          )}
-                          <Box sx={{ flex: 1, minWidth: 0 }}>
-                            <Typography variant="subtitle2" noWrap>
-                              {product.productName}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary" 
-                              sx={{ 
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                display: '-webkit-box',
-                                WebkitLineClamp: 2,
-                                WebkitBoxOrient: 'vertical',
-                                mb: 1
-                              }}>
-                              {product.productDescription}
-                            </Typography>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                              <Typography variant="subtitle2" color="primary">
-                                ${product.productPrice.toFixed(2)}
-                              </Typography>
-                              <Button
-                                variant="contained"
-                                onClick={() => handleAddToCart(product)}
-                                disabled={addingToCart === product._id}
-                                size="small"
-                                sx={{ minWidth: 'unset', px: 1, py: 0.5 }}
-                              >
-                                {addingToCart === product._id ? t('addingToCart') : t('addToCart')}
-                              </Button>
-                            </Box>
-                          </Box>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </Box>
-              ) : (
-                <Typography variant="body2" color="text.secondary">
-                  {t("noProducts")}
-                </Typography>
-              )}
+
+                {loading ? (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+                    <CircularProgress />
+                  </Box>
+                ) : items.length > 0 ? (
+                  <PublicWeeklyCalendar
+                    items={items}
+                    onItemClick={setSelectedItem}
+                    currentWeek={currentWeek}
+                  />
+                ) : (
+                  <Typography variant="body2" color="text.secondary" align="center">
+                    {t("noProducts")}
+                  </Typography>
+                )}
+              </Box>
             </Grid>
           </Grid>
         </CardContent>
       </Card>
+
+      <PublicItemDetailModal
+        item={selectedItem}
+        open={!!selectedItem}
+        onClose={() => setSelectedItem(null)}
+        onAddToCart={handleAddToCart}
+        isAddingToCart={!!addingToCart}
+      />
     </Box>
   );
 };

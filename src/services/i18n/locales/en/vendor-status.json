@@ -1,56 +1,63 @@
 {
-    "title": "Vendor Onboarding",
-    "subtitle": "Complete these steps to activate your vendor profile",
-    "status": {
-      "title": "Onboarding Progress",
-      "steps": {
-        "onboard": "Create Vendor Profile",
-        "onboardDesc": "Complete your initial vendor registration and provide business details",
-        "stripe": "Stripe Connect Setup",
-        "stripeDesc": "Set up your Stripe account to receive payments and manage transactions",
-        "products": "Add Products",
-        "productsDesc": "List the services or products you'll offer through the platform",
-        "complete": "Vendor Activation",
-        "completeDesc": "Your vendor profile is fully activated and ready to accept bookings"
-      }
-    },
-    "stripe": {
-      "title": "Stripe Connect Account Setup",
-      "description": "Complete your Stripe account setup to enable payments and transactions.",
-      "success": "Stripe account successfully linked",
-      "updateFailed": "Failed to update Stripe account",
-      "exitError": "Error during Stripe account setup",
-      "exitedMessage": "Stripe onboarding was exited. Would you like to resume?",
-      "retry": "Retry Setup",
-      "resumeOnboarding": "Resume Onboarding"
-    },
-    "products": {
-      "title": "Add Your First Product",
-      "description": "Add your first product or service to start accepting bookings.",
-      "add": "Add Product"
-    },
-    "messages": {
-      "submitted": "Vendor Application Submitted",
-      "submittedDesc": "Your vendor application is under review. We'll notify you once it's processed.",
-      "actionNeeded": "Additional Information Required",
-      "actionNeededDesc": "Please review and address the following:"
-    },
-    "actions": {
-      "viewDashboard": "View Dashboard",
-      "contactSupport": "Contact Support"
-    },
-    "errors": {
-      "title": "Onboarding Error",
-      "loadFailed": "Failed to load vendor status",
-      "setupIncomplete": "Please complete all onboarding steps",
-      "stripeSetupRequired": "Stripe account setup is required",
-      "productsRequired": "Please add at least one product"
-    },
-    "requirements": {
-      "stripeAccount": {
-        "notCreated": "Stripe account not created",
-        "incomplete": "Stripe account setup incomplete",
-        "detailsMissing": "Additional details required"
-      }
+  "title": "Vendor Onboarding",
+  "subtitle": "Complete these steps to activate your vendor profile",
+  "status": {
+    "title": "Onboarding Progress",
+    "steps": {
+      "onboard": "Create Vendor Profile",
+      "onboardDesc": "Complete your initial vendor registration and provide business details",
+      "stripe": "Stripe Connect Setup",
+      "stripeDesc": "Set up your Stripe account to receive payments and manage transactions",
+      "templates": "Create Product Templates",
+      "templatesDesc": "Create templates for your products, tours, or services",
+      "products": "Generate Product Items",
+      "productsDesc": "Generate bookable items from your templates",
+      "complete": "Vendor Activation",
+      "completeDesc": "Your vendor profile is fully activated and ready to accept bookings"
+    }
+  },
+  "stripe": {
+    "title": "Stripe Connect Account Setup",
+    "description": "Complete your Stripe account setup to enable payments and transactions.",
+    "success": "Stripe account successfully linked",
+    "updateFailed": "Failed to update Stripe account",
+    "exitError": "Error during Stripe account setup",
+    "exitedMessage": "Stripe onboarding was exited. Would you like to resume?",
+    "retry": "Retry Setup",
+    "resumeOnboarding": "Resume Onboarding"
+  },
+  "templates": {
+    "title": "Create Your First Template",
+    "description": "Start by creating a template for your products or services. Templates help you manage recurring offerings efficiently.",
+    "add": "Create Template"
+  },
+  "products": {
+    "title": "Generate Product Items",
+    "description": "Use your templates to generate bookable items for specific dates and times.",
+    "generate": "Generate Items"
+  },
+  "messages": {
+    "submitted": "Vendor Application Submitted",
+    "submittedDesc": "Your vendor application is under review. We'll notify you once it's processed.",
+    "actionNeeded": "Additional Information Required",
+    "actionNeededDesc": "Please review and address the following:"
+  },
+  "actions": {
+    "viewDashboard": "View Dashboard",
+    "contactSupport": "Contact Support"
+  },
+  "errors": {
+    "title": "Onboarding Error",
+    "loadFailed": "Failed to load vendor status",
+    "setupIncomplete": "Please complete all onboarding steps",
+    "stripeSetupRequired": "Stripe account setup is required",
+    "productsRequired": "Please add at least one product"
+  },
+  "requirements": {
+    "stripeAccount": {
+      "notCreated": "Stripe account not created",
+      "incomplete": "Stripe account setup incomplete",
+      "detailsMissing": "Additional details required"
     }
   }
+}

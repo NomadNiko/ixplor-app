@@ -38,7 +38,7 @@ export const ProductItemCard = ({
 
   const getStatusColor = (status: string): "success" | "error" | "default" => {
     switch (status) {
-      case ProductItemStatus.ACTIVE:
+      case ProductItemStatus.PUBLISHED:
         return 'success';
       case ProductItemStatus.CANCELLED:
         return 'error';
@@ -161,7 +161,7 @@ export const ProductItemCard = ({
           >
             {t('actions.edit')}
           </Button>
-          {onUpdateStatus && item.itemStatus === ProductItemStatus.ACTIVE && (
+          {onUpdateStatus && item.itemStatus === ProductItemStatus.PUBLISHED && (
             <Button
               size="small"
               color="error"
@@ -174,7 +174,7 @@ export const ProductItemCard = ({
             <Button
               size="small"
               color="success"
-              onClick={() => onUpdateStatus(item._id, ProductItemStatus.ACTIVE)}
+              onClick={() => onUpdateStatus(item._id, ProductItemStatus.PUBLISHED)}
             >
               {t('actions.reactivate')}
             </Button>

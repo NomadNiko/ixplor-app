@@ -33,9 +33,21 @@ export function useVendorStatus(userId: string) {
 
       if (vendorData.data.length > 0) {
         const currentVendor = vendorData.data[0];
+
         
-        // Check for products
-        const productsResponse = await fetch(`${API_URL}/products/by-vendor/${currentVendor._id}`, {
+        // Check for templates
+        const templatesResponse = await fetch(`${API_URL}/product-templates/by-vendor/${currentVendor._id}`, {
+          headers: {
+            'Authorization': `Bearer ${tokensInfo.token}`
+          }
+        });
+
+        if (!templatesResponse.ok) throw new Error('Failed to fetch templates');
+        const templatesData = await templatesResponse.json();
+
+        
+        // Check for product items
+        const productsResponse = await fetch(`${API_URL}/product-items/by-vendor/${currentVendor._id}`, {
           headers: {
             'Authorization': `Bearer ${tokensInfo.token}`
           }
@@ -46,6 +58,7 @@ export function useVendorStatus(userId: string) {
 
         setVendor({
           ...currentVendor,
+          hasTemplates: templatesData.data.length > 0,
           hasProducts: productsData.data.length > 0
         });
       }

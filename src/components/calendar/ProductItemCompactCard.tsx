@@ -18,7 +18,7 @@ export default function ProductItemCompactCard({ item, onClick, isVendorView = f
 
   const getStatusColor = (status: ProductItemStatus): "success" | "error" | "warning" | "default" => {
     switch (status) {
-      case ProductItemStatus.ACTIVE:
+      case ProductItemStatus.PUBLISHED:
         return 'success';
       case ProductItemStatus.CANCELLED:
         return 'error';

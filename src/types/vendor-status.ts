@@ -29,5 +29,6 @@ export interface StripePendingVerification {
     pendingBalance: number;
     vendorStatus: string;
     actionNeeded?: string;
+    hasTemplates: boolean;
     hasProducts: boolean;
   }

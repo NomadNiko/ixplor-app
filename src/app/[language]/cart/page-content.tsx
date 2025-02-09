@@ -12,10 +12,25 @@ import CartSummary from "@/components/cart/cart-summary";
 import useAuth from "@/services/auth/use-auth";
 import { useRouter } from "next/navigation";
 import { useCartQuery } from "@/hooks/use-cart-query";
-import { CartItemType } from "./types";
 import useGuestCart from "@/hooks/use-guest-cart";
 import Link from "@/components/link";
 import { useSnackbar } from "@/hooks/use-snackbar";
+
+interface CartItemType {
+  productItemId: string;
+  templateId: string;       
+  templateName: string;
+  productName: string;
+  productDescription?: string;
+  price: number;
+  quantity: number;
+  productImageURL?: string;
+  vendorId: string;
+  productType: "tours" | "lessons" | "rentals" | "tickets";
+  productDate: string;
+  productStartTime: string;
+  productDuration: number;
+}
 
 export default function CartPage() {
   const { t } = useTranslation("cart");
@@ -30,14 +45,12 @@ export default function CartPage() {
     isGuest 
   } = useGuestCart();
 
-  // Redirect to sign-in if trying to access cart while not authenticated
   useEffect(() => {
     if (!user && !isGuest && isLoaded) {
       router.replace('/sign-in');
     }
   }, [isLoaded, user, router, isGuest]);
 
-  // Calculate total based on whether user is logged in or guest
   const calculateTotal = () => {
     if (isGuest) {
       return guestCart.reduce(
@@ -51,27 +64,24 @@ export default function CartPage() {
     ) ?? 0;
   };
 
-  // Handle cart item quantity updates
-  const handleQuantityUpdate = (productId: string, newQuantity: number) => {
+  const handleQuantityUpdate = (productItemId: string, newQuantity: number) => {
     if (isGuest) {
-      updateGuestCartItem(productId, newQuantity);
+      updateGuestCartItem(productItemId, newQuantity);
       enqueueSnackbar(t('success.quantityUpdated'), { variant: 'success' });
     } else {
       refreshCart();
     }
   };
 
-  // Handle cart item removal
-  const handleRemoveItem = (productId: string) => {
+  const handleRemoveItem = (productItemId: string) => {
     if (isGuest) {
-      removeFromGuestCart(productId);
+      removeFromGuestCart(productItemId);
       enqueueSnackbar(t('success.itemRemoved'), { variant: 'success' });
     } else {
       refreshCart();
     }
   };
 
-  // Handle checkout button click
   const handleCheckout = () => {
     if (isGuest) {
       router.push('/sign-in?returnTo=/checkout');
@@ -80,7 +90,6 @@ export default function CartPage() {
     router.push('/checkout');
   };
 
-  // Loading state
   if (isCartLoading && !isGuest) {
     return (
       <Container
@@ -96,7 +105,6 @@ export default function CartPage() {
     );
   }
 
-  // Get cart items based on auth state
   const cartItems = isGuest ? guestCart : cartData?.items || [];
   const total = calculateTotal();
 
@@ -116,7 +124,7 @@ export default function CartPage() {
           ) : (
             cartItems.map((item: CartItemType) => (
               <CartItem
-                key={item.productId}
+                key={item.productItemId}
                 item={item}
                 onUpdate={handleQuantityUpdate}
                 onRemove={handleRemoveItem}

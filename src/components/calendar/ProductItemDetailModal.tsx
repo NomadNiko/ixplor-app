@@ -36,7 +36,7 @@ export default function ProductItemDetailModal({
 
   const getStatusColor = (status: ProductItemStatus): "success" | "error" | "warning" | "default" => {
     switch (status) {
-      case ProductItemStatus.ACTIVE:
+      case ProductItemStatus.PUBLISHED:
         return 'success';
       case ProductItemStatus.CANCELLED:
         return 'error';

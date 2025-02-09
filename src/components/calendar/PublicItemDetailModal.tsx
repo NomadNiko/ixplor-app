@@ -1,0 +1,164 @@
+// PublicItemDetailModal.tsx
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import CircularProgress from "@mui/material/CircularProgress";
+import { X, MapPin, Calendar, Clock } from 'lucide-react';
+import { format } from 'date-fns';
+import { ProductItem } from '@/app/[language]/types/product-item';
+import { useTranslation } from "@/services/i18n/client";
+import { formatDuration } from '@/components/utils/duration-utils';
+import { Image } from "@nextui-org/react";
+
+interface PublicItemDetailModalProps {
+  item: ProductItem | null;
+  open: boolean;
+  onClose: () => void;
+  onAddToCart: (item: ProductItem) => Promise<void>;
+  isAddingToCart: boolean;
+}
+
+export default function PublicItemDetailModal({
+  item,
+  open,
+  onClose,
+  onAddToCart,
+  isAddingToCart
+}: PublicItemDetailModalProps) {
+  const { t } = useTranslation("product-items");
+
+  if (!item) return null;
+
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      PaperProps={{
+        sx: {
+          background: 'rgba(17, 25, 40, 0.75)',
+          backdropFilter: 'blur(16px)',
+          border: '1px solid rgba(255, 255, 255, 0.125)',
+          zIndex: 300
+        }
+      }}
+    >
+      <DialogTitle>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="h6">{item.templateName}</Typography>
+          <IconButton onClick={onClose} size="small">
+            <X size={20} />
+          </IconButton>
+        </Box>
+      </DialogTitle>
+
+      <DialogContent>
+        {item.imageURL && (
+          <Box sx={{ mb: 2, borderRadius: 1, overflow: 'hidden' }}>
+            <Image
+              src={item.imageURL}
+              alt={item.templateName}
+              style={{
+                width: '100%',
+                height: 'auto',
+                maxHeight: '300px',
+                objectFit: 'cover'
+              }}
+            />
+          </Box>
+        )}
+
+        <Typography variant="body1" paragraph>
+          {item.description}
+        </Typography>
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Calendar size={20} />
+            <Typography>
+              {format(new Date(item.productDate), 'PPPP')}
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Clock size={20} />
+            <Typography>
+              {format(new Date(`2000-01-01T${item.startTime}`), 'h:mm a')} ({formatDuration(item.duration)})
+            </Typography>
+          </Box>
+
+          {item.location && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <MapPin size={20} />
+              <Button 
+                variant="text" 
+                onClick={() => window.open(
+                  `https://www.google.com/maps/search/?api=1&query=${item.location.coordinates[1]},${item.location.coordinates[0]}`,
+                  '_blank'
+                )}
+              >
+                {t('viewLocation')}
+              </Button>
+            </Box>
+          )}
+        </Box>
+
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          bgcolor: 'background.paper',
+          p: 2,
+          borderRadius: 1,
+          mb: 2
+        }}>
+          <Typography variant="h5" color="primary">
+            ${item.price.toFixed(2)}
+          </Typography>
+          {item.quantityAvailable > 0 ? (
+            <Typography variant="caption" color="success.main">
+              {t('available')}
+            </Typography>
+          ) : (
+            <Typography variant="caption" color="error">
+              {t('soldOut')}
+            </Typography>
+          )}
+        </Box>
+
+        {item.requirements && item.requirements.length > 0 && (
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="subtitle2" gutterBottom>
+              {t('requirements')}
+            </Typography>
+            {item.requirements.map((req, index) => (
+              <Typography key={index} variant="body2" sx={{ ml: 2 }}>
+                • {req}
+              </Typography>
+            ))}
+          </Box>
+        )}
+      </DialogContent>
+
+      <DialogActions sx={{ p: 2 }}>
+        <Button onClick={onClose} color="inherit">
+          {t('close')}
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => onAddToCart(item)}
+          disabled={isAddingToCart || item.quantityAvailable === 0}
+          startIcon={isAddingToCart ? <CircularProgress size={20} /> : null}
+        >
+          {isAddingToCart ? t('addingToCart') : t('addToCart')}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
