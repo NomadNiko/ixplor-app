@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { format, isWithinInterval, startOfDay, eachDayOfInterval, isToday, isBefore } from 'date-fns';
+import { format, isWithinInterval, eachDayOfInterval, isToday } from 'date-fns';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -29,7 +29,6 @@ export function PublicWeeklyCalendar({
   } = usePublicCalendarNavigation();
   
   const [groupedItems, setGroupedItems] = useState<Map<string, ProductItem[]>>(new Map());
-  const today = startOfDay(new Date());
 
   useEffect(() => {
     const itemMap = new Map<string, ProductItem[]>();
@@ -38,9 +37,6 @@ export function PublicWeeklyCalendar({
       if (item.itemStatus !== 'PUBLISHED') return;
       
       const itemDate = new Date(item.productDate);
-      // Skip items from the past
-      if (isBefore(startOfDay(itemDate), today)) return;
-      
       if (!isWithinInterval(itemDate, { start: currentWeek.start, end: currentWeek.end })) return;
       
       const dateKey = format(itemDate, 'yyyy-MM-dd');
@@ -57,7 +53,7 @@ export function PublicWeeklyCalendar({
     });
 
     setGroupedItems(itemMap);
-  }, [items, currentWeek, today]);
+  }, [items, currentWeek]);
 
   const weekDays = eachDayOfInterval({
     start: currentWeek.start,
@@ -126,23 +122,15 @@ export function PublicWeeklyCalendar({
           }
         }
       }}>
-        {weekDays.map(day => {
-          // Only render days from today onwards
-          if (isBefore(startOfDay(day), today)) {
-            return null;
-          }
-          
-          const dateKey = format(day, 'yyyy-MM-dd');
-          return (
-            <PublicDayColumn
-              key={dateKey}
-              date={day}
-              items={groupedItems.get(dateKey) || []}
-              onItemClick={onItemClick}
-              isToday={isToday(day)}
-            />
-          );
-        })}
+        {weekDays.map(day => (
+          <PublicDayColumn
+            key={format(day, 'yyyy-MM-dd')}
+            date={day}
+            items={groupedItems.get(format(day, 'yyyy-MM-dd')) || []}
+            onItemClick={onItemClick}
+            isToday={isToday(day)}
+          />
+        ))}
       </Box>
     </Box>
   );

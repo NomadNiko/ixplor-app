@@ -1,54 +1,54 @@
 import { useState, useCallback } from 'react';
-import { startOfWeek, endOfWeek, addWeeks, subWeeks, startOfDay, isBefore } from 'date-fns';
+import { addDays, subDays, startOfDay, isBefore } from 'date-fns';
 import { WeekRange } from '../types/calendar-types';
 
 export function usePublicCalendarNavigation() {
   const today = startOfDay(new Date());
   
-  // Ensure the initial week starts from today
+  // Create a week range starting from today
   const getInitialWeekRange = () => ({
     start: today,
-    end: endOfWeek(today, { weekStartsOn: 0 })
+    end: addDays(today, 6) // Show 7 days including today
   });
 
   const [currentWeek, setCurrentWeek] = useState<WeekRange>(getInitialWeekRange);
 
   const navigateToWeek = useCallback((date: Date) => {
-    const weekStart = startOfWeek(date, { weekStartsOn: 0 });
-    // Never allow navigation to weeks before today
-    if (isBefore(weekStart, today)) {
+    const startDate = startOfDay(date);
+    // Prevent navigation to dates before today
+    if (isBefore(startDate, today)) {
       setCurrentWeek({
         start: today,
-        end: endOfWeek(today, { weekStartsOn: 0 })
+        end: addDays(today, 6)
       });
     } else {
       setCurrentWeek({
-        start: weekStart,
-        end: endOfWeek(date, { weekStartsOn: 0 })
+        start: startDate,
+        end: addDays(startDate, 6)
       });
     }
   }, [today]);
 
   const nextWeek = useCallback(() => {
     setCurrentWeek(prev => ({
-      start: addWeeks(prev.start, 1),
-      end: addWeeks(prev.end, 1)
+      start: addDays(prev.start, 7),
+      end: addDays(prev.end, 7)
     }));
   }, []);
 
   const previousWeek = useCallback(() => {
     setCurrentWeek(prev => {
-      const newStart = subWeeks(prev.start, 1);
+      const newStart = subDays(prev.start, 7);
       // Prevent going before today
       if (isBefore(newStart, today)) {
         return {
           start: today,
-          end: endOfWeek(today, { weekStartsOn: 0 })
+          end: addDays(today, 6)
         };
       }
       return {
         start: newStart,
-        end: subWeeks(prev.end, 1)
+        end: subDays(prev.end, 7)
       };
     });
   }, [today]);
@@ -56,13 +56,13 @@ export function usePublicCalendarNavigation() {
   const goToToday = useCallback(() => {
     setCurrentWeek({
       start: today,
-      end: endOfWeek(today, { weekStartsOn: 0 })
+      end: addDays(today, 6)
     });
   }, [today]);
 
   // Check if we can go to previous week
   const canGoPrevious = useCallback(() => {
-    const previousStart = subWeeks(currentWeek.start, 1);
+    const previousStart = subDays(currentWeek.start, 7);
     return !isBefore(previousStart, today);
   }, [currentWeek.start, today]);
 
