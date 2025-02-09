@@ -48,6 +48,13 @@ export default function CartItem({
   const handleQuantityChange = async (newQuantity: number) => {
     try {
       setLoading(true);
+      
+      // If new quantity would be 0, use remove function instead
+      if (newQuantity <= 0) {
+        await handleRemove();
+        return;
+      }
+
       if (isGuest) {
         onUpdate(item.productItemId, newQuantity);
         enqueueSnackbar(t('success.quantityUpdated'), { variant: 'success' });
@@ -75,7 +82,7 @@ export default function CartItem({
         enqueueSnackbar(t('success.itemRemoved'), { variant: 'success' });
       } else {
         await removeFromCart(item.productItemId);
-        onUpdate(item.productItemId, 0);
+        onRemove(item.productItemId);
         enqueueSnackbar(t('success.itemRemoved'), { variant: 'success' });
       }
     } catch (error) {
@@ -182,7 +189,7 @@ export default function CartItem({
         >
           <IconButton
             size="small"
-            onClick={() => handleQuantityChange(Math.max(0, item.quantity - 1))}
+            onClick={() => handleQuantityChange(item.quantity - 1)}
             disabled={loading}
           >
             <Minus size={16} />
