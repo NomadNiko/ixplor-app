@@ -27,6 +27,24 @@ interface NearbyActivitiesProps {
   };
 }
 
+// Haversine formula for calculating distance between coordinates
+const calculateDistance = (
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number => {
+  const R = 3959; // Earth's radius in miles
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+};
+
 const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
   isOpen,
   onClose,
@@ -129,26 +147,18 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
                new Date(`${b.productDate}T${b.startTime}`).getTime();
       }
 
-      const locationA = new google.maps.LatLng(
+      const distanceA = calculateDistance(
+        currentLocation.latitude,
+        currentLocation.longitude,
         a.location.coordinates[1],
         a.location.coordinates[0]
       );
-      const locationB = new google.maps.LatLng(
+
+      const distanceB = calculateDistance(
+        currentLocation.latitude,
+        currentLocation.longitude,
         b.location.coordinates[1],
         b.location.coordinates[0]
-      );
-      const currentLatLng = new google.maps.LatLng(
-        currentLocation.latitude,
-        currentLocation.longitude
-      );
-
-      const distanceA = google.maps.geometry.spherical.computeDistanceBetween(
-        locationA,
-        currentLatLng
-      );
-      const distanceB = google.maps.geometry.spherical.computeDistanceBetween(
-        locationB,
-        currentLatLng
       );
 
       return distanceA - distanceB;
@@ -228,10 +238,12 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
           </Typography>
         ) : (
           sortedItems.map((item) => {
-            const distance = google.maps.geometry.spherical.computeDistanceBetween(
-              new google.maps.LatLng(currentLocation.latitude, currentLocation.longitude),
-              new google.maps.LatLng(item.location.coordinates[1], item.location.coordinates[0])
-            ) * 0.000621371; // Convert to miles
+            const distance = calculateDistance(
+              currentLocation.latitude,
+              currentLocation.longitude,
+              item.location.coordinates[1],
+              item.location.coordinates[0]
+            );
 
             return (
               <Box
