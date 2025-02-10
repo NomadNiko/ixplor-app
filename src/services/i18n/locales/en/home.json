@@ -14,8 +14,15 @@
   "errors": {
     "failedToLoadVendors": "Failed to load vendors. Please try again later.",
     "locationError": "Unable to get your location. Please check your settings.",
-    "connectionError": "Connection error. Please check your internet connection."
+    "connectionError": "Connection error. Please check your internet connection.",
+    "fetchFailed": "Failed to fetch nearby activities. Please try again.",
+    "addToCartFailed": "Failed to add activity to cart"
   },
+  "success": {
+    "addedToCart": "Activity added to cart successfully"
+  },
+  "nearbyActivities": "Nearby Activities",
+  "noNearbyActivities": "No nearby activities found",
   "navigation": {
     "map": "Map",
     "favorites": "Favorites",

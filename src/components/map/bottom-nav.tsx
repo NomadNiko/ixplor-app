@@ -6,13 +6,13 @@ import NearbyActivities from '@/components/product-item/NearbyActivities';
 
 export const BottomNav = ({ currentLocation }: { currentLocation: { latitude: number; longitude: number } }) => {
   const [showNearbyActivities, setShowNearbyActivities] = useState(false);
- 
+
   return (
     <>
       <Box
         sx={{
           width: "100%",
-          position: "fixed", 
+          position: "fixed",
           bottom: { xs: 0, md: 10 },
           left: 0,
           right: 0,
@@ -26,7 +26,7 @@ export const BottomNav = ({ currentLocation }: { currentLocation: { latitude: nu
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-around", 
+            justifyContent: "space-around",
             alignItems: "center",
             width: "100%",
             height: (theme) => theme.spacing(5),
@@ -46,14 +46,15 @@ export const BottomNav = ({ currentLocation }: { currentLocation: { latitude: nu
           </NavButton>
         </Box>
       </Box>
- 
+
       <NearbyActivities
         isOpen={showNearbyActivities}
         onClose={() => setShowNearbyActivities(false)}
-        currentLocation={currentLocation}
+        latitude={currentLocation.latitude}
+        longitude={currentLocation.longitude}
       />
     </>
   );
- };
+};
 
 export default BottomNav;
