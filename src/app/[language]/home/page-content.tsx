@@ -4,6 +4,9 @@ import Map, { MapRef, GeolocateControl, ViewState } from "react-map-gl";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import CircularProgress from "@mui/material/CircularProgress";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import { RefreshCw } from "lucide-react";
 import { useTheme } from "@mui/material/styles";
 import { useGetVendorsService } from "@/services/api/services/vendors";
 import { Vendor, VendorTypes } from "@/app/[language]/types/vendor";
@@ -16,6 +19,8 @@ import { VendorTypeFilters } from "./components/vendor-type-filters";
 import { VendorViews } from "./components/vendor-views";
 import { BottomNav } from "@/components/map/bottom-nav";
 import { ClusteredVendorMarkers } from "@/components/vendor/clustered-vendor-markers";
+import type { ErrorEvent } from 'react-map-gl';
+
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -35,6 +40,8 @@ const MapHomeLayout = () => {
   const mapRef = useRef<MapRef>(null);
   const getVendors = useGetVendorsService();
 
+  const [mapKey, setMapKey] = useState(0);
+  const [mapError, setMapError] = useState(false);
   const [viewState, setViewState] = useState<ViewState>(DEFAULT_VIEW_STATE);
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(true);
@@ -42,6 +49,8 @@ const MapHomeLayout = () => {
   const [showFullView, setShowFullView] = useState(false);
   const [filterTypes, setFilterTypes] = useState<VendorTypes[]>([]);
   const [bounds, setBounds] = useState<BBox | undefined>();
+  const [retryCount, setRetryCount] = useState(0);
+  const maxRetries = 3;
 
   const controlStyle = {
     padding: theme.spacing(1),
@@ -50,6 +59,26 @@ const MapHomeLayout = () => {
     color: theme.palette.primary.main,
     borderRadius: theme.shape.borderRadius,
     zIndex: 0,
+  };
+
+  const handleMapError = (e: ErrorEvent) => {
+    console.error('Map Error:', e);
+    setMapError(true);
+    
+    if (retryCount < maxRetries) {
+      setTimeout(() => {
+        setMapKey(prev => prev + 1);
+        setMapError(false);
+        setRetryCount(prev => prev + 1);
+      }, 1000);
+    }
+  };
+  
+  const handleManualRetry = () => {
+    setMapError(false);
+    setRetryCount(0);
+    setMapKey(prev => prev + 1);
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -100,13 +129,13 @@ const MapHomeLayout = () => {
   const updateBounds = () => {
     const map = mapRef.current?.getMap();
     if (map) {
-      const bounds = map.getBounds();
-      if (bounds) {
+      const mapBounds = map.getBounds();
+      if (mapBounds) {
         setBounds([
-          bounds.getWest(),
-          bounds.getSouth(),
-          bounds.getEast(),
-          bounds.getNorth(),
+          mapBounds.getWest(),
+          mapBounds.getSouth(),
+          mapBounds.getEast(),
+          mapBounds.getNorth(),
         ]);
       }
     }
@@ -117,9 +146,9 @@ const MapHomeLayout = () => {
       filterTypes.length === 0 ||
       vendor.vendorTypes.some((type) => filterTypes.includes(type))
   );
+
   useEffect(() => {
     if (vendors.length > 0) {
-      // Preload by briefly showing and hiding the component
       setSelectedVendor(vendors[0]);
       setTimeout(() => setSelectedVendor(null), 100);
     }
@@ -141,11 +170,39 @@ const MapHomeLayout = () => {
     );
   }
 
+  if (mapError && retryCount >= maxRetries) {
+    return (
+      <Box
+        sx={{
+          height: "calc(100vh - 64px)",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 2,
+        }}
+      >
+        <Typography variant="h6">
+          Unable to load the map
+        </Typography>
+        <Button
+          variant="contained"
+          startIcon={<RefreshCw />}
+          onClick={handleManualRetry}
+        >
+          Retry
+        </Button>
+      </Box>
+    );
+  }
+
   return (
     <Box
       sx={{ height: "calc(100vh - 64px)", width: "100%", position: "relative" }}
     >
       <Map
+        key={mapKey}
         {...viewState}
         onMove={(evt) => setViewState(evt.viewState)}
         mapStyle="mapbox://styles/mapbox/dark-v11"
@@ -154,8 +211,10 @@ const MapHomeLayout = () => {
         ref={mapRef}
         onLoad={updateBounds}
         onMoveEnd={updateBounds}
+        onError={handleMapError}
         maxZoom={20}
         minZoom={3}
+        reuseMaps
       >
         <GeolocateControl
           position="top-right"
@@ -195,7 +254,12 @@ const MapHomeLayout = () => {
               setFilterTypes={setFilterTypes}
             />
           </Box>
-          <BottomNav currentLocation={{ latitude: viewState.latitude, longitude: viewState.longitude }} />
+          <BottomNav 
+            currentLocation={{ 
+              latitude: viewState.latitude, 
+              longitude: viewState.longitude 
+            }} 
+          />
         </Container>
       </Map>
       <VendorViews
