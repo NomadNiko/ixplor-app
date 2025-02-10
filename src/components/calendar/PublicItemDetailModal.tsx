@@ -14,6 +14,8 @@ import { ProductItem } from '@/app/[language]/types/product-item';
 import { useTranslation } from "@/services/i18n/client";
 import { formatDuration } from '@/components/utils/duration-utils';
 import { Image } from "@nextui-org/react";
+import useAuth from '@/services/auth/use-auth';
+import { useRouter } from 'next/navigation';
 
 interface PublicItemDetailModalProps {
   item: ProductItem | null;
@@ -23,6 +25,8 @@ interface PublicItemDetailModalProps {
   isAddingToCart: boolean;
 }
 
+
+
 export default function PublicItemDetailModal({
   item,
   open,
@@ -31,8 +35,19 @@ export default function PublicItemDetailModal({
   isAddingToCart
 }: PublicItemDetailModalProps) {
   const { t } = useTranslation("product-items");
+  const { user } = useAuth();
+  const router = useRouter();
 
   if (!item) return null;
+
+  const handleAddToCart = () => {
+    if (!user) {
+      router.push('/sign-in');
+      return;
+    }
+    
+    onAddToCart(item);
+  };
 
   return (
     <Dialog
@@ -156,14 +171,14 @@ export default function PublicItemDetailModal({
           {t('close')}
         </Button>
         <Button
-          variant="contained"
-          size="small"
-          onClick={() => onAddToCart(item)}
-          disabled={isAddingToCart || item.quantityAvailable === 0}
-          startIcon={isAddingToCart ? <CircularProgress size={16} /> : null}
-        >
-          {isAddingToCart ? t('addingToCart') : t('addToCart')}
-        </Button>
+      variant="contained"
+      size="small"
+      onClick={handleAddToCart}  // Update this to use the new handler
+      disabled={isAddingToCart || item.quantityAvailable === 0}
+      startIcon={isAddingToCart ? <CircularProgress size={16} /> : null}
+    >
+      {isAddingToCart ? t('addingToCart') : t('addToCart')}
+    </Button>
       </DialogActions>
     </Dialog>
   );

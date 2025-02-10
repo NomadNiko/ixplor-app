@@ -75,7 +75,7 @@ export const useGuestCart = () => {
   ): Promise<ValidationError | null> => {
     try {
       // Use public endpoint for availability check
-      const response = await fetch(`${API_URL}/product-items/${productItemId}/public`);
+      const response = await fetch(`${API_URL}/product-items/${productItemId}`);
       
       if (!response.ok) {
         return { 

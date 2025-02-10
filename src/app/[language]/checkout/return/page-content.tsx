@@ -14,63 +14,35 @@ import { getTokensInfo } from '@/services/auth/auth-tokens-info';
 import PurchasedTickets from '@/components/tickets/PurchasedTicketsDisplay';
 import useAuth from '@/services/auth/use-auth';
 
-interface PurchasedTicket {
-  _id: string;
-  productName: string;
-  productDescription: string;
-  productDate?: string;
-  productStartTime?: string;
-  productImageURL?: string;
-  quantity: number;
-  price: number;
-  transactionId: string;
-}
-
-interface Transaction {
-  _id: string;
-  stripeCheckoutSessionId: string;
-  amount: number;
-  currency: string;
-  vendorId: string;
-  customerId: string;
-  productItemId: string;
-  status: string;
-  type: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export default function CheckoutReturnPage() {
   const { t } = useTranslation('checkout');
   const router = useRouter();
   const searchParams = useSearchParams();
   const { refreshCart } = useCartQuery();
   const { enqueueSnackbar } = useSnackbar();
-  const [status, setStatus] = useState<'complete' | 'open' | null>(null);
+  const [status, setStatus] = useState<'complete' | 'open' | 'processing' | 'error' | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [hasChecked, setHasChecked] = useState(false);
-  const [purchasedTickets, setPurchasedTickets] = useState<PurchasedTicket[]>([]);
+  const [purchasedTickets, setPurchasedTickets] = useState([]);
   const { user } = useAuth();
 
   useEffect(() => {
     const checkStatus = async () => {
-      if (hasChecked) return;
-
       try {
         const sessionId = searchParams.get('session_id');
         
         if (!sessionId) {
-          console.log('No session ID found, redirecting to cart');
-          router.push('/cart');
+          console.error('No session ID found');
+          setStatus('error');
+          setIsLoading(false);
           return;
         }
 
+        setStatus('processing');
         const tokensInfo = getTokensInfo();
         if (!tokensInfo?.token) {
           throw new Error('No auth token available');
         }
 
-        // First check the session status
         const response = await fetch(`${API_URL}/stripe/session-status?session_id=${sessionId}`, {
           headers: {
             'Authorization': `Bearer ${tokensInfo.token}`
@@ -85,59 +57,35 @@ export default function CheckoutReturnPage() {
         setStatus(data.status);
 
         if (data.status === 'complete') {
-          // Get transaction details
-          const transactionResponse = await fetch(`${API_URL}/transactions/checkout/${sessionId}`, {
-            headers: {
-              'Authorization': `Bearer ${tokensInfo.token}`
-            }
-          });
-
-          if (!transactionResponse.ok) {
-            throw new Error('Failed to fetch transaction details');
-          }
-
-          const transaction: Transaction = await transactionResponse.json();
-
-          // Get tickets for the current user
-          const ticketsResponse = await fetch(`${API_URL}/tickets/user/${user?.id}`, {
-            headers: {
-              'Authorization': `Bearer ${tokensInfo.token}`
-            }
-          });
-
-          if (ticketsResponse.ok) {
-            const ticketsData = await ticketsResponse.json();
-            // Filter tickets created around the same time as the transaction
-            const transactionTime = new Date(transaction.createdAt).getTime();
-            const relevantTickets = ticketsData.data.filter((ticket: PurchasedTicket) => {
-              const ticketTime = new Date(ticket.transactionId).getTime();
-              // Consider tickets created within 5 minutes of the transaction
-              return Math.abs(ticketTime - transactionTime) < 5 * 60 * 1000;
-            });
-            setPurchasedTickets(relevantTickets);
-          }
-
+          // Refresh cart and fetch tickets
           await refreshCart();
+          
+          if (user?.id) {
+            const ticketsResponse = await fetch(`${API_URL}/tickets/user/${user.id}`, {
+              headers: {
+                'Authorization': `Bearer ${tokensInfo.token}`
+              }
+            });
+            
+            if (ticketsResponse.ok) {
+              const ticketsData = await ticketsResponse.json();
+              setPurchasedTickets(ticketsData.data);
+            }
+          }
+          
           enqueueSnackbar(t('success.paymentComplete'), { variant: 'success' });
         }
-
-        setHasChecked(true);
       } catch (error) {
         console.error('Error checking session status:', error);
+        setStatus('error');
         enqueueSnackbar(t('errors.statusCheckFailed'), { variant: 'error' });
-        router.push('/cart');
       } finally {
         setIsLoading(false);
       }
     };
 
     checkStatus();
-  }, [searchParams, hasChecked]);
-
-  if (status === 'open') {
-    router.push('/checkout');
-    return null;
-  }
+  }, [searchParams, user?.id, refreshCart, enqueueSnackbar, t]);
 
   if (isLoading) {
     return (
@@ -148,6 +96,24 @@ export default function CheckoutReturnPage() {
         minHeight: 'calc(100vh - 64px)'
       }}>
         <CircularProgress />
+      </Container>
+    );
+  }
+
+  if (status === 'processing') {
+    return (
+      <Container sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: 'calc(100vh - 64px)',
+        gap: 3
+      }}>
+        <CircularProgress />
+        <Typography variant="h6">
+          {t('returnPage.processing.message')}
+        </Typography>
       </Container>
     );
   }
@@ -165,10 +131,10 @@ export default function CheckoutReturnPage() {
           <>
             <CheckCircle size={64} color="success" />
             <Typography variant="h4" gutterBottom>
-              {t('success.title')}
+              {t('returnPage.success.title')}
             </Typography>
             <Typography color="text.secondary" paragraph>
-              {t('success.message')}
+              {t('returnPage.success.message')}
             </Typography>
             {purchasedTickets.length > 0 && (
               <PurchasedTickets tickets={purchasedTickets} />
@@ -178,10 +144,10 @@ export default function CheckoutReturnPage() {
           <>
             <XCircle size={64} color="error" />
             <Typography variant="h4" gutterBottom>
-              {t('failure.title')}
+              {t('returnPage.failure.title')}
             </Typography>
             <Typography color="text.secondary" paragraph>
-              {t('failure.message')}
+              {t('returnPage.failure.message')}
             </Typography>
           </>
         )}
@@ -191,14 +157,14 @@ export default function CheckoutReturnPage() {
             variant="contained"
             onClick={() => router.push('/')}
           >
-            {t('actions.backToHome')}
+            {t('returnPage.actions.backToHome')}
           </Button>
           {status !== 'complete' && (
             <Button
               variant="outlined"
               onClick={() => router.push('/cart')}
             >
-              {t('actions.tryAgain')}
+              {t('returnPage.actions.tryAgain')}
             </Button>
           )}
         </Box>
