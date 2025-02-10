@@ -11,7 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { ChevronUp, ChevronDown } from "lucide-react";
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import { ProductItem } from '@/app/[language]/types/product-item';
 
 type Order = 'asc' | 'desc';
@@ -68,7 +68,7 @@ export default function EnhancedInventoryTable({
       type: 'string',
       label: t('date'), 
       align: 'left',
-      format: (value: string) => format(parseISO(value), 'PP'),
+      format: (value: string) => format(new Date(value), 'PP'),
       sortable: true
     },
     { 
@@ -106,16 +106,22 @@ export default function EnhancedInventoryTable({
 
   const getComparatorValue = (item: ProductItem, property: ColumnId): number | string => {
     if (property === 'productDate') {
-      // Combine date and time for sorting
-      const dateTimeString = `${item.productDate}T${item.startTime}`;
-      return new Date(dateTimeString).getTime();
-    } else if (property === 'startTime') {
-      // Convert time to comparable number
+      // Convert date and time to a comparable timestamp
+      const [hours, minutes] = item.startTime.split(':').map(Number);
+      const date = new Date(item.productDate);
+      date.setHours(hours, minutes, 0, 0);
+      return date.getTime();
+    }
+    
+    if (property === 'startTime') {
       const [hours, minutes] = item.startTime.split(':').map(Number);
       return hours * 60 + minutes;
-    } else if (property === 'quantityAvailable') {
+    }
+    
+    if (property === 'quantityAvailable') {
       return item.quantityAvailable;
     }
+    
     return item[property] as string;
   };
 
@@ -124,17 +130,15 @@ export default function EnhancedInventoryTable({
       const aValue = getComparatorValue(a, orderBy);
       const bValue = getComparatorValue(b, orderBy);
       
+      let comparison = 0;
+      
       if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return order === 'asc' ? aValue - bValue : bValue - aValue;
+        comparison = aValue - bValue;
+      } else if (typeof aValue === 'string' && typeof bValue === 'string') {
+        comparison = aValue.localeCompare(bValue);
       }
       
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return order === 'asc' 
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
-      }
-      
-      return 0;
+      return order === 'asc' ? comparison : -comparison;
     });
   };
 
@@ -218,7 +222,7 @@ export default function EnhancedInventoryTable({
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[10, 25, 50, 100]}
         component="div"
         count={items.length}
         rowsPerPage={rowsPerPage}
