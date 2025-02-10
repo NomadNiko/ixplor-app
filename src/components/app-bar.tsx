@@ -184,6 +184,7 @@ function ResponsiveAppBar() {
                     </Typography>
                   </MenuItem>,
                 ]}
+                
               {!!user?.role &&
                 [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
@@ -194,6 +195,20 @@ function ResponsiveAppBar() {
                   >
                     <Typography textAlign="center">
                       {t("common:navigation.products")}
+                    </Typography>
+                  </MenuItem>,
+                ]}
+
+              {!!user?.role &&
+                [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
+                  <MenuItem
+                    key="inventory"
+                    onClick={handleCloseNavMenu}
+                    component={Link}
+                    href="/inventory"
+                  >
+                    <Typography textAlign="center">
+                      {t("common:navigation.inventory")}
                     </Typography>
                   </MenuItem>,
                 ]}
@@ -379,6 +394,7 @@ function ResponsiveAppBar() {
                   </Button>
                 </>
               )}
+              
             {!!user?.role &&
               [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
                 <>
@@ -389,6 +405,20 @@ function ResponsiveAppBar() {
                     href="/product-items"
                   >
                     {t("common:navigation.products")}
+                  </Button>
+                </>
+              )}
+
+            {!!user?.role &&
+              [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+                <>
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                    component={Link}
+                    href="/inventory"
+                  >
+                    {t("common:navigation.inventory")}
                   </Button>
                 </>
               )}
