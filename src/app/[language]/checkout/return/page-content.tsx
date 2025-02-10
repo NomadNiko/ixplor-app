@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -14,53 +14,62 @@ import { getTokensInfo } from '@/services/auth/auth-tokens-info';
 import PurchasedTickets from '@/components/tickets/PurchasedTicketsDisplay';
 import useAuth from '@/services/auth/use-auth';
 
+type TransactionStatus = 'pending' | 'processing' | 'succeeded' | 'failed' | 'refunded' | 'disputed' | 'canceled';
+type UIStatus = 'complete' | 'open' | 'expired' | 'canceled' | null;
+
 export default function CheckoutReturnPage() {
   const { t } = useTranslation('checkout');
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { refreshCart } = useCartQuery();
   const { enqueueSnackbar } = useSnackbar();
-  const [status, setStatus] = useState<'complete' | 'open' | 'processing' | 'error' | null>(null);
+  const [status, setStatus] = useState<UIStatus>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [purchasedTickets, setPurchasedTickets] = useState([]);
   const { user } = useAuth();
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
+    const MAX_RETRIES = 3;
+    let timeoutId: NodeJS.Timeout;
+
     const checkStatus = async () => {
       try {
-        const sessionId = searchParams.get('session_id');
-        
-        if (!sessionId) {
-          console.error('No session ID found');
-          setStatus('error');
-          setIsLoading(false);
-          return;
+        if (!user?.id) {
+          throw new Error('No user ID available');
         }
 
-        setStatus('processing');
         const tokensInfo = getTokensInfo();
         if (!tokensInfo?.token) {
           throw new Error('No auth token available');
         }
 
-        const response = await fetch(`${API_URL}/stripe/session-status?session_id=${sessionId}`, {
+        // Get most recent transaction regardless of status
+        const response = await fetch(`${API_URL}/transactions/customer/${user.id}?limit=1`, {
           headers: {
             'Authorization': `Bearer ${tokensInfo.token}`
           }
         });
 
         if (!response.ok) {
-          throw new Error('Failed to fetch session status');
+          throw new Error('Failed to fetch transaction');
         }
 
-        const data = await response.json();
-        setStatus(data.status);
+        const { data: transactions } = await response.json();
+        
+        if (!transactions || transactions.length === 0) {
+          setStatus('canceled');
+          setIsLoading(false);
+          return;
+        }
 
-        if (data.status === 'complete') {
-          // Refresh cart and fetch tickets
-          await refreshCart();
-          
-          if (user?.id) {
+        const transaction = transactions[0];
+        const currentStatus = transaction.status as TransactionStatus;
+
+        switch(currentStatus) {
+          case 'succeeded':
+            setStatus('complete');
+            await refreshCart();
+            
             const ticketsResponse = await fetch(`${API_URL}/tickets/user/${user.id}`, {
               headers: {
                 'Authorization': `Bearer ${tokensInfo.token}`
@@ -71,23 +80,56 @@ export default function CheckoutReturnPage() {
               const ticketsData = await ticketsResponse.json();
               setPurchasedTickets(ticketsData.data);
             }
-          }
-          
-          enqueueSnackbar(t('success.paymentComplete'), { variant: 'success' });
+            
+            enqueueSnackbar(t('success.paymentComplete'), { variant: 'success' });
+            setIsLoading(false);
+            break;
+
+          case 'pending':
+          case 'processing':
+            if (retryCount < MAX_RETRIES) {
+              setStatus('open');
+              setRetryCount(prev => prev + 1);
+              timeoutId = setTimeout(checkStatus, 2000);
+            } else {
+              setStatus('canceled');
+              setIsLoading(false);
+            }
+            break;
+
+          case 'failed':
+          case 'canceled':
+          case 'refunded':
+          case 'disputed':
+            setStatus('canceled');
+            setIsLoading(false);
+            break;
+
+          default:
+            console.error('Unknown transaction status:', currentStatus);
+            setStatus('canceled');
+            setIsLoading(false);
         }
       } catch (error) {
-        console.error('Error checking session status:', error);
-        setStatus('error');
+        console.error('Error checking transaction status:', error);
+        setStatus('canceled');
         enqueueSnackbar(t('errors.statusCheckFailed'), { variant: 'error' });
-      } finally {
         setIsLoading(false);
       }
     };
 
-    checkStatus();
-  }, [searchParams, user?.id, refreshCart, enqueueSnackbar, t]);
+    if (user?.id) {
+      checkStatus();
+    }
 
-  if (isLoading) {
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [user?.id, refreshCart, enqueueSnackbar, t, retryCount]);
+
+  if (!user?.id || isLoading) {
     return (
       <Container sx={{
         display: 'flex',
@@ -100,7 +142,7 @@ export default function CheckoutReturnPage() {
     );
   }
 
-  if (status === 'processing') {
+  if (status === 'open') {
     return (
       <Container sx={{
         display: 'flex',
