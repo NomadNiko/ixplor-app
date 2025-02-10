@@ -195,7 +195,7 @@ const MapHomeLayout = () => {
               setFilterTypes={setFilterTypes}
             />
           </Box>
-          <BottomNav />
+          <BottomNav currentLocation={{ latitude: viewState.latitude, longitude: viewState.longitude }} />
         </Container>
       </Map>
       <VendorViews
