@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect } from 'react';
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -7,8 +6,9 @@ import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Box from "@mui/material/Box";
-import { useTranslation } from "@/services/i18n/client";
+import Chip from "@mui/material/Chip";
 import { Receipt } from 'lucide-react';
+import { useTranslation } from "@/services/i18n/client";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import useAuth from "@/services/auth/use-auth";
@@ -55,6 +55,19 @@ export default function ReceiptsPage() {
     }
   }, [user?.id, enqueueSnackbar, t]);
 
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'succeeded':
+        return 'success';
+      case 'pending':
+        return 'warning';
+      case 'failed':
+        return 'error';
+      default:
+        return 'default';
+    }
+  };
+
   if (loading) {
     return (
       <Container sx={{ 
@@ -96,16 +109,28 @@ export default function ReceiptsPage() {
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
                     <Receipt size={20} />
                     <Typography variant="h6">
-                      ${(invoice.amount / 100).toFixed(2)}
+                      ${invoice.amount.toFixed(2)}
                     </Typography>
                   </Box>
                   
-                  <Typography variant="body2" color="text.secondary">
-                    {t('invoice')} #{invoice._id.slice(-8)}
+                  <Typography variant="body2" gutterBottom>
+                    {invoice.vendorName}
                   </Typography>
+
+                  <Box sx={{ mb: 2 }}>
+                    <Chip 
+                      label={invoice.status}
+                      size="small"
+                      color={getStatusColor(invoice.status)}
+                      sx={{ mr: 1 }}
+                    />
+                    <Typography variant="caption" color="text.secondary">
+                      {invoice.items?.length || 0} {t('itemsCount')}
+                    </Typography>
+                  </Box>
                   
-                  <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}>
-                    {invoice.description}
+                  <Typography variant="caption" color="text.secondary" display="block">
+                    {t('invoice')} #{invoice._id.slice(-8)}
                   </Typography>
                 </CardContent>
               </Card>

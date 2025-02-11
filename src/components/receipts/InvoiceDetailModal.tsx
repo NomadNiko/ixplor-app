@@ -6,11 +6,11 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import { Printer, Receipt } from "lucide-react";
 import { useTranslation } from "@/services/i18n/client";
 import { InvoiceResponseDto } from '@/types/invoice';
+import { format } from 'date-fns';
 
 interface InvoiceDetailModalProps {
   invoice: InvoiceResponseDto | null;
@@ -62,7 +62,7 @@ export default function InvoiceDetailModal({
     <Dialog 
       open={open} 
       onClose={onClose}
-      maxWidth="md"
+      maxWidth="sm"
       fullWidth
     >
       <DialogTitle>
@@ -75,81 +75,79 @@ export default function InvoiceDetailModal({
       </DialogTitle>
 
       <DialogContent>
-        <Box ref={printRef}>
+        <Box ref={printRef} sx={{ maxWidth: '400px', mx: 'auto' }}>
+          {/* Header */}
           <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <Typography variant="h5" gutterBottom>
-              {t('receiptTitle')}
+            <Typography variant="h6" gutterBottom>
+              {invoice.vendorName}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {format(new Date(), 'PPP')}
             </Typography>
           </Box>
 
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle2" gutterBottom>
-                {t('billedTo')}
-              </Typography>
-              <Typography>{invoice.customerId}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle2" gutterBottom>
-                {t('from')}
-              </Typography>
-              <Typography>{invoice.vendorId}</Typography>
-            </Grid>
-          </Grid>
-
-          <Box sx={{ mb: 4 }}>
-            <Typography variant="subtitle2" gutterBottom>
-              {t('description')}
+          {/* Customer Info */}
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="subtitle2" color="text.secondary">
+              {t('billedTo')}
             </Typography>
-            <Typography>{invoice.description}</Typography>
+            <Typography>{invoice.customerName}</Typography>
+            <Typography variant="caption" color="text.secondary">
+              ID: {invoice.customerId}
+            </Typography>
           </Box>
 
-          <Box sx={{ mb: 4 }}>
-            <Typography variant="subtitle2" gutterBottom>
-              {t('paymentDetails')}
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Typography color="text.secondary">
-                  {t('status')}
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography>{invoice.status}</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography color="text.secondary">
-                  {t('transactionId')}
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography 
-                  sx={{ 
-                    wordBreak: 'break-all',
-                    fontSize: '0.875rem'
-                  }}
-                >
-                  {invoice.stripeCheckoutSessionId}
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography color="text.secondary">
-                  {t('items')}
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
+          <Divider sx={{ my: 2 }} />
+
+          {/* Items */}
+          <Box sx={{ mb: 3 }}>
+            {invoice.items?.map((item, index) => (
+              <Box key={index} sx={{ mb: 2 }}>
                 <Typography>
-                  {invoice.productItemIds.length} {t('itemsCount')}
+                  {item.quantity}x {item.productName}
                 </Typography>
-              </Grid>
-            </Grid>
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between',
+                  pl: 2,
+                  color: 'text.secondary'
+                }}>
+                  <Typography variant="body2">
+                    {format(new Date(item.productDate), 'PP')} at {item.productStartTime}
+                  </Typography>
+                  <Typography variant="body2">
+                    ${(item.price * item.quantity).toFixed(2)}
+                  </Typography>
+                </Box>
+              </Box>
+            ))}
           </Box>
 
-          <Divider sx={{ my: 3 }} />
+          <Divider sx={{ my: 2 }} />
 
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Typography variant="h5">
-              {t('total')}: ${(invoice.amount / 100).toFixed(2)} {invoice.currency.toUpperCase()}
+          {/* Payment Details */}
+          <Box sx={{ mb: 3 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography variant="subtitle2">{t('status')}</Typography>
+              <Typography>{invoice.status}</Typography>
+            </Box>
+            <Typography variant="caption" color="text.secondary" sx={{ wordBreak: 'break-all' }}>
+              {t('transactionId')}: {invoice.stripeCheckoutSessionId}
+            </Typography>
+          </Box>
+
+          <Divider sx={{ my: 2 }} />
+
+          {/* Total */}
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mt: 3
+          }}>
+            <Typography variant="h6">{t('total')}</Typography>
+            <Typography variant="h6">
+              ${invoice.amount.toFixed(2)} {invoice.currency.toUpperCase()}
             </Typography>
           </Box>
         </Box>
