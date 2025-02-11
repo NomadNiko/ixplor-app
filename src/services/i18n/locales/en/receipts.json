@@ -1,0 +1,21 @@
+{
+    "title": "Receipts",
+    "noInvoices": "No receipts found",
+    "invoice": "Invoice",
+    "receiptTitle": "Receipt",
+    "billedTo": "Billed To",
+    "from": "From",
+    "description": "Description",
+    "paymentDetails": "Payment Details",
+    "status": "Status",
+    "transactionId": "Transaction ID",
+    "total": "Total",
+    "close": "Close",
+    "print": "Print",
+    "items": "Items",
+    "itemsCount": "items",
+    "errors": {
+      "unauthorized": "You are not authorized to view this content",
+      "fetchFailed": "Failed to fetch receipts"
+    }
+  }

@@ -111,6 +111,7 @@ function ResponsiveAppBar() {
                   {t("common:navigation.home")}
                 </Typography>
               </MenuItem>
+              
               {!!user?.role &&
                 [RoleEnum.USER, RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
@@ -121,6 +122,20 @@ function ResponsiveAppBar() {
                   >
                     <Typography textAlign="center">
                       {t("common:navigation.tickets")}
+                    </Typography>
+                  </MenuItem>,
+                ]}
+                
+              {!!user?.role &&
+                [RoleEnum.USER, RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
+                  <MenuItem
+                    key="receipts"
+                    onClick={handleCloseNavMenu}
+                    component={Link}
+                    href="/receipts"
+                  >
+                    <Typography textAlign="center">
+                      {t("common:navigation.receipts")}
                     </Typography>
                   </MenuItem>,
                 ]}
@@ -323,6 +338,7 @@ function ResponsiveAppBar() {
             >
               {t("common:navigation.home")}
             </Button>
+            
             {!!user?.role &&
               [RoleEnum.USER,RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
                 <>
@@ -333,6 +349,20 @@ function ResponsiveAppBar() {
                     href="/tickets"
                   >
                     {t("common:navigation.tickets")}
+                  </Button>
+                </>
+              )}
+
+            {!!user?.role &&
+              [RoleEnum.USER,RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+                <>
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                    component={Link}
+                    href="/receipts"
+                  >
+                    {t("common:navigation.receipts")}
                   </Button>
                 </>
               )}
