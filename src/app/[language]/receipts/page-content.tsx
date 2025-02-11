@@ -12,9 +12,13 @@ import { useTranslation } from "@/services/i18n/client";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import useAuth from "@/services/auth/use-auth";
-import { InvoiceResponseDto } from '@/types/invoice';
+import { InvoiceResponseDto, InvoiceItem } from '@/types/invoice';
 import { useSnackbar } from "@/hooks/use-snackbar";
 import InvoiceDetailModal from '@/components/receipts/InvoiceDetailModal';
+
+const getTotalItemCount = (items: InvoiceItem[]): number => {
+  return items.reduce((total, item) => total + item.quantity, 0);
+};
 
 export default function ReceiptsPage() {
   const { t } = useTranslation("receipts");
@@ -125,7 +129,7 @@ export default function ReceiptsPage() {
                       sx={{ mr: 1 }}
                     />
                     <Typography variant="caption" color="text.secondary">
-                      {invoice.items?.length || 0} {t('itemsCount')}
+                      {getTotalItemCount(invoice.items)} {t('itemsCount')}
                     </Typography>
                   </Box>
                   
