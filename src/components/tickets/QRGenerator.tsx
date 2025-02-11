@@ -1,5 +1,5 @@
 import React from "react";
-import { QRCodeSVG } from "qrcode.react";
+import { QRCodeCanvas } from "qrcode.react";
 
 interface QRGeneratorProps {
   ticketId: string;
@@ -15,7 +15,7 @@ const QRGenerator = ({ ticketId, transactionId }: QRGeneratorProps) => {
         Vendors Scan Here
       </p>
       <div className="flex justify-center items-center w-40 h-40 bg-slate-800 rounded-lg p-2">
-        <QRCodeSVG
+        <QRCodeCanvas
           value={validationUrl}
           size={218}
           level="H"
@@ -23,7 +23,7 @@ const QRGenerator = ({ ticketId, transactionId }: QRGeneratorProps) => {
           fgColor="#CDDAF7"
           marginSize={4}
           imageSettings={{
-            src: "https://ixplor-profile-s3-bucket-02.s3.us-east-2.amazonaws.com/0932659af73111d7ba4e2.png",
+            src: "/qr-logo.png",
             height: 60,
             width: 60,
             excavate: true,
