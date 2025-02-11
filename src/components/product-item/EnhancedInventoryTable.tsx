@@ -68,7 +68,7 @@ export default function EnhancedInventoryTable({
       label: t('productName'),
       icon: <Tag size={16} />,
       align: 'left',
-      format: (value: string) => isMobile ? `${value.slice(0, 22)}${value.length > 22 ? '...' : ''}` : value,
+      format: (value: string) => isMobile ? `${value.slice(0, 42)}${value.length > 42 ? '...' : ''}` : value,
       sortable: true,
       minWidth: isMobile ? 120 : 200
     },
