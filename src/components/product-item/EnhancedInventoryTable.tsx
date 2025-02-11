@@ -10,9 +10,11 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { ChevronUp, ChevronDown } from "lucide-react";
+import { ChevronUp, ChevronDown, Calendar, Clock, Tag } from "lucide-react";
 import { format } from 'date-fns';
 import { ProductItem } from '@/app/[language]/types/product-item';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 type Order = 'asc' | 'desc';
 type ColumnId = keyof Pick<ProductItem, 'templateName' | 'productDate' | 'startTime' | 'quantityAvailable'>;
@@ -20,8 +22,11 @@ type ColumnId = keyof Pick<ProductItem, 'templateName' | 'productDate' | 'startT
 interface BaseColumnType {
   id: ColumnId;
   label: string;
+  icon?: React.ReactNode;
   align?: 'left' | 'center' | 'right';
   sortable?: boolean;
+  minWidth?: number;
+  maxWidth?: number;
 }
 
 interface StringColumnType extends BaseColumnType {
@@ -49,7 +54,8 @@ export default function EnhancedInventoryTable({
   isUpdating,
   t 
 }: EnhancedTableProps) {
-  // Remove the local items state since we'll use the parent's state
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<ColumnId>('productDate');
   const [page, setPage] = useState(0);
@@ -59,35 +65,33 @@ export default function EnhancedInventoryTable({
     { 
       id: 'templateName', 
       type: 'string',
-      label: t('productName'), 
+      label: t('productName'),
+      icon: <Tag size={16} />,
       align: 'left',
-      format: (value: string) => value,
-      sortable: true 
+      format: (value: string) => isMobile ? `${value.slice(0, 22)}${value.length > 22 ? '...' : ''}` : value,
+      sortable: true,
+      minWidth: isMobile ? 120 : 200
     },
     { 
       id: 'productDate', 
       type: 'string',
-      label: t('date'), 
+      label: t('date'),
+      icon: <Calendar size={16} />,
       align: 'left',
-      format: (value: string) => format(new Date(value), 'PP'),
-      sortable: true
+      format: (value: string) => format(new Date(value), isMobile ? 'MM/dd' : 'PP'),
+      sortable: true,
+      minWidth: isMobile ? 80 : 120
     },
     { 
       id: 'startTime', 
       type: 'string',
-      label: t('startTime'), 
+      label: t('startTime'),
+      icon: <Clock size={16} />,
       align: 'left',
-      format: (value: string) => format(new Date(`2000-01-01T${value}`), 'p'),
-      sortable: true
-    },
-    { 
-      id: 'quantityAvailable', 
-      type: 'number',
-      label: t('quantity'), 
-      align: 'center',
-      format: (value: number) => value.toString(),
-      sortable: true
-    },
+      format: (value: string) => format(new Date(`2000-01-01T${value}`), isMobile ? 'HH:mm' : 'p'),
+      sortable: true,
+      minWidth: isMobile ? 70 : 100
+    }
   ];
 
   const handleRequestSort = (property: ColumnId) => {
@@ -105,10 +109,8 @@ export default function EnhancedInventoryTable({
     setPage(0);
   };
 
-
   const getComparatorValue = (item: ProductItem, property: ColumnId): number | string => {
     if (property === 'productDate') {
-      // Convert date and time to a comparable timestamp
       const [hours, minutes] = item.startTime.split(':').map(Number);
       const date = new Date(item.productDate);
       date.setHours(hours, minutes, 0, 0);
@@ -145,19 +147,34 @@ export default function EnhancedInventoryTable({
   };
 
   const sortedAndPaginatedData = sortData(initialItems)
-  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
     <>
       <TableContainer>
-        <Table>
+        <Table size={isMobile ? "small" : "medium"}>
           <TableHead>
             <TableRow>
+              <TableCell 
+                padding="none" 
+                sx={{ 
+                  width: 80,
+                  minWidth: 80,
+                  maxWidth: 80 
+                }}
+              >
+                {t('quantity')}
+              </TableCell>
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
                   align={column.align}
                   sortDirection={orderBy === column.id ? order : false}
+                  sx={{
+                    minWidth: column.minWidth,
+                    maxWidth: column.maxWidth,
+                    padding: isMobile ? '8px 4px' : undefined
+                  }}
                 >
                   {column.sortable ? (
                     <TableSortLabel
@@ -165,20 +182,19 @@ export default function EnhancedInventoryTable({
                       direction={orderBy === column.id ? order : 'asc'}
                       onClick={() => handleRequestSort(column.id)}
                     >
-                      {column.label}
+                      {isMobile ? column.icon : column.label}
                     </TableSortLabel>
                   ) : (
-                    column.label
+                    isMobile ? column.icon : column.label
                   )}
                 </TableCell>
               ))}
-              <TableCell align="center">{t('actions')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {sortedAndPaginatedData.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} align="center">
+                <TableCell colSpan={columns.length + 1} align="center">
                   <Typography color="text.secondary">
                     {t('noItems')}
                   </Typography>
@@ -187,10 +203,44 @@ export default function EnhancedInventoryTable({
             ) : (
               sortedAndPaginatedData.map((item) => (
                 <TableRow key={item._id}>
+                  <TableCell padding="none">
+                    <Box sx={{ 
+                      display: 'flex', 
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: 0.5,
+                      px: 1
+                    }}>
+                      <IconButton
+                        onClick={() => onQuantityChange(item, 1)}
+                        size="small"
+                        disabled={isUpdating}
+                      >
+                        <ChevronUp size={16} />
+                      </IconButton>
+                      <Typography variant="body2">
+                        {item.quantityAvailable}
+                      </Typography>
+                      <IconButton
+                        onClick={() => onQuantityChange(item, -1)}
+                        size="small"
+                        disabled={isUpdating || item.quantityAvailable <= 0}
+                      >
+                        <ChevronDown size={16} />
+                      </IconButton>
+                    </Box>
+                  </TableCell>
                   {columns.map(column => {
                     const value = item[column.id];
                     return (
-                      <TableCell key={column.id} align={column.align}>
+                      <TableCell 
+                        key={column.id} 
+                        align={column.align}
+                        sx={{
+                          padding: isMobile ? '8px 4px' : undefined,
+                          fontSize: isMobile ? '0.875rem' : undefined
+                        }}
+                      >
                         {column.type === 'string' 
                           ? column.format(value as string)
                           : column.type === 'number'
@@ -199,38 +249,21 @@ export default function EnhancedInventoryTable({
                       </TableCell>
                     );
                   })}
-                  <TableCell align="center">
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-                    <IconButton 
-          onClick={() => onQuantityChange(item, 1)}
-          size="small"
-          disabled={isUpdating}
-        >
-          <ChevronUp size={20} />
-        </IconButton>
-        <IconButton 
-          onClick={() => onQuantityChange(item, -1)}
-          size="small"
-          disabled={isUpdating || item.quantityAvailable <= 0}
-        >
-          <ChevronDown size={20} />
-        </IconButton>
-                    </Box>
-                  </TableCell>
                 </TableRow>
               ))
             )}
           </TableBody>
         </Table>
-        </TableContainer>
+      </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[10, 25, 50, 100]}
+        rowsPerPageOptions={isMobile ? [10, 20, 60] : [15, 50, 300]}
         component="div"
         count={initialItems.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage={isMobile ? '' : undefined}
       />
     </>
   );
