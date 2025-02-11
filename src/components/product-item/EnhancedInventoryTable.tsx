@@ -44,11 +44,12 @@ interface EnhancedTableProps {
 }
 
 export default function EnhancedInventoryTable({ 
-  items, 
+  items: initialItems, 
   onQuantityChange, 
   isUpdating,
   t 
 }: EnhancedTableProps) {
+  // Remove the local items state since we'll use the parent's state
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<ColumnId>('productDate');
   const [page, setPage] = useState(0);
@@ -104,6 +105,7 @@ export default function EnhancedInventoryTable({
     setPage(0);
   };
 
+
   const getComparatorValue = (item: ProductItem, property: ColumnId): number | string => {
     if (property === 'productDate') {
       // Convert date and time to a comparable timestamp
@@ -142,8 +144,8 @@ export default function EnhancedInventoryTable({
     });
   };
 
-  const sortedAndPaginatedData = sortData(items)
-    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const sortedAndPaginatedData = sortData(initialItems)
+  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
     <>
@@ -199,20 +201,20 @@ export default function EnhancedInventoryTable({
                   })}
                   <TableCell align="center">
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-                      <IconButton 
-                        onClick={() => onQuantityChange(item, 1)}
-                        size="small"
-                        disabled={isUpdating}
-                      >
-                        <ChevronUp size={20} />
-                      </IconButton>
-                      <IconButton 
-                        onClick={() => onQuantityChange(item, -1)}
-                        size="small"
-                        disabled={isUpdating || item.quantityAvailable <= 0}
-                      >
-                        <ChevronDown size={20} />
-                      </IconButton>
+                    <IconButton 
+          onClick={() => onQuantityChange(item, 1)}
+          size="small"
+          disabled={isUpdating}
+        >
+          <ChevronUp size={20} />
+        </IconButton>
+        <IconButton 
+          onClick={() => onQuantityChange(item, -1)}
+          size="small"
+          disabled={isUpdating || item.quantityAvailable <= 0}
+        >
+          <ChevronDown size={20} />
+        </IconButton>
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -220,11 +222,11 @@ export default function EnhancedInventoryTable({
             )}
           </TableBody>
         </Table>
-      </TableContainer>
+        </TableContainer>
       <TablePagination
         rowsPerPageOptions={[10, 25, 50, 100]}
         component="div"
-        count={items.length}
+        count={initialItems.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

@@ -76,7 +76,7 @@ export function useProductItems({ filterStatus }: { filterStatus?: ProductItemSt
     loadItems();
   }, [loadItems]);
 
-  const updateItemQuantity = useCallback(async (itemId: string, newQuantity: number) => {
+  const updateItemQuantity = useCallback(async (itemId: string, quantityChange: number) => {
     try {
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) throw new Error('Unauthorized');
@@ -87,15 +87,25 @@ export function useProductItems({ filterStatus }: { filterStatus?: ProductItemSt
           'Content-Type': 'application/json',
           Authorization: `Bearer ${tokensInfo.token}`,
         },
-        body: JSON.stringify({ quantityChange: newQuantity }),
+        body: JSON.stringify({ quantityChange }),
       });
 
       if (!response.ok) throw new Error('Failed to update quantity');
-      await loadItems();
+      
+      // Update local state instead of reloading
+      setItems(prevItems => 
+        prevItems.map(item => 
+          item._id === itemId
+            ? { ...item, quantityAvailable: item.quantityAvailable + quantityChange }
+            : item
+        )
+      );
+
+      return true;
     } catch (error) {
       throw error;
     }
-  }, [loadItems]);
+  }, []); // Remove loadItems dependency
 
   return {
     items,
