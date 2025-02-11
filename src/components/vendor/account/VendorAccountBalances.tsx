@@ -22,6 +22,7 @@ interface VendorAccountBalancesProps {
     accountBalance?: number;
     internalAccountBalance?: number;
   };
+  onRefresh: () => void;
 }
 
 interface Payout {
@@ -62,7 +63,7 @@ const PayoutItem = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(1)
 }));
 
-function VendorAccountBalances({ vendor }: VendorAccountBalancesProps) {
+function VendorAccountBalances({ vendor, onRefresh }: VendorAccountBalancesProps) {
   const { t } = useTranslation("vendor-account");
   const { enqueueSnackbar } = useSnackbar();
   const [processingPayout, setProcessingPayout] = useState(false);
@@ -93,35 +94,21 @@ function VendorAccountBalances({ vendor }: VendorAccountBalancesProps) {
     }
   }, [vendor._id, enqueueSnackbar, t]);
 
-  const refreshBalance = async () => {
-    try {
-      const tokensInfo = getTokensInfo();
-      if (!tokensInfo?.token) return;
-
-      const response = await fetch(`${API_URL}/vendors/${vendor._id}/balance`, {
-        headers: {
-          'Authorization': `Bearer ${tokensInfo.token}`
-        }
-      });
-
-      if (!response.ok) throw new Error('Failed to fetch balance');
-      const data = await response.json();
-      setInternalBalance(data.internalBalance || 0);
-    } catch (error) {
-      console.error('Error refreshing balance:', error);
-      enqueueSnackbar(t('errors.refreshBalanceFailed'), { variant: 'error' });
-    }
-  };
-
-  const handleRefresh = async () => {
-    setRefreshing(true);
-    await Promise.all([fetchPayouts(), refreshBalance()]);
-    setRefreshing(false);
-  };
-
   useEffect(() => {
     fetchPayouts();
   }, [fetchPayouts]);
+
+  // Update internal state when vendor prop changes
+  useEffect(() => {
+    setInternalBalance(vendor.internalAccountBalance || 0);
+  }, [vendor.internalAccountBalance]);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    onRefresh(); // Call the parent's refresh function to update vendor data
+    await fetchPayouts(); // Refresh payouts data
+    setRefreshing(false);
+  };
 
   const handleTriggerPayout = async () => {
     try {
@@ -145,7 +132,8 @@ function VendorAccountBalances({ vendor }: VendorAccountBalancesProps) {
       await response.json();
       enqueueSnackbar(t('success.payoutScheduled'), { variant: 'success' });
       
-      await handleRefresh();
+      // Refresh data after successful payout
+      handleRefresh();
     } catch (error) {
       console.error('Error triggering payout:', error);
       enqueueSnackbar(t('errors.payoutFailed'), { variant: 'error' });

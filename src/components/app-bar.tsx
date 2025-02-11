@@ -169,20 +169,6 @@ function ResponsiveAppBar() {
                 ]}
 
               {!!user?.role &&
-                [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
-                  <MenuItem
-                    key="vendors"
-                    onClick={handleCloseNavMenu}
-                    component={Link}
-                    href="/vendors"
-                  >
-                    <Typography textAlign="center">
-                      {t("common:navigation.vendors")}
-                    </Typography>
-                  </MenuItem>,
-                ]}
-
-              {!!user?.role &&
                 [RoleEnum.ADMIN, RoleEnum.VENDOR].includes(
                   Number(user?.role?.id)
                 ) && [
@@ -391,20 +377,6 @@ function ResponsiveAppBar() {
                     href="/vendor-account"
                   >
                     {t("common:navigation.vendor-account")}
-                  </Button>
-                </>
-              )}
-
-            {!!user?.role &&
-              [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
-                <>
-                  <Button
-                    onClick={handleCloseNavMenu}
-                    sx={{ my: 2, color: "white", display: "block" }}
-                    component={Link}
-                    href="/vendors"
-                  >
-                    {t("common:navigation.vendors")}
                   </Button>
                 </>
               )}
