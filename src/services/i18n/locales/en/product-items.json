@@ -16,7 +16,7 @@
   },
   "status": {
     "active": "Active",
-    "pusblished": "Active",
+    "published": "Active",
     "completed": "Completed",
     "draft": "Draft",
     "cancelled": "Cancelled"
