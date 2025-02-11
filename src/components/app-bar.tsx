@@ -24,7 +24,6 @@ import { styled } from "@mui/material/styles";
 import { ShoppingCart } from "lucide-react";
 import { useCartQuery } from "@/hooks/use-cart-query";
 import Badge from "@mui/material/Badge";
-import { useGuestCart } from "@/hooks/use-guest-cart";
 
 
 // Define the props type for the LogoTypography component
@@ -49,7 +48,6 @@ function ResponsiveAppBar() {
   const { t } = useTranslation("common");
   const { user, isLoaded } = useAuth();
   const { logOut } = useAuthActions();
-  const { guestCart, isGuest } = useGuestCart();
   const { data: cartData, isLoading: isCartLoading } = useCartQuery();
 
   const [anchorElementNav, setAnchorElementNav] = useState<null | HTMLElement>(
@@ -485,7 +483,7 @@ function ResponsiveAppBar() {
               mr: 1,
             }}
           ></Box>
-          {(user || isGuest) && (
+          {(user) && (
              <Box sx={{ mr: 2 }}>
              <Tooltip title={t("common:navigation.cart")}>
                {isCartLoading ? (
@@ -498,7 +496,7 @@ function ResponsiveAppBar() {
                    data-testid="cart-button"
                  >
                    <Badge
-                     badgeContent={isGuest ? guestCart.length : cartData?.items?.length || 0}
+                     badgeContent={cartData?.items?.length || 0}
                      color="primary"
                      sx={{
                        "& .MuiBadge-badge": {

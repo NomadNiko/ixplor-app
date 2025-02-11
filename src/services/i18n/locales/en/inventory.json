@@ -5,6 +5,7 @@
     "date": "Date",
     "startTime": "Start Time",
     "quantity": "Available Quantity",
+    "quantityShort": "#",
     "actions": "Adjust Quantity",
     "noItems": "No published items found",
     "errors": {

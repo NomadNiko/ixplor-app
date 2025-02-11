@@ -163,7 +163,7 @@ export default function EnhancedInventoryTable({
                   maxWidth: 80 
                 }}
               >
-                {t('quantity')}
+                {t('quantityShort')}
               </TableCell>
               {columns.map((column) => (
                 <TableCell
@@ -256,7 +256,7 @@ export default function EnhancedInventoryTable({
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={isMobile ? [10, 20, 60] : [15, 50, 300]}
+        rowsPerPageOptions={isMobile ? [10, 25, 100] : [20, 60, 300]}
         component="div"
         count={initialItems.length}
         rowsPerPage={rowsPerPage}

@@ -12,8 +12,6 @@ import CartSummary from "@/components/cart/cart-summary";
 import useAuth from "@/services/auth/use-auth";
 import { useRouter } from "next/navigation";
 import { useCartQuery } from "@/hooks/use-cart-query";
-import useGuestCart from "@/hooks/use-guest-cart";
-import Link from "@/components/link";
 import { useSnackbar } from "@/hooks/use-snackbar";
 
 interface CartItemType {
@@ -34,63 +32,51 @@ interface CartItemType {
 
 export default function CartPage() {
   const { t } = useTranslation("cart");
-  const { data: cartData, isLoading: isCartLoading, refreshCart } = useCartQuery();
+  const { data: cartData, isLoading: isCartLoading, refreshCart, updateItem, removeItem } = useCartQuery();
   const { user, isLoaded } = useAuth();
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-  const { 
-    guestCart, 
-    updateGuestCartItem, 
-    removeFromGuestCart,
-    isGuest 
-  } = useGuestCart();
 
   useEffect(() => {
-    if (!user && !isGuest && isLoaded) {
+    if (!user && isLoaded) {
       router.replace('/sign-in');
     }
-  }, [isLoaded, user, router, isGuest]);
+  }, [isLoaded, user, router]);
 
   const calculateTotal = () => {
-    if (isGuest) {
-      return guestCart.reduce(
-        (sum: number, item: CartItemType) => sum + item.price * item.quantity,
-        0
-      );
-    }
     return cartData?.items.reduce(
       (sum: number, item: CartItemType) => sum + item.price * item.quantity,
       0
     ) ?? 0;
   };
 
-  const handleQuantityUpdate = (productItemId: string, newQuantity: number) => {
-    if (isGuest) {
-      updateGuestCartItem(productItemId, newQuantity);
-      enqueueSnackbar(t('success.quantityUpdated'), { variant: 'success' });
-    } else {
+  const handleQuantityUpdate = async (productItemId: string, newQuantity: number) => {
+    try {
+      await updateItem(productItemId, newQuantity);
       refreshCart();
+      enqueueSnackbar(t('success.quantityUpdated'), { variant: 'success' });
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+      enqueueSnackbar(t('errors.updateFailed'), { variant: 'error' });
     }
   };
 
-  const handleRemoveItem = (productItemId: string) => {
-    if (isGuest) {
-      removeFromGuestCart(productItemId);
-      enqueueSnackbar(t('success.itemRemoved'), { variant: 'success' });
-    } else {
+  const handleRemoveItem = async (productItemId: string) => {
+    try {
+      await removeItem(productItemId);
       refreshCart();
+      enqueueSnackbar(t('success.itemRemoved'), { variant: 'success' });
+    } catch (error) {
+      console.error('Error removing item:', error);
+      enqueueSnackbar(t('errors.removeFailed'), { variant: 'error' });
     }
   };
 
   const handleCheckout = () => {
-    if (isGuest) {
-      router.push('/sign-in?returnTo=/checkout');
-      return;
-    }
     router.push('/checkout');
   };
 
-  if (isCartLoading && !isGuest) {
+  if (isCartLoading && user) {
     return (
       <Container
         sx={{
@@ -105,7 +91,7 @@ export default function CartPage() {
     );
   }
 
-  const cartItems = isGuest ? guestCart : cartData?.items || [];
+  const cartItems = cartData?.items || [];
   const total = calculateTotal();
 
   return (
@@ -128,36 +114,8 @@ export default function CartPage() {
                 item={item}
                 onUpdate={handleQuantityUpdate}
                 onRemove={handleRemoveItem}
-                isGuest={isGuest}
               />
             ))
-          )}
-
-          {/* Guest User Notice */}
-          {isGuest && cartItems.length > 0 && (
-            <Box sx={{ mt: 4, p: 2, bgcolor: 'background.paper', borderRadius: 1 }}>
-              <Typography variant="body1" color="text.secondary" gutterBottom>
-                {t("guestCartNotice")}
-              </Typography>
-              <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
-                <Button
-                  component={Link}
-                  href="/sign-in"
-                  variant="contained"
-                  color="primary"
-                >
-                  {t("signIn")}
-                </Button>
-                <Button
-                  component={Link}
-                  href="/sign-up"
-                  variant="outlined"
-                  color="primary"
-                >
-                  {t("signUp")}
-                </Button>
-              </Box>
-            </Box>
           )}
         </Grid>
         
@@ -183,7 +141,7 @@ export default function CartPage() {
                 onClick={handleCheckout}
                 sx={{ mt: 2 }}
               >
-                {isGuest ? t("signInToCheckout") : t("actions.checkout")}
+                {t("actions.checkout")}
               </Button>
             )}
             

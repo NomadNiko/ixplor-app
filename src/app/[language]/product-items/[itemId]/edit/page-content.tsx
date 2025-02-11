@@ -76,8 +76,6 @@ export default function ProductItemEditPageContent({ itemId }: ProductItemEditPa
       if (!response.ok) {
         throw new Error('Failed to delete product item');
       }
-
-      enqueueSnackbar(t('success.deleted'), { variant: 'success' });
       router.push('/product-items');
     } catch (error) {
       console.error('Error deleting product item:', error);
@@ -105,8 +103,6 @@ export default function ProductItemEditPageContent({ itemId }: ProductItemEditPa
       if (!response.ok) {
         throw new Error('Failed to update product item status');
       }
-
-      enqueueSnackbar(t('success.statusUpdated'), { variant: 'success' });
       const data = await response.json();
       setItem(data.data);
     } catch (error) {

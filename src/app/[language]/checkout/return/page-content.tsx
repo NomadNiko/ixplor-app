@@ -80,8 +80,7 @@ export default function CheckoutReturnPage() {
               const ticketsData = await ticketsResponse.json();
               setPurchasedTickets(ticketsData.data);
             }
-            
-            enqueueSnackbar(t('success.paymentComplete'), { variant: 'success' });
+            console.log(t('success.paymentComplete'))
             setIsLoading(false);
             break;
 

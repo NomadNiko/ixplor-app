@@ -49,7 +49,6 @@ export default function ProductItemsContent() {
       });
       
       if (!response.ok) throw new Error('Failed to update status');
-      enqueueSnackbar(t('success.statusUpdated'), { variant: 'success' });
       loadItems();
       setSelectedItem(null);
     } catch (error) {

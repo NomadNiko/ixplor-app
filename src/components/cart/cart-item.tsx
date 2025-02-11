@@ -57,14 +57,12 @@ export default function CartItem({
 
       if (isGuest) {
         onUpdate(item.productItemId, newQuantity);
-        enqueueSnackbar(t('success.quantityUpdated'), { variant: 'success' });
       } else {
         await updateCartItem({
           productItemId: item.productItemId,
           quantity: newQuantity,
         });
         onUpdate(item.productItemId, newQuantity);
-        enqueueSnackbar(t('success.quantityUpdated'), { variant: 'success' });
       }
     } catch (error) {
       console.error('Error updating quantity:', error);

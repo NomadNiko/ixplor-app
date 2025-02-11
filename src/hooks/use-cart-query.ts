@@ -179,8 +179,6 @@ export function useCartQuery() {
       await queryClient.invalidateQueries({
         queryKey: cartKeys.root().sub.detail(user!.id.toString()).key,
       });
-
-      enqueueSnackbar(t("success.quantityUpdated"), { variant: "success" });
     } catch (error) {
       console.error('Error updating cart item:', error);
       enqueueSnackbar(t("errors.updateFailed"), { variant: "error" });

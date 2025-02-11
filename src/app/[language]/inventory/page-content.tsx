@@ -33,7 +33,6 @@ export default function InventoryPageContent() {
     setIsUpdating(true);
     try {
       await updateItemQuantity(item._id, change);
-      enqueueSnackbar(t("success.quantityUpdated"), { variant: "success" });
     } catch (error) {
       console.error("Error updating quantity:", error);
       enqueueSnackbar(t("errors.updateFailed"), { variant: "error" });

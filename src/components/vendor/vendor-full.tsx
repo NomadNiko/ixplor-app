@@ -16,12 +16,9 @@ import { Vendor } from "@/app/[language]/types/vendor";
 import { ProductItem, ProductItemStatus } from '@/app/[language]/types/product-item';
 import { API_URL } from "@/services/api/config";
 import { useCartQuery } from '@/hooks/use-cart-query';
-import useGuestCart from '@/hooks/use-guest-cart';
 import useAuth from '@/services/auth/use-auth';
 import { useSnackbar } from "@/hooks/use-snackbar";
 import { useAddToCartService } from '@/services/api/services/cart';
-
-const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
 interface VendorFullViewProps {
   vendor: Vendor;
@@ -44,7 +41,6 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps): JSX.El
   const { refreshCart } = useCartQuery();
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuth();
-  const { addToGuestCart } = useGuestCart();
 
   const fetchItems = useCallback(async (): Promise<void> => {
     try {
@@ -89,20 +85,6 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps): JSX.El
           templateId: item.templateId
         });
         await refreshCart();
-      } else {
-        addToGuestCart({
-          productItemId: item._id,
-          templateId: item.templateId,
-          templateName: item.templateName,
-          productName: item.templateName,
-          quantity: 1,
-          price: item.price,
-          vendorId: vendor._id,
-          productType: item.productType,
-          productDate: item.productDate,
-          productStartTime: item.startTime,
-          productDuration: item.duration
-        });
       }
       
       enqueueSnackbar(t('success.addedToCart'), { variant: 'success' });
@@ -117,16 +99,6 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps): JSX.El
       setAddingToCart(null);
     }
   };
-
-  const staticMapUrl = `https://api.mapbox.com/styles/v1/mapbox/dark-v11/static/pin-s+ff0000(${
-    vendor.location.coordinates[0]
-  },${
-    vendor.location.coordinates[1]
-  })/${
-    vendor.location.coordinates[0]
-  },${
-    vendor.location.coordinates[1]
-  },14,0/400x200@2x?access_token=${MAPBOX_TOKEN}`;
 
   return (
     <Box sx={{
@@ -217,17 +189,6 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps): JSX.El
                 {vendor.address}<br />
                 {vendor.city}, {vendor.state} {vendor.postalCode}
               </Typography>
-              <Box sx={{ height: 200, mb: 2, borderRadius: 1, overflow: 'hidden' }}>
-                <img
-                  src={staticMapUrl}
-                  alt="Location map"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover'
-                  }}
-                />
-              </Box>
             </Grid>
 
             {/* Calendar/Products View */}
