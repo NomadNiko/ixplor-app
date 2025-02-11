@@ -107,14 +107,14 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps): JSX.El
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+      backgroundColor: 'rgba(0, 0, 0, 0.4)',
       backdropFilter: 'blur(8px)',
       zIndex: 200,
       padding: { xs: 1, sm: 2 },
       overflow: 'auto'
     }}>
       <Card sx={{
-        maxWidth: 'md',
+        maxWidth: 'sm',
         margin: '0 auto',
         minHeight: '100%'
       }}>
