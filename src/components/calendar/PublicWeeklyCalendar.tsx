@@ -113,7 +113,7 @@ export function PublicWeeklyCalendar({
       <Box sx={{ 
         display: 'flex',
         flex: 1,
-        flexDirection: { xs: 'column', sm: 'row' },
+        flexDirection: 'column',
         overflow: 'auto',
         '& > *': {
           flex: { xs: '0 0 auto', sm: 1 },

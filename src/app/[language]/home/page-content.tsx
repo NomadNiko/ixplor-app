@@ -230,7 +230,7 @@ const MapHomeLayout = () => {
           zoom={viewState.zoom}
         />
         <Container
-          maxWidth="md"
+          maxWidth="sm"
           sx={{
             height: "100%",
             display: "flex",
