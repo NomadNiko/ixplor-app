@@ -260,7 +260,8 @@ const MapHomeLayout = () => {
             currentLocation={{ 
               latitude: viewState.latitude, 
               longitude: viewState.longitude 
-            }} 
+            }}
+            vendors={vendors} 
           />
         </Container>
       </Map>

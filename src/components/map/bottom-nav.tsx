@@ -1,25 +1,32 @@
 import { useState } from 'react';
-import { Earth, Star, CalendarDays, User } from "lucide-react";
+import { Store, FerrisWheel, Ticket, Receipt } from "lucide-react";
 import Box from "@mui/material/Box";
 import { NavButton } from "./styled-components";
 import NearbyActivities from '@/components/product-item/NearbyActivities';
+import NearbyVendors from '../vendor/NearbyVendors';
+import { Vendor } from "@/app/[language]/types/vendor";
 
-export const BottomNav = ({ currentLocation }: { currentLocation: { latitude: number; longitude: number } }) => {
+export const BottomNav = ({ currentLocation, vendors }: { 
+  currentLocation: { latitude: number; longitude: number };
+  vendors: Vendor[]; 
+}) => {
   const [showNearbyActivities, setShowNearbyActivities] = useState(false);
+  const [showNearbyVendors, setShowNearbyVendors] = useState(false);
 
   return (
     <>
       <Box
         sx={{
-          width: "100%",
+          width: { xs: '100%', sm: '600px' },
           position: "fixed",
-          bottom: { xs: 0, md: 10 },
-          left: 0,
-          right: 0,
+          bottom: { xs: 0, md: 5 },
+          left: { xs: 0, md: '50%' },
+          right: { xs: 0, md: 'auto' },
           padding: (theme) => theme.spacing(2),
           backgroundColor: (theme) => theme.palette.background.glass,
           backdropFilter: "blur(10px)",
           borderRadius: { xs: 0, md: 2 },
+          transform: { xs: 'none', md: 'translateX(-50%)' },
           zIndex: 80,
         }}
       >
@@ -32,17 +39,18 @@ export const BottomNav = ({ currentLocation }: { currentLocation: { latitude: nu
             height: (theme) => theme.spacing(5),
           }}
         >
-          <NavButton>
-            <Earth />
-          </NavButton>
+          
           <NavButton onClick={() => setShowNearbyActivities(true)}>
-            <Star />
+            <FerrisWheel />
+          </NavButton>
+          <NavButton onClick={() => setShowNearbyVendors(true)}>
+            <Store />
           </NavButton>
           <NavButton>
-            <CalendarDays />
+            <Ticket />
           </NavButton>
           <NavButton>
-            <User />
+            <Receipt />
           </NavButton>
         </Box>
       </Box>
@@ -52,6 +60,13 @@ export const BottomNav = ({ currentLocation }: { currentLocation: { latitude: nu
         onClose={() => setShowNearbyActivities(false)}
         latitude={currentLocation.latitude}
         longitude={currentLocation.longitude}
+      />
+      <NearbyVendors
+        isOpen={showNearbyVendors}
+        onClose={() => setShowNearbyVendors(false)}
+        latitude={currentLocation.latitude}
+        longitude={currentLocation.longitude}
+        vendors={vendors}
       />
     </>
   );

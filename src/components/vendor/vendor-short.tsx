@@ -27,7 +27,7 @@ export const VendorShortView = ({ vendor, onViewMore, onClose }: VendorShortView
         left: { xs: 0, md: '50%' },
         right: { xs: 0, md: 'auto' },
         transform: { xs: 'none', md: 'translateX(-50%)' },
-        width: { xs: '100%', md: '600px' },
+        width: { xs: '100%', sm: '600px' },
         padding: theme => ({ 
           xs: 0, 
           md: theme.spacing(0, 2)

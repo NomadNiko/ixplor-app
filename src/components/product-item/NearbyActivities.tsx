@@ -226,7 +226,7 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
     <Box
       sx={{
         position: "fixed",
-        bottom: { xs: 75, md: 80 }, // Updated to match VendorShortView
+        bottom: { xs: 70, md: 82 }, 
         left: { xs: 0, md: '50%' },
         right: { xs: 0, md: 'auto' },
         height: "75%",
@@ -234,12 +234,8 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
         borderTopLeftRadius: theme.spacing(2),
         borderTopRightRadius: theme.spacing(2),
         transform: { xs: 'none', md: 'translateX(-50%)' },
-        maxWidth: 'lg',
+        width: { xs: '100%', sm: '600px' },
         boxShadow: 3,
-        padding: theme => ({ 
-          xs: 0, 
-          md: theme.spacing(0, 2)
-        }),
         zIndex: 75,
         display: "flex",
         flexDirection: "column",
