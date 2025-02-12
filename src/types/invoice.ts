@@ -21,5 +21,6 @@ export interface InvoiceItem {
     items: InvoiceItem[];
     status: string;
     type: string;
+    invoiceDate: Date;
     description: string;
   }

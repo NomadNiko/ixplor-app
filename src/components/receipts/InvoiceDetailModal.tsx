@@ -82,7 +82,7 @@ export default function InvoiceDetailModal({
               {invoice.vendorName}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {format(new Date(), 'PPP')}
+             {new Date(invoice.invoiceDate).toDateString()}
             </Typography>
           </Box>
 
