@@ -240,7 +240,7 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
           xs: 0, 
           md: theme.spacing(0, 2)
         }),
-        zIndex: 300,
+        zIndex: 75,
         display: "flex",
         flexDirection: "column",
         transition: "bottom 0.3s ease-in-out", // Added smooth transition

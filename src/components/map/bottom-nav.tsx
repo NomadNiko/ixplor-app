@@ -20,7 +20,7 @@ export const BottomNav = ({ currentLocation }: { currentLocation: { latitude: nu
           backgroundColor: (theme) => theme.palette.background.glass,
           backdropFilter: "blur(10px)",
           borderRadius: { xs: 0, md: 2 },
-          zIndex: 1,
+          zIndex: 80,
         }}
       >
         <Box
