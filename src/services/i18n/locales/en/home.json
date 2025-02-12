@@ -23,6 +23,8 @@
   },
   "nearbyActivities": "Nearby Activities",
   "noNearbyActivities": "No nearby activities found",
+  "nearbyVendors": "Nearby Vendors",
+  "noNearbyVendors": "No nearby vendors found",
   "navigation": {
     "map": "Map",
     "favorites": "Favorites",

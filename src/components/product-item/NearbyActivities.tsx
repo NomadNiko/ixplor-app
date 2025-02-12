@@ -119,6 +119,7 @@ interface NearbyActivitiesProps {
   longitude: number;
 }
 
+
 const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
   isOpen,
   onClose,
@@ -139,6 +140,7 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
 
   useEffect(() => {
     const fetchNearbyActivities = async () => {
+      
       try {
         setLoading(true);
         const tokensInfo = getTokensInfo();
@@ -204,6 +206,8 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
     }
   };
 
+  
+
   const sortedActivities = [...activities].sort((a, b) => {
     const distA = calculateDistance(
       latitude,
@@ -220,10 +224,23 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
     return distA - distB;
   });
 
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedItem(null);
+    }
+  }, [isOpen]);
+
+  // Stop propagation for clicks inside the modal
+  const handleModalClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   if (!isOpen) return null;
 
   return (
     <Box
+    className="modal-content" // Add this class for click handling
+    onClick={handleModalClick} // Add click handler
       sx={{
         position: "fixed",
         bottom: { xs: 70, md: 82 }, 
@@ -313,15 +330,17 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
       </Box>
 
       {selectedItem && (
-        <PublicItemDetailModal
-          item={selectedItem}
-          open={true}
-          onClose={() => setSelectedItem(null)}
-          onAddToCart={handleAddToCart}
-          isAddingToCart={addingToCart === selectedItem._id}
-        />
+        <Box onClick={e => e.stopPropagation()}> {/* Add click handler to prevent closing */}
+          <PublicItemDetailModal
+            item={selectedItem}
+            open={true}
+            onClose={() => setSelectedItem(null)}
+            onAddToCart={handleAddToCart}
+            isAddingToCart={addingToCart === selectedItem._id}
+          />
+        </Box>
       )}
-    </Box>
+      </Box>
   );
 };
 

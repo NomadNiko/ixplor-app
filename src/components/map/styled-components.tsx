@@ -1,11 +1,17 @@
 "use client";
 import { styled } from "@mui/material/styles";
-import IconButton from "@mui/material/IconButton";
+import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
-export const NavButton = styled(IconButton)(({ theme }) => ({
-  color: theme.palette.primary.light,
+interface NavButtonProps extends IconButtonProps {
+  selected?: boolean;
+}
+
+export const NavButton = styled(IconButton, {
+  shouldForwardProp: (prop) => prop !== 'selected',
+})<NavButtonProps>(({ theme, selected }) => ({
+  color: selected ? theme.palette.primary.main : theme.palette.primary.light,
   backgroundColor: theme.palette.background.glass,
   backdropFilter: "blur(10px)",
   "&:hover": {

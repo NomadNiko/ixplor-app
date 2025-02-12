@@ -6,12 +6,34 @@ import NearbyActivities from '@/components/product-item/NearbyActivities';
 import NearbyVendors from '../vendor/NearbyVendors';
 import { Vendor } from "@/app/[language]/types/vendor";
 
+type ActiveWindow = 'activities' | 'vendors' | 'tickets' | 'receipts' | null;
+
 export const BottomNav = ({ currentLocation, vendors }: { 
   currentLocation: { latitude: number; longitude: number };
   vendors: Vendor[]; 
 }) => {
-  const [showNearbyActivities, setShowNearbyActivities] = useState(false);
-  const [showNearbyVendors, setShowNearbyVendors] = useState(false);
+  const [activeWindow, setActiveWindow] = useState<ActiveWindow>(null);
+
+  const handleNavClick = (window: ActiveWindow) => {
+    if (activeWindow === window) {
+      // If clicking the same button, close the window
+      setActiveWindow(null);
+    } else {
+      // If clicking a different button, switch to that window
+      setActiveWindow(window);
+    }
+  };
+
+  const handleClose = () => {
+    setActiveWindow(null);
+  };
+
+  // Click outside handler
+  const handleOutsideClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('.modal-content') === null) {
+      handleClose();
+    }
+  };
 
   return (
     <>
@@ -39,35 +61,44 @@ export const BottomNav = ({ currentLocation, vendors }: {
             height: (theme) => theme.spacing(5),
           }}
         >
-          
-          <NavButton onClick={() => setShowNearbyActivities(true)}>
+          <NavButton 
+            onClick={() => handleNavClick('activities')}
+            selected={activeWindow === 'activities'}
+          >
             <FerrisWheel />
           </NavButton>
-          <NavButton onClick={() => setShowNearbyVendors(true)}>
+          <NavButton 
+            onClick={() => handleNavClick('vendors')}
+            selected={activeWindow === 'vendors'}
+          >
             <Store />
           </NavButton>
-          <NavButton>
+          <NavButton 
+          >
             <Ticket />
           </NavButton>
-          <NavButton>
+          <NavButton 
+          >
             <Receipt />
           </NavButton>
         </Box>
       </Box>
 
-      <NearbyActivities
-        isOpen={showNearbyActivities}
-        onClose={() => setShowNearbyActivities(false)}
-        latitude={currentLocation.latitude}
-        longitude={currentLocation.longitude}
-      />
-      <NearbyVendors
-        isOpen={showNearbyVendors}
-        onClose={() => setShowNearbyVendors(false)}
-        latitude={currentLocation.latitude}
-        longitude={currentLocation.longitude}
-        vendors={vendors}
-      />
+      <Box onClick={handleOutsideClick}>
+        <NearbyActivities
+          isOpen={activeWindow === 'activities'}
+          onClose={handleClose}
+          latitude={currentLocation.latitude}
+          longitude={currentLocation.longitude}
+        />
+        <NearbyVendors
+          isOpen={activeWindow === 'vendors'}
+          onClose={handleClose}
+          latitude={currentLocation.latitude}
+          longitude={currentLocation.longitude}
+          vendors={vendors}
+        />
+      </Box>
     </>
   );
 };
