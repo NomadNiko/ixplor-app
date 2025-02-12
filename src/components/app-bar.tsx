@@ -140,6 +140,21 @@ function ResponsiveAppBar() {
                   </MenuItem>,
                 ]}
                 
+                
+              {!!user?.role &&
+                [RoleEnum.USER, RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
+                  <MenuItem
+                    key="service-desk"
+                    onClick={handleCloseNavMenu}
+                    component={Link}
+                    href="/service-desk"
+                  >
+                    <Typography textAlign="center">
+                      {t("common:navigation.service-desk")}
+                    </Typography>
+                  </MenuItem>,
+                ]}
+                
               {!!user?.role &&
                 [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
@@ -215,13 +230,13 @@ function ResponsiveAppBar() {
               {!!user?.role &&
                 [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
                   <MenuItem
-                    key="products-admin"
+                    key="service-admin"
                     onClick={handleCloseNavMenu}
                     component={Link}
-                    href="/product-items"
+                    href="/service-admin"
                   >
                     <Typography textAlign="center">
-                      {t("common:navigation.products-admin")}
+                      {t("common:navigation.service-admin")}
                     </Typography>
                   </MenuItem>,
                 ]}
@@ -354,6 +369,20 @@ function ResponsiveAppBar() {
               )}
 
             {!!user?.role &&
+              [RoleEnum.USER,RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+                <>
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                    component={Link}
+                    href="/service-desk"
+                  >
+                    {t("common:navigation.service-desk")}
+                  </Button>
+                </>
+              )}
+
+            {!!user?.role &&
               [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
@@ -430,9 +459,9 @@ function ResponsiveAppBar() {
                     onClick={handleCloseNavMenu}
                     sx={{ my: 2, color: "white", display: "block" }}
                     component={Link}
-                    href="/product-items"
+                    href="/service-admin"
                   >
-                    {t("common:navigation.products-admin")}
+                    {t("common:navigation.service-admin")}
                   </Button>
                 </>
               )}
