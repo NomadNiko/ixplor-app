@@ -13,7 +13,6 @@ import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import PublicItemDetailModal from "@/components/calendar/PublicItemDetailModal";
 import { useCartQuery } from "@/hooks/use-cart-query";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { useTheme } from "@mui/material/styles";
 import useAuth from "@/services/auth/use-auth";
 import { useAddToCartService } from "@/services/api/services/cart";
@@ -119,7 +118,6 @@ interface NearbyActivitiesProps {
   longitude: number;
 }
 
-
 const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
   isOpen,
   onClose,
@@ -130,7 +128,6 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
   const router = useRouter();
   const { t } = useTranslation("home");
   const { user } = useAuth();
-  const { enqueueSnackbar } = useSnackbar();
   const [activities, setActivities] = useState<ProductItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState<ProductItem | null>(null);
@@ -140,7 +137,6 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
 
   useEffect(() => {
     const fetchNearbyActivities = async () => {
-      
       try {
         setLoading(true);
         const tokensInfo = getTokensInfo();
@@ -167,7 +163,6 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
         setActivities(data.data);
       } catch (error) {
         console.error("Error fetching nearby activities:", error);
-        enqueueSnackbar(t("errors.fetchFailed"), { variant: "error" });
       } finally {
         setLoading(false);
       }
@@ -176,7 +171,7 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
     if (isOpen && latitude && longitude) {
       fetchNearbyActivities();
     }
-  }, [isOpen, latitude, longitude, enqueueSnackbar, t]);
+  }, [isOpen, latitude, longitude, t]);
 
   const handleAddToCart = async (item: ProductItem): Promise<void> => {
     try {
@@ -195,18 +190,13 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
         router.push("/sign-in");
         return;
       }
-
-      enqueueSnackbar(t("success.addedToCart"), { variant: "success" });
       setSelectedItem(null);
     } catch (error) {
       console.error("Error adding to cart:", error);
-      enqueueSnackbar(t("errors.addToCartFailed"), { variant: "error" });
     } finally {
       setAddingToCart(null);
     }
   };
-
-  
 
   const sortedActivities = [...activities].sort((a, b) => {
     const distA = calculateDistance(
@@ -239,19 +229,19 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
 
   return (
     <Box
-    className="modal-content" // Add this class for click handling
-    onClick={handleModalClick} // Add click handler
+      className="modal-content" // Add this class for click handling
+      onClick={handleModalClick} // Add click handler
       sx={{
         position: "fixed",
-        bottom: { xs: 70, md: 82 }, 
-        left: { xs: 0, md: '50%' },
-        right: { xs: 0, md: 'auto' },
+        bottom: { xs: 70, md: 82 },
+        left: { xs: 0, md: "50%" },
+        right: { xs: 0, md: "auto" },
         height: "75%",
         backgroundColor: "background.paper",
         borderTopLeftRadius: theme.spacing(2),
         borderTopRightRadius: theme.spacing(2),
-        transform: { xs: 'none', md: 'translateX(-50%)' },
-        width: { xs: '100%', sm: '600px' },
+        transform: { xs: "none", md: "translateX(-50%)" },
+        width: { xs: "100%", sm: "600px" },
         boxShadow: 3,
         zIndex: 75,
         display: "flex",
@@ -330,7 +320,9 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
       </Box>
 
       {selectedItem && (
-        <Box onClick={e => e.stopPropagation()}> {/* Add click handler to prevent closing */}
+        <Box onClick={(e) => e.stopPropagation()}>
+          {" "}
+          {/* Add click handler to prevent closing */}
           <PublicItemDetailModal
             item={selectedItem}
             open={true}
@@ -340,7 +332,7 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
           />
         </Box>
       )}
-      </Box>
+    </Box>
   );
 };
 

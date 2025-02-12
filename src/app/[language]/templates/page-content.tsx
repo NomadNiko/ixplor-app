@@ -9,7 +9,6 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useRouter } from 'next/navigation';
 import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { Plus, Filter, ChevronUp, ChevronDown } from 'lucide-react';
@@ -24,7 +23,6 @@ import { formatDuration } from '@/components/utils/duration-utils';
 export default function TemplatesPageContent() {
   const { user } = useAuth();
   const { t } = useTranslation("templates");
-  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,7 +34,6 @@ export default function TemplatesPageContent() {
       setLoading(true);
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
         router.push('/sign-in');
         return;
       }
@@ -75,7 +72,6 @@ export default function TemplatesPageContent() {
       }
     } catch (error) {
       console.error('Error loading templates:', error);
-      enqueueSnackbar(t('errors.loadFailed'), { variant: 'error' });
     } finally {
       setLoading(false);
     }

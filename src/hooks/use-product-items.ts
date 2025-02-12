@@ -1,6 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useSnackbar } from "@/hooks/use-snackbar";
-import { useTranslation } from "@/services/i18n/client";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { ProductItem, ProductItemStatus } from '@/app/[language]/types/product-item';
@@ -10,8 +8,6 @@ export function useProductItems({ filterStatus }: { filterStatus?: ProductItemSt
   const [items, setItems] = useState<ProductItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { enqueueSnackbar } = useSnackbar();
-  const { t } = useTranslation("product-items");
   const { user } = useAuth();
 
   const loadItems = useCallback(async () => {
@@ -19,7 +15,6 @@ export function useProductItems({ filterStatus }: { filterStatus?: ProductItemSt
       setLoading(true);
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
         return;
       }
 
@@ -66,7 +61,6 @@ export function useProductItems({ filterStatus }: { filterStatus?: ProductItemSt
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'An error occurred';
       setError(errorMessage);
-      enqueueSnackbar(t('errors.loadFailed'), { variant: 'error' });
     } finally {
       setLoading(false);
     }

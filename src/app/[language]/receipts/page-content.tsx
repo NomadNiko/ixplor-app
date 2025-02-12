@@ -13,7 +13,6 @@ import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import useAuth from "@/services/auth/use-auth";
 import { InvoiceResponseDto, InvoiceItem } from '@/types/invoice';
-import { useSnackbar } from "@/hooks/use-snackbar";
 import InvoiceDetailModal from '@/components/receipts/InvoiceDetailModal';
 
 const getTotalItemCount = (items: InvoiceItem[]): number => {
@@ -23,7 +22,6 @@ const getTotalItemCount = (items: InvoiceItem[]): number => {
 export default function ReceiptsPage() {
   const { t } = useTranslation("receipts");
   const { user } = useAuth();
-  const { enqueueSnackbar } = useSnackbar();
   const [invoices, setInvoices] = useState<InvoiceResponseDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedInvoice, setSelectedInvoice] = useState<InvoiceResponseDto | null>(null);
@@ -33,7 +31,6 @@ export default function ReceiptsPage() {
       try {
         const tokensInfo = getTokensInfo();
         if (!tokensInfo?.token) {
-          enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
           return;
         }
 
@@ -48,7 +45,6 @@ export default function ReceiptsPage() {
         setInvoices(data);
       } catch (error) {
         console.error('Error fetching invoices:', error);
-        enqueueSnackbar(t('errors.fetchFailed'), { variant: 'error' });
       } finally {
         setLoading(false);
       }
@@ -57,7 +53,7 @@ export default function ReceiptsPage() {
     if (user?.id) {
       fetchInvoices();
     }
-  }, [user?.id, enqueueSnackbar, t]);
+  }, [user?.id, t]);
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {

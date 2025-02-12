@@ -2,8 +2,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CreateCard } from '@/components/cards/create-cards/CreateCard';
-import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { productConfig } from '@/components/cards/create-cards/configs';
@@ -11,8 +9,6 @@ import { FormData } from '@/components/cards/shared/types';
 import { format } from 'date-fns';
 
 export default function ProductCreateCard() {
-  const { t } = useTranslation("products");
-  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -21,7 +17,6 @@ export default function ProductCreateCard() {
       setIsSubmitting(true);
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
         router.push('/sign-in');
         return;
       }
@@ -54,14 +49,12 @@ export default function ProductCreateCard() {
       });
 
       if (response.ok) {
-        enqueueSnackbar(t('success.productCreated'), { variant: 'success' });
         router.push('/products');  
       } else {
         throw new Error('Failed to create product');
       }
     } catch (error) {
       console.error('Error creating product:', error);
-      enqueueSnackbar(t('errors.createFailed'), { variant: 'error' });
     } finally {
       setIsSubmitting(false);  
     }

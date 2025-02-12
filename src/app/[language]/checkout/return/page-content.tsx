@@ -6,7 +6,6 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
 import { CheckCircle, XCircle } from 'lucide-react';
-import { useSnackbar } from '@/hooks/use-snackbar';
 import { useTranslation } from '@/services/i18n/client';
 import { useCartQuery } from '@/hooks/use-cart-query';
 import { API_URL } from '@/services/api/config';
@@ -21,7 +20,6 @@ export default function CheckoutReturnPage() {
   const { t } = useTranslation('checkout');
   const router = useRouter();
   const { refreshCart } = useCartQuery();
-  const { enqueueSnackbar } = useSnackbar();
   const [status, setStatus] = useState<UIStatus>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [purchasedTickets, setPurchasedTickets] = useState([]);
@@ -112,7 +110,6 @@ export default function CheckoutReturnPage() {
       } catch (error) {
         console.error('Error checking transaction status:', error);
         setStatus('canceled');
-        enqueueSnackbar(t('errors.statusCheckFailed'), { variant: 'error' });
         setIsLoading(false);
       }
     };
@@ -126,7 +123,7 @@ export default function CheckoutReturnPage() {
         clearTimeout(timeoutId);
       }
     };
-  }, [user?.id, refreshCart, enqueueSnackbar, t, retryCount]);
+  }, [user?.id, refreshCart, t, retryCount]);
 
   if (!user?.id || isLoading) {
     return (

@@ -11,7 +11,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Grid from "@mui/material/Grid";
 import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import FormDatePickerInput from "@/components/form/date-pickers/date-picker";
@@ -58,7 +57,6 @@ export default function TemplateItemGenerator({
   onCancel
 }: TemplateItemGeneratorProps) {
   const { t } = useTranslation("templates");
-  const { enqueueSnackbar } = useSnackbar();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<GenerationFormData>({
     productDate: null,
@@ -80,14 +78,12 @@ export default function TemplateItemGenerator({
   const handleSubmit = async () => {
     try {
       if (!formData.productDate || !formData.startTime) {
-        enqueueSnackbar(t('errors.requiredFields'), { variant: 'error' });
         return;
       }
 
       setIsSubmitting(true);
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
         return;
       }
 
@@ -119,12 +115,9 @@ export default function TemplateItemGenerator({
       if (!response.ok) {
         throw new Error('Failed to generate items');
       }
-
-      enqueueSnackbar(t('success.itemsGenerated'), { variant: 'success' });
       onSuccess();
     } catch (error) {
       console.error('Error generating items:', error);
-      enqueueSnackbar(t('errors.generationFailed'), { variant: 'error' });
     } finally {
       setIsSubmitting(false);
     }

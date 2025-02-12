@@ -2,7 +2,6 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useGetCartService, useAddToCartService, useUpdateCartItemService, useRemoveFromCartService, useClearCartService } from '@/services/api/services/cart';
 import { cartKeys } from '@/src/services/react-query/keys/cart';
 import useAuth from '@/services/auth/use-auth';
-import { useSnackbar } from '@/hooks/use-snackbar';
 import { useTranslation } from "@/services/i18n/client";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
@@ -58,7 +57,6 @@ export function useCartQuery() {
   const clearCart = useClearCartService();
   const queryClient = useQueryClient();
   const { user } = useAuth();
-  const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslation("cart");
 
   const query = useQuery({
@@ -96,7 +94,6 @@ export function useCartQuery() {
       return null;
     } catch (error) {
       console.error('Validation error:', error);
-      enqueueSnackbar(t('warnings.offlineValidation'));
       return null;
     }
   };
@@ -126,7 +123,6 @@ export function useCartQuery() {
     try {
       const inventoryError = await validateInventory(data.productItemId, data.quantity);
       if (inventoryError) {
-        enqueueSnackbar(inventoryError.message, { variant: "error" });
         return;
       }
 
@@ -143,7 +139,6 @@ export function useCartQuery() {
       if (query.data?.items) {
         const timeConflict = checkTimeConflicts(itemDetails, query.data.items);
         if (timeConflict) {
-          enqueueSnackbar(timeConflict.message, { variant: "error" });
           return;
         }
       }
@@ -157,10 +152,8 @@ export function useCartQuery() {
         queryKey: cartKeys.root().sub.detail(user!.id.toString()).key,
       });
 
-      enqueueSnackbar(t("success.addedToCart"), { variant: "success" });
     } catch (error) {
       console.error('Error adding item to cart:', error);
-      enqueueSnackbar(t("errors.addToCartFailed"), { variant: "error" });
       throw error;
     }
   };
@@ -170,7 +163,6 @@ export function useCartQuery() {
       if (quantity > 0) {
         const inventoryError = await validateInventory(productItemId, quantity);
         if (inventoryError) {
-          enqueueSnackbar(inventoryError.message, { variant: "error" });
           return;
         }
       }
@@ -181,7 +173,6 @@ export function useCartQuery() {
       });
     } catch (error) {
       console.error('Error updating cart item:', error);
-      enqueueSnackbar(t("errors.updateFailed"), { variant: "error" });
       throw error;
     }
   };
@@ -193,10 +184,8 @@ export function useCartQuery() {
         queryKey: cartKeys.root().sub.detail(user!.id.toString()).key,
       });
 
-      enqueueSnackbar(t("success.itemRemoved"), { variant: "success" });
     } catch (error) {
       console.error('Error removing item from cart:', error);
-      enqueueSnackbar(t("errors.removeFailed"), { variant: "error" });
       throw error;
     }
   };
@@ -207,11 +196,8 @@ export function useCartQuery() {
       await queryClient.invalidateQueries({
         queryKey: cartKeys.root().sub.detail(user!.id.toString()).key,
       });
-
-      enqueueSnackbar(t("success.cartCleared"), { variant: "success" });
     } catch (error) {
       console.error('Error clearing cart:', error);
-      enqueueSnackbar(t("errors.clearFailed"), { variant: "error" });
       throw error;
     }
   };

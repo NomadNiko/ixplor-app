@@ -9,7 +9,6 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { styled } from '@mui/material/styles';
 import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { BanknoteIcon, PiggyBank, RefreshCw, History } from 'lucide-react';
@@ -65,7 +64,6 @@ const PayoutItem = styled(Box)(({ theme }) => ({
 
 function VendorAccountBalances({ vendor, onRefresh }: VendorAccountBalancesProps) {
   const { t } = useTranslation("vendor-account");
-  const { enqueueSnackbar } = useSnackbar();
   const [processingPayout, setProcessingPayout] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [payouts, setPayouts] = useState<Payout[]>([]);
@@ -88,11 +86,10 @@ function VendorAccountBalances({ vendor, onRefresh }: VendorAccountBalancesProps
       setPayouts(data.data);
     } catch (error) {
       console.error('Error fetching payouts:', error);
-      enqueueSnackbar(t('errors.fetchPayoutsFailed'), { variant: 'error' });
     } finally {
       setLoadingPayouts(false);
     }
-  }, [vendor._id, enqueueSnackbar, t]);
+  }, [vendor._id, t]);
 
   useEffect(() => {
     fetchPayouts();
@@ -116,7 +113,6 @@ function VendorAccountBalances({ vendor, onRefresh }: VendorAccountBalancesProps
       const tokensInfo = getTokensInfo();
       
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
         return;
       }
 
@@ -129,14 +125,11 @@ function VendorAccountBalances({ vendor, onRefresh }: VendorAccountBalancesProps
 
       if (!response.ok) throw new Error('Failed to trigger payout');
       
-      await response.json();
-      enqueueSnackbar(t('success.payoutScheduled'), { variant: 'success' });
-      
+      await response.json();      
       // Refresh data after successful payout
       handleRefresh();
     } catch (error) {
       console.error('Error triggering payout:', error);
-      enqueueSnackbar(t('errors.payoutFailed'), { variant: 'error' });
     } finally {
       setProcessingPayout(false);
     }

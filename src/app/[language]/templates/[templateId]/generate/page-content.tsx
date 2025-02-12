@@ -7,7 +7,6 @@ import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import ItemGeneratorCard from '@/components/template/card/ItemGeneratorCard';
@@ -20,7 +19,6 @@ interface ProductGenerationPageContentProps {
 export default function ProductGenerationPageContent({ templateId }: ProductGenerationPageContentProps) {
   const { t } = useTranslation("templates");
   const router = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
   const [template, setTemplate] = useState<Template | null>(null);
   const [loading, setLoading] = useState(true);
   
@@ -29,7 +27,6 @@ export default function ProductGenerationPageContent({ templateId }: ProductGene
       try {
         const tokensInfo = getTokensInfo();
         if (!tokensInfo?.token) {
-          enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
           router.push('/sign-in');
           return;
         }
@@ -48,7 +45,6 @@ export default function ProductGenerationPageContent({ templateId }: ProductGene
         setTemplate(data.data);
       } catch (error) {
         console.error('Error loading template:', error);
-        enqueueSnackbar(t('errors.loadFailed'), { variant: 'error' });
         router.push('/templates');
       } finally {
         setLoading(false);
@@ -56,7 +52,7 @@ export default function ProductGenerationPageContent({ templateId }: ProductGene
     };
 
     loadTemplate();
-  }, [templateId, router, enqueueSnackbar, t]);
+  }, [templateId, router, t]);
 
   if (loading) {
     return (

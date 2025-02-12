@@ -4,7 +4,6 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useTranslation } from '@/services/i18n/client';
-import { useSnackbar } from '@/hooks/use-snackbar';
 import { API_URL } from '@/services/api/config';
 import { getTokensInfo } from '@/services/auth/auth-tokens-info';
 import useAuth from '@/services/auth/use-auth';
@@ -24,7 +23,6 @@ export const VendorSelect: React.FC<VendorSelectProps> = ({
   disabled = false
 }) => {
   const { t } = useTranslation('products');
-  const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuth();
   const { register, setValue, control } = useFormContext();
   const [vendors, setVendors] = useState<Vendor[]>([]);
@@ -42,7 +40,6 @@ export const VendorSelect: React.FC<VendorSelectProps> = ({
         setLoading(true);
         const tokensInfo = getTokensInfo();
         if (!tokensInfo?.token) {
-          enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
           return;
         }
 
@@ -69,7 +66,6 @@ export const VendorSelect: React.FC<VendorSelectProps> = ({
         }
       } catch (error) {
         console.error('Error fetching vendors:', error);
-        enqueueSnackbar(t('errors.failedToLoadVendors'), { variant: 'error' });
       } finally {
         setLoading(false);
       }
@@ -78,7 +74,7 @@ export const VendorSelect: React.FC<VendorSelectProps> = ({
     if (user?.id) {
       fetchUserVendors();
     }
-  }, [user?.id, enqueueSnackbar, t, setValue, name, currentValue]);
+  }, [user?.id, t, setValue, name, currentValue]);
 
   return (
     <TextField

@@ -7,7 +7,6 @@ import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import ProductItemEditCard from '@/components/product-item/product-item-edit-card';
@@ -20,8 +19,7 @@ interface ProductItemEditPageContentProps {
 export default function ProductItemEditPageContent({ itemId }: ProductItemEditPageContentProps) {
   const { t } = useTranslation("product-items");
   const router = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
-  const [item, setItem] = useState<ProductItem | null>(null);
+   const [item, setItem] = useState<ProductItem | null>(null);
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
@@ -29,7 +27,6 @@ export default function ProductItemEditPageContent({ itemId }: ProductItemEditPa
       try {
         const tokensInfo = getTokensInfo();
         if (!tokensInfo?.token) {
-          enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
           router.push('/sign-in');
           return;
         }
@@ -48,7 +45,6 @@ export default function ProductItemEditPageContent({ itemId }: ProductItemEditPa
         setItem(data.data);
       } catch (error) {
         console.error('Error loading product item:', error);
-        enqueueSnackbar(t('errors.loadFailed'), { variant: 'error' });
         router.push('/product-items');
       } finally {
         setLoading(false);
@@ -56,13 +52,12 @@ export default function ProductItemEditPageContent({ itemId }: ProductItemEditPa
     };
 
     loadItem();
-  }, [itemId, router, enqueueSnackbar, t]);
+  }, [itemId, router, t]);
 
   const handleDelete = async (itemId: string) => {
     try {
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
         return;
       }
 
@@ -79,16 +74,14 @@ export default function ProductItemEditPageContent({ itemId }: ProductItemEditPa
       router.push('/product-items');
     } catch (error) {
       console.error('Error deleting product item:', error);
-      enqueueSnackbar(t('errors.deleteFailed'), { variant: 'error' });
-    }
+      }
   };
 
   const handleStatusChange = async (itemId: string, status: ProductItemStatus) => {
     try {
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
-        return;
+         return;
       }
 
       const response = await fetch(`${API_URL}/product-items/${itemId}/status`, {
@@ -107,8 +100,7 @@ export default function ProductItemEditPageContent({ itemId }: ProductItemEditPa
       setItem(data.data);
     } catch (error) {
       console.error('Error updating product item status:', error);
-      enqueueSnackbar(t('errors.statusUpdateFailed'), { variant: 'error' });
-    }
+      }
   };
 
   if (loading) {

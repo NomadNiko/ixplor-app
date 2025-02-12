@@ -12,7 +12,6 @@ import { useGetVendorsService } from "@/services/api/services/vendors";
 import { Vendor, VendorTypes } from "@/app/[language]/types/vendor";
 import HTTP_CODES_ENUM from "@/services/api/types/http-codes";
 import { BBox } from "geojson";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { useTranslation } from "@/services/i18n/client";
 import { SearchControls } from "./components/search-controls";
 import { VendorTypeFilters } from "./components/vendor-type-filters";
@@ -35,7 +34,6 @@ const DEFAULT_VIEW_STATE: ViewState = {
 
 const MapHomeLayout = () => {
   const { t } = useTranslation("home");
-  const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const mapRef = useRef<MapRef>(null);
   const getVendors = useGetVendorsService();
@@ -88,19 +86,15 @@ const MapHomeLayout = () => {
         const response = await getVendors();
         if (response.status === HTTP_CODES_ENUM.OK && response.data) {
           setVendors(response.data.data);
-        } else {
-          enqueueSnackbar(t("errors.failedToLoadVendors"), {
-            variant: "error",
-          });
-        }
+        } 
       } catch (error) {
-        enqueueSnackbar(t("errors.failedToLoadVendors"), { variant: "error" });
+        console.log(t("errors.failedToLoadVendors"));
       } finally {
         setLoading(false);
       }
     };
     fetchVendors();
-  }, [getVendors, enqueueSnackbar, t]);
+  }, [getVendors, t]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(

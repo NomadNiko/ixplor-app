@@ -18,7 +18,6 @@ import IconButton from "@mui/material/IconButton";
 import { Edit, Filter, Clock, User, LifeBuoy, Calendar, ExternalLink } from "lucide-react";
 import { format } from 'date-fns';
 import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { SupportTicket } from '../../types/support-ticket';
@@ -41,7 +40,6 @@ interface SortConfig {
 
 export default function ServiceAdminPage() {
   const { t } = useTranslation("service-admin");
-  const { enqueueSnackbar } = useSnackbar();
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTicket, setSelectedTicket] = useState<SupportTicket | null>(null);
@@ -90,7 +88,6 @@ export default function ServiceAdminPage() {
       setTickets(data.tickets);
     } catch (error) {
       console.error('Error loading tickets:', error);
-      enqueueSnackbar(t('errors.loadFailed'), { variant: 'error' });
     } finally {
       setLoading(false);
     }

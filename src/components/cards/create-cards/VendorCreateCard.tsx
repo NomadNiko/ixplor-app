@@ -1,16 +1,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CreateCard } from '@/components/cards/create-cards/CreateCard';
-import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { vendorConfig } from '@/components/cards/create-cards/configs';
 import { FormData } from '@/components/cards/shared/types';
 
 export default function VendorCreateCard() {
-  const { t } = useTranslation("onboard");
-  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -19,7 +15,6 @@ export default function VendorCreateCard() {
       setIsSubmitting(true);
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
         router.push('/sign-in');
         return;
       }
@@ -46,14 +41,12 @@ export default function VendorCreateCard() {
       });
 
       if (response.ok) {
-        enqueueSnackbar(t('success.vendorCreated'), { variant: 'success' });
         router.push('/vendor-status');
       } else {
         throw new Error('Failed to create vendor profile');
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      enqueueSnackbar(t('error'), { variant: 'error' });
     } finally {
       setIsSubmitting(false);
     }

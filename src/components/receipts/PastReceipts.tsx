@@ -11,7 +11,6 @@ import { useRouter } from 'next/navigation';
 import useAuth from '@/services/auth/use-auth';
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import InvoiceDetailModal from '@/components/receipts/InvoiceDetailModal';
 import type { InvoiceResponseDto } from '@/types/invoice';
 
@@ -93,7 +92,6 @@ const PastReceipts: React.FC<PastReceiptsProps> = ({
   const { t } = useTranslation("receipts");
   const router = useRouter();
   const { user } = useAuth();
-  const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
   const [receipts, setReceipts] = useState<InvoiceResponseDto[]>([]);
   const [selectedReceipt, setSelectedReceipt] = useState<InvoiceResponseDto | null>(null);
@@ -106,7 +104,6 @@ const PastReceipts: React.FC<PastReceiptsProps> = ({
         setLoading(true);
         const tokensInfo = getTokensInfo();
         if (!tokensInfo?.token) {
-          enqueueSnackbar(t("errors.unauthorized"), { variant: "error" });
           return;
         }
 
@@ -121,7 +118,6 @@ const PastReceipts: React.FC<PastReceiptsProps> = ({
         setReceipts(data);
       } catch (error) {
         console.error("Error fetching receipts:", error);
-        enqueueSnackbar(t("errors.fetchFailed"), { variant: "error" });
       } finally {
         setLoading(false);
       }
@@ -130,7 +126,7 @@ const PastReceipts: React.FC<PastReceiptsProps> = ({
     if (isOpen && user?.id) {
       fetchReceipts();
     }
-  }, [isOpen, user?.id, enqueueSnackbar, t]);
+  }, [isOpen, user?.id, t]);
 
   useEffect(() => {
     if (!isOpen) {

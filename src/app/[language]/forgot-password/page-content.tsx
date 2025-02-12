@@ -9,7 +9,6 @@ import Typography from "@mui/material/Typography";
 import FormTextInput from "@/components/form/text-input/form-text-input";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import HTTP_CODES_ENUM from "@/services/api/types/http-codes";
 import { useTranslation } from "@/services/i18n/client";
 
@@ -46,7 +45,6 @@ function FormActions() {
 }
 
 function Form() {
-  const { enqueueSnackbar } = useSnackbar();
   const fetchAuthForgotPassword = useAuthForgotPasswordService();
   const { t } = useTranslation("forgot-password");
   const validationSchema = useValidationSchema();
@@ -76,12 +74,6 @@ function Form() {
       );
 
       return;
-    }
-
-    if (status === HTTP_CODES_ENUM.NO_CONTENT) {
-      enqueueSnackbar(t("forgot-password:alerts.success"), {
-        variant: "success",
-      });
     }
   });
 

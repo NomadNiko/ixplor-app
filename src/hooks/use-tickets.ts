@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import useAuth from '@/services/auth/use-auth';
@@ -38,7 +37,6 @@ interface UseTicketsReturn {
 
 export function useTickets(): UseTicketsReturn {
   const { t } = useTranslation("tickets");
-  const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuth();
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,7 +49,6 @@ export function useTickets(): UseTicketsReturn {
         setLoading(true);
         const tokensInfo = getTokensInfo();
         if (!tokensInfo?.token) {
-          enqueueSnackbar(t("errors.unauthorized"), { variant: "error" });
           return;
         }
 
@@ -67,14 +64,13 @@ export function useTickets(): UseTicketsReturn {
         setTickets(data.data);
       } catch (error) {
         console.error("Error fetching tickets:", error);
-        enqueueSnackbar(t("errors.loadFailed"), { variant: "error" });
       } finally {
         setLoading(false);
       }
     };
 
     fetchTickets();
-  }, [user?.id, enqueueSnackbar, t]);
+  }, [user?.id, t]);
 
   const activeTickets = tickets.filter(ticket => ticket.status === 'ACTIVE');
   const oldTickets = tickets.filter(ticket => ticket.status !== 'ACTIVE');

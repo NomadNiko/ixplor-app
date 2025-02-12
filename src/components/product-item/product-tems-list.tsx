@@ -5,7 +5,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import useAuth from '@/services/auth/use-auth';
@@ -16,7 +15,6 @@ import { ProductItemFilters } from './product-item-filters';
 export const ProductItemsList = () => {
   const { user } = useAuth();
   const { t } = useTranslation("product-items");
-  const { enqueueSnackbar } = useSnackbar();
   const [items, setItems] = useState<ProductItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<FilterOptions>({
@@ -31,7 +29,6 @@ export const ProductItemsList = () => {
       setLoading(true);
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
         return;
       }
       if (!user?.id) {
@@ -64,17 +61,15 @@ export const ProductItemsList = () => {
       setItems(data.data);
     } catch (error) {
       console.error('Error loading items:', error);
-      enqueueSnackbar(t('errors.loadFailed'), { variant: 'error' });
     } finally {
       setLoading(false);
     }
-  }, [user?.id, enqueueSnackbar, t]);
+  }, [user?.id, t]);
 
   const handleUpdateStatus = async (itemId: string, newStatus: ProductItemStatus) => {
     try {
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
         return;
       }
       const response = await fetch(`${API_URL}/product-items/${itemId}/status`, {
@@ -88,11 +83,9 @@ export const ProductItemsList = () => {
       if (!response.ok) {
         throw new Error('Failed to update status');
       }
-      enqueueSnackbar(t('success.statusUpdated'), { variant: 'success' });
       loadItems();
     } catch (error) {
       console.error('Error updating status:', error);
-      enqueueSnackbar(t('errors.updateFailed'), { variant: 'error' });
     }
   };
 

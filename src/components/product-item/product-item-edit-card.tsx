@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { useTranslation } from "@/services/i18n/client";
 import { EditCard } from "@/components/cards/edit-cards/EditCard";
 import { API_URL } from "@/services/api/config";
@@ -175,7 +174,6 @@ export default function ProductItemEditCard({
   onStatusChange,
 }: ProductItemEditCardProps) {
   const { t } = useTranslation("product-items");
-  const { enqueueSnackbar } = useSnackbar();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { confirmDialog } = useConfirmDialog();
 
@@ -202,7 +200,6 @@ export default function ProductItemEditCard({
       setIsSubmitting(true);
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t("errors.unauthorized"), { variant: "error" });
         return;
       }
 
@@ -238,11 +235,9 @@ export default function ProductItemEditCard({
         throw new Error("Failed to update product item");
       }
 
-      enqueueSnackbar(t("success.updated"), { variant: "success" });
       onSave();
     } catch (error) {
       console.error("Error updating product item:", error);
-      enqueueSnackbar(t("errors.updateFailed"), { variant: "error" });
     } finally {
       setIsSubmitting(false);
     }
@@ -262,11 +257,9 @@ export default function ProductItemEditCard({
       setIsSubmitting(true);
       try {
         await onDelete(item._id);
-        enqueueSnackbar(t("success.deleted"), { variant: "success" });
         onSave();
       } catch (error) {
         console.error("Error deleting product item:", error);
-        enqueueSnackbar(t("errors.deleteFailed"), { variant: "error" });
       } finally {
         setIsSubmitting(false);
       }
@@ -279,13 +272,9 @@ export default function ProductItemEditCard({
     try {
       setIsSubmitting(true);
       await onStatusChange(item._id, status);
-      enqueueSnackbar(t(`success.status.${status.toLowerCase()}`), {
-        variant: "success",
-      });
       onSave();
     } catch (error) {
       console.error("Error updating status:", error);
-      enqueueSnackbar(t("errors.statusUpdateFailed"), { variant: "error" });
     } finally {
       setIsSubmitting(false);
     }

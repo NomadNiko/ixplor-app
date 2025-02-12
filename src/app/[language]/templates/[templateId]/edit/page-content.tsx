@@ -6,7 +6,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import TemplateEditCard from '@/components/cards/edit-cards/TemplateEditCard';
@@ -20,7 +19,6 @@ interface TemplateEditPageContentProps {
 export default function TemplateEditPageContent({ templateId }: TemplateEditPageContentProps) {
   const { t } = useTranslation("templates");
   const router = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
   const [template, setTemplate] = useState<Template | null>(null);
   const [loading, setLoading] = useState(true);
   
@@ -29,7 +27,6 @@ export default function TemplateEditPageContent({ templateId }: TemplateEditPage
       try {
         const tokensInfo = getTokensInfo();
         if (!tokensInfo?.token) {
-          enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
           router.push('/sign-in');
           return;
         }
@@ -48,7 +45,6 @@ export default function TemplateEditPageContent({ templateId }: TemplateEditPage
         setTemplate(data.data);
       } catch (error) {
         console.error('Error loading template:', error);
-        enqueueSnackbar(t('errors.loadFailed'), { variant: 'error' });
         router.push('/templates');
       } finally {
         setLoading(false);
@@ -56,13 +52,12 @@ export default function TemplateEditPageContent({ templateId }: TemplateEditPage
     };
 
     loadTemplate();
-  }, [templateId, router, enqueueSnackbar, t]);
+  }, [templateId, router, t]);
 
   const handleDelete = async (templateId: string) => {
     try {
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
         return;
       }
 
@@ -76,12 +71,9 @@ export default function TemplateEditPageContent({ templateId }: TemplateEditPage
       if (!response.ok) {
         throw new Error('Failed to delete template');
       }
-
-      enqueueSnackbar(t('success.deleted'), { variant: 'success' });
       router.push('/templates');
     } catch (error) {
       console.error('Error deleting template:', error);
-      enqueueSnackbar(t('errors.deleteFailed'), { variant: 'error' });
     }
   };
 
@@ -89,7 +81,6 @@ export default function TemplateEditPageContent({ templateId }: TemplateEditPage
     try {
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
         return;
       }
 
@@ -106,12 +97,10 @@ export default function TemplateEditPageContent({ templateId }: TemplateEditPage
         throw new Error('Failed to update template status');
       }
 
-      enqueueSnackbar(t('success.statusUpdated'), { variant: 'success' });
       const data = await response.json();
       setTemplate(data.data);
     } catch (error) {
       console.error('Error updating template status:', error);
-      enqueueSnackbar(t('errors.statusUpdateFailed'), { variant: 'error' });
     }
   };
 

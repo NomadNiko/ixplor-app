@@ -9,7 +9,6 @@ import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
 import { X, Upload } from 'lucide-react';
 import { useDropzone } from "react-dropzone";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { useTranslation } from "@/services/i18n/client";
 import { FormData, ImageUploadFieldProps } from './types';
 
@@ -18,7 +17,6 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
   mode = 'edit'
 }) => {
   const { t } = useTranslation("tests");
-  const { enqueueSnackbar } = useSnackbar();
   const [isLoading, setIsLoading] = useState(false);
   const { setValue, control } = useFormContext<FormData>();
   const fetchFileUpload = useFileUploadService();
@@ -39,17 +37,15 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
       if (status === HTTP_CODES_ENUM.CREATED) {
         // Only set the path/URL instead of the full FileEntity
         setValue(field.name, data.file.path);
-        enqueueSnackbar(t('success.imageUploaded'), { variant: 'success' });
       } else {
         throw new Error('Upload failed');
       }
     } catch (error) {
       console.error('File upload failed:', error);
-      enqueueSnackbar(t('errors.uploadFailed'), { variant: 'error' });
     } finally {
       setIsLoading(false);
     }
-  }, [fetchFileUpload, setValue, field.name, isLoading, enqueueSnackbar, t]);
+  }, [fetchFileUpload, setValue, field.name, isLoading, t]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

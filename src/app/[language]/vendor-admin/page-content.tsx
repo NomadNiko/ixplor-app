@@ -13,7 +13,6 @@ import InputLabel from "@mui/material/InputLabel";
 import { useTranslation } from "@/services/i18n/client";
 import { useCallback, useEffect, useState } from 'react';
 import { Vendor, VendorStatusEnum, VendorSortField, SortOrder } from "@/app/[language]/types/vendor";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { VendorManagementCard } from "@/components/vendor/vendor-management-card";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
@@ -21,7 +20,6 @@ import { Filter, Search, X } from 'lucide-react';
 
 export default function VendorAdminPage() {
   const { t } = useTranslation("vendor-admin");
-  const { enqueueSnackbar } = useSnackbar();
 
   // Pagination state
   const [page, setPage] = useState(1);
@@ -47,7 +45,6 @@ export default function VendorAdminPage() {
       setLoading(true);
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
         return;
       }
 
@@ -79,11 +76,10 @@ export default function VendorAdminPage() {
       setTotalPages(result.totalPages);
     } catch (error) {
       console.error('Error fetching vendors:', error);
-      enqueueSnackbar(t('errors.failedToLoadVendors'), { variant: 'error' });
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize, sortField, sortOrder, search, filterType, filterStatus, filterCity, filterState, filterPostalCode, enqueueSnackbar, t]);
+  }, [page, pageSize, sortField, sortOrder, search, filterType, filterStatus, filterCity, filterState, filterPostalCode, t]);
 
   useEffect(() => {
     loadVendors();
@@ -93,7 +89,6 @@ export default function VendorAdminPage() {
     try {
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
         return;
       }
 
@@ -116,11 +111,9 @@ export default function VendorAdminPage() {
         throw new Error('Failed to update vendor');
       }
 
-      enqueueSnackbar(t(`success.${action.toLowerCase()}`), { variant: 'success' });
       await loadVendors();
     } catch (error) {
       console.error('Error updating vendor:', error);
-      enqueueSnackbar(t('errors.updateFailed'), { variant: 'error' });
     } finally {
     }
   };
@@ -129,7 +122,6 @@ export default function VendorAdminPage() {
     try {
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
         return;
       }
 
@@ -144,11 +136,9 @@ export default function VendorAdminPage() {
         throw new Error('Failed to delete vendor');
       }
 
-      enqueueSnackbar(t('success.deleted'), { variant: 'success' });
       await loadVendors();
     } catch (error) {
       console.error('Error deleting vendor:', error);
-      enqueueSnackbar(t('errors.deleteFailed'), { variant: 'error' });
     }
   };
 

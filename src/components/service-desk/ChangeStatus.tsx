@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import InputLabel from "@mui/material/InputLabel";
 import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { TicketStatus } from '../../types/support-ticket';
@@ -20,7 +19,6 @@ interface ChangeStatusProps {
 
 export const ChangeStatus = ({ ticketId, currentStatus, onStatusChange }: ChangeStatusProps) => {
   const { t } = useTranslation('service-desk');
-  const { enqueueSnackbar } = useSnackbar();
   const [selectedStatus, setSelectedStatus] = useState<TicketStatus | ''>('');
   const [loading, setLoading] = useState(false);
 
@@ -47,12 +45,10 @@ export const ChangeStatus = ({ ticketId, currentStatus, onStatusChange }: Change
         throw new Error('Failed to update status');
       }
 
-      enqueueSnackbar(t('success.statusUpdated'), { variant: 'success' });
       setSelectedStatus('');
       onStatusChange();
     } catch (error) {
       console.error('Error updating status:', error);
-      enqueueSnackbar(t('errors.statusUpdateFailed'), { variant: 'error' });
     } finally {
       setLoading(false);
     }

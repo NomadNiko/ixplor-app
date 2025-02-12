@@ -1,8 +1,4 @@
-// In hooks/use-vendor-status.ts
-
 import { useState, useEffect } from 'react';
-import { useSnackbar } from '@/hooks/use-snackbar';
-import { useTranslation } from '@/services/i18n/client';
 import { VendorStatus } from '@/types/vendor-status';
 import { API_URL } from '@/services/api/config';
 import { getTokensInfo } from '@/services/auth/auth-tokens-info';
@@ -11,8 +7,6 @@ export function useVendorStatus(userId: string) {
   const [vendor, setVendor] = useState<VendorStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { enqueueSnackbar } = useSnackbar();
-  const { t } = useTranslation("vendor-status");
 
   const loadVendorStatus = async () => {
     try {
@@ -66,7 +60,6 @@ export function useVendorStatus(userId: string) {
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       setError(errorMessage);
-      enqueueSnackbar(t('errors.fetchFailed'), { variant: 'error' });
     } finally {
       setLoading(false);
     }

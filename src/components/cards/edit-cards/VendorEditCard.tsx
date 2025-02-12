@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { EditCard } from '@/components/cards/edit-cards/EditCard';
-import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { vendorConfig } from '@/components/cards/edit-cards/configs';
@@ -23,8 +21,6 @@ export default function VendorEditCard({
   onDelete,
   onStatusChange
 }: VendorEditCardProps) {
-  const { t } = useTranslation("vendor-admin");
-  const { enqueueSnackbar } = useSnackbar();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Set up initial form data from vendor props
@@ -46,7 +42,6 @@ export default function VendorEditCard({
       setIsSubmitting(true);
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t("errors.unauthorized"), { variant: "error" });
         return;
       }
 
@@ -77,12 +72,9 @@ export default function VendorEditCard({
       if (!response.ok) {
         throw new Error("Failed to update vendor");
       }
-
-      enqueueSnackbar(t("success.updated"), { variant: "success" });
       onSave();
     } catch (error) {
       console.error("Error updating vendor:", error);
-      enqueueSnackbar(t("errors.updateFailed"), { variant: "error" });
     } finally {
       setIsSubmitting(false);
     }
@@ -94,11 +86,9 @@ export default function VendorEditCard({
     setIsSubmitting(true);
     try {
       await onDelete(vendor._id);
-      enqueueSnackbar(t('success.deleted'), { variant: 'success' });
       onSave();
     } catch (error) {
       console.error('Error deleting vendor:', error);
-      enqueueSnackbar(t('errors.deleteFailed'), { variant: 'error' });
     } finally {
       setIsSubmitting(false);
     }
@@ -110,11 +100,9 @@ export default function VendorEditCard({
     try {
       setIsSubmitting(true);
       await onStatusChange(vendor._id, status, '');
-      enqueueSnackbar(t(`success.${status.toLowerCase()}`), { variant: 'success' });
       onSave();
     } catch (error) {
       console.error('Error updating status:', error);
-      enqueueSnackbar(t('errors.statusUpdateFailed'), { variant: 'error' });
     } finally {
       setIsSubmitting(false);
     }

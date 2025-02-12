@@ -17,7 +17,6 @@ import { ProductItem, ProductItemStatus } from '@/app/[language]/types/product-i
 import { API_URL } from "@/services/api/config";
 import { useCartQuery } from '@/hooks/use-cart-query';
 import useAuth from '@/services/auth/use-auth';
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { useAddToCartService } from '@/services/api/services/cart';
 
 interface VendorFullViewProps {
@@ -39,7 +38,6 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps): JSX.El
   const [addingToCart, setAddingToCart] = useState<string | null>(null);
 
   const { refreshCart } = useCartQuery();
-  const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuth();
 
   const fetchItems = useCallback(async (): Promise<void> => {
@@ -54,9 +52,8 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps): JSX.El
       setItems(activeItems);
     } catch (error) {
       console.error('Error fetching items:', error);
-      enqueueSnackbar(t('errors.loadFailed'), { variant: 'error' });
     }
-  }, [vendor._id, enqueueSnackbar, t]);
+  }, [vendor._id, t]);
 
   const refreshItems = useCallback(async (): Promise<void> => {
     await fetchItems();
@@ -87,14 +84,12 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps): JSX.El
         await refreshCart();
       }
       
-      enqueueSnackbar(t('success.addedToCart'), { variant: 'success' });
       setSelectedItem(null);
       
       // Refresh items to update quantities
       await refreshItems();
     } catch (error) {
       console.error('Error adding to cart:', error);
-      enqueueSnackbar(t('errors.addToCartFailed'), { variant: 'error' });
     } finally {
       setAddingToCart(null);
     }

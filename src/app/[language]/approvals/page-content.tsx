@@ -5,10 +5,9 @@ import Grid from "@mui/material/Grid";
 import { useTranslation } from "@/services/i18n/client";
 import { useGetAllVendorsService } from "@/services/api/services/vendors";
 import { useGetAllProductsService } from "@/services/api/services/products";
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import { Vendor, VendorStatusEnum } from "@/app/[language]/types/vendor";
 import { Product, ProductStatusEnum } from "@/app/[language]/types/product";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { VendorApprovalCard } from "@/components/vendor/vendor-approval-card";
 import { ProductApprovalCard } from "@/components/product/product-approval-card";
 import { API_URL } from "@/services/api/config";
@@ -35,30 +34,25 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`approvals-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ py: 3 }}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
     </div>
   );
 }
 
 export default function ApprovalsPage() {
   const { t } = useTranslation("approvals");
-  const { enqueueSnackbar } = useSnackbar();
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
-  
+
   const getAllVendors = useGetAllVendorsService();
   const getAllProducts = useGetAllProductsService();
 
   const loadData = async () => {
     try {
       setLoading(true);
-      
+
       // Load vendors
       const vendorResponse = await getAllVendors();
       if (vendorResponse.status === HTTP_CODES_ENUM.OK && vendorResponse.data) {
@@ -70,141 +64,148 @@ export default function ApprovalsPage() {
 
       // Load products
       const productResponse = await getAllProducts();
-      if (productResponse.status === HTTP_CODES_ENUM.OK && productResponse.data) {
+      if (
+        productResponse.status === HTTP_CODES_ENUM.OK &&
+        productResponse.data
+      ) {
         const draftProducts = productResponse.data.data.filter(
           (p) => p.productStatus === ProductStatusEnum.DRAFT
         );
         setProducts(draftProducts);
       }
     } catch (error) {
-      console.error('Error loading data:', error);
-      enqueueSnackbar(t('errors.failedToLoad'), { variant: 'error' });
+      console.error("Error loading data:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleVendorAction = async (id: string, action: VendorStatusEnum, notes: string) => {
+  const handleVendorAction = async (
+    id: string,
+    action: VendorStatusEnum,
+    notes: string
+  ) => {
     const tokensInfo = getTokensInfo();
     if (!tokensInfo?.token) {
-      enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
       return;
     }
-  
+
     try {
       if (action === VendorStatusEnum.APPROVED) {
         // Get vendor owners first
         const ownersResponse = await fetch(`${API_URL}/vendors/${id}/owners`, {
           headers: {
-            'Authorization': `Bearer ${tokensInfo.token}`
-          }
+            Authorization: `Bearer ${tokensInfo.token}`,
+          },
         });
-        
+
         if (!ownersResponse.ok) {
-          throw new Error('Failed to fetch vendor owners');
+          throw new Error("Failed to fetch vendor owners");
         }
-        
+
         const ownersData = await ownersResponse.json();
         const ownerId = ownersData.data[0]; // Get first owner
-        
-        const response = await fetch(`${API_URL}/vendors/admin/approve/${id}/${ownerId}`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${tokensInfo.token}`
+
+        const response = await fetch(
+          `${API_URL}/vendors/admin/approve/${id}/${ownerId}`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${tokensInfo.token}`,
+            },
           }
-        });
-  
+        );
+
         if (!response.ok) {
-          throw new Error('Failed to approve vendor');
+          throw new Error("Failed to approve vendor");
         }
       } else {
         // For other status updates, use the existing update endpoint
         const updateData = {
           vendorStatus: action,
-          ...(action === VendorStatusEnum.ACTION_NEEDED ? { actionNeeded: notes } : {}),
-          ...(notes ? { adminNotes: notes } : {})
+          ...(action === VendorStatusEnum.ACTION_NEEDED
+            ? { actionNeeded: notes }
+            : {}),
+          ...(notes ? { adminNotes: notes } : {}),
         };
-  
+
         const response = await fetch(`${API_URL}/vendors/${id}`, {
-          method: 'PUT',
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${tokensInfo.token}`
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${tokensInfo.token}`,
           },
-          body: JSON.stringify(updateData)
+          body: JSON.stringify(updateData),
         });
-  
+
         if (!response.ok) {
-          throw new Error('Failed to update vendor');
+          throw new Error("Failed to update vendor");
         }
       }
-  
-      enqueueSnackbar(t(`success.${action.toLowerCase()}`), { variant: 'success' });
+
       await loadData();
     } catch (error) {
-      console.error('Error updating vendor:', error);
-      enqueueSnackbar(t('errors.updateFailed'), { variant: 'error' });
+      console.error("Error updating vendor:", error);
     }
   };
 
-  
-  const handleProductAction = async (id: string, status: ProductStatusEnum, notes: string) => {
+  const handleProductAction = async (
+    id: string,
+    status: ProductStatusEnum,
+    notes: string
+  ) => {
     const tokensInfo = getTokensInfo();
     if (!tokensInfo?.token) {
-      enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
       return;
     }
 
     try {
       const response = await fetch(`${API_URL}/products/${id}/status`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${tokensInfo.token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokensInfo.token}`,
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           status,
-          notes 
-        })
+          notes,
+        }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update product status');
+        throw new Error("Failed to update product status");
       }
-
-      enqueueSnackbar(t(`success.${status.toLowerCase()}`), { variant: 'success' });
       await loadData();
     } catch (error) {
-      console.error('Error updating product:', error);
-      enqueueSnackbar(t('errors.updateFailed'), { variant: 'error' });
+      console.error("Error updating product:", error);
     }
   };
 
-  const handleDelete = async (type: 'vendor' | 'product' | 'template', id: string) => {
+  const handleDelete = async (
+    type: "vendor" | "product" | "template",
+    id: string
+  ) => {
     const tokensInfo = getTokensInfo();
     if (!tokensInfo?.token) {
-      enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
       return;
     }
 
     try {
-      const endpoint = type === 'vendor' ? 'vendors' : 'products';
+      const endpoint = type === "vendor" ? "vendors" : "products";
       const response = await fetch(`${API_URL}/${endpoint}/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Authorization': `Bearer ${tokensInfo.token}`
-        }
+          Authorization: `Bearer ${tokensInfo.token}`,
+        },
       });
 
       if (response.ok) {
-        enqueueSnackbar(t('success.deleted'), { variant: 'success' });
         await loadData();
       } else {
         throw new Error(`Failed to delete ${type}`);
       }
     } catch (error) {
       console.error(`Error deleting ${type}:`, error);
-      enqueueSnackbar(t('errors.deleteFailed'), { variant: 'error' });
     }
   };
 
@@ -214,12 +215,14 @@ export default function ApprovalsPage() {
 
   if (loading) {
     return (
-      <Container sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: 'calc(100vh - 64px)' 
-      }}>
+      <Container
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "calc(100vh - 64px)",
+        }}
+      >
         <CircularProgress />
       </Container>
     );
@@ -230,31 +233,31 @@ export default function ApprovalsPage() {
       <Typography variant="h4" gutterBottom>
         {t("title")}
       </Typography>
-      
+
       <Typography color="text.secondary" paragraph>
         {t("subtitle")}
       </Typography>
 
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs 
-          value={activeTab} 
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Tabs
+          value={activeTab}
           onChange={(_, newValue) => setActiveTab(newValue)}
           aria-label="approval sections"
         >
-          <Tab 
+          <Tab
             label={
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 {t("tabs.vendors")}
-                <Typography 
-                  variant="caption" 
-                  sx={{ 
-                    backgroundColor: 'primary.main',
-                    color: 'primary.contrastText',
+                <Typography
+                  variant="caption"
+                  sx={{
+                    backgroundColor: "primary.main",
+                    color: "primary.contrastText",
                     px: 1,
                     py: 0.5,
                     borderRadius: 1,
                     minWidth: 24,
-                    textAlign: 'center'
+                    textAlign: "center",
                   }}
                 >
                   {vendors.length}
@@ -264,20 +267,20 @@ export default function ApprovalsPage() {
             id="approvals-tab-0"
             aria-controls="approvals-tabpanel-0"
           />
-          <Tab 
+          <Tab
             label={
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 {t("tabs.products")}
-                <Typography 
-                  variant="caption" 
-                  sx={{ 
-                    backgroundColor: 'primary.main',
-                    color: 'primary.contrastText',
+                <Typography
+                  variant="caption"
+                  sx={{
+                    backgroundColor: "primary.main",
+                    color: "primary.contrastText",
                     px: 1,
                     py: 0.5,
                     borderRadius: 1,
                     minWidth: 24,
-                    textAlign: 'center'
+                    textAlign: "center",
                   }}
                 >
                   {products.length}
@@ -294,7 +297,12 @@ export default function ApprovalsPage() {
         <Grid container spacing={3}>
           {vendors.length === 0 ? (
             <Grid item xs={12}>
-              <Typography variant="h6" color="text.secondary" align="center" sx={{ py: 8 }}>
+              <Typography
+                variant="h6"
+                color="text.secondary"
+                align="center"
+                sx={{ py: 8 }}
+              >
                 {t("noVendors")}
               </Typography>
             </Grid>
@@ -304,7 +312,7 @@ export default function ApprovalsPage() {
                 <VendorApprovalCard
                   vendor={vendor}
                   onAction={handleVendorAction}
-                  onDelete={(id) => handleDelete('vendor', id)}
+                  onDelete={(id) => handleDelete("vendor", id)}
                 />
               </Grid>
             ))
@@ -316,7 +324,12 @@ export default function ApprovalsPage() {
         <Grid container spacing={3}>
           {products.length === 0 ? (
             <Grid item xs={12}>
-              <Typography variant="h6" color="text.secondary" align="center" sx={{ py: 8 }}>
+              <Typography
+                variant="h6"
+                color="text.secondary"
+                align="center"
+                sx={{ py: 8 }}
+              >
                 {t("noProducts")}
               </Typography>
             </Grid>
@@ -326,7 +339,7 @@ export default function ApprovalsPage() {
                 <ProductApprovalCard
                   product={product}
                   onAction={handleProductAction}
-                  onDelete={(id) => handleDelete('product', id)}
+                  onDelete={(id) => handleDelete("product", id)}
                 />
               </Grid>
             ))

@@ -12,7 +12,6 @@ import CartSummary from "@/components/cart/cart-summary";
 import useAuth from "@/services/auth/use-auth";
 import { useRouter } from "next/navigation";
 import { useCartQuery } from "@/hooks/use-cart-query";
-import { useSnackbar } from "@/hooks/use-snackbar";
 
 interface CartItemType {
   productItemId: string;
@@ -35,8 +34,7 @@ export default function CartPage() {
   const { data: cartData, isLoading: isCartLoading, refreshCart, updateItem, removeItem } = useCartQuery();
   const { user, isLoaded } = useAuth();
   const router = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
-
+  
   useEffect(() => {
     if (!user && isLoaded) {
       router.replace('/sign-in');
@@ -54,22 +52,18 @@ export default function CartPage() {
     try {
       await updateItem(productItemId, newQuantity);
       refreshCart();
-      enqueueSnackbar(t('success.quantityUpdated'), { variant: 'success' });
-    } catch (error) {
+      } catch (error) {
       console.error('Error updating quantity:', error);
-      enqueueSnackbar(t('errors.updateFailed'), { variant: 'error' });
-    }
+       }
   };
 
   const handleRemoveItem = async (productItemId: string) => {
     try {
       await removeItem(productItemId);
       refreshCart();
-      enqueueSnackbar(t('success.itemRemoved'), { variant: 'success' });
-    } catch (error) {
+      } catch (error) {
       console.error('Error removing item:', error);
-      enqueueSnackbar(t('errors.removeFailed'), { variant: 'error' });
-    }
+      }
   };
 
   const handleCheckout = () => {

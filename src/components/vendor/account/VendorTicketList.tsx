@@ -8,7 +8,6 @@ import Grid from "@mui/material/Grid";
 import CircularProgress from "@mui/material/CircularProgress";
 import { styled } from '@mui/material/styles';
 import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { TicketIcon } from 'lucide-react';
@@ -55,8 +54,7 @@ const TicketItem = styled(Box)(({ theme }) => ({
 
 export default function VendorTicketList({ vendorId }: VendorTicketListProps) {
   const { t } = useTranslation("vendor-account");
-  const { enqueueSnackbar } = useSnackbar();
-  const [tickets, setTickets] = useState<Ticket[]>([]);
+   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -64,7 +62,6 @@ export default function VendorTicketList({ vendorId }: VendorTicketListProps) {
       try {
         const tokensInfo = getTokensInfo();
         if (!tokensInfo?.token) {
-          enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
           return;
         }
 
@@ -82,14 +79,13 @@ export default function VendorTicketList({ vendorId }: VendorTicketListProps) {
         setTickets(data.data);
       } catch (error) {
         console.error('Error fetching tickets:', error);
-        enqueueSnackbar(t('errors.loadTicketsFailed'), { variant: 'error' });
       } finally {
         setLoading(false);
       }
     };
 
     fetchTickets();
-  }, [vendorId, enqueueSnackbar, t]);
+  }, [vendorId, t]);
 
   return (
     <StyledCard>

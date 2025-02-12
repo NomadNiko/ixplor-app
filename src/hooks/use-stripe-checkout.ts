@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { CartItemType } from '@/app/[language]/cart/types';
@@ -11,8 +10,7 @@ export const useStripeCheckout = (cartItems: CartItemType[] | undefined) => {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { enqueueSnackbar } = useSnackbar();
-
+  
   useEffect(() => {
     if (!cartItems || cartItems.length === 0) return;
 
@@ -52,14 +50,13 @@ export const useStripeCheckout = (cartItems: CartItemType[] | undefined) => {
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to initialize checkout';
         setError(errorMessage);
-        enqueueSnackbar(errorMessage, { variant: 'error' });
-      } finally {
+        } finally {
         setIsLoading(false);
       }
     };
 
     initializeCheckout();
-  }, [cartItems, enqueueSnackbar]);
+  }, [cartItems]);
 
   return {
     stripePromise,

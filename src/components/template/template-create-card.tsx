@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CreateCard } from '@/components/cards/create-cards/CreateCard';
-import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { templateConfig } from '@/components/template/template-form-config';
@@ -10,8 +8,6 @@ import { FormData } from '@/components/cards/shared/types';
 import { TemplateStatusEnum } from './template-status-badge';
 
 export default function TemplateCreateCard() {
-  const { t } = useTranslation("templates");
-  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -21,7 +17,6 @@ export default function TemplateCreateCard() {
       
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
         router.push('/sign-in');
         return;
       }
@@ -59,12 +54,10 @@ export default function TemplateCreateCard() {
         throw new Error(errorData.message || 'Failed to create template');
       }
 
-      enqueueSnackbar(t('success.templateCreated'), { variant: 'success' });
       router.push('/templates');  
 
     } catch (error) {
       console.error('Error creating template:', error);
-      enqueueSnackbar(t('errors.createFailed'), { variant: 'error' });
     } finally {
       setIsSubmitting(false);  
     }

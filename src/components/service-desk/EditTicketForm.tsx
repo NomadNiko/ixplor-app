@@ -9,7 +9,6 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useTranslation } from '@/services/i18n/client';
-import { useSnackbar } from '@/hooks/use-snackbar';
 import { API_URL } from '@/services/api/config';
 import { getTokensInfo } from '@/services/auth/auth-tokens-info';
 import FormTextInput from '@/components/form/text-input/form-text-input';
@@ -23,7 +22,6 @@ interface EditTicketFormProps {
 
 export const EditTicketForm = ({ ticket, onSuccess, onCancel }: EditTicketFormProps) => {
   const { t } = useTranslation('support-tickets');
-  const { enqueueSnackbar } = useSnackbar();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const methods = useForm<UpdateTicketDto>({
@@ -56,11 +54,9 @@ export const EditTicketForm = ({ ticket, onSuccess, onCancel }: EditTicketFormPr
         throw new Error('Failed to update ticket');
       }
 
-      enqueueSnackbar(t('success.ticketUpdated'), { variant: 'success' });
       onSuccess?.();
     } catch (error) {
       console.error('Error updating ticket:', error);
-      enqueueSnackbar(t('errors.updateFailed'), { variant: 'error' });
     } finally {
       setIsSubmitting(false);
     }

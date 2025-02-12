@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import InputLabel from "@mui/material/InputLabel";
 import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { TicketStatus } from '../../types/support-ticket';
@@ -26,7 +25,6 @@ interface AssignUserProps {
 
 export const AssignUser = ({ ticketId, currentStatus, onAssignSuccess }: AssignUserProps) => {
   const { t } = useTranslation('service-desk');
-  const { enqueueSnackbar } = useSnackbar();
   const [selectedUser, setSelectedUser] = useState<string>('');
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
@@ -55,14 +53,13 @@ export const AssignUser = ({ ticketId, currentStatus, onAssignSuccess }: AssignU
         setUsers(data.data);
       } catch (error) {
         console.error('Error fetching users:', error);
-        enqueueSnackbar(t('errors.loadUsersFailed'), { variant: 'error' });
       } finally {
         setLoadingUsers(false);
       }
     };
 
     fetchUsers();
-  }, [enqueueSnackbar, t]);
+  }, [t]);
 
   const handleAssign = async () => {
     if (!selectedUser) return;
@@ -104,12 +101,10 @@ export const AssignUser = ({ ticketId, currentStatus, onAssignSuccess }: AssignU
         }
       }
 
-      enqueueSnackbar(t('success.assigned'), { variant: 'success' });
       setSelectedUser('');
       onAssignSuccess();
     } catch (error) {
       console.error('Error assigning user:', error);
-      enqueueSnackbar(t('errors.assignFailed'), { variant: 'error' });
     } finally {
       setLoading(false);
     }

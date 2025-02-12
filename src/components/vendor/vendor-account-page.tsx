@@ -10,7 +10,6 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Box from "@mui/material/Box";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import VendorAccountBalances from "./account/VendorAccountBalances";
 import VendorEditCard from "@/components/cards/edit-cards/VendorEditCard";
 import { VendorManagementCard } from "@/components/vendor/vendor-management-card";
@@ -19,7 +18,6 @@ import { Vendor } from "@/app/[language]/types/vendor";
 export default function VendorAccountPage() {
   const { t } = useTranslation("vendor-account");
   const { user } = useAuth();
-  const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [vendor, setVendor] = useState<Vendor | null>(null);
@@ -78,10 +76,8 @@ export default function VendorAccountPage() {
         setVendor(data.data[0]);
       }
       setIsEditing(false);
-      enqueueSnackbar(t('success.updated'), { variant: 'success' });
     } catch (error) {
       console.error('Error updating vendor:', error);
-      enqueueSnackbar(t('errors.updateFailed'), { variant: 'error' });
     } finally {
       setLoading(false);
     }

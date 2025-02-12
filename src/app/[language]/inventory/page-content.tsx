@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { useProductItems } from "@/hooks/use-product-items";
 import {
   ProductItem,
@@ -15,7 +14,6 @@ import EnhancedInventoryTable from "@/components/product-item/EnhancedInventoryT
 
 export default function InventoryPageContent() {
   const { t } = useTranslation("inventory");
-  const { enqueueSnackbar } = useSnackbar();
   const [isUpdating, setIsUpdating] = useState(false);
 
   const { items, loading, updateItemQuantity } = useProductItems({
@@ -26,7 +24,6 @@ export default function InventoryPageContent() {
     if (isUpdating) return;
 
     if (item.quantityAvailable + change < 0) {
-      enqueueSnackbar(t("errors.quantityBelowZero"), { variant: "error" });
       return;
     }
 
@@ -35,8 +32,7 @@ export default function InventoryPageContent() {
       await updateItemQuantity(item._id, change);
     } catch (error) {
       console.error("Error updating quantity:", error);
-      enqueueSnackbar(t("errors.updateFailed"), { variant: "error" });
-    } finally {
+      } finally {
       setIsUpdating(false);
     }
   };

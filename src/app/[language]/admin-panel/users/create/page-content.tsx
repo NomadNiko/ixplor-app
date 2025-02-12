@@ -9,7 +9,6 @@ import FormTextInput from "@/components/form/text-input/form-text-input";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import withPageRequiredAuth from "@/services/auth/with-page-required-auth";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import Link from "@/components/link";
 import FormAvatarInput from "@/components/form/avatar-input/form-avatar-input";
 import { FileEntity } from "@/services/api/types/file-entity";
@@ -104,8 +103,6 @@ function FormCreateUser() {
   const { t } = useTranslation("admin-panel-users-create");
   const validationSchema = useValidationSchema();
 
-  const { enqueueSnackbar } = useSnackbar();
-
   const methods = useForm<CreateUserFormData>({
     resolver: yupResolver(validationSchema),
     defaultValues: {
@@ -139,9 +136,6 @@ function FormCreateUser() {
       return;
     }
     if (status === HTTP_CODES_ENUM.CREATED) {
-      enqueueSnackbar(t("admin-panel-users-create:alerts.user.success"), {
-        variant: "success",
-      });
       router.push("/admin-panel/users");
     }
   });

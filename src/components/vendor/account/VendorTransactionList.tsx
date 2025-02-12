@@ -8,7 +8,6 @@ import Grid from "@mui/material/Grid";
 import CircularProgress from "@mui/material/CircularProgress";
 import { styled } from '@mui/material/styles';
 import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { ClockIcon } from 'lucide-react';
@@ -51,7 +50,6 @@ const TransactionItem = styled(Box)(({ theme }) => ({
 
 export default function VendorTransactionList({ vendorId }: VendorTransactionListProps) {
   const { t } = useTranslation("vendor-account");
-  const { enqueueSnackbar } = useSnackbar();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -60,7 +58,6 @@ export default function VendorTransactionList({ vendorId }: VendorTransactionLis
       try {
         const tokensInfo = getTokensInfo();
         if (!tokensInfo?.token) {
-          enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
           return;
         }
 
@@ -78,14 +75,13 @@ export default function VendorTransactionList({ vendorId }: VendorTransactionLis
         setTransactions(data.data);
       } catch (error) {
         console.error('Error fetching transactions:', error);
-        enqueueSnackbar(t('errors.loadTransactionsFailed'), { variant: 'error' });
       } finally {
         setLoading(false);
       }
     };
 
     fetchTransactions();
-  }, [vendorId, enqueueSnackbar, t]);
+  }, [vendorId, t]);
 
   return (
     <StyledCard>

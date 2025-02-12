@@ -13,7 +13,6 @@ import Alert from "@mui/material/Alert";
 import { MessageCircle, Plus, Clock, User, LifeBuoy } from "lucide-react";
 import { format } from 'date-fns';
 import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import useAuth from "@/services/auth/use-auth";
@@ -25,8 +24,7 @@ import { RoleEnum } from "@/services/api/types/role";
 export default function ServiceDeskPage() {
   const { t } = useTranslation("service-desk");
   const { user } = useAuth();
-  const { enqueueSnackbar } = useSnackbar();
-  const [tickets, setTickets] = useState<SupportTicket[]>([]);
+   const [tickets, setTickets] = useState<SupportTicket[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -64,7 +62,6 @@ export default function ServiceDeskPage() {
     } catch (error) {
       console.error('Error loading tickets:', error);
       setError(t('errors.loadFailed'));
-      enqueueSnackbar(t('errors.loadFailed'), { variant: 'error' });
     } finally {
       setLoading(false);
     }
@@ -77,13 +74,11 @@ export default function ServiceDeskPage() {
   const handleCreateSuccess = () => {
     setCreateDialogOpen(false);
     loadTickets();
-    enqueueSnackbar(t('success.ticketCreated'), { variant: 'success' });
   };
 
   const handleUpdateSuccess = () => {
     setSelectedTicket(null);
     loadTickets();
-    enqueueSnackbar(t('success.updateAdded'), { variant: 'success' });
   };
 
   const getStatusColor = (status: string) => {

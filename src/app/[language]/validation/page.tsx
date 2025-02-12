@@ -13,7 +13,6 @@ import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import { format } from 'date-fns';
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { useTranslation } from "@/services/i18n/client";
 
 interface TicketData {
@@ -40,7 +39,6 @@ interface TicketData {
 
 export default function TicketValidationPage() {
   const { t } = useTranslation("validation");
-  const { enqueueSnackbar } = useSnackbar();
   const searchParams = useSearchParams();
   const { user } = useAuth();
   const [ticket, setTicket] = useState<TicketData | null>(null);
@@ -110,10 +108,8 @@ export default function TicketValidationPage() {
 
       const updatedTicket = await response.json();
       setTicket(updatedTicket.data);
-      enqueueSnackbar(t('success.ticketRedeemed'), { variant: 'success' });
     } catch (error) {
       console.error('Error redeeming ticket:', error);
-      enqueueSnackbar(t('errors.redeemFailed'), { variant: 'error' });
     }
   };
 

@@ -7,7 +7,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import useAuth from "@/services/auth/use-auth";
@@ -24,7 +23,6 @@ import { useRouter } from "next/navigation";
 export default function ProductItemsContent() {
   const { user } = useAuth();
   const { t } = useTranslation("product-items");
-  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   const [items, setItems] = useState<ProductItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,7 +33,6 @@ export default function ProductItemsContent() {
     try {
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
         return;
       }
       
@@ -53,8 +50,7 @@ export default function ProductItemsContent() {
       setSelectedItem(null);
     } catch (error) {
       console.error('Error updating status:', error);
-      enqueueSnackbar(t('errors.updateFailed'), { variant: 'error' });
-    }
+      }
   };
 
   const loadItems = useCallback(async () => {
@@ -62,8 +58,7 @@ export default function ProductItemsContent() {
       setLoading(true);
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t("errors.unauthorized"), { variant: "error" });
-        return;
+         return;
       }
 
       const vendorResponse = await fetch(
@@ -95,11 +90,10 @@ export default function ProductItemsContent() {
       setItems(data.data);
     } catch (error) {
       console.error("Error loading items:", error);
-      enqueueSnackbar(t("errors.loadFailed"), { variant: "error" });
-    } finally {
+      } finally {
       setLoading(false);
     }
-  }, [user?.id, enqueueSnackbar, t]);
+  }, [user?.id, t]);
 
   useEffect(() => {
     loadItems();
