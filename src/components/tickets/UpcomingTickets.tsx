@@ -8,7 +8,7 @@ import { X, Clock, Calendar, QrCode, LogIn } from "lucide-react";
 import { useTranslation } from "@/services/i18n/client";
 import { useTheme } from "@mui/material/styles";
 import { useTickets, Ticket } from '@/hooks/use-tickets';
-import TicketDetail from '@/components/tickets/UpcomingTicketDetail';
+import UpcomingTicketDetail from '@/components/tickets/UpcomingTicketDetail';
 import { format, parseISO } from 'date-fns';
 import useAuth from '@/services/auth/use-auth';
 import { useRouter } from 'next/navigation';
@@ -202,7 +202,7 @@ const UpcomingTicketsPanel: React.FC<UpcomingTicketsPanelProps> = ({
       </Box>
 
       {selectedTicket && (
-        <TicketDetail
+        <UpcomingTicketDetail
           ticket={selectedTicket}
           onClose={() => setSelectedTicket(null)}
         />

@@ -12,7 +12,7 @@ const QRGenerator = ({ ticketId, transactionId }: QRGeneratorProps) => {
   return (
     <div className="flex flex-col items-center justify-center w-full p-4 space-y-4">
       <p className="text-8 text-gray-800 text-center w-full">
-        Vendors Scan Here
+      {" "}
       </p>
       <div className="flex justify-center items-center w-40 h-40 bg-slate-800 rounded-lg p-2">
         <QRCodeCanvas
@@ -33,8 +33,6 @@ const QRGenerator = ({ ticketId, transactionId }: QRGeneratorProps) => {
       </div>
       <p className="text-8 text-gray-800 text-center w-full">
         {" "}
-        {/* Adjusted text size and width */}
-        Vendors Scan Here
       </p>
     </div>
   );

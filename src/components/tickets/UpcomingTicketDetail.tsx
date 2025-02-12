@@ -15,7 +15,7 @@ interface TicketDetailProps {
   onClose: () => void;
 }
 
-export const TicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose }) => {
+export const UpcomingTicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose }) => {
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
@@ -41,8 +41,8 @@ export const TicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose }) =
         scale: 2,
         useCORS: true,
         backgroundColor: null,
-        windowWidth: 440,
-        windowHeight: 1350
+        windowWidth: 330, // Reduced from 440
+        windowHeight: 1012 // Reduced from 1350
       });
       
       const blob = await new Promise<Blob>((resolve) => {
@@ -94,16 +94,16 @@ export const TicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose }) =
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        p: 2
+        p: 1.5 // Reduced from 2
       }}
       onClick={onClose}
     >
       <Paper 
         sx={{ 
-          maxWidth: 500, 
+          maxWidth: 375, // Reduced from 500
           width: '100%', 
           mx: 'auto', 
-          p: 3,
+          p: 2, // Reduced from 3
           backgroundColor: 'background.paper',
           position: 'relative'
         }}
@@ -112,40 +112,40 @@ export const TicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose }) =
         <Box id="ticket-content" sx={{ 
           bgcolor: 'background.paper',
           borderRadius: 1,
-          p: 3,
+          p: 2, // Reduced from 3
           position: 'relative'
         }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-            <TicketIcon size={24} />
-            <Typography variant="h6">{ticket.productName}</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
+            <TicketIcon size={18} /> {/* Reduced from 24 */}
+            <Typography variant="subtitle1">{ticket.productName}</Typography> {/* Changed from h6 */}
           </Box>
 
-          <Alert severity={getStatusColor(ticket.status)} sx={{ mb: 3 }}>
+          <Alert severity={getStatusColor(ticket.status)} sx={{ mb: 2, py: 0.75, px: 1 }}>
             Ticket Status: {ticket.status}
           </Alert>
 
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
             <QRGenerator ticketId={ticket._id} transactionId={ticket.transactionId} />
           </Box>
 
-          <Grid container spacing={2} sx={{ mb: 2 }}>
+          <Grid container spacing={1.5} sx={{ mb: 1.5 }}> {/* Reduced spacing */}
             <Grid item xs={6} sm={6}>
               <Typography color="text.secondary" variant="caption" display="block">
                 Date
               </Typography>
-              <Typography>{formatDate(ticket.productDate)}</Typography>
+              <Typography variant="body2">{formatDate(ticket.productDate)}</Typography>
             </Grid>
             <Grid item xs={6} sm={6}>
               <Typography color="text.secondary" variant="caption" display="block">
                 Time
               </Typography>
-              <Typography>{ticket.productStartTime || 'N/A'}</Typography>
+              <Typography variant="body2">{ticket.productStartTime || 'N/A'}</Typography>
             </Grid>
             <Grid item xs={6} sm={6}>
               <Typography color="text.secondary" variant="caption" display="block">
                 Duration
               </Typography>
-              <Typography>
+              <Typography variant="body2">
                 {ticket.productDuration && formatDuration(ticket.productDuration)}
               </Typography>
             </Grid>
@@ -153,17 +153,17 @@ export const TicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose }) =
               <Typography color="text.secondary" variant="caption" display="block">
                 Quantity
               </Typography>
-              <Typography>{ticket.quantity}</Typography>
+              <Typography variant="body2">{ticket.quantity}</Typography>
             </Grid>
           </Grid>
 
           {ticket.productLocation && (
-            <Box sx={{ mb: 2, ml: 2 }}>
+            <Box sx={{ mb: 1.5, ml: 1.5 }}>
               <Button
                 variant="text"
                 size="small"
                 onClick={handleOpenMap}
-                endIcon={<ExternalLink size={16} />}
+                endIcon={<ExternalLink size={12} />}
               >
                 View Location
               </Button>
@@ -171,15 +171,20 @@ export const TicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose }) =
           )}
         </Box>
 
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
           <Button
             variant="outlined"
-            startIcon={<Download size={16} />}
+            size="small"
+            startIcon={<Download size={12} />}
             onClick={handleExportTicket}
           >
             Export
           </Button>
-          <Button variant="contained" onClick={onClose}>
+          <Button 
+            variant="contained"
+            size="small"
+            onClick={onClose}
+          >
             Close
           </Button>
         </Box>
@@ -188,4 +193,4 @@ export const TicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose }) =
   );
 };
 
-export default TicketDetail;
+export default UpcomingTicketDetail;
