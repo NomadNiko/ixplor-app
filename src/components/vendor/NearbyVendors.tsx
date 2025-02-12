@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from "react";
+"use client";
+import React, { useState, useMemo, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
@@ -115,7 +116,19 @@ const NearbyVendors: React.FC<NearbyVendorsProps> = ({
   const theme = useTheme();
   const { t } = useTranslation("home");
   const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
-  const RADIUS_MILES = 10; // Max distance to show vendors
+  const RADIUS_MILES = 30; // Max distance to show vendors
+
+  // Reset selected vendor when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedVendor(null);
+    }
+  }, [isOpen]);
+
+  // Stop propagation for clicks inside the modal
+  const handleModalClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
 
   // Filter and sort vendors by distance
   const sortedVendors = useMemo(() => {
@@ -151,6 +164,8 @@ const NearbyVendors: React.FC<NearbyVendorsProps> = ({
 
   return (
     <Box
+      className="modal-content"
+      onClick={handleModalClick}
       sx={{
         position: "fixed",
         bottom: { xs: 70, md: 82 },
@@ -220,11 +235,14 @@ const NearbyVendors: React.FC<NearbyVendorsProps> = ({
         )}
       </Box>
 
+
       {selectedVendor && (
-        <VendorFullView
-          vendor={selectedVendor}
-          onClose={() => setSelectedVendor(null)}
-        />
+        <Box onClick={e => e.stopPropagation()}>
+          <VendorFullView
+            vendor={selectedVendor}
+            onClose={() => setSelectedVendor(null)}
+          />
+        </Box>
       )}
     </Box>
   );
