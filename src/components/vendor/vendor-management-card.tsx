@@ -35,7 +35,7 @@ export const VendorManagementCard: React.FC<VendorManagementCardProps> = ({
 
   useEffect(() => {
     setIsEditing(true);
-    setTimeout(() => setIsEditing(false), 100);
+    setTimeout(() => setIsEditing(false), 5);
   }, []);
 
   const handleAction = async (id: string, action: VendorStatusEnum, notes: string) => {
