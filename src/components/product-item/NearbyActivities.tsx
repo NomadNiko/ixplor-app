@@ -226,7 +226,7 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
     <Box
       sx={{
         position: "fixed",
-        bottom: { xs: 80, md: 80 }, // Updated to match VendorShortView
+        bottom: { xs: 70, md: 70 }, // Updated to match VendorShortView
         left: { xs: 0, md: '50%' },
         right: { xs: 0, md: 'auto' },
         height: "80%",
