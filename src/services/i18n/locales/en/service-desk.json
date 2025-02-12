@@ -1,0 +1,36 @@
+{
+    "title": "Service Desk",
+    "description": "Welcome to our support center. Create a ticket to get help from our team.",
+    "yourTickets": "Your Tickets",
+    "allTickets": "All Support Tickets",
+    "noTickets": "No tickets found",
+    "ticket": "Ticket",
+    "latestUpdate": "Latest Update",
+  
+    "actions": {
+      "createTicket": "Create New Ticket",
+      "addUpdate": "Add Update",
+      "submit": "Submit",
+      "cancel": "Cancel"
+    },
+  
+    "status": {
+      "opened": "Open",
+      "assigned": "Assigned",
+      "hold": "On Hold",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    },
+  
+    "success": {
+      "ticketCreated": "Support ticket created successfully",
+      "updateAdded": "Update added successfully"
+    },
+  
+    "errors": {
+      "loadFailed": "Failed to load tickets",
+      "createFailed": "Failed to create ticket",
+      "updateFailed": "Failed to add update",
+      "unauthorized": "You are not authorized to perform this action"
+    }
+  }
