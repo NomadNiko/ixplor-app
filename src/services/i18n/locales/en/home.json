@@ -25,6 +25,10 @@
   "noNearbyActivities": "No nearby activities found",
   "nearbyVendors": "Nearby Vendors",
   "noNearbyVendors": "No nearby vendors found",
+  "upcomingTickets": "Upcoming Tickets",
+  "pleaseLogin": "Please Login to See Tickets...",
+  "login": "Login",
+  "pastReceipts": "Past Receipts",
   "navigation": {
     "map": "Map",
     "favorites": "Favorites",

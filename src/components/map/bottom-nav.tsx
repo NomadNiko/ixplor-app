@@ -5,6 +5,7 @@ import { NavButton } from "./styled-components";
 import NearbyActivities from '@/components/product-item/NearbyActivities';
 import NearbyVendors from '../vendor/NearbyVendors';
 import { Vendor } from "@/app/[language]/types/vendor";
+import UpcomingTicketsPanel from '../tickets/UpcomingTickets';
 
 type ActiveWindow = 'activities' | 'vendors' | 'tickets' | 'receipts' | null;
 
@@ -74,6 +75,8 @@ export const BottomNav = ({ currentLocation, vendors }: {
             <Store />
           </NavButton>
           <NavButton 
+            onClick={() => handleNavClick('tickets')}
+            selected={activeWindow === 'tickets'}
           >
             <Ticket />
           </NavButton>
@@ -97,6 +100,10 @@ export const BottomNav = ({ currentLocation, vendors }: {
           latitude={currentLocation.latitude}
           longitude={currentLocation.longitude}
           vendors={vendors}
+        />
+        <UpcomingTicketsPanel
+          isOpen={activeWindow === 'tickets'}
+          onClose={handleClose}
         />
       </Box>
     </>
