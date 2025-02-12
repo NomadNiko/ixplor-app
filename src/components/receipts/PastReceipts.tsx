@@ -53,7 +53,6 @@ const ReceiptItem: React.FC<ReceiptItemProps> = ({ receipt, onClick }) => {
             size={14}
             style={{ verticalAlign: "middle", marginRight: theme.spacing(0.5) }}
           />
-          {new Date(item.productDate).toLocaleDateString()}
         </Typography>
         <Typography variant="body2" color="primary.main">
           ${receipt.amount.toFixed(2)}
