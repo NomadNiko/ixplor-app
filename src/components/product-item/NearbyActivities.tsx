@@ -234,7 +234,7 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
         borderTopLeftRadius: theme.spacing(2),
         borderTopRightRadius: theme.spacing(2),
         transform: { xs: 'none', md: 'translateX(-50%)' },
-        maxWidth: 'sm',
+        maxWidth: 'md',
         boxShadow: 3,
         padding: theme => ({ 
           xs: 0, 
