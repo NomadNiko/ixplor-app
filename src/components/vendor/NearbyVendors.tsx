@@ -43,9 +43,14 @@ const VendorItem: React.FC<VendorItemProps> = ({
 }) => {
   const theme = useTheme();
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onClick();
+  };
+
   return (
     <Button
-      onClick={onClick}
+      onClick={handleClick}
       sx={{
         width: "100%",
         mb: theme.spacing(1),
@@ -103,142 +108,148 @@ interface NearbyVendorsProps {
   onClose: () => void;
   latitude: number;
   longitude: number;
-  vendors: Vendor[]; // Now accepting vendors as a prop
+  vendors: Vendor[];
 }
 
 const NearbyVendors: React.FC<NearbyVendorsProps> = ({
-    isOpen,
-    onClose,
-    latitude,
-    longitude,
-    vendors
-  }) => {
-    const theme = useTheme();
-    const { t } = useTranslation("home");
-    const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
-    const RADIUS_MILES = 30; // Max distance to show vendors
-  
-    useEffect(() => {
-      if (!isOpen) {
-        setSelectedVendor(null);
-      }
-    }, [isOpen]);
-  
-    const handleModalClick = (e: React.MouseEvent) => {
-      e.stopPropagation();
-    };
-  
-    const sortedVendors = useMemo(() => {
-      return vendors
-        .filter(vendor => {
-          if (vendor.vendorStatus !== VendorStatusEnum.APPROVED) return false;
-          
-          const distance = calculateDistance(
-            latitude,
-            longitude,
-            vendor.location.coordinates[1],
-            vendor.location.coordinates[0]
-          );
-          
-          return distance <= RADIUS_MILES;
-        })
-        .map(vendor => ({
-          ...vendor,
-          distance: calculateDistance(
-            latitude,
-            longitude,
-            vendor.location.coordinates[1],
-            vendor.location.coordinates[0]
-          )
-        }))
-        .sort((a, b) => (a.distance - b.distance));
-    }, [vendors, latitude, longitude]);
-  
-    if (!isOpen) return null;
-  
-    return (
-      <>
+  isOpen,
+  onClose,
+  latitude,
+  longitude,
+  vendors
+}) => {
+  const theme = useTheme();
+  const { t } = useTranslation("home");
+  const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
+  const RADIUS_MILES = 30;
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedVendor(null);
+    }
+  }, [isOpen]);
+
+  const handleModalClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
+  const handleVendorSelect = (vendor: Vendor) => {
+    setSelectedVendor(vendor);
+  };
+
+  const handleVendorClose = () => {
+    setSelectedVendor(null);
+  };
+
+  const sortedVendors = useMemo(() => {
+    return vendors
+      .filter(vendor => {
+        if (vendor.vendorStatus !== VendorStatusEnum.APPROVED) return false;
+        
+        const distance = calculateDistance(
+          latitude,
+          longitude,
+          vendor.location.coordinates[1],
+          vendor.location.coordinates[0]
+        );
+        
+        return distance <= RADIUS_MILES;
+      })
+      .map(vendor => ({
+        ...vendor,
+        distance: calculateDistance(
+          latitude,
+          longitude,
+          vendor.location.coordinates[1],
+          vendor.location.coordinates[0]
+        )
+      }))
+      .sort((a, b) => (a.distance - b.distance));
+  }, [vendors, latitude, longitude]);
+
+  if (!isOpen) return null;
+
+  return (
+    <>
+      <Box
+        className="modal-content"
+        onClick={handleModalClick}
+        sx={{
+          position: "fixed",
+          bottom: { xs: 70, md: 82 },
+          left: { xs: 0, md: '50%' },
+          right: { xs: 0, md: 'auto' },
+          height: "75%",
+          backgroundColor: "background.paper",
+          borderTopLeftRadius: theme.spacing(2),
+          borderTopRightRadius: theme.spacing(2),
+          transform: { xs: 'none', md: 'translateX(-50%)' },
+          width: { xs: '100%', sm: '600px' },
+          boxShadow: 3,
+          zIndex: 75,
+          display: "flex",
+          flexDirection: "column",
+          transition: "bottom 0.3s ease-in-out",
+          background: "rgba(17, 25, 40, 0.75)",
+          backdropFilter: "blur(16px)",
+          border: "1px solid rgba(255, 255, 255, 0.125)",
+          borderRadius: { xs: "12px 12px 0 0", md: 2 },
+        }}
+      >
         <Box
-          className="modal-content"
-          onClick={handleModalClick}
           sx={{
-            position: "fixed",
-            bottom: { xs: 70, md: 82 },
-            left: { xs: 0, md: '50%' },
-            right: { xs: 0, md: 'auto' },
-            height: "75%",
-            backgroundColor: "background.paper",
-            borderTopLeftRadius: theme.spacing(2),
-            borderTopRightRadius: theme.spacing(2),
-            transform: { xs: 'none', md: 'translateX(-50%)' },
-            width: { xs: '100%', sm: '600px' },
-            boxShadow: 3,
-            zIndex: 75,
+            p: theme.spacing(2),
             display: "flex",
-            flexDirection: "column",
-            transition: "bottom 0.3s ease-in-out",
-            background: "rgba(17, 25, 40, 0.75)",
-            backdropFilter: "blur(16px)",
-            border: "1px solid rgba(255, 255, 255, 0.125)",
-            borderRadius: { xs: "12px 12px 0 0", md: 2 },
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderBottom: 1,
+            borderColor: "divider",
           }}
         >
-          <Box
-            sx={{
-              p: theme.spacing(2),
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              borderBottom: 1,
-              borderColor: "divider",
-            }}
-          >
-            <Typography variant="h6">{t("nearbyVendors")}</Typography>
-            <Box
-              sx={{ display: "flex", alignItems: "center", gap: theme.spacing(2) }}
-            >
-              <IconButton onClick={onClose}>
-                <X />
-              </IconButton>
-            </Box>
-          </Box>
-  
-          <Box
-            sx={{
-              flex: 1,
-              overflowY: "auto",
-              p: theme.spacing(2),
-            }}
-          >
-            {sortedVendors.length === 0 ? (
-              <Typography
-                color="text.secondary"
-                align="center"
-                sx={{ py: theme.spacing(4) }}
-              >
-                {t("noNearbyVendors")}
-              </Typography>
-            ) : (
-              sortedVendors.map((vendor) => (
-                <VendorItem
-                  key={vendor._id}
-                  vendor={vendor}
-                  distance={vendor.distance}
-                  onClick={() => setSelectedVendor(vendor)}
-                />
-              ))
-            )}
-          </Box>
+          <Typography variant="h6">{t("nearbyVendors")}</Typography>
+          <IconButton onClick={onClose}>
+            <X />
+          </IconButton>
         </Box>
-  
-        {selectedVendor && (
+
+        <Box
+          sx={{
+            flex: 1,
+            overflowY: "auto",
+            p: theme.spacing(2),
+          }}
+        >
+          {sortedVendors.length === 0 ? (
+            <Typography
+              color="text.secondary"
+              align="center"
+              sx={{ py: theme.spacing(4) }}
+            >
+              {t("noNearbyVendors")}
+            </Typography>
+          ) : (
+            sortedVendors.map((vendor) => (
+              <VendorItem
+                key={vendor._id}
+                vendor={vendor}
+                distance={vendor.distance}
+                onClick={() => handleVendorSelect(vendor)}
+              />
+            ))
+          )}
+        </Box>
+      </Box>
+
+      {selectedVendor && (
+        <Box onClick={e => e.stopPropagation()}>
           <VendorFullView
             vendor={selectedVendor}
-            onClose={() => setSelectedVendor(null)}
+            onClose={handleVendorClose}
           />
-        )}
-      </>
-    );
-  };
-  
-  export default NearbyVendors;
+        </Box>
+      )}
+    </>
+  );
+};
+
+export default NearbyVendors;

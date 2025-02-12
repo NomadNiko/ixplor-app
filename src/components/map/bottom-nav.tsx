@@ -6,6 +6,7 @@ import NearbyActivities from '@/components/product-item/NearbyActivities';
 import NearbyVendors from '../vendor/NearbyVendors';
 import { Vendor } from "@/app/[language]/types/vendor";
 import UpcomingTicketsPanel from '../tickets/UpcomingTickets';
+import PastReceipts from '../receipts/PastReceipts';
 
 type ActiveWindow = 'activities' | 'vendors' | 'tickets' | 'receipts' | null;
 
@@ -81,6 +82,8 @@ export const BottomNav = ({ currentLocation, vendors }: {
             <Ticket />
           </NavButton>
           <NavButton 
+            onClick={() => handleNavClick('receipts')}
+            selected={activeWindow === 'receipts'}
           >
             <Receipt />
           </NavButton>
@@ -103,6 +106,10 @@ export const BottomNav = ({ currentLocation, vendors }: {
         />
         <UpcomingTicketsPanel
           isOpen={activeWindow === 'tickets'}
+          onClose={handleClose}
+        />
+        <PastReceipts
+          isOpen={activeWindow === 'receipts'}
           onClose={handleClose}
         />
       </Box>
