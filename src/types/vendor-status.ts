@@ -31,4 +31,9 @@ export interface StripePendingVerification {
     actionNeeded?: string;
     hasTemplates: boolean;
     hasProducts: boolean;
+    templates?: Array<{
+      _id: string;
+      templateName: string;
+      hasItems: boolean;
+    }>;
   }
