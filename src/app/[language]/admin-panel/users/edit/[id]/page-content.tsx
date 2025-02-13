@@ -247,6 +247,9 @@ function FormEditUser() {
                   {
                     id: RoleEnum.VENDOR,
                   },
+                  {
+                    id: RoleEnum.PREVENDOR,
+                  },
                 ]}
                 keyValue="id"
                 renderOption={(option) =>

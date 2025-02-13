@@ -15,6 +15,7 @@ import useAuth from "@/services/auth/use-auth";
 import { useVendorStatus } from '@/hooks/use-vendor-status';
 import { styled } from '@mui/material/styles';
 import StripeConnectOnboarding from '@/components/vendor/StripeConnectOnboarding';
+import { RoleEnum } from '@/services/api/types/role';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   backgroundColor: theme.palette.background.glass,
@@ -72,28 +73,41 @@ const VendorStatusPage: React.FC = () => {
   const { t } = useTranslation("vendor-status");
   const { user } = useAuth();
   const { vendor, loading, error } = useVendorStatus(user?.id?.toString() || '');
-
   const isStripeComplete = vendor?.stripeAccountStatus?.detailsSubmitted === true;
 
   const getStepStatus = (step: string): 'complete' | 'in-progress' | 'pending' => {
     if (!vendor) return 'pending';
     
+    // Special handling for PreVendor role
+    const isPreVendor = user?.role?.id === RoleEnum.PREVENDOR;
+    const isVendorRole = user?.role?.id === RoleEnum.VENDOR;
+    const canProceed = isPreVendor || isVendorRole;
+
     switch (step) {
       case 'onboard':
         return 'complete';
+      
       case 'templates':
+        // PreVendor can proceed through templates step
         return vendor.hasTemplates ? 'complete' : 
-               vendor.vendorStatus === 'APPROVED' ? 'in-progress' : 'pending';
+               canProceed ? 'in-progress' : 'pending';
+      
       case 'products':
+        // PreVendor can proceed through products step
         return vendor.hasProducts ? 'complete' : 
-               vendor.vendorStatus === 'APPROVED' && vendor.hasTemplates ? 'in-progress' : 'pending';
+               canProceed && vendor.hasTemplates ? 'in-progress' : 'pending';
+      
       case 'stripe':
+        // PreVendor can proceed through Stripe step
         return isStripeComplete ? 'complete' : 
-               vendor.vendorStatus === 'APPROVED' && vendor.hasProducts ? 'in-progress' : 'pending';
+               canProceed && vendor.hasProducts ? 'in-progress' : 'pending';
+      
       case 'complete':
-        return vendor.vendorStatus === 'APPROVED' && 
+        // Final step requires Vendor role and full completion
+        return isVendorRole && 
                vendor.hasProducts && 
                isStripeComplete ? 'complete' : 'pending';
+      
       default:
         return 'pending';
     }
@@ -160,8 +174,8 @@ const VendorStatusPage: React.FC = () => {
         </CardContent>
       </StyledCard>
 
-        {/* Template Creation Card */}
-        {vendor && vendor.vendorStatus === 'APPROVED' && !vendor.hasTemplates && (
+      {/* Template Creation Card */}
+      {vendor && !vendor.hasTemplates && (
         <StyledCard sx={{ mb: 4 }}>
           <CardHeader title={t("templates.title")} />
           <CardContent>
@@ -184,12 +198,9 @@ const VendorStatusPage: React.FC = () => {
           </CardContent>
         </StyledCard>
       )}
-
-
       
       {/* Product Generation Card */}
-      {vendor && vendor.vendorStatus === 'APPROVED' && 
-       vendor.hasTemplates && !vendor.hasProducts && (
+      {vendor && vendor.hasTemplates && !vendor.hasProducts && (
         <StyledCard sx={{ mb: 4 }}>
           <CardHeader title={t("products.title")} />
           <CardContent>
@@ -213,7 +224,8 @@ const VendorStatusPage: React.FC = () => {
         </StyledCard>
       )}
 
-      {vendor && vendor.vendorStatus === 'APPROVED' && vendor.hasProducts && !isStripeComplete && (
+      {/* Stripe Connect Onboarding Card */}
+      {vendor && vendor.hasProducts && !isStripeComplete && (
         <StyledCard sx={{ mb: 4 }}>
           <CardHeader title={t("stripe.title")} />
           <CardContent>
@@ -225,6 +237,7 @@ const VendorStatusPage: React.FC = () => {
         </StyledCard>
       )}
 
+      {/* Status Messages */}
       {vendor && vendor.vendorStatus === 'SUBMITTED' && (
         <Alert severity="info" variant="filled" sx={{ mb: 2 }}>
           <AlertTitle>{t("messages.submitted")}</AlertTitle>

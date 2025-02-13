@@ -113,7 +113,7 @@ function ResponsiveAppBar() {
               </MenuItem>
               
               {!!user?.role &&
-                [RoleEnum.USER, RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
+                [RoleEnum.USER, RoleEnum.ADMIN, RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
                     key="tickets"
                     onClick={handleCloseNavMenu}
@@ -127,7 +127,7 @@ function ResponsiveAppBar() {
                 ]}
                 
               {!!user?.role &&
-                [RoleEnum.USER, RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
+                [RoleEnum.USER, RoleEnum.ADMIN, RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
                     key="receipts"
                     onClick={handleCloseNavMenu}
@@ -142,7 +142,7 @@ function ResponsiveAppBar() {
                 
                 
               {!!user?.role &&
-                [RoleEnum.USER, RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
+                [RoleEnum.USER, RoleEnum.ADMIN, RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
                     key="service-desk"
                     onClick={handleCloseNavMenu}
@@ -156,7 +156,7 @@ function ResponsiveAppBar() {
                 ]}
                 
               {!!user?.role &&
-                [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
+                [RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
                     key="vendor-status"
                     onClick={handleCloseNavMenu}
@@ -184,7 +184,7 @@ function ResponsiveAppBar() {
                 ]}
 
               {!!user?.role &&
-                [RoleEnum.ADMIN, RoleEnum.VENDOR].includes(
+                [RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(
                   Number(user?.role?.id)
                 ) && [
                   <MenuItem
@@ -200,7 +200,7 @@ function ResponsiveAppBar() {
                 ]}
                 
               {!!user?.role &&
-                [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
+                [RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
                     key="products"
                     onClick={handleCloseNavMenu}
@@ -214,7 +214,7 @@ function ResponsiveAppBar() {
                 ]}
 
               {!!user?.role &&
-                [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
+                [RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
                     key="inventory"
                     onClick={handleCloseNavMenu}
@@ -341,7 +341,7 @@ function ResponsiveAppBar() {
             </Button>
             
             {!!user?.role &&
-              [RoleEnum.USER,RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+              [RoleEnum.USER,RoleEnum.ADMIN, RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
@@ -355,7 +355,7 @@ function ResponsiveAppBar() {
               )}
 
             {!!user?.role &&
-              [RoleEnum.USER,RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+              [RoleEnum.USER,RoleEnum.ADMIN, RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
@@ -369,7 +369,7 @@ function ResponsiveAppBar() {
               )}
 
             {!!user?.role &&
-              [RoleEnum.USER,RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+              [RoleEnum.USER,RoleEnum.ADMIN, RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
@@ -383,7 +383,7 @@ function ResponsiveAppBar() {
               )}
 
             {!!user?.role &&
-              [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+              [RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
@@ -411,7 +411,7 @@ function ResponsiveAppBar() {
               )}
 
             {!!user?.role &&
-              [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+              [RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
@@ -425,7 +425,7 @@ function ResponsiveAppBar() {
               )}
               
             {!!user?.role &&
-              [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+              [RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
@@ -439,7 +439,7 @@ function ResponsiveAppBar() {
               )}
 
             {!!user?.role &&
-              [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+              [RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}

@@ -10,7 +10,7 @@ export default function VendorStatusPageContainer() {
   const { user, isLoaded } = useAuth();
   
   useEffect(() => {
-    if (isLoaded && (!user || ![RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user.role?.id)))) {
+    if (isLoaded && (!user || ![RoleEnum.ADMIN, RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user.role?.id)))) {
       router.replace('/');
     }
   }, [user, isLoaded, router]);

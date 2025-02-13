@@ -15,6 +15,7 @@ export default function ProductItemsPageContainer() {
         router.replace('/sign-in');
       } else if (
         Number(user.role?.id) !== RoleEnum.ADMIN && 
+        Number(user.role?.id) !== RoleEnum.PREVENDOR && 
         Number(user.role?.id) !== RoleEnum.VENDOR
       ) {
         router.replace('/');
@@ -28,6 +29,7 @@ export default function ProductItemsPageContainer() {
 
   if (!user || (
     Number(user.role?.id) !== RoleEnum.ADMIN && 
+    Number(user.role?.id) !== RoleEnum.PREVENDOR && 
     Number(user.role?.id) !== RoleEnum.VENDOR
   )) {
     return null;
