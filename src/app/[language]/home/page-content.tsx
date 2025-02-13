@@ -15,11 +15,18 @@ import { BBox } from "geojson";
 import { useTranslation } from "@/services/i18n/client";
 import { SearchControls } from "./components/search-controls";
 import { VendorTypeFilters } from "./components/vendor-type-filters";
-import { VendorViews } from "./components/vendor-views";
 import { BottomNav } from "@/components/map/bottom-nav";
 import { ClusteredVendorMarkers } from "@/components/vendor/clustered-vendor-markers";
 import type { ErrorEvent } from 'react-map-gl';
+import dynamic from 'next/dynamic';
 
+const VendorViews = dynamic(
+  () => import('./components/vendor-views').then(mod => mod.VendorViews),
+  { 
+    ssr: false,
+    loading: () => null 
+  }
+);
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -141,12 +148,12 @@ const MapHomeLayout = () => {
       vendor.vendorTypes.some((type) => filterTypes.includes(type))
   );
 
-  useEffect(() => {
-    if (vendors.length > 0) {
-      setSelectedVendor(vendors[0]);
-      setTimeout(() => setSelectedVendor(null), 100);
-    }
-  }, [vendors]);
+  // useEffect(() => {
+  //   if (vendors.length > 0) {
+  //     setSelectedVendor(vendors[0]);
+  //     setTimeout(() => setSelectedVendor(null), 100);
+  //   }
+  // }, [vendors]);
 
   if (loading) {
     return (
@@ -210,7 +217,6 @@ const MapHomeLayout = () => {
         minZoom={3}
         reuseMaps
         attributionControl={false}
-
       >
         <GeolocateControl
           position="top-right"

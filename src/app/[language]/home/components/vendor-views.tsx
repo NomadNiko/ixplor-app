@@ -1,6 +1,15 @@
 "use client";
-import { VendorShortView, VendorFullView } from "@/components/vendor/vendor-display";
+import { VendorShortView } from "@/components/vendor/vendor-display";
 import { Vendor } from "@/app/[language]/types/vendor";
+import dynamic from 'next/dynamic';
+
+const VendorFullView = dynamic(
+  () => import('@/components/vendor/vendor-full').then(mod => mod.VendorFullView),
+  { 
+    ssr: false,
+    loading: () => null
+  }
+);
 
 interface VendorViewsProps {
   selectedVendor: Vendor | null;

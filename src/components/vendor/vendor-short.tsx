@@ -5,10 +5,9 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import { Phone, X, Mail } from "lucide-react";
-import { Image } from "@nextui-org/react";
+import Chip from "@mui/material/Chip";
 import { useTranslation } from "@/services/i18n/client";
 import { Vendor } from "@/app/[language]/types/vendor";
-import Chip from "@mui/material/Chip";
 
 interface VendorShortViewProps {
   vendor: Vendor;
@@ -51,21 +50,34 @@ export const VendorShortView = ({ vendor, onViewMore, onClose }: VendorShortView
             position: 'relative',
             pt: 1
           }}>
-            <Box sx={{ 
-              width: 80,
-              height: 80,
-              position: 'relative',
-              flexShrink: 0
-            }}>
-              <Image 
-                src={vendor.logoUrl} 
-                alt={vendor.businessName}
-                style={{ 
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'contain'
-                }}
-              />
+            <Box 
+              sx={{ 
+                width: 80,
+                height: 80,
+                position: 'relative',
+                flexShrink: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                bgcolor: 'background.paper',
+                borderRadius: 1,
+                overflow: 'hidden'
+              }}
+            >
+              {vendor.logoUrl && (
+                <Box
+                  component="img"
+                  src={vendor.logoUrl}
+                  alt={vendor.businessName}
+                  sx={{
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    objectFit: 'contain',
+                    width: 'auto',
+                    height: 'auto'
+                  }}
+                />
+              )}
             </Box>
             <Box sx={{ flex: 1 }}>
               <Box sx={{ 

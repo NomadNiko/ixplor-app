@@ -1,4 +1,5 @@
 import { useMemo, JSX } from 'react';
+import dynamic from 'next/dynamic';
 import { format, isWithinInterval, eachDayOfInterval, isToday } from 'date-fns';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -7,8 +8,12 @@ import IconButton from "@mui/material/IconButton";
 import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
 import { ProductItem } from '@/app/[language]/types/product-item';
 import { usePublicCalendarNavigation } from '@/hooks/use-public-calendar-navigation';
-import PublicDayColumn from './PublicDayColumn';
 import { useTranslation } from "@/services/i18n/client";
+
+const PublicDayColumn = dynamic(
+  () => import('./PublicDayColumn'),
+  { ssr: false }
+);
 
 interface PublicWeeklyCalendarProps {
   items: ProductItem[];

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, JSX } from 'react';
+import dynamic from 'next/dynamic';
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -10,14 +11,30 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { Phone, Mail, X, Globe } from "lucide-react";
 import { Image } from "@nextui-org/react";
 import { useTranslation } from "@/services/i18n/client";
-import PublicWeeklyCalendar from '../calendar/PublicWeeklyCalendar';
-import PublicItemDetailModal from '../calendar/PublicItemDetailModal';
 import { Vendor } from "@/app/[language]/types/vendor";
 import { ProductItem, ProductItemStatus } from '@/app/[language]/types/product-item';
 import { API_URL } from "@/services/api/config";
 import { useCartQuery } from '@/hooks/use-cart-query';
 import useAuth from '@/services/auth/use-auth';
 import { useAddToCartService } from '@/services/api/services/cart';
+
+// Dynamically import components
+const PublicWeeklyCalendar = dynamic(
+  () => import('../calendar/PublicWeeklyCalendar'),
+  { 
+    ssr: false,
+    loading: () => (
+      <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+        <CircularProgress />
+      </Box>
+    )
+  }
+);
+
+const PublicItemDetailModal = dynamic(
+  () => import('../calendar/PublicItemDetailModal'),
+  { ssr: false }
+);
 
 interface VendorFullViewProps {
   vendor: Vendor;
@@ -53,7 +70,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps): JSX.El
     } catch (error) {
       console.error('Error fetching items:', error);
     }
-  }, [vendor._id, t]);
+  }, [vendor._id]);
 
   const refreshItems = useCallback(async (): Promise<void> => {
     await fetchItems();
@@ -85,8 +102,6 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps): JSX.El
       }
       
       setSelectedItem(null);
-      
-      // Refresh items to update quantities
       await refreshItems();
     } catch (error) {
       console.error('Error adding to cart:', error);
