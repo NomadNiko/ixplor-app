@@ -31,7 +31,7 @@ export const ProductCard = ({
 
   useEffect(() => {
     setIsEditing(true);
-    setTimeout(() => setIsEditing(false), 5);
+    setTimeout(() => setIsEditing(false), 100);
   }, []);
 
 

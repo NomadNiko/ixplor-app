@@ -144,7 +144,7 @@ const MapHomeLayout = () => {
   useEffect(() => {
     if (vendors.length > 0) {
       setSelectedVendor(vendors[0]);
-      setTimeout(() => setSelectedVendor(null), 5);
+      setTimeout(() => setSelectedVendor(null), 100);
     }
   }, [vendors]);
 
