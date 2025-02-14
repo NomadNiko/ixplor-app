@@ -19,6 +19,7 @@ import { BottomNav } from "@/components/map/bottom-nav";
 import { ClusteredVendorMarkers } from "@/components/vendor/clustered-vendor-markers";
 import type { ErrorEvent } from 'react-map-gl';
 import dynamic from 'next/dynamic';
+import GetDirections from "@/components/map/GetDirections";
 
 const VendorViews = dynamic(
   () => import('./components/vendor-views').then(mod => mod.VendorViews),
@@ -55,6 +56,9 @@ const MapHomeLayout = () => {
   const [filterTypes, setFilterTypes] = useState<VendorTypes[]>([]);
   const [bounds, setBounds] = useState<BBox | undefined>();
   const [retryCount, setRetryCount] = useState(0);
+  const [showDirections, setShowDirections] = useState(false);
+const [selectedLocation, setSelectedLocation] = useState<{latitude: number; longitude: number} | null>(null);
+
   const maxRetries = 3;
 
   const controlStyle = {
@@ -64,6 +68,11 @@ const MapHomeLayout = () => {
     color: theme.palette.primary.main,
     borderRadius: theme.shape.borderRadius,
     zIndex: 0,
+  };
+
+  const handleShowDirections = (location: {latitude: number; longitude: number}) => {
+    setSelectedLocation(location);
+    setShowDirections(true);
   };
 
   const handleMapError = (e: ErrorEvent) => {
@@ -231,6 +240,15 @@ const MapHomeLayout = () => {
           bounds={bounds}
           zoom={viewState.zoom}
         />
+        {showDirections && selectedLocation && (
+  <GetDirections
+    destination={selectedLocation}
+    onClose={() => {
+      setShowDirections(false);
+      setSelectedLocation(null);
+    }}
+  />
+)}
         <Container
           maxWidth="sm"
           sx={{
@@ -257,12 +275,13 @@ const MapHomeLayout = () => {
             />
           </Box>
           <BottomNav 
-            currentLocation={{ 
-              latitude: viewState.latitude, 
-              longitude: viewState.longitude 
-            }}
-            vendors={vendors} 
-          />
+  currentLocation={{ 
+    latitude: viewState.latitude, 
+    longitude: viewState.longitude 
+  }}
+  vendors={vendors}
+  onShowDirections={handleShowDirections}
+/>
         </Container>
       </Map>
       <VendorViews

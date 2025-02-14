@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
-import { X, Clock, Calendar, QrCode, LogIn } from "lucide-react";
+import { X, Clock, Calendar, QrCode, LogIn, Navigation } from "lucide-react";
 import { useTranslation } from "@/services/i18n/client";
 import { useTheme } from "@mui/material/styles";
 import { useTickets, Ticket } from '@/hooks/use-tickets';
@@ -16,61 +16,92 @@ import { useRouter } from 'next/navigation';
 interface TicketItemProps {
   ticket: Ticket;
   onClick: () => void;
+  onGetDirections: () => void;
 }
 
-const TicketItem: React.FC<TicketItemProps> = ({ ticket, onClick }) => {
+const TicketItem: React.FC<TicketItemProps> = ({ ticket, onClick, onGetDirections }) => {
   const theme = useTheme();
 
+  const handleDirectionsClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onGetDirections();
+  };
+
   return (
-    <Button
-      onClick={onClick}
-      sx={{
-        width: "100%",
-        mb: theme.spacing(1),
-        p: theme.spacing(2),
-        textAlign: "left",
-        display: "block",
-        backgroundColor: "background.paper",
-        "&:hover": {
-          backgroundColor: "action.hover",
-        },
-      }}
-    >
-      <Typography variant="subtitle1" color="text.primary">
-        {ticket.productName}
-      </Typography>
-      <Box sx={{ display: "flex", gap: theme.spacing(2), mt: 1 }}>
-        {ticket.productDate && (
-          <Typography variant="body2" color="text.secondary">
-            <Calendar
-              size={14}
-              style={{ verticalAlign: "middle", marginRight: theme.spacing(0.5) }}
-            />
-            {format(parseISO(ticket.productDate), "PPP")}
-          </Typography>
-        )}
-        {ticket.productStartTime && (
-          <Typography variant="body2" color="text.secondary">
-            <Clock
-              size={14}
-              style={{ verticalAlign: "middle", marginRight: theme.spacing(0.5) }}
-            />
-            {ticket.productStartTime}
-          </Typography>
-        )}
-      </Box>
-    </Button>
+    <Box sx={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 2,
+      mb: theme.spacing(1),
+    }}>
+      <Button
+        onClick={onClick}
+        sx={{
+          flex: 1,
+          p: theme.spacing(2),
+          textAlign: "left",
+          display: "block",
+          backgroundColor: "background.paper",
+          "&:hover": {
+            backgroundColor: "action.hover",
+          },
+        }}
+      >
+        <Typography variant="subtitle1" color="text.primary">
+          {ticket.productName}
+        </Typography>
+        <Box sx={{ display: "flex", gap: theme.spacing(2), mt: 1 }}>
+          {ticket.productDate && (
+            <Typography variant="body2" color="text.secondary">
+              <Calendar
+                size={14}
+                style={{ verticalAlign: "middle", marginRight: theme.spacing(0.5) }}
+              />
+              {format(parseISO(ticket.productDate), "PPP")}
+            </Typography>
+          )}
+          {ticket.productStartTime && (
+            <Typography variant="body2" color="text.secondary">
+              <Clock
+                size={14}
+                style={{ verticalAlign: "middle", marginRight: theme.spacing(0.5) }}
+              />
+              {ticket.productStartTime}
+            </Typography>
+          )}
+        </Box>
+      </Button>
+
+      {ticket.productLocation && (
+        <IconButton 
+          onClick={handleDirectionsClick}
+          sx={{
+            bgcolor: 'background.paper',
+            '&:hover': {
+              bgcolor: 'action.hover',
+            },
+            width: 40,
+            height: 40,
+            borderRadius: 1,
+          }}
+        >
+          <Navigation size={20} />
+        </IconButton>
+      )}
+    </Box>
   );
 };
 
 interface UpcomingTicketsPanelProps {
   isOpen: boolean;
   onClose: () => void;
+  onShowDirections?: (location: { latitude: number; longitude: number }) => void;
 }
 
 const UpcomingTicketsPanel: React.FC<UpcomingTicketsPanelProps> = ({
   isOpen,
   onClose,
+  onShowDirections
 }) => {
   const theme = useTheme();
   const { t } = useTranslation("tickets");
@@ -94,6 +125,14 @@ const UpcomingTicketsPanel: React.FC<UpcomingTicketsPanelProps> = ({
   const handleLoginClick = () => {
     router.push('/sign-in');
     onClose();
+  };
+
+  const handleGetDirections = (ticket: Ticket) => {
+    if (ticket.productLocation && onShowDirections) {
+      const [longitude, latitude] = ticket.productLocation.coordinates;
+      onShowDirections({ latitude, longitude });
+      onClose(); // Close the tickets panel
+    }
   };
 
   return (
@@ -195,6 +234,7 @@ const UpcomingTicketsPanel: React.FC<UpcomingTicketsPanelProps> = ({
                 key={ticket._id}
                 ticket={ticket}
                 onClick={() => setSelectedTicket(ticket)}
+                onGetDirections={() => handleGetDirections(ticket)}
               />
             ))
           )}
@@ -207,6 +247,7 @@ const UpcomingTicketsPanel: React.FC<UpcomingTicketsPanelProps> = ({
           onClose={() => setSelectedTicket(null)}
         />
       )}
+
     </>
   );
 };

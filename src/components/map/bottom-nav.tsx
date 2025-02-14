@@ -10,10 +10,17 @@ import PastReceipts from '../receipts/PastReceipts';
 
 type ActiveWindow = 'activities' | 'vendors' | 'tickets' | 'receipts' | null;
 
-export const BottomNav = ({ currentLocation, vendors }: { 
-  currentLocation: { latitude: number; longitude: number };
-  vendors: Vendor[]; 
-}) => {
+interface BottomNavProps { 
+  currentLocation: { 
+    latitude: number; 
+    longitude: number; 
+  };
+  vendors: Vendor[];
+  onShowDirections?: (location: { latitude: number; longitude: number }) => void;
+}
+
+
+export const BottomNav = ({ currentLocation, vendors, onShowDirections }: BottomNavProps) => {
   const [activeWindow, setActiveWindow] = useState<ActiveWindow>(null);
 
   const handleNavClick = (window: ActiveWindow) => {
@@ -105,9 +112,10 @@ export const BottomNav = ({ currentLocation, vendors }: {
           vendors={vendors}
         />
         <UpcomingTicketsPanel
-          isOpen={activeWindow === 'tickets'}
-          onClose={handleClose}
-        />
+        isOpen={activeWindow === 'tickets'}
+        onClose={handleClose}
+        onShowDirections={onShowDirections}
+      />
         <PastReceipts
           isOpen={activeWindow === 'receipts'}
           onClose={handleClose}
