@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Source, Layer } from "react-map-gl";
+import { Source, Layer, useMap } from "react-map-gl";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import { Navigation2, X, ArrowRight } from "lucide-react";
+import { Navigation2, X, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Feature, LineString } from 'geojson';
 
 interface GetDirectionsProps {
@@ -39,10 +35,12 @@ const GetDirections: React.FC<GetDirectionsProps> = ({
   onClose,
 }) => {
   const theme = useTheme();
+  const { current: map } = useMap();
   const [route, setRoute] = useState<RouteFeature | null>(null);
   const [steps, setSteps] = useState<DirectionStep[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [userLocation, setUserLocation] = useState<{
     latitude: number;
     longitude: number;
@@ -62,6 +60,42 @@ const GetDirections: React.FC<GetDirectionsProps> = ({
       { enableHighAccuracy: true }
     );
   }, []);
+
+  const fitRouteInView = (routeGeometry: LineString) => {
+    if (!map) return;
+    const coordinates = routeGeometry.coordinates;
+    const bounds = coordinates.reduce(
+      (box, coord) => {
+        return {
+          minLng: Math.min(box.minLng, coord[0]),
+          maxLng: Math.max(box.maxLng, coord[0]),
+          minLat: Math.min(box.minLat, coord[1]),
+          maxLat: Math.max(box.maxLat, coord[1]),
+        };
+      },
+      {
+        minLng: Infinity,
+        maxLng: -Infinity,
+        minLat: Infinity,
+        maxLat: -Infinity,
+      }
+    );
+
+    const lngPadding = (bounds.maxLng - bounds.minLng) * 0.1;
+    const latPadding = (bounds.maxLat - bounds.minLat) * 0.1;
+    const bottomPadding = window.innerHeight * 0.25;
+
+    map.fitBounds(
+      [
+        [bounds.minLng - lngPadding, bounds.minLat - latPadding],
+        [bounds.maxLng + lngPadding, bounds.maxLat + latPadding],
+      ],
+      {
+        padding: { top: 50, bottom: bottomPadding, left: 50, right: 50 },
+        duration: 1000,
+      }
+    );
+  };
 
   useEffect(() => {
     const getDirections = async () => {
@@ -94,6 +128,7 @@ const GetDirections: React.FC<GetDirectionsProps> = ({
 
         setRoute(routeGeoJSON);
         setSteps(data.routes[0].legs[0].steps);
+        fitRouteInView(data.routes[0].geometry);
       } catch (error) {
         setError("Could not calculate directions. Please try again.");
       } finally {
@@ -113,6 +148,18 @@ const GetDirections: React.FC<GetDirectionsProps> = ({
       : `${miles.toFixed(1)} mi`;
   };
 
+  const handleNextStep = () => {
+    if (currentStepIndex < steps.length - 1) {
+      setCurrentStepIndex(prev => prev + 1);
+    }
+  };
+
+  const handlePrevStep = () => {
+    if (currentStepIndex > 0) {
+      setCurrentStepIndex(prev => prev - 1);
+    }
+  };
+
   return (
     <>
       <Box
@@ -121,7 +168,7 @@ const GetDirections: React.FC<GetDirectionsProps> = ({
           bottom: { xs: theme.spacing(10), md: theme.spacing(12.5) },
           left: { xs: 0, md: '50%' },
           right: { xs: 0, md: 'auto' },
-          height: "20%",
+          height: "30%",
           width: { xs: '100%', sm: '600px' },
           transform: { xs: 'none', md: 'translateX(-50%)' },
           bgcolor: "background.glass",
@@ -153,30 +200,81 @@ const GetDirections: React.FC<GetDirectionsProps> = ({
           )}
         </Box>
 
-        <Box sx={{ flex: 1, overflow: "auto", p: 0 }}>
+        <Box sx={{ 
+          flex: 1, 
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'relative',
+          px: 2
+        }}>
           {loading ? (
-            <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
-              <CircularProgress />
-            </Box>
+            <CircularProgress />
           ) : error ? (
             <Typography color="error" sx={{ p: 2 }}>
               {error}
             </Typography>
-          ) : (
-            <List>
-              {steps.map((step, index) => (
-                <ListItem key={index} sx={{ py: 2 }}>
-                  <ListItemIcon>
-                    <ArrowRight size={20} />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={step.maneuver.instruction}
-                    secondary={formatDistance(step.distance)}
-                  />
-                </ListItem>
-              ))}
-            </List>
-          )}
+          ) : steps.length > 0 ? (
+            <>
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                width: '100%',
+                gap: 2
+              }}>
+                <IconButton 
+                  onClick={handlePrevStep}
+                  disabled={currentStepIndex === 0}
+                  sx={{ 
+                    visibility: currentStepIndex === 0 ? 'hidden' : 'visible',
+                    bgcolor: 'background.paper',
+                    '&:hover': { bgcolor: 'action.hover' }
+                  }}
+                >
+                  <ChevronLeft />
+                </IconButton>
+
+                <Box sx={{ 
+                  flex: 1,
+                  textAlign: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 1
+                }}>
+                  <Typography variant="body1">
+                    {steps[currentStepIndex].maneuver.instruction}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    {formatDistance(steps[currentStepIndex].distance)}
+                  </Typography>
+                </Box>
+
+                <IconButton 
+                  onClick={handleNextStep}
+                  disabled={currentStepIndex === steps.length - 1}
+                  sx={{ 
+                    visibility: currentStepIndex === steps.length - 1 ? 'hidden' : 'visible',
+                    bgcolor: 'background.paper',
+                    '&:hover': { bgcolor: 'action.hover' }
+                  }}
+                >
+                  <ChevronRight />
+                </IconButton>
+              </Box>
+
+              <Typography 
+                variant="caption" 
+                sx={{ 
+                  position: 'absolute',
+                  bottom: 8,
+                  color: 'text.secondary'
+                }}
+              >
+                Step {currentStepIndex + 1} of {steps.length}
+              </Typography>
+            </>
+          ) : null}
         </Box>
       </Box>
       
