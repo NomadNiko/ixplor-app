@@ -48,7 +48,7 @@ export const BottomNav = ({ currentLocation, vendors, onShowDirections }: Bottom
     <>
       <Box
         sx={{
-          width: { xs: '100%', sm: '600px' },
+          width: { xs: '100%', md: '600px' },
           position: "fixed",
           bottom: { xs: 0, md: 5 },
           left: { xs: 0, md: '50%' },

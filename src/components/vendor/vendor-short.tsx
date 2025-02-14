@@ -22,7 +22,7 @@ export const VendorShortView = ({ vendor, onViewMore, onClose }: VendorShortView
     <Box
       sx={{
         position: 'fixed',
-        bottom: { xs: 80, md: 4 }, // Updated to add space for bottom nav on mobile
+        bottom: 80,
         left: { xs: 0, md: '50%' },
         right: { xs: 0, md: 'auto' },
         transform: { xs: 'none', md: 'translateX(-50%)' },
