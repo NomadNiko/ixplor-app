@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -10,8 +10,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import Chip from "@mui/material/Chip";
 import Alert from "@mui/material/Alert";
-import { MessageCircle, Plus, Clock, User, LifeBuoy } from "lucide-react";
-import { format } from 'date-fns';
+import { MessageCircle, Plus, Clock, LifeBuoy } from "lucide-react";
 import { useTranslation } from "@/services/i18n/client";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
@@ -20,11 +19,12 @@ import CreateTicketForm from "./CreateTicketForm";
 import UpdateTicketForm from "./UpdateTicketForm";
 import { SupportTicket } from '../../types/support-ticket';
 import { RoleEnum } from "@/services/api/types/role";
+import TicketUserInfo from './TicketUserInfo';
 
 export default function ServiceDeskPage() {
   const { t } = useTranslation("service-desk");
   const { user } = useAuth();
-   const [tickets, setTickets] = useState<SupportTicket[]>([]);
+  const [tickets, setTickets] = useState<SupportTicket[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -32,7 +32,7 @@ export default function ServiceDeskPage() {
 
   const isAdmin = user?.role?.id === RoleEnum.ADMIN;
 
-  const loadTickets = async () => {
+  const loadTickets = useCallback(async () => {
     if (!user?.id) return;
     
     try {
@@ -65,11 +65,11 @@ export default function ServiceDeskPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.id, isAdmin, t]);
 
   useEffect(() => {
     loadTickets();
-  }, [user?.id]);
+  }, [loadTickets]);
 
   const handleCreateSuccess = () => {
     setCreateDialogOpen(false);
@@ -182,15 +182,28 @@ export default function ServiceDeskPage() {
                   </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, mb: 2 }}>
+                    <TicketUserInfo 
+                      userId={ticket.createdBy} 
+                      timestamp={new Date(ticket.createDate)} 
+                    />
                     <Typography variant="caption" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <Clock size={16} />
-                      {format(new Date(ticket.createDate), 'PPp')}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <User size={16} />
                       {t('ticket')} #{ticket.ticketId}
                     </Typography>
                   </Box>
+
+                  {ticket.assignedTo && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="caption" color="text.secondary">
+                        {t('assigned.to')}:&nbsp;
+                      </Typography>
+                      <TicketUserInfo 
+                        userId={ticket.assignedTo} 
+                        timestamp={new Date(ticket.createDate)}
+                        showTimestamp={false}
+                      />
+                    </Box>
+                  )}
 
                   {ticket.updates.length > 0 && (
                     <Box 
@@ -209,9 +222,12 @@ export default function ServiceDeskPage() {
                       <Typography variant="body2">
                         {ticket.updates[ticket.updates.length - 1].updateText}
                       </Typography>
-                      <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                        {format(new Date(ticket.updates[ticket.updates.length - 1].timestamp), 'PPp')}
-                      </Typography>
+                      <Box sx={{ mt: 1 }}>
+                        <TicketUserInfo 
+                          userId={ticket.updates[ticket.updates.length - 1].userId} 
+                          timestamp={new Date(ticket.updates[ticket.updates.length - 1].timestamp)} 
+                        />
+                      </Box>
                     </Box>
                   )}
 

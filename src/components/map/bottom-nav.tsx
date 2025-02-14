@@ -48,16 +48,16 @@ export const BottomNav = ({ currentLocation, vendors, onShowDirections }: Bottom
     <>
       <Box
         sx={{
-          width: { xs: '100%', md: '600px' },
+          width: { xs: '100%', sm: '600px' },
           position: "fixed",
-          bottom: { xs: 0, md: 5 },
-          left: { xs: 0, md: '50%' },
-          right: { xs: 0, md: 'auto' },
+          bottom: { xs: 0, sm: 5 },
+          left: { xs: 0, sm: '50%' },
+          right: { xs: 0, sm: 'auto' },
           padding: (theme) => theme.spacing(2),
           backgroundColor: (theme) => theme.palette.background.glass,
           backdropFilter: "blur(10px)",
-          borderRadius: { xs: 0, md: 2 },
-          transform: { xs: 'none', md: 'translateX(-50%)' },
+          borderRadius: { xs: 0, sm: 2 },
+          transform: { xs: 'none', sm: 'translateX(-50%)' },
           zIndex: 80,
         }}
       >

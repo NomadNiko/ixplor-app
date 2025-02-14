@@ -16,7 +16,6 @@ import InputLabel from "@mui/material/InputLabel";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { Edit, Filter, Clock, User, LifeBuoy, Calendar, ExternalLink } from "lucide-react";
-import { format } from 'date-fns';
 import { useTranslation } from "@/services/i18n/client";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
@@ -25,6 +24,7 @@ import AssignUser from './AssignUser';
 import ChangeStatus from './ChangeStatus';
 import EditTicketForm from './EditTicketForm';
 import UpdateTicketForm from './UpdateTicketForm';
+import TicketUserInfo from './TicketUserInfo';
 
 interface Filters {
   status: string;
@@ -265,16 +265,55 @@ export default function ServiceAdminPage() {
                     </Box>
                   </Box>
 
-                  <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 2 }}>
-                    <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <Calendar size={16} />
-                      {format(new Date(ticket.createDate), 'PPp')}
-                    </Typography>
-                    <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  <Box sx={{ display: 'flex', gap: 3, alignItems: 'center', mb: 2 }}>
+                    <TicketUserInfo 
+                      userId={ticket.createdBy} 
+                      timestamp={new Date(ticket.createDate)} 
+                    />
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <User size={16} />
                       {t('ticket')} #{ticket.ticketId}
                     </Typography>
                   </Box>
+
+                  {ticket.assignedTo && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="caption" color="text.secondary">
+                        {t('assigned.to')}:
+                      </Typography>
+                      <TicketUserInfo 
+                        userId={ticket.assignedTo} 
+                        timestamp={new Date(ticket.createDate)}
+                        showTimestamp={false}
+                      />
+                    </Box>
+                  )}
+
+                  {ticket.updates.length > 0 && (
+                    <Box 
+                      sx={{ 
+                        mb: 2,
+                        p: 2,
+                        borderRadius: 1,
+                        bgcolor: 'background.paper',
+                        border: '1px solid',
+                        borderColor: 'divider'
+                      }}
+                    >
+                      <Typography variant="subtitle2" gutterBottom>
+                        {t('latestUpdate')}:
+                      </Typography>
+                      <Typography variant="body2">
+                        {ticket.updates[ticket.updates.length - 1].updateText}
+                      </Typography>
+                      <Box sx={{ mt: 1 }}>
+                        <TicketUserInfo 
+                          userId={ticket.updates[ticket.updates.length - 1].userId} 
+                          timestamp={new Date(ticket.updates[ticket.updates.length - 1].timestamp)} 
+                        />
+                      </Box>
+                    </Box>
+                  )}
 
                   <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', alignItems: 'center' }}>
                     <Button
@@ -336,6 +375,25 @@ export default function ServiceAdminPage() {
                 </Typography>
               </Box>
 
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 3 }}>
+                <TicketUserInfo 
+                  userId={selectedTicket.createdBy} 
+                  timestamp={new Date(selectedTicket.createDate)} 
+                />
+                {selectedTicket.assignedTo && (
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Typography variant="caption" color="text.secondary">
+                      {t('assigned.to')}:
+                    </Typography>
+                    <TicketUserInfo 
+                      userId={selectedTicket.assignedTo} 
+                      timestamp={new Date(selectedTicket.createDate)}
+                      showTimestamp={false}
+                    />
+                  </Box>
+                )}
+              </Box>
+
               <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
                 <Chip
                   label={selectedTicket.ticketCategory}
@@ -366,9 +424,12 @@ export default function ServiceAdminPage() {
                   <Typography variant="body1">
                     {update.updateText}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                    {format(new Date(update.timestamp), 'PPp')}
-                  </Typography>
+                  <Box sx={{ mt: 1 }}>
+                    <TicketUserInfo 
+                      userId={update.userId} 
+                      timestamp={new Date(update.timestamp)} 
+                    />
+                  </Box>
                 </Box>
               ))}
 

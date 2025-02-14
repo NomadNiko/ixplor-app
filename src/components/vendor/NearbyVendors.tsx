@@ -1,10 +1,9 @@
-"use client";
 import React, { useState, useMemo, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
-import { X, MapPin, Phone } from "lucide-react";
+import { X, MapPin, Phone, Navigation, Store } from "lucide-react";
 import { useTranslation } from "@/services/i18n/client";
 import { Vendor, VendorStatusEnum } from "@/app/[language]/types/vendor";
 import { useTheme } from "@mui/material/styles";
@@ -34,12 +33,14 @@ interface VendorItemProps {
   vendor: Vendor;
   distance: number;
   onClick: () => void;
+  onGetDirections: () => void;
 }
 
 const VendorItem: React.FC<VendorItemProps> = ({
   vendor,
   distance,
   onClick,
+  onGetDirections,
 }) => {
   const theme = useTheme();
 
@@ -48,58 +49,83 @@ const VendorItem: React.FC<VendorItemProps> = ({
     onClick();
   };
 
+  const handleDirectionsClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onGetDirections();
+  };
+
   return (
-    <Button
-      onClick={handleClick}
-      sx={{
-        width: "100%",
-        mb: theme.spacing(1),
-        p: theme.spacing(2),
-        textAlign: "left",
-        display: "block",
-        backgroundColor: "background.paper",
-        "&:hover": {
-          backgroundColor: "action.hover",
-        },
-      }}
-    >
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        {vendor.logoUrl && (
-          <Box sx={{ width: 40, height: 40, flexShrink: 0 }}>
-            <Image
-              src={vendor.logoUrl}
-              alt={vendor.businessName}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-              }}
-            />
-          </Box>
-        )}
-        <Box sx={{ flex: 1 }}>
-          <Typography variant="subtitle1" color="text.primary">
-            {vendor.businessName}
-          </Typography>
-          <Box sx={{ display: "flex", gap: theme.spacing(2), mt: 1 }}>
-            <Typography variant="body2" color="text.secondary">
-              <Phone
-                size={14}
-                style={{ verticalAlign: "middle", marginRight: theme.spacing(0.5) }}
+    <Box sx={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 2,
+      mb: theme.spacing(1),
+    }}>
+      <Button
+        onClick={handleClick}
+        sx={{
+          flex: 1,
+          p: theme.spacing(2),
+          textAlign: "left",
+          display: "block",
+          backgroundColor: "background.paper",
+          "&:hover": {
+            backgroundColor: "action.hover",
+          },
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          {vendor.logoUrl && (
+            <Box sx={{ width: 40, height: 40, flexShrink: 0 }}>
+              <Image
+                src={vendor.logoUrl}
+                alt={vendor.businessName}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                }}
               />
-              {vendor.phone}
+            </Box>
+          )}
+          <Box sx={{ flex: 1 }}>
+            <Typography variant="subtitle1" color="text.primary">
+              {vendor.businessName}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              <MapPin
-                size={14}
-                style={{ verticalAlign: "middle", marginRight: theme.spacing(0.5) }}
-              />
-              {distance.toFixed(1)} mi
-            </Typography>
+            <Box sx={{ display: "flex", gap: theme.spacing(2), mt: 1 }}>
+              <Typography variant="body2" color="text.secondary">
+                <Phone
+                  size={14}
+                  style={{ verticalAlign: "middle", marginRight: theme.spacing(0.5) }}
+                />
+                {vendor.phone}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                <MapPin
+                  size={14}
+                  style={{ verticalAlign: "middle", marginRight: theme.spacing(0.5) }}
+                />
+                {distance.toFixed(1)} mi
+              </Typography>
+            </Box>
           </Box>
         </Box>
-      </Box>
-    </Button>
+      </Button>
+      <IconButton 
+        onClick={handleDirectionsClick}
+        sx={{
+          bgcolor: 'background.paper',
+          '&:hover': {
+            bgcolor: 'action.hover',
+          },
+          width: 40,
+          height: 40,
+          borderRadius: 1,
+        }}
+      >
+        <Navigation size={20} />
+      </IconButton>
+    </Box>
   );
 };
 
@@ -109,6 +135,7 @@ interface NearbyVendorsProps {
   latitude: number;
   longitude: number;
   vendors: Vendor[];
+  onShowDirections?: (location: { latitude: number; longitude: number }) => void;
 }
 
 const NearbyVendors: React.FC<NearbyVendorsProps> = ({
@@ -116,7 +143,8 @@ const NearbyVendors: React.FC<NearbyVendorsProps> = ({
   onClose,
   latitude,
   longitude,
-  vendors
+  vendors,
+  onShowDirections
 }) => {
   const theme = useTheme();
   const { t } = useTranslation("home");
@@ -139,6 +167,14 @@ const NearbyVendors: React.FC<NearbyVendorsProps> = ({
 
   const handleVendorClose = () => {
     setSelectedVendor(null);
+  };
+
+  const handleGetDirections = (vendor: Vendor) => {
+    if (onShowDirections && vendor.location) {
+      const [longitude, latitude] = vendor.location.coordinates;
+      onShowDirections({ latitude, longitude });
+      onClose(); // Close the vendors panel
+    }
   };
 
   const sortedVendors = useMemo(() => {
@@ -206,7 +242,10 @@ const NearbyVendors: React.FC<NearbyVendorsProps> = ({
             borderColor: "divider",
           }}
         >
-          <Typography variant="h6">{t("nearbyVendors")}</Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Store size={20} />
+            <Typography variant="h6">{t("nearbyVendors")}</Typography>
+          </Box>
           <IconButton onClick={onClose}>
             <X />
           </IconButton>
@@ -234,6 +273,7 @@ const NearbyVendors: React.FC<NearbyVendorsProps> = ({
                 vendor={vendor}
                 distance={vendor.distance}
                 onClick={() => handleVendorSelect(vendor)}
+                onGetDirections={() => handleGetDirections(vendor)}
               />
             ))
           )}
