@@ -83,7 +83,7 @@ const GetDirections: React.FC<GetDirectionsProps> = ({
 
     const lngPadding = (bounds.maxLng - bounds.minLng) * 0.1;
     const latPadding = (bounds.maxLat - bounds.minLat) * 0.1;
-    const bottomPadding = window.innerHeight * 0.25;
+    const bottomPadding = window.innerHeight * 0.30;
 
     map.fitBounds(
       [
@@ -168,7 +168,7 @@ const GetDirections: React.FC<GetDirectionsProps> = ({
           bottom: { xs: theme.spacing(10), md: theme.spacing(12.5) },
           left: { xs: 0, md: '50%' },
           right: { xs: 0, md: 'auto' },
-          height: "30%",
+          height: "25%",
           width: { xs: '100%', sm: '600px' },
           transform: { xs: 'none', md: 'translateX(-50%)' },
           bgcolor: "background.glass",
