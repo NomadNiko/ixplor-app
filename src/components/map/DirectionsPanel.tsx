@@ -70,7 +70,7 @@ const DirectionsPanel: React.FC<DirectionsPanelProps> = ({
             display: 'flex', 
             alignItems: 'center', 
             width: '100%',
-            gap: 2
+            gap: 1
           }}>
             <IconButton 
               onClick={handlePrevStep}

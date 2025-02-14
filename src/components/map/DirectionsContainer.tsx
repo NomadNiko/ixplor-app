@@ -10,10 +10,10 @@ const DirectionsContainer: React.FC<DirectionsContainerProps> = ({ children }) =
     <Box
       sx={{
         position: "fixed",
-        bottom: { xs: 10, md: 12.5 },
+        bottom: { xs: 40, md: 40 },
         left: { xs: 0, md: '50%' },
         right: { xs: 0, md: 'auto' },
-        height: { xs: '26%', md: '30%' },
+        height: { xs: '22%', md: '22%' },
         width: { xs: '100%', sm: '600px' },
         transform: { xs: 'none', md: 'translateX(-50%)' },
         bgcolor: "background.glass",
