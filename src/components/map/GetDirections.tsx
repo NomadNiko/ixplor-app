@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Source, Layer, useMap, Marker } from "react-map-gl";
 import { useTheme } from "@mui/material/styles";
-import { MapPin } from "lucide-react";
+import { MapPin, PersonStanding} from "lucide-react";
 import type { Feature, LineString } from "geojson";
 import DirectionsHeader from "./DirectionsHeader";
 import DirectionsPanel from "./DirectionsPanel";
@@ -45,6 +45,10 @@ const GetDirections: React.FC<GetDirectionsProps> = ({
     latitude: number;
     longitude: number;
   } | null>(null);
+  const [routeStartEnd, setRouteStartEnd] = useState<{
+    start: [number, number] | null;
+    end: [number, number] | null;
+  }>({ start: null, end: null });
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -138,6 +142,14 @@ const GetDirections: React.FC<GetDirectionsProps> = ({
           geometry: data.routes[0].geometry,
         };
 
+        // Extract the first and last coordinates of the route
+        const coordinates = routeGeoJSON.geometry.coordinates;
+         setRouteStartEnd({
+           start: coordinates[0] as [number, number],
+           end: coordinates[coordinates.length - 1] as [number, number]
+         });
+
+
         setRoute(routeGeoJSON);
         setSteps(data.routes[0].legs[0].steps);
         fitRouteInView(data.routes[0].geometry);
@@ -171,7 +183,7 @@ const GetDirections: React.FC<GetDirectionsProps> = ({
         />
       </DirectionsContainer>
 
-      {route && (
+      {route && routeStartEnd.start && routeStartEnd.end && (
         <>
           <Source type="geojson" data={route}>
             <Layer
@@ -186,23 +198,21 @@ const GetDirections: React.FC<GetDirectionsProps> = ({
           </Source>
 
           {/* Start marker */}
-          {userLocation && (
-            <Marker
-              longitude={userLocation.longitude}
-              latitude={userLocation.latitude}
-              anchor="bottom"
-            >
-              <MapPin size={24} className="text-blue-500" />
-            </Marker>
-          )}
+          <Marker
+            longitude={routeStartEnd.start[0]}
+            latitude={routeStartEnd.start[1]}
+            anchor="bottom"
+          >
+            <PersonStanding size={26} className="text-blue-500" />
+          </Marker>
 
           {/* Destination marker */}
           <Marker
-            longitude={destination.longitude}
-            latitude={destination.latitude}
+            longitude={routeStartEnd.end[0]}
+            latitude={routeStartEnd.end[1]}
             anchor="bottom"
           >
-            <MapPin size={24} className="text-red-500" />
+            <MapPin size={26} className="text-red-500" />
           </Marker>
         </>
       )}
