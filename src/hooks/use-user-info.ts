@@ -12,17 +12,26 @@ type UserCache = {
   [key: string]: UserInfo;
 };
 
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 1000; // 1 second
+
 export const useUserInfo = () => {
   const [userCache, setUserCache] = useState<UserCache>({});
   const [loading, setLoading] = useState<{[key: string]: boolean}>({});
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
 
-  const fetchUserInfo = async (userId: string) => {
+  const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+  const fetchUserInfo = async (userId: string, retryCount = 0): Promise<UserInfo | null> => {
+    // Don't retry if we already have the data or are loading
     if (userCache[userId] || loading[userId]) {
       return userCache[userId];
     }
 
     try {
       setLoading(prev => ({ ...prev, [userId]: true }));
+      setErrors(prev => ({ ...prev, [userId]: '' }));
+
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
         throw new Error('No auth token');
@@ -35,7 +44,7 @@ export const useUserInfo = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch user info');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const userData = await response.json();
@@ -47,6 +56,17 @@ export const useUserInfo = () => {
       return userData;
     } catch (error) {
       console.error(`Error fetching user info for ${userId}:`, error);
+      
+      // Implement retry logic
+      if (retryCount < MAX_RETRIES) {
+        await sleep(RETRY_DELAY);
+        return fetchUserInfo(userId, retryCount + 1);
+      }
+
+      setErrors(prev => ({
+        ...prev,
+        [userId]: 'Failed to fetch user info'
+      }));
       return null;
     } finally {
       setLoading(prev => {
@@ -59,7 +79,7 @@ export const useUserInfo = () => {
 
   const getUserDisplayName = (userId: string): string => {
     const user = userCache[userId];
-    if (!user) return 'Unknown User';
+    if (!user) return 'Loading...';
     if (user.firstName && user.lastName) {
       return `${user.firstName} ${user.lastName}`;
     }
@@ -70,6 +90,7 @@ export const useUserInfo = () => {
     fetchUserInfo,
     getUserDisplayName,
     userCache,
-    loading
+    loading,
+    errors,
   };
 };

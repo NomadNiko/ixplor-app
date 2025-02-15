@@ -20,6 +20,7 @@ import Box from "@mui/material/Box";
 import HTTP_CODES_ENUM from "@/services/api/types/http-codes";
 import { useTranslation } from "@/services/i18n/client";
 import { UserProviderEnum } from "@/services/api/types/user";
+import { useRouter } from "next/navigation";
 
 type EditProfileBasicInfoFormData = {
   firstName: string;
@@ -151,6 +152,7 @@ function ChangePasswordFormActions() {
 }
 
 function FormBasicInfo() {
+  const router = useRouter();
   const { setUser } = useAuthActions();
   const { user } = useAuth();
   const fetchAuthPatchMe = useAuthPatchMeService();
@@ -188,6 +190,7 @@ function FormBasicInfo() {
 
     if (status === HTTP_CODES_ENUM.OK) {
       setUser(data);
+      router.push('/profile');
     }
   });
 
@@ -252,6 +255,7 @@ function FormBasicInfo() {
 }
 
 function FormChangeEmail() {
+  const router = useRouter();
   const fetchAuthPatchMe = useAuthPatchMeService();
   const { t } = useTranslation("profile");
   const validationSchema = useValidationChangeEmailSchema();
@@ -289,6 +293,7 @@ function FormChangeEmail() {
 
     if (status === HTTP_CODES_ENUM.OK) {
       reset();
+      router.push('/profile');
     }
   });
 
@@ -343,6 +348,7 @@ function FormChangeEmail() {
 }
 
 function FormChangePassword() {
+  const router = useRouter();
   const fetchAuthPatchMe = useAuthPatchMeService();
   const { t } = useTranslation("profile");
   const validationSchema = useValidationChangePasswordSchema();
@@ -366,9 +372,7 @@ function FormChangePassword() {
 
     if (status === HTTP_CODES_ENUM.UNPROCESSABLE_ENTITY) {
       (
-        Object.keys(data.errors) as Array<
-          keyof EditProfileChangePasswordFormData
-        >
+        Object.keys(data.errors) as Array<keyof EditProfileChangePasswordFormData>
       ).forEach((key) => {
         setError(key, {
           type: "manual",
@@ -383,6 +387,7 @@ function FormChangePassword() {
 
     if (status === HTTP_CODES_ENUM.OK) {
       reset();
+      router.push('/profile');
     }
   });
 
