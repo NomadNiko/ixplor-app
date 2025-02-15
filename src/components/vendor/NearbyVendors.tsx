@@ -10,12 +10,8 @@ import { useTheme } from "@mui/material/styles";
 import { Image } from "@nextui-org/react";
 import VendorFullView from './vendor-full';
 
-const calculateDistance = (
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-): number => {
+// Calculation helper
+const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
   const R = 3963; // Radius of Earth in miles
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
@@ -170,10 +166,12 @@ const NearbyVendors: React.FC<NearbyVendorsProps> = ({
   };
 
   const handleGetDirections = (vendor: Vendor) => {
-    if (onShowDirections && vendor.location) {
+    if (onShowDirections && vendor.location?.coordinates) {
+      // Extract coordinates from vendor location (in [longitude, latitude] format)
       const [longitude, latitude] = vendor.location.coordinates;
+      // Pass them in the format expected by the directions component
       onShowDirections({ latitude, longitude });
-      onClose(); // Close the vendors panel
+      onClose();
     }
   };
 

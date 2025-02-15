@@ -1,26 +1,32 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { Store, FerrisWheel, Ticket, Receipt } from "lucide-react";
 import Box from "@mui/material/Box";
 import { NavButton } from "./styled-components";
-import NearbyActivities from '@/components/product-item/NearbyActivities';
-import NearbyVendors from '../vendor/NearbyVendors';
+import NearbyActivities from "@/components/product-item/NearbyActivities";
+import NearbyVendors from "../vendor/NearbyVendors";
 import { Vendor } from "@/app/[language]/types/vendor";
-import UpcomingTicketsPanel from '../tickets/UpcomingTickets';
-import PastReceipts from '../receipts/PastReceipts';
+import UpcomingTicketsPanel from "../tickets/UpcomingTickets";
+import PastReceipts from "../receipts/PastReceipts";
 
-type ActiveWindow = 'activities' | 'vendors' | 'tickets' | 'receipts' | null;
+type ActiveWindow = "activities" | "vendors" | "tickets" | "receipts" | null;
 
-interface BottomNavProps { 
-  currentLocation: { 
-    latitude: number; 
-    longitude: number; 
+interface BottomNavProps {
+  currentLocation: {
+    latitude: number;
+    longitude: number;
   };
   vendors: Vendor[];
-  onShowDirections?: (location: { latitude: number; longitude: number }) => void;
+  onShowDirections?: (location: {
+    latitude: number;
+    longitude: number;
+  }) => void;
 }
 
-
-export const BottomNav = ({ currentLocation, vendors, onShowDirections }: BottomNavProps) => {
+export const BottomNav = ({
+  currentLocation,
+  vendors,
+  onShowDirections,
+}: BottomNavProps) => {
   const [activeWindow, setActiveWindow] = useState<ActiveWindow>(null);
 
   const handleNavClick = (window: ActiveWindow) => {
@@ -39,7 +45,7 @@ export const BottomNav = ({ currentLocation, vendors, onShowDirections }: Bottom
 
   // Click outside handler
   const handleOutsideClick = (e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).closest('.modal-content') === null) {
+    if ((e.target as HTMLElement).closest(".modal-content") === null) {
       handleClose();
     }
   };
@@ -48,16 +54,16 @@ export const BottomNav = ({ currentLocation, vendors, onShowDirections }: Bottom
     <>
       <Box
         sx={{
-          width: { xs: '100%', sm: '600px' },
+          width: { xs: "100%", sm: "600px" },
           position: "fixed",
           bottom: { xs: 0, sm: 5 },
-          left: { xs: 0, sm: '50%' },
-          right: { xs: 0, sm: 'auto' },
+          left: { xs: 0, sm: "50%" },
+          right: { xs: 0, sm: "auto" },
           padding: (theme) => theme.spacing(2),
           backgroundColor: (theme) => theme.palette.background.glass,
           backdropFilter: "blur(10px)",
           borderRadius: { xs: 0, sm: 2 },
-          transform: { xs: 'none', sm: 'translateX(-50%)' },
+          transform: { xs: "none", sm: "translateX(-50%)" },
           zIndex: 80,
         }}
       >
@@ -70,27 +76,27 @@ export const BottomNav = ({ currentLocation, vendors, onShowDirections }: Bottom
             height: (theme) => theme.spacing(5),
           }}
         >
-          <NavButton 
-            onClick={() => handleNavClick('activities')}
-            selected={activeWindow === 'activities'}
+          <NavButton
+            onClick={() => handleNavClick("activities")}
+            selected={activeWindow === "activities"}
           >
             <FerrisWheel />
           </NavButton>
-          <NavButton 
-            onClick={() => handleNavClick('vendors')}
-            selected={activeWindow === 'vendors'}
+          <NavButton
+            onClick={() => handleNavClick("vendors")}
+            selected={activeWindow === "vendors"}
           >
             <Store />
           </NavButton>
-          <NavButton 
-            onClick={() => handleNavClick('tickets')}
-            selected={activeWindow === 'tickets'}
+          <NavButton
+            onClick={() => handleNavClick("tickets")}
+            selected={activeWindow === "tickets"}
           >
             <Ticket />
           </NavButton>
-          <NavButton 
-            onClick={() => handleNavClick('receipts')}
-            selected={activeWindow === 'receipts'}
+          <NavButton
+            onClick={() => handleNavClick("receipts")}
+            selected={activeWindow === "receipts"}
           >
             <Receipt />
           </NavButton>
@@ -99,25 +105,26 @@ export const BottomNav = ({ currentLocation, vendors, onShowDirections }: Bottom
 
       <Box onClick={handleOutsideClick}>
         <NearbyActivities
-          isOpen={activeWindow === 'activities'}
+          isOpen={activeWindow === "activities"}
           onClose={handleClose}
           latitude={currentLocation.latitude}
           longitude={currentLocation.longitude}
         />
         <NearbyVendors
-          isOpen={activeWindow === 'vendors'}
+          isOpen={activeWindow === "vendors"}
           onClose={handleClose}
           latitude={currentLocation.latitude}
           longitude={currentLocation.longitude}
           vendors={vendors}
+          onShowDirections={onShowDirections}
         />
         <UpcomingTicketsPanel
-        isOpen={activeWindow === 'tickets'}
-        onClose={handleClose}
-        onShowDirections={onShowDirections}
-      />
+          isOpen={activeWindow === "tickets"}
+          onClose={handleClose}
+          onShowDirections={onShowDirections}
+        />
         <PastReceipts
-          isOpen={activeWindow === 'receipts'}
+          isOpen={activeWindow === "receipts"}
           onClose={handleClose}
         />
       </Box>
