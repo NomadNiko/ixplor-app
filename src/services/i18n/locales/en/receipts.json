@@ -1,6 +1,7 @@
 {
     "title": "Receipts",
-    "noInvoices": "No receipts found",
+    "noInvoices": "No invoices found",
+    "noReceipts": "No receipts found",
     "invoice": "Invoice",
     "receiptTitle": "Receipt",
     "billedTo": "Billed To",

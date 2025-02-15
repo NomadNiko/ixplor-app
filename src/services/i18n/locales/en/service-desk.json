@@ -1,5 +1,5 @@
 {
-    "title": "Service Desk",
+    "title": "Service Desk User",
     "description": "Welcome to our support center. Create a ticket to get help from our team.",
     "yourTickets": "Your Tickets",
     "allTickets": "All Support Tickets",
@@ -71,5 +71,7 @@
       "loadUsersFailed": "Failed to load users",
       "assignFailed": "Failed to assign user",
       "statusUpdateFailed": "Failed to update status"
+    }, "adminPage": {
+      "title": "Service Desk Admin"
     }
   }
