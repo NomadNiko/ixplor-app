@@ -41,6 +41,15 @@ export const UserMenu: React.FC<UserMenuProps> = ({ anchorEl, onClose, onLogout 
         </Typography>
       </MenuItem>
       <MenuItem
+        onClick={onClose}
+        component={Link}
+        href="/service-desk"
+      >
+        <Typography textAlign="center">
+          {t("common:navigation.service-desk")}
+        </Typography>
+      </MenuItem>
+      <MenuItem
         onClick={() => {
           onLogout();
           onClose();
