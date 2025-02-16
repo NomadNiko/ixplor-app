@@ -29,6 +29,7 @@
       "vendor": "Vendor Tools",
       "products-admin": "Products Admin",
       "products": "Products",
+      "items": "Items",
       "inventory": "Inventory",
       "addProduct": "Templates",
       "cart": "Cart",

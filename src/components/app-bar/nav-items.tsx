@@ -25,7 +25,7 @@ const PRODUCT_GROUP = {
   groupName: 'Products',
   items: [
     { key: "addProduct", path: "/templates" },
-    { key: "products", path: "/product-items" },
+    { key: "items", path: "/product-items" },
     { key: "inventory", path: "/inventory" },
   ]
 };

@@ -26,16 +26,23 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
   onClose,
 }) => {
   const { t } = useTranslation("common");
-  const { regularItems, adminGroup } = getNavItems(user);
+  const { regularItems, adminGroup, productGroup } = getNavItems(user);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [isProductOpen, setIsProductOpen] = useState(false);
 
   const handleAdminClick = (event: React.MouseEvent) => {
     event.stopPropagation();
     setIsAdminOpen(!isAdminOpen);
   };
 
+  const handleProductClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setIsProductOpen(!isProductOpen);
+  };
+
   const handleMenuClose = () => {
     setIsAdminOpen(false);
+    setIsProductOpen(false);
     onClose();
   };
 
@@ -65,6 +72,56 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
           </Typography>
         </MenuItem>
       ))}
+
+      {productGroup && (
+        <>
+          <Divider />
+          <MenuItem
+            onClick={handleProductClick}
+            sx={{
+              color: 'primary.main',
+              fontWeight: 'bold'
+            }}
+          >
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 1,
+              width: '100%',
+              justifyContent: 'space-between'
+            }}>
+              <Typography>
+                {t(`common:navigation.${productGroup.groupName.toLowerCase()}`)}
+              </Typography>
+              <ChevronDown 
+                size={16}
+                style={{ 
+                  transform: isProductOpen ? 'rotate(180deg)' : 'none',
+                  transition: 'transform 0.2s'
+                }}
+              />
+            </Box>
+          </MenuItem>
+          <Collapse in={isProductOpen}>
+            {productGroup.items.map((item) => (
+              <MenuItem
+                key={item.key}
+                onClick={handleMenuClose}
+                component={Link}
+                href={item.path}
+                sx={{ 
+                  pl: 4,
+                  bgcolor: 'rgba(0, 0, 0, 0.1)'
+                }}
+              >
+                <Typography textAlign="center">
+                  {t(`common:navigation.${item.key}`)}
+                </Typography>
+              </MenuItem>
+            ))}
+          </Collapse>
+        </>
+      )}
 
       {adminGroup && (
         <>
