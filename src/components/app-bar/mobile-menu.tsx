@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
@@ -7,6 +8,9 @@ import { IS_SIGN_UP_ENABLED } from "@/services/auth/config";
 import Divider from "@mui/material/Divider";
 import { User } from "@/services/api/types/user";
 import { getNavItems } from "./nav-items";
+import { ChevronDown } from 'lucide-react';
+import Box from "@mui/material/Box";
+import Collapse from "@mui/material/Collapse";
 
 interface MobileMenuProps {
   anchorEl: HTMLElement | null;
@@ -22,7 +26,18 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
   onClose,
 }) => {
   const { t } = useTranslation("common");
-  const navItems = getNavItems(user);
+  const { regularItems, adminGroup } = getNavItems(user);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
+
+  const handleAdminClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setIsAdminOpen(!isAdminOpen);
+  };
+
+  const handleMenuClose = () => {
+    setIsAdminOpen(false);
+    onClose();
+  };
 
   return (
     <Menu
@@ -38,29 +53,79 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
         horizontal: "left",
       }}
       open={Boolean(anchorEl)}
-      onClose={onClose}
+      onClose={handleMenuClose}
       sx={{
         display: { xs: "block", md: "none" },
       }}
     >
-      {navItems.map((item) => (
-        <MenuItem key={item.key} onClick={onClose} component={Link} href={item.path}>
+      {regularItems.map((item) => (
+        <MenuItem key={item.key} onClick={handleMenuClose} component={Link} href={item.path}>
           <Typography textAlign="center">
             {t(`common:navigation.${item.key}`)}
           </Typography>
         </MenuItem>
       ))}
 
+      {adminGroup && (
+        <>
+          <Divider />
+          <MenuItem
+            onClick={handleAdminClick}
+            sx={{
+              color: 'primary.main',
+              fontWeight: 'bold'
+            }}
+          >
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 1,
+              width: '100%',
+              justifyContent: 'space-between'
+            }}>
+              <Typography>
+                {t(`common:navigation.${adminGroup.groupName.toLowerCase()}`)}
+              </Typography>
+              <ChevronDown 
+                size={16}
+                style={{ 
+                  transform: isAdminOpen ? 'rotate(180deg)' : 'none',
+                  transition: 'transform 0.2s'
+                }}
+              />
+            </Box>
+          </MenuItem>
+          <Collapse in={isAdminOpen}>
+            {adminGroup.items.map((item) => (
+              <MenuItem
+                key={item.key}
+                onClick={handleMenuClose}
+                component={Link}
+                href={item.path}
+                sx={{ 
+                  pl: 4,
+                  bgcolor: 'rgba(0, 0, 0, 0.1)'
+                }}
+              >
+                <Typography textAlign="center">
+                  {t(`common:navigation.${item.key}`)}
+                </Typography>
+              </MenuItem>
+            ))}
+          </Collapse>
+        </>
+      )}
+
       {isLoaded && !user && (
         <>
           <Divider />
-          <MenuItem onClick={onClose} component={Link} href="/sign-in">
+          <MenuItem onClick={handleMenuClose} component={Link} href="/sign-in">
             <Typography textAlign="center">
               {t("common:navigation.signIn")}
             </Typography>
           </MenuItem>
           {IS_SIGN_UP_ENABLED && (
-            <MenuItem onClick={onClose} component={Link} href="/sign-up">
+            <MenuItem onClick={handleMenuClose} component={Link} href="/sign-up">
               <Typography textAlign="center">
                 {t("common:navigation.signUp")}
               </Typography>

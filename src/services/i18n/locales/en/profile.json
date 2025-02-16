@@ -24,7 +24,8 @@
     "viewTickets": "View All Tickets",
     "viewReceipts": "View All Receipts",
     "viewServiceDesk": "View Service Desk",
-    "viewAll": "View All"
+    "viewAll": "View All",
+    "save": "Save"
   },
   "inputs": {
     "firstName": {
