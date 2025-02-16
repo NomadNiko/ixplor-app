@@ -5,6 +5,7 @@
     "noUpcomingTickets": "You don't have any upcoming tickets",
     "noOldTickets": "You don't have any past tickets",
     "viewAll": "View All",
+    "pleaseLogin": "Please login to see your owned Upcoming Tickets",
     "ticketDetails": {
       "title": "Ticket Details",
       "qrCode": "QR Code",

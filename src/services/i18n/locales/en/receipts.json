@@ -16,6 +16,7 @@
     "viewAll": "View All",
     "items": "Items",
     "itemsCount": "items",
+    "pleaseLogin": "Please login to see past receipts.",
     "errors": {
       "unauthorized": "You are not authorized to view this content",
       "fetchFailed": "Failed to fetch receipts"
