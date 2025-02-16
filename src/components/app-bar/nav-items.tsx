@@ -36,7 +36,7 @@ export const getNavItems = (user: User | null) => {
 
   const regularItems = [
     { key: "home", path: "/", roles: [] },
-    { key: "dashboard", path: "/dashboard", roles: [RoleEnum.USER, RoleEnum.ADMIN, RoleEnum.VENDOR, RoleEnum.PREVENDOR] },
+    { key: "dashboard", path: "/dashboard", roles: [RoleEnum.USER] },
     { key: "vendor-status", path: "/vendor-status", roles: [RoleEnum.PREVENDOR] },
     { key: "vendor-account", path: "/vendor-account", roles: [RoleEnum.VENDOR] },
     { key: "service-desk", path: "/service-desk", roles: [RoleEnum.VENDOR, RoleEnum.PREVENDOR, RoleEnum.ADMIN] }
