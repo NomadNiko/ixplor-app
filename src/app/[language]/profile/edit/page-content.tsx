@@ -12,7 +12,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import withPageRequiredAuth from "@/services/auth/with-page-required-auth";
 import { useEffect } from "react";
 import useAuth from "@/services/auth/use-auth";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import Link from "@/components/link";
 import FormAvatarInput from "@/components/form/avatar-input/form-avatar-input";
 import { FileEntity } from "@/services/api/types/file-entity";
@@ -21,6 +20,7 @@ import Box from "@mui/material/Box";
 import HTTP_CODES_ENUM from "@/services/api/types/http-codes";
 import { useTranslation } from "@/services/i18n/client";
 import { UserProviderEnum } from "@/services/api/types/user";
+import { useRouter } from "next/navigation";
 
 type EditProfileBasicInfoFormData = {
   firstName: string;
@@ -152,12 +152,12 @@ function ChangePasswordFormActions() {
 }
 
 function FormBasicInfo() {
+  const router = useRouter();
   const { setUser } = useAuthActions();
   const { user } = useAuth();
   const fetchAuthPatchMe = useAuthPatchMeService();
   const { t } = useTranslation("profile");
   const validationSchema = useValidationBasicInfoSchema();
-  const { enqueueSnackbar } = useSnackbar();
 
   const methods = useForm<EditProfileBasicInfoFormData>({
     resolver: yupResolver(validationSchema),
@@ -190,10 +190,7 @@ function FormBasicInfo() {
 
     if (status === HTTP_CODES_ENUM.OK) {
       setUser(data);
-
-      enqueueSnackbar(t("profile:alerts.profile.success"), {
-        variant: "success",
-      });
+      router.push('/profile');
     }
   });
 
@@ -258,8 +255,8 @@ function FormBasicInfo() {
 }
 
 function FormChangeEmail() {
+  const router = useRouter();
   const fetchAuthPatchMe = useAuthPatchMeService();
-  const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslation("profile");
   const validationSchema = useValidationChangeEmailSchema();
   const { user } = useAuth();
@@ -296,11 +293,7 @@ function FormChangeEmail() {
 
     if (status === HTTP_CODES_ENUM.OK) {
       reset();
-
-      enqueueSnackbar(t("profile:alerts.email.success"), {
-        variant: "success",
-        autoHideDuration: 15000,
-      });
+      router.push('/profile');
     }
   });
 
@@ -355,11 +348,11 @@ function FormChangeEmail() {
 }
 
 function FormChangePassword() {
+  const router = useRouter();
   const fetchAuthPatchMe = useAuthPatchMeService();
   const { t } = useTranslation("profile");
   const validationSchema = useValidationChangePasswordSchema();
-  const { enqueueSnackbar } = useSnackbar();
-
+ 
   const methods = useForm<EditProfileChangePasswordFormData>({
     resolver: yupResolver(validationSchema),
     defaultValues: {
@@ -379,9 +372,7 @@ function FormChangePassword() {
 
     if (status === HTTP_CODES_ENUM.UNPROCESSABLE_ENTITY) {
       (
-        Object.keys(data.errors) as Array<
-          keyof EditProfileChangePasswordFormData
-        >
+        Object.keys(data.errors) as Array<keyof EditProfileChangePasswordFormData>
       ).forEach((key) => {
         setError(key, {
           type: "manual",
@@ -396,10 +387,7 @@ function FormChangePassword() {
 
     if (status === HTTP_CODES_ENUM.OK) {
       reset();
-
-      enqueueSnackbar(t("profile:alerts.password.success"), {
-        variant: "success",
-      });
+      router.push('/profile');
     }
   });
 

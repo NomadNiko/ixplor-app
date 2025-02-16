@@ -34,7 +34,7 @@ export default function CartSummary({ total }: CartSummaryProps) {
         </Box>
         
         <Typography variant="caption" color="text.secondary" display="block">
-          {t("noAdditionalFees")}
+          {t("thankCustomer")}
         </Typography>
       </CardContent>
     </Card>

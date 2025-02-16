@@ -9,7 +9,6 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { styled } from '@mui/material/styles';
 import { useTranslation } from "@/services/i18n/client";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { BanknoteIcon, PiggyBank, RefreshCw, History } from 'lucide-react';
@@ -22,6 +21,7 @@ interface VendorAccountBalancesProps {
     accountBalance?: number;
     internalAccountBalance?: number;
   };
+  onRefresh: () => void;
 }
 
 interface Payout {
@@ -62,9 +62,8 @@ const PayoutItem = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(1)
 }));
 
-function VendorAccountBalances({ vendor }: VendorAccountBalancesProps) {
+function VendorAccountBalances({ vendor, onRefresh }: VendorAccountBalancesProps) {
   const { t } = useTranslation("vendor-account");
-  const { enqueueSnackbar } = useSnackbar();
   const [processingPayout, setProcessingPayout] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [payouts, setPayouts] = useState<Payout[]>([]);
@@ -87,41 +86,26 @@ function VendorAccountBalances({ vendor }: VendorAccountBalancesProps) {
       setPayouts(data.data);
     } catch (error) {
       console.error('Error fetching payouts:', error);
-      enqueueSnackbar(t('errors.fetchPayoutsFailed'), { variant: 'error' });
     } finally {
       setLoadingPayouts(false);
     }
-  }, [vendor._id, enqueueSnackbar, t]);
-
-  const refreshBalance = async () => {
-    try {
-      const tokensInfo = getTokensInfo();
-      if (!tokensInfo?.token) return;
-
-      const response = await fetch(`${API_URL}/vendors/${vendor._id}/balance`, {
-        headers: {
-          'Authorization': `Bearer ${tokensInfo.token}`
-        }
-      });
-
-      if (!response.ok) throw new Error('Failed to fetch balance');
-      const data = await response.json();
-      setInternalBalance(data.internalBalance || 0);
-    } catch (error) {
-      console.error('Error refreshing balance:', error);
-      enqueueSnackbar(t('errors.refreshBalanceFailed'), { variant: 'error' });
-    }
-  };
-
-  const handleRefresh = async () => {
-    setRefreshing(true);
-    await Promise.all([fetchPayouts(), refreshBalance()]);
-    setRefreshing(false);
-  };
+  }, [vendor._id, t]);
 
   useEffect(() => {
     fetchPayouts();
   }, [fetchPayouts]);
+
+  // Update internal state when vendor prop changes
+  useEffect(() => {
+    setInternalBalance(vendor.internalAccountBalance || 0);
+  }, [vendor.internalAccountBalance]);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    onRefresh(); // Call the parent's refresh function to update vendor data
+    await fetchPayouts(); // Refresh payouts data
+    setRefreshing(false);
+  };
 
   const handleTriggerPayout = async () => {
     try {
@@ -129,7 +113,6 @@ function VendorAccountBalances({ vendor }: VendorAccountBalancesProps) {
       const tokensInfo = getTokensInfo();
       
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t('errors.unauthorized'), { variant: 'error' });
         return;
       }
 
@@ -142,13 +125,11 @@ function VendorAccountBalances({ vendor }: VendorAccountBalancesProps) {
 
       if (!response.ok) throw new Error('Failed to trigger payout');
       
-      await response.json();
-      enqueueSnackbar(t('success.payoutScheduled'), { variant: 'success' });
-      
-      await handleRefresh();
+      await response.json();      
+      // Refresh data after successful payout
+      handleRefresh();
     } catch (error) {
       console.error('Error triggering payout:', error);
-      enqueueSnackbar(t('errors.payoutFailed'), { variant: 'error' });
     } finally {
       setProcessingPayout(false);
     }

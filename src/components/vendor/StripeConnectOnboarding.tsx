@@ -13,7 +13,6 @@ import { useTranslation } from "@/services/i18n/client";
 import { useStripeConnect } from '@/hooks/use-stripe-connect';
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
-import { useSnackbar } from "@/hooks/use-snackbar";
 
 // Define interfaces for type safety
 interface StripeAccountDetails {
@@ -33,7 +32,6 @@ export const StripeConnectOnboarding: React.FC<StripeConnectOnboardingProps> = (
   vendorId
 }) => {
   const { t } = useTranslation("vendor-status");
-  const { enqueueSnackbar } = useSnackbar();
   const [onboardingExited, setOnboardingExited] = useState(false);
   const { stripeConnectInstance, isLoading, error } = useStripeConnect(vendorId);
 
@@ -59,14 +57,10 @@ export const StripeConnectOnboarding: React.FC<StripeConnectOnboardingProps> = (
       }
   
       // Consume the response to avoid ESLint warning
-      await response.json();
-  
-      enqueueSnackbar(t('stripe.success'), { variant: 'success' });
-      
+      await response.json();      
       window.location.reload();
     } catch (error) {
       console.error('Error updating Stripe account:', error);
-      enqueueSnackbar(t('stripe.updateFailed'), { variant: 'error' });
     }
   };
   
@@ -107,7 +101,6 @@ export const StripeConnectOnboarding: React.FC<StripeConnectOnboardingProps> = (
       await updateVendorStripeAccount(accountData.account);
     } catch (error) {
       console.error('Error on Stripe onboarding exit:', error);
-      enqueueSnackbar(t('stripe.exitError'), { variant: 'error' });
     }
   };
 

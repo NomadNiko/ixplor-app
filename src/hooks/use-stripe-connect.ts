@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { loadConnectAndInitialize } from "@stripe/connect-js";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 
@@ -8,8 +7,7 @@ export const useStripeConnect = (vendorId: string | undefined) => {
     const [stripeConnectInstance, setStripeConnectInstance] = useState<ReturnType<typeof loadConnectAndInitialize> | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { enqueueSnackbar } = useSnackbar();
-  
+    
     useEffect(() => {
       if (!vendorId) return;
   
@@ -96,14 +94,13 @@ export const useStripeConnect = (vendorId: string | undefined) => {
           const errorMessage = err instanceof Error ? err.message : 'Failed to initialize Stripe Connect';
           console.error('Stripe Connect Error:', errorMessage);
           setError(errorMessage);
-          enqueueSnackbar(errorMessage, { variant: 'error' });
         } finally {
           setIsLoading(false);
         }
       };
   
       initializeStripeConnect();
-    }, [vendorId, enqueueSnackbar]);
+    }, [vendorId]);
   
     return {
       stripeConnectInstance,

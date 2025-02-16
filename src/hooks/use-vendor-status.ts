@@ -1,27 +1,32 @@
-// In hooks/use-vendor-status.ts
-
-import { useState, useEffect } from 'react';
-import { useSnackbar } from '@/hooks/use-snackbar';
-import { useTranslation } from '@/services/i18n/client';
-import { VendorStatus } from '@/types/vendor-status';
+import { useState, useEffect, useCallback } from 'react';
+import { VendorStatus } from '../types/vendor-status';
+import { Template } from '../types/template';
+import { ProductItem } from '../types/product-item';
 import { API_URL } from '@/services/api/config';
 import { getTokensInfo } from '@/services/auth/auth-tokens-info';
+
+interface TemplateResponse {
+  data: Template[];
+  message?: string;
+}
+
+interface ProductResponse {
+  data: ProductItem[];
+  message?: string;
+}
 
 export function useVendorStatus(userId: string) {
   const [vendor, setVendor] = useState<VendorStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { enqueueSnackbar } = useSnackbar();
-  const { t } = useTranslation("vendor-status");
 
-  const loadVendorStatus = async () => {
+  const loadVendorStatus = useCallback(async () => {
     try {
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
         throw new Error('No auth token');
       }
 
-      // Get owned vendors
       const vendorResponse = await fetch(`${API_URL}/v1/vendors/user/${userId}/owned`, {
         headers: {
           'Authorization': `Bearer ${tokensInfo.token}`
@@ -34,41 +39,52 @@ export function useVendorStatus(userId: string) {
       if (vendorData.data.length > 0) {
         const currentVendor = vendorData.data[0];
         
-        // Check for products
-        const productsResponse = await fetch(`${API_URL}/products/by-vendor/${currentVendor._id}`, {
+        // Fetch templates
+        const templatesResponse = await fetch(`${API_URL}/product-templates/by-vendor/${currentVendor._id}`, {
           headers: {
             'Authorization': `Bearer ${tokensInfo.token}`
           }
         });
+        const templatesData: TemplateResponse = await templatesResponse.json();
+        
+        // Fetch products
+        const productsResponse = await fetch(`${API_URL}/product-items/by-vendor/${currentVendor._id}`, {
+          headers: {
+            'Authorization': `Bearer ${tokensInfo.token}`
+          }
+        });
+        const productsData: ProductResponse = await productsResponse.json();
 
-        if (!productsResponse.ok) throw new Error('Failed to fetch products');
-        const productsData = await productsResponse.json();
+        // Create map of template IDs to whether they have items
+        const templateItemMap = productsData.data.reduce((acc: Record<string, boolean>, product) => {
+          acc[product.templateId] = true;
+          return acc;
+        }, {});
 
         setVendor({
           ...currentVendor,
-          hasProducts: productsData.data.length > 0
+          hasTemplates: templatesData.data.length > 0,
+          hasProducts: productsData.data.length > 0,
+          templates: templatesData.data.map((template) => ({
+            _id: template._id,
+            templateName: template.templateName,
+            hasItems: !!templateItemMap[template._id]
+          }))
         });
       }
-      setError(null);
-    } catch (error: unknown) {
+    } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       setError(errorMessage);
-      enqueueSnackbar(t('errors.fetchFailed'), { variant: 'error' });
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId]); // Include userId in dependencies
 
   useEffect(() => {
     if (userId) {
       loadVendorStatus();
     }
-  }, [userId]);
+  }, [userId, loadVendorStatus]); // Include both dependencies
 
-  const refreshStatus = async () => {
-    setLoading(true);
-    await loadVendorStatus();
-  };
-
-  return { vendor, loading, error, refreshStatus };
+  return { vendor, loading, error, refreshStatus: loadVendorStatus };
 }

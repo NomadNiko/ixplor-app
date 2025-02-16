@@ -15,6 +15,15 @@
       "backToCart": "Return to Cart",
       "contactSupport": "Contact Support"
     },
+    "actions": {
+    "backToCart": "Back to Cart",
+    "backToHome": "Return to Home",
+    "tryAgain": "Try Again",
+    "contactSupport": "Contact Support",
+    "continueToPayment": "Continue to Payment",
+    "placeOrder": "Place Order",
+    "payNow": "Pay Now"
+  },
     "processing": {
       "title": "Processing Payment",
       "message": "Please wait while we process your payment..."

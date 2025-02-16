@@ -11,7 +11,6 @@ import { Check, X, AlertTriangle, Trash2 } from 'lucide-react';
 import { Image } from "@nextui-org/react";
 import useConfirmDialog from '@/components/confirm-dialog/use-confirm-dialog';
 import Divider from '@mui/material/Divider';
-import { useSnackbar } from "@/hooks/use-snackbar";
 
 interface ProductApprovalCardProps {
   product: Product;
@@ -25,7 +24,6 @@ export const ProductApprovalCard: React.FC<ProductApprovalCardProps> = ({
   onDelete
 }) => {
   const { t } = useTranslation("approvals");
-  const { enqueueSnackbar } = useSnackbar();
   const [notes, setNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { confirmDialog } = useConfirmDialog();
@@ -34,7 +32,6 @@ export const ProductApprovalCard: React.FC<ProductApprovalCardProps> = ({
     if (isSubmitting) return;
     
     if (action === ProductStatusEnum.ARCHIVED && !notes.trim()) {
-      enqueueSnackbar(t('errors.notesRequired'), { variant: 'error' });
       return;
     }
     

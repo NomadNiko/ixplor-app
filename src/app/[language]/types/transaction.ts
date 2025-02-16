@@ -55,7 +55,7 @@ export enum TransactionStatus {
     currency: string;
     vendorId: string;
     customerId: string;
-    productId: string;
+    productItemId: string;
     status: TransactionStatus;
     type: TransactionType;
     paymentMethodDetails?: PaymentMethodDetails;

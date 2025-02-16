@@ -15,8 +15,8 @@ import Grid from "@mui/material/Grid";
 import { UrlField } from './UrlField';
 import { VendorSelect } from "./VendorSelect";
 import GPSLocationField from "./GPSLocationField";
-import { DurationInputWrapper } from "./DurationInputWrapper";
 import ProductTypeToggle from "./ProductTypeToggle";
+import DurationPicker from "./DurationPicker";
 
 export const CardField: React.FC<CardFieldProps> = ({
   field,
@@ -78,6 +78,29 @@ export const CardField: React.FC<CardFieldProps> = ({
     return <UrlField field={field} mode={mode} />;
   }
 
+  if (field.type === 'number') {
+    return (
+      <TextField
+        {...register(field.name, validationRules)}
+        type="number"
+        label={t(field.label)}
+        fullWidth
+        error={!!errors[field.name]}
+        helperText={errors[field.name]?.message as string}
+        InputProps={{
+          inputProps: {
+            min: 0,
+            step: 1,
+            onInput: (e) => {
+              e.currentTarget.value = e.currentTarget.value.replace('-', '');
+            }
+          }
+        }}
+        disabled={mode === 'edit' && field.prefilled}
+      />
+    );
+   }
+
   if (field.type === "price") {
     return (
       <BaseCurrencyInput
@@ -95,7 +118,7 @@ export const CardField: React.FC<CardFieldProps> = ({
 
   if (field.type === "duration") {
     return (
-      <DurationInputWrapper
+      <DurationPicker
         name={field.name}
         label={t(field.label)}
         control={control}

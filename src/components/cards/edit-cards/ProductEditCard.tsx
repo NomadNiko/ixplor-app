@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { useTranslation } from "@/services/i18n/client";
 import { EditCard } from '@/components/cards/edit-cards/EditCard';
 import { productConfig } from '@/components/cards/edit-cards/configs';
@@ -26,7 +25,6 @@ export default function ProductEditCard({
   onStatusChange,
 }: ProductEditCardProps) {
   const { t } = useTranslation("products");
-  const { enqueueSnackbar } = useSnackbar();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { confirmDialog } = useConfirmDialog();
 
@@ -54,7 +52,6 @@ export default function ProductEditCard({
       setIsSubmitting(true);
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        enqueueSnackbar(t("errors.unauthorized"), { variant: "error" });
         return;
       }
 
@@ -89,11 +86,9 @@ export default function ProductEditCard({
         throw new Error("Failed to update product");
       }
 
-      enqueueSnackbar(t("success.updated"), { variant: "success" });
       onSave();
     } catch (error) {
       console.error("Error updating product:", error);
-      enqueueSnackbar(t("errors.updateFailed"), { variant: "error" });
     } finally {
       setIsSubmitting(false);
     }
@@ -113,11 +108,9 @@ export default function ProductEditCard({
       setIsSubmitting(true);
       try {
         await onDelete(product._id);
-        enqueueSnackbar(t('success.deleted'), { variant: 'success' });
         onSave();
       } catch (error) {
         console.error('Error deleting product:', error);
-        enqueueSnackbar(t('errors.deleteFailed'), { variant: 'error' });
       } finally {
         setIsSubmitting(false);
       }
@@ -130,11 +123,9 @@ export default function ProductEditCard({
     try {
       setIsSubmitting(true);
       await onStatusChange(product._id, status);
-      enqueueSnackbar(t(`success.status.${status.toLowerCase()}`), { variant: 'success' });
       onSave();
     } catch (error) {
       console.error('Error updating status:', error);
-      enqueueSnackbar(t('errors.statusUpdateFailed'), { variant: 'error' });
     } finally {
       setIsSubmitting(false);
     }

@@ -5,7 +5,6 @@ import { useTranslation } from "@/services/i18n/client";
 import { Check, X, AlertTriangle, Trash2, Edit2 } from "lucide-react";
 import { useTheme } from "@mui/material/styles";
 import useConfirmDialog from "@/components/confirm-dialog/use-confirm-dialog";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { VendorStatusEnum } from "@/app/[language]/types/vendor";
 import { VendorActionProps } from "./types";
 
@@ -21,7 +20,6 @@ export const VendorActionSection: React.FC<VendorActionProps> = ({
   const { t } = useTranslation("vendor-admin");
   const theme = useTheme();
   const { confirmDialog } = useConfirmDialog();
-  const { enqueueSnackbar } = useSnackbar();
 
   const handleAction = async (action: VendorStatusEnum) => {
     if (isSubmitting) return;
@@ -30,7 +28,6 @@ export const VendorActionSection: React.FC<VendorActionProps> = ({
         action === VendorStatusEnum.ACTION_NEEDED) &&
       !notes.trim()
     ) {
-      enqueueSnackbar(t("errors.notesRequired"), { variant: "error" });
       return;
     }
     await onAction(vendorId, action, notes);

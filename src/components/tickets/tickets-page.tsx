@@ -50,7 +50,7 @@ export default function TicketsPage() {
   }
 
   return (
-    <Container maxWidth="sm" sx={{ py: 4 }}>
+    <Container maxWidth="md" sx={{ py: 4 }}>
       {/* Active Tickets */}
       <Box sx={{ mb: 6 }}>
         <Typography variant="h4" gutterBottom>

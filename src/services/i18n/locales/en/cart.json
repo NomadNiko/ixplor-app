@@ -120,5 +120,6 @@
   "guestCartNotice": "Sign in or create an account to save your cart and proceed to checkout",
   "signIn": "Sign In",
   "signUp": "Sign Up",
-  "signInToCheckout": "Sign In to Checkout"
+  "signInToCheckout": "Sign In to Checkout",
+  "thankCustomer": "Thank You for using iXplor"
 }

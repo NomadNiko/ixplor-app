@@ -12,76 +12,65 @@ import CartSummary from "@/components/cart/cart-summary";
 import useAuth from "@/services/auth/use-auth";
 import { useRouter } from "next/navigation";
 import { useCartQuery } from "@/hooks/use-cart-query";
-import { CartItemType } from "./types";
-import useGuestCart from "@/hooks/use-guest-cart";
-import Link from "@/components/link";
-import { useSnackbar } from "@/hooks/use-snackbar";
+
+interface CartItemType {
+  productItemId: string;
+  templateId: string;       
+  templateName: string;
+  productName: string;
+  productDescription?: string;
+  price: number;
+  quantity: number;
+  productImageURL?: string;
+  vendorId: string;
+  productType: "tours" | "lessons" | "rentals" | "tickets";
+  productDate: string;
+  productStartTime: string;
+  productDuration: number;
+}
 
 export default function CartPage() {
   const { t } = useTranslation("cart");
-  const { data: cartData, isLoading: isCartLoading, refreshCart } = useCartQuery();
+  const { data: cartData, isLoading: isCartLoading, refreshCart, updateItem, removeItem } = useCartQuery();
   const { user, isLoaded } = useAuth();
   const router = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
-  const { 
-    guestCart, 
-    updateGuestCartItem, 
-    removeFromGuestCart,
-    isGuest 
-  } = useGuestCart();
-
-  // Redirect to sign-in if trying to access cart while not authenticated
+  
   useEffect(() => {
-    if (!user && !isGuest && isLoaded) {
+    if (!user && isLoaded) {
       router.replace('/sign-in');
     }
-  }, [isLoaded, user, router, isGuest]);
+  }, [isLoaded, user, router]);
 
-  // Calculate total based on whether user is logged in or guest
   const calculateTotal = () => {
-    if (isGuest) {
-      return guestCart.reduce(
-        (sum: number, item: CartItemType) => sum + item.price * item.quantity,
-        0
-      );
-    }
     return cartData?.items.reduce(
       (sum: number, item: CartItemType) => sum + item.price * item.quantity,
       0
     ) ?? 0;
   };
 
-  // Handle cart item quantity updates
-  const handleQuantityUpdate = (productId: string, newQuantity: number) => {
-    if (isGuest) {
-      updateGuestCartItem(productId, newQuantity);
-      enqueueSnackbar(t('success.quantityUpdated'), { variant: 'success' });
-    } else {
+  const handleQuantityUpdate = async (productItemId: string, newQuantity: number) => {
+    try {
+      await updateItem(productItemId, newQuantity);
       refreshCart();
-    }
+      } catch (error) {
+      console.error('Error updating quantity:', error);
+       }
   };
 
-  // Handle cart item removal
-  const handleRemoveItem = (productId: string) => {
-    if (isGuest) {
-      removeFromGuestCart(productId);
-      enqueueSnackbar(t('success.itemRemoved'), { variant: 'success' });
-    } else {
+  const handleRemoveItem = async (productItemId: string) => {
+    try {
+      await removeItem(productItemId);
       refreshCart();
-    }
+      } catch (error) {
+      console.error('Error removing item:', error);
+      }
   };
 
-  // Handle checkout button click
   const handleCheckout = () => {
-    if (isGuest) {
-      router.push('/sign-in?returnTo=/checkout');
-      return;
-    }
     router.push('/checkout');
   };
 
-  // Loading state
-  if (isCartLoading && !isGuest) {
+  if (isCartLoading && user) {
     return (
       <Container
         sx={{
@@ -96,8 +85,7 @@ export default function CartPage() {
     );
   }
 
-  // Get cart items based on auth state
-  const cartItems = isGuest ? guestCart : cartData?.items || [];
+  const cartItems = cartData?.items || [];
   const total = calculateTotal();
 
   return (
@@ -116,40 +104,12 @@ export default function CartPage() {
           ) : (
             cartItems.map((item: CartItemType) => (
               <CartItem
-                key={item.productId}
+                key={item.productItemId}
                 item={item}
                 onUpdate={handleQuantityUpdate}
                 onRemove={handleRemoveItem}
-                isGuest={isGuest}
               />
             ))
-          )}
-
-          {/* Guest User Notice */}
-          {isGuest && cartItems.length > 0 && (
-            <Box sx={{ mt: 4, p: 2, bgcolor: 'background.paper', borderRadius: 1 }}>
-              <Typography variant="body1" color="text.secondary" gutterBottom>
-                {t("guestCartNotice")}
-              </Typography>
-              <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
-                <Button
-                  component={Link}
-                  href="/sign-in"
-                  variant="contained"
-                  color="primary"
-                >
-                  {t("signIn")}
-                </Button>
-                <Button
-                  component={Link}
-                  href="/sign-up"
-                  variant="outlined"
-                  color="primary"
-                >
-                  {t("signUp")}
-                </Button>
-              </Box>
-            </Box>
           )}
         </Grid>
         
@@ -175,7 +135,7 @@ export default function CartPage() {
                 onClick={handleCheckout}
                 sx={{ mt: 2 }}
               >
-                {isGuest ? t("signInToCheckout") : t("actions.checkout")}
+                {t("actions.checkout")}
               </Button>
             )}
             

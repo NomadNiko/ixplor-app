@@ -4,18 +4,30 @@ import Map, { MapRef, GeolocateControl, ViewState } from "react-map-gl";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import CircularProgress from "@mui/material/CircularProgress";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import { RefreshCw } from "lucide-react";
 import { useTheme } from "@mui/material/styles";
 import { useGetVendorsService } from "@/services/api/services/vendors";
 import { Vendor, VendorTypes } from "@/app/[language]/types/vendor";
 import HTTP_CODES_ENUM from "@/services/api/types/http-codes";
 import { BBox } from "geojson";
-import { useSnackbar } from "@/hooks/use-snackbar";
 import { useTranslation } from "@/services/i18n/client";
 import { SearchControls } from "./components/search-controls";
 import { VendorTypeFilters } from "./components/vendor-type-filters";
-import { VendorViews } from "./components/vendor-views";
 import { BottomNav } from "@/components/map/bottom-nav";
 import { ClusteredVendorMarkers } from "@/components/vendor/clustered-vendor-markers";
+import type { ErrorEvent } from 'react-map-gl';
+import dynamic from 'next/dynamic';
+import GetDirections from "@/components/map/GetDirections";
+
+const VendorViews = dynamic(
+  () => import('./components/vendor-views').then(mod => mod.VendorViews),
+  { 
+    ssr: false,
+    loading: () => null 
+  }
+);
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -30,11 +42,12 @@ const DEFAULT_VIEW_STATE: ViewState = {
 
 const MapHomeLayout = () => {
   const { t } = useTranslation("home");
-  const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const mapRef = useRef<MapRef>(null);
   const getVendors = useGetVendorsService();
 
+  const [mapKey, setMapKey] = useState(0);
+  const [mapError, setMapError] = useState(false);
   const [viewState, setViewState] = useState<ViewState>(DEFAULT_VIEW_STATE);
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(true);
@@ -42,6 +55,11 @@ const MapHomeLayout = () => {
   const [showFullView, setShowFullView] = useState(false);
   const [filterTypes, setFilterTypes] = useState<VendorTypes[]>([]);
   const [bounds, setBounds] = useState<BBox | undefined>();
+  const [retryCount, setRetryCount] = useState(0);
+  const [showDirections, setShowDirections] = useState(false);
+const [selectedLocation, setSelectedLocation] = useState<{latitude: number; longitude: number} | null>(null);
+
+  const maxRetries = 3;
 
   const controlStyle = {
     padding: theme.spacing(1),
@@ -52,6 +70,31 @@ const MapHomeLayout = () => {
     zIndex: 0,
   };
 
+  const handleShowDirections = (location: {latitude: number; longitude: number}) => {
+    setSelectedLocation(location);
+    setShowDirections(true);
+  };
+
+  const handleMapError = (e: ErrorEvent) => {
+    console.error('Map Error:', e);
+    setMapError(true);
+    
+    if (retryCount < maxRetries) {
+      setTimeout(() => {
+        setMapKey(prev => prev + 1);
+        setMapError(false);
+        setRetryCount(prev => prev + 1);
+      }, 1000);
+    }
+  };
+  
+  const handleManualRetry = () => {
+    setMapError(false);
+    setRetryCount(0);
+    setMapKey(prev => prev + 1);
+    window.location.reload();
+  };
+
   useEffect(() => {
     const fetchVendors = async () => {
       try {
@@ -59,19 +102,15 @@ const MapHomeLayout = () => {
         const response = await getVendors();
         if (response.status === HTTP_CODES_ENUM.OK && response.data) {
           setVendors(response.data.data);
-        } else {
-          enqueueSnackbar(t("errors.failedToLoadVendors"), {
-            variant: "error",
-          });
-        }
+        } 
       } catch (error) {
-        enqueueSnackbar(t("errors.failedToLoadVendors"), { variant: "error" });
+        console.log(t("errors.failedToLoadVendors"));
       } finally {
         setLoading(false);
       }
     };
     fetchVendors();
-  }, [getVendors, enqueueSnackbar, t]);
+  }, [getVendors, t]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -100,13 +139,13 @@ const MapHomeLayout = () => {
   const updateBounds = () => {
     const map = mapRef.current?.getMap();
     if (map) {
-      const bounds = map.getBounds();
-      if (bounds) {
+      const mapBounds = map.getBounds();
+      if (mapBounds) {
         setBounds([
-          bounds.getWest(),
-          bounds.getSouth(),
-          bounds.getEast(),
-          bounds.getNorth(),
+          mapBounds.getWest(),
+          mapBounds.getSouth(),
+          mapBounds.getEast(),
+          mapBounds.getNorth(),
         ]);
       }
     }
@@ -117,13 +156,13 @@ const MapHomeLayout = () => {
       filterTypes.length === 0 ||
       vendor.vendorTypes.some((type) => filterTypes.includes(type))
   );
-  useEffect(() => {
-    if (vendors.length > 0) {
-      // Preload by briefly showing and hiding the component
-      setSelectedVendor(vendors[0]);
-      setTimeout(() => setSelectedVendor(null), 100);
-    }
-  }, [vendors]);
+
+  // useEffect(() => {
+  //   if (vendors.length > 0) {
+  //     setSelectedVendor(vendors[0]);
+  //     setTimeout(() => setSelectedVendor(null), 100);
+  //   }
+  // }, [vendors]);
 
   if (loading) {
     return (
@@ -141,21 +180,52 @@ const MapHomeLayout = () => {
     );
   }
 
+  if (mapError && retryCount >= maxRetries) {
+    return (
+      <Box
+        sx={{
+          height: "calc(100vh - 64px)",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 2,
+        }}
+      >
+        <Typography variant="h6">
+          Unable to load the map
+        </Typography>
+        <Button
+          variant="contained"
+          startIcon={<RefreshCw />}
+          onClick={handleManualRetry}
+        >
+          Retry
+        </Button>
+      </Box>
+    );
+  }
+
   return (
     <Box
       sx={{ height: "calc(100vh - 64px)", width: "100%", position: "relative" }}
     >
       <Map
+        key={mapKey}
         {...viewState}
         onMove={(evt) => setViewState(evt.viewState)}
         mapStyle="mapbox://styles/mapbox/dark-v11"
         mapboxAccessToken={MAPBOX_TOKEN}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: "100%"}}
         ref={mapRef}
         onLoad={updateBounds}
         onMoveEnd={updateBounds}
+        onError={handleMapError}
         maxZoom={20}
         minZoom={3}
+        reuseMaps
+        attributionControl={false}
       >
         <GeolocateControl
           position="top-right"
@@ -170,8 +240,17 @@ const MapHomeLayout = () => {
           bounds={bounds}
           zoom={viewState.zoom}
         />
+        {showDirections && selectedLocation && (
+  <GetDirections
+    destination={selectedLocation}
+    onClose={() => {
+      setShowDirections(false);
+      setSelectedLocation(null);
+    }}
+  />
+)}
         <Container
-          maxWidth="md"
+          maxWidth="sm"
           sx={{
             height: "100%",
             display: "flex",
@@ -195,7 +274,14 @@ const MapHomeLayout = () => {
               setFilterTypes={setFilterTypes}
             />
           </Box>
-          <BottomNav />
+          <BottomNav 
+  currentLocation={{ 
+    latitude: viewState.latitude, 
+    longitude: viewState.longitude 
+  }}
+  vendors={vendors}
+  onShowDirections={handleShowDirections}
+/>
         </Container>
       </Map>
       <VendorViews

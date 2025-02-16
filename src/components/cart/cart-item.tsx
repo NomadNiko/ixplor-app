@@ -1,57 +1,66 @@
-import { useState } from 'react';
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import { Minus, Plus, X } from "lucide-react";
-import { CartItemType } from "@/app/[language]/cart/types";
+import { Minus, Plus, X, Calendar, Clock } from "lucide-react";
 import { useTranslation } from "@/services/i18n/client";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useUpdateCartItemService, useRemoveFromCartService } from "@/services/api/services/cart";
-import { useSnackbar } from "@/hooks/use-snackbar";
+import {
+  useUpdateCartItemService,
+  useRemoveFromCartService,
+} from "@/services/api/services/cart";
+import { format } from "date-fns";
+import { formatDuration } from "@/components/utils/duration-utils";
 
 type CartItemProps = {
-  item: CartItemType;
-  onUpdate: (productId: string, quantity: number) => void;
-  onRemove?: (productId: string) => void;
-  isGuest?: boolean;
+  item: {
+    productItemId: string;
+    productName: string;
+    price: number;
+    quantity: number;
+    productDate: string;
+    productStartTime: string;
+    productDuration: number;
+    vendorId: string;
+  };
+  onUpdate: (productItemId: string, quantity: number) => void;
+  onRemove: (productItemId: string) => void;
 };
 
-export default function CartItem({ 
-  item, 
-  onUpdate, 
+export default function CartItem({
+  item,
+  onUpdate,
   onRemove,
-  isGuest = false 
 }: CartItemProps) {
   const { t } = useTranslation("cart");
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { enqueueSnackbar } = useSnackbar();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [loading, setLoading] = useState(false);
-  
+
   const updateCartItem = useUpdateCartItemService();
   const removeFromCart = useRemoveFromCartService();
 
   const handleQuantityChange = async (newQuantity: number) => {
     try {
       setLoading(true);
-      if (isGuest) {
-        onUpdate(item.productId, newQuantity);
-        enqueueSnackbar(t('success.quantityUpdated'), { variant: 'success' });
-      } else {
-        await updateCartItem({
-          productId: item.productId,
-          quantity: newQuantity,
-        });
-        onUpdate(item.productId, newQuantity);
-        enqueueSnackbar(t('success.quantityUpdated'), { variant: 'success' });
+
+      // If new quantity would be 0, use remove function instead
+      if (newQuantity <= 0) {
+        await handleRemove();
+        return;
       }
+
+      await updateCartItem({
+        productItemId: item.productItemId,
+        quantity: newQuantity,
+      });
+      onUpdate(item.productItemId, newQuantity);
     } catch (error) {
-      console.error('Error updating quantity:', error);
-      enqueueSnackbar(t('errors.updateFailed'), { variant: 'error' });
+      console.error("Error updating quantity:", error);
     } finally {
       setLoading(false);
     }
@@ -60,47 +69,40 @@ export default function CartItem({
   const handleRemove = async () => {
     try {
       setLoading(true);
-      if (isGuest && onRemove) {
-        onRemove(item.productId);
-        enqueueSnackbar(t('success.itemRemoved'), { variant: 'success' });
-      } else {
-        await removeFromCart(item.productId);
-        onUpdate(item.productId, 0);
-        enqueueSnackbar(t('success.itemRemoved'), { variant: 'success' });
-      }
+      await removeFromCart(item.productItemId);
+      onRemove(item.productItemId);
     } catch (error) {
-      console.error('Error removing item:', error);
-      enqueueSnackbar(t('errors.removeFailed'), { variant: 'error' });
+      console.error("Error removing item:", error);
     } finally {
       setLoading(false);
     }
   };
-  
+
   return (
     <Card sx={{ mb: 2 }}>
-      <CardContent 
-        sx={{ 
-          display: "flex", 
-          flexDirection: isMobile ? "column" : "row", 
-          alignItems: "center", 
+      <CardContent
+        sx={{
+          display: "flex",
+          flexDirection: isMobile ? "column" : "row",
+          alignItems: "center",
           gap: isMobile ? 1 : 2,
           position: "relative",
           px: isMobile ? 1 : 2,
-          py: isMobile ? 1 : 2
+          py: isMobile ? 1 : 2,
         }}
       >
         {loading && (
           <Box
             sx={{
-              position: 'absolute',
+              position: "absolute",
               top: 0,
               left: 0,
               right: 0,
               bottom: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
               borderRadius: 1,
               zIndex: 1,
             }}
@@ -108,72 +110,76 @@ export default function CartItem({
             <CircularProgress />
           </Box>
         )}
-        
+
         {isMobile && (
-          <IconButton 
+          <IconButton
             onClick={handleRemove}
             disabled={loading}
-            sx={{ 
-              position: "absolute", 
-              top: 4, 
-              right: 4, 
-              zIndex: 1 
+            sx={{
+              position: "absolute",
+              top: 4,
+              right: 4,
+              zIndex: 1,
             }}
           >
             <X size={16} />
           </IconButton>
         )}
 
-        {item.productImageURL && (
-          <Box
-            component="img"
-            src={item.productImageURL}
-            alt={item.productName}
-            sx={{
-              width: isMobile ? 80 : 100,
-              height: isMobile ? 80 : 100,
-              objectFit: "cover",
-              borderRadius: 1,
-              mb: isMobile ? 1 : 0
-            }}
-          />
-        )}
-        
-        <Box 
-          flex={1} 
-          sx={{ 
-            width: "100%", 
+        <Box
+          flex={1}
+          sx={{
+            width: "100%",
             textAlign: isMobile ? "center" : "left",
-            mb: isMobile ? 1 : 0
+            mb: isMobile ? 1 : 0,
           }}
         >
           <Typography variant={isMobile ? "subtitle1" : "h6"}>
             {item.productName}
           </Typography>
-          {item.productDate && (
-            <Typography variant={isMobile ? "caption" : "body2"}>
-              {t("date")}: {new Date(item.productDate).toLocaleDateString()}
-            </Typography>
-          )}
-          {item.productStartTime && (
-            <Typography variant={isMobile ? "caption" : "body2"}>
-              {t("time")}: {item.productStartTime}
-            </Typography>
-          )}
+
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 0.5,
+              mt: 1,
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Calendar size={16} />
+              <Typography variant="body2" color="text.secondary">
+                {format(new Date(item.productDate), "PPP")}
+              </Typography>
+            </Box>
+
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Clock size={16} />
+              <Typography variant="body2" color="text.secondary">
+                {format(
+                  new Date(`2000-01-01T${item.productStartTime}`),
+                  "h:mm a"
+                )}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                ({formatDuration(item.productDuration)})
+              </Typography>
+            </Box>
+          </Box>
         </Box>
 
-        <Box 
-          sx={{ 
-            display: "flex", 
-            alignItems: "center", 
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
             justifyContent: "center",
             gap: 1,
-            mb: isMobile ? 1 : 0
+            mb: isMobile ? 1 : 0,
           }}
         >
           <IconButton
             size="small"
-            onClick={() => handleQuantityChange(Math.max(0, item.quantity - 1))}
+            onClick={() => handleQuantityChange(item.quantity - 1)}
             disabled={loading}
           >
             <Minus size={16} />
@@ -190,14 +196,19 @@ export default function CartItem({
           </IconButton>
         </Box>
 
-        <Box sx={{ 
-          textAlign: isMobile ? "center" : "right", 
-          minWidth: isMobile ? "100%" : 100 
-        }}>
+        <Box
+          sx={{
+            textAlign: isMobile ? "center" : "right",
+            minWidth: isMobile ? "100%" : 100,
+          }}
+        >
           <Typography variant={isMobile ? "subtitle1" : "h6"}>
             ${(item.price * item.quantity).toFixed(2)}
           </Typography>
-          <Typography variant={isMobile ? "caption" : "body2"} color="text.secondary">
+          <Typography
+            variant={isMobile ? "caption" : "body2"}
+            color="text.secondary"
+          >
             ${item.price.toFixed(2)} {t("each")}
           </Typography>
         </Box>

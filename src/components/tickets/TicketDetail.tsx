@@ -37,25 +37,20 @@ export const TicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose }) =
     if (!ticketEl) return;
 
     try {
-      // Create canvas with better quality settings
       const canvas = await html2canvas(ticketEl, {
-        scale: 2, // Better quality for retina displays
+        scale: 2,
         useCORS: true,
         backgroundColor: null,
         windowWidth: 440,
         windowHeight: 1350
       });
-
-      // Convert to blob
+      
       const blob = await new Promise<Blob>((resolve) => {
         canvas.toBlob((blob) => {
           resolve(blob as Blob);
         }, 'pdf', 1.0);
       });
-
     
-
-      // Create download link
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -86,82 +81,110 @@ export const TicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose }) =
   };
 
   return (
-    <Paper sx={{ maxWidth: 500, width: '100%', mx: 'auto', p: 3 }}>
-      <Box id="ticket-content" sx={{ 
-        bgcolor: 'background.paper',
-        borderRadius: 1,
-        p: 3,
-        position: 'relative'
-      }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-          <TicketIcon size={24} />
-          <Typography variant="h6">{ticket.productName}</Typography>
-        </Box>
-
-        <Alert severity={getStatusColor(ticket.status)} sx={{ mb: 3 }}>
-          Ticket Status: {ticket.status}
-        </Alert>
-
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
-          <QRGenerator ticketId={ticket._id} transactionId={ticket.transactionId} />
-        </Box>
-
-        <Grid container spacing={2} sx={{ mb: 2 }}>
-          <Grid item xs={6} sm={6}>
-            <Typography color="text.secondary" variant="caption" display="block">
-              Date
-            </Typography>
-            <Typography>{formatDate(ticket.productDate)}</Typography>
-          </Grid>
-          <Grid item xs={6} sm={6}>
-            <Typography color="text.secondary" variant="caption" display="block">
-              Time
-            </Typography>
-            <Typography>{ticket.productStartTime || 'N/A'}</Typography>
-          </Grid>
-          <Grid item xs={6} sm={6}>
-            <Typography color="text.secondary" variant="caption" display="block">
-              Duration
-            </Typography>
-            <Typography>
-            {ticket.productDuration && ` (${formatDuration(ticket.productDuration)})`}
-            </Typography>
-          </Grid>
-          <Grid item xs={6} sm={6}>
-            <Typography color="text.secondary" variant="caption" display="block">
-              Quantity
-            </Typography>
-            <Typography>{ticket.quantity}</Typography>
-          </Grid>
-        </Grid>
-
-        {ticket.productLocation && (
-          <Box sx={{ mb: 2, ml: 2 }}>
-            <Button
-              variant="text"
-              size="small"
-              onClick={handleOpenMap}
-              endIcon={<ExternalLink size={16} />}
-            >
-              View Location
-            </Button>
+    <Box
+      sx={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backdropFilter: 'blur(8px)',
+        zIndex: 1000,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        p: 2
+      }}
+      onClick={onClose}
+    >
+      <Paper 
+        sx={{ 
+          maxWidth: 500, 
+          width: '100%', 
+          mx: 'auto', 
+          p: 3,
+          backgroundColor: 'background.paper',
+          position: 'relative'
+        }}
+        onClick={e => e.stopPropagation()}
+      >
+        <Box id="ticket-content" sx={{ 
+          bgcolor: 'background.paper',
+          borderRadius: 1,
+          p: 3,
+          position: 'relative'
+        }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+            <TicketIcon size={24} />
+            <Typography variant="h6">{ticket.productName}</Typography>
           </Box>
-        )}
-      </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
-        <Button
-          variant="outlined"
-          startIcon={<Download size={16} />}
-          onClick={handleExportTicket}
-        >
-          Export
-        </Button>
-        <Button variant="contained" onClick={onClose}>
-          Close
-        </Button>
-      </Box>
-    </Paper>
+          <Alert severity={getStatusColor(ticket.status)} sx={{ mb: 3 }}>
+            Ticket Status: {ticket.status}
+          </Alert>
+
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+            <QRGenerator ticketId={ticket._id} transactionId={ticket.transactionId} />
+          </Box>
+
+          <Grid container spacing={2} sx={{ mb: 2 }}>
+            <Grid item xs={6} sm={6}>
+              <Typography color="text.secondary" variant="caption" display="block">
+                Date
+              </Typography>
+              <Typography>{formatDate(ticket.productDate)}</Typography>
+            </Grid>
+            <Grid item xs={6} sm={6}>
+              <Typography color="text.secondary" variant="caption" display="block">
+                Time
+              </Typography>
+              <Typography>{ticket.productStartTime || 'N/A'}</Typography>
+            </Grid>
+            <Grid item xs={6} sm={6}>
+              <Typography color="text.secondary" variant="caption" display="block">
+                Duration
+              </Typography>
+              <Typography>
+                {ticket.productDuration && formatDuration(ticket.productDuration)}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} sm={6}>
+              <Typography color="text.secondary" variant="caption" display="block">
+                Quantity
+              </Typography>
+              <Typography>{ticket.quantity}</Typography>
+            </Grid>
+          </Grid>
+
+          {ticket.productLocation && (
+            <Box sx={{ mb: 2, ml: 2 }}>
+              <Button
+                variant="text"
+                size="small"
+                onClick={handleOpenMap}
+                endIcon={<ExternalLink size={16} />}
+              >
+                View Location
+              </Button>
+            </Box>
+          )}
+        </Box>
+
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
+          <Button
+            variant="outlined"
+            startIcon={<Download size={16} />}
+            onClick={handleExportTicket}
+          >
+            Export
+          </Button>
+          <Button variant="contained" onClick={onClose}>
+            Close
+          </Button>
+        </Box>
+      </Paper>
+    </Box>
   );
 };
 

@@ -1,25 +1,42 @@
 import { API_URL } from "../config";
-import { CartItemType } from "@/app/[language]/cart/types";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
+
+export interface CartItem {
+  productItemId: string;
+  productName: string;
+  productDescription?: string;
+  price: number;
+  quantity: number;
+  productImageURL?: string;
+  vendorId: string;
+  productType: 'tours' | 'lessons' | 'rentals' | 'tickets';
+  productDate: Date;
+  productStartTime: string;
+  productDuration: number;
+  quantityAvailable: number;
+  itemStatus: string;
+  templateId: string;
+  templateName: string;
+}
 
 export interface CartResponse {
   userId: string;
-  items: CartItemType[];
+  items: CartItem[];
   total: number;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface AddToCartData {
-  productId: string;
+  productItemId: string;
+  productDate: Date;
   quantity: number;
-  vendorId: string; 
-  productDate?: string;
-  productStartTime?: string;
+  vendorId: string;
+  templateId: string;
 }
 
 export interface UpdateCartItemData {
-  productId: string;
+  productItemId: string;
   quantity: number;
 }
 
@@ -29,17 +46,15 @@ export const useGetCartService = () => {
     if (!tokensInfo?.token) {
       throw new Error('No auth token');
     }
-
     const response = await fetch(`${API_URL}/cart`, {
       headers: {
         Authorization: `Bearer ${tokensInfo.token}`,
       },
     });
-
     if (!response.ok) {
-      throw new Error('Failed to fetch cart');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to fetch cart');
     }
-
     return response.json();
   };
 };
@@ -50,7 +65,6 @@ export const useAddToCartService = () => {
     if (!tokensInfo?.token) {
       throw new Error('No auth token');
     }
-
     const response = await fetch(`${API_URL}/cart/add`, {
       method: 'POST',
       headers: {
@@ -59,11 +73,10 @@ export const useAddToCartService = () => {
       },
       body: JSON.stringify(data),
     });
-
     if (!response.ok) {
-      throw new Error('Failed to add item to cart');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to add item to cart');
     }
-
     return response.json();
   };
 };
@@ -74,42 +87,38 @@ export const useUpdateCartItemService = () => {
     if (!tokensInfo?.token) {
       throw new Error('No auth token');
     }
-
-    const response = await fetch(`${API_URL}/cart/update`, {
+    const response = await fetch(`${API_URL}/cart/${data.productItemId}`, { // Fixed URL
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${tokensInfo.token}`,
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ quantity: data.quantity }),
     });
-
     if (!response.ok) {
-      throw new Error('Failed to update cart item');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to update cart item');
     }
-
     return response.json();
   };
 };
 
 export const useRemoveFromCartService = () => {
-  return async (productId: string) => {
+  return async (productItemId: string) => {
     const tokensInfo = getTokensInfo();
     if (!tokensInfo?.token) {
       throw new Error('No auth token');
     }
-
-    const response = await fetch(`${API_URL}/cart/item/${productId}`, {
+    const response = await fetch(`${API_URL}/cart/${productItemId}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${tokensInfo.token}`,
       },
     });
-
     if (!response.ok) {
-      throw new Error('Failed to remove item from cart');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to remove item from cart');
     }
-
     return response.json();
   };
 };
@@ -120,18 +129,16 @@ export const useClearCartService = () => {
     if (!tokensInfo?.token) {
       throw new Error('No auth token');
     }
-
-    const response = await fetch(`${API_URL}/cart/clear`, {
+    const response = await fetch(`${API_URL}/cart`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${tokensInfo.token}`,
       },
     });
-
     if (!response.ok) {
-      throw new Error('Failed to clear cart');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Failed to clear cart');
     }
-
     return response.json();
   };
 };

@@ -24,7 +24,6 @@ import { styled } from "@mui/material/styles";
 import { ShoppingCart } from "lucide-react";
 import { useCartQuery } from "@/hooks/use-cart-query";
 import Badge from "@mui/material/Badge";
-import { useGuestCart } from "@/hooks/use-guest-cart";
 
 
 // Define the props type for the LogoTypography component
@@ -49,7 +48,6 @@ function ResponsiveAppBar() {
   const { t } = useTranslation("common");
   const { user, isLoaded } = useAuth();
   const { logOut } = useAuthActions();
-  const { guestCart, isGuest } = useGuestCart();
   const { data: cartData, isLoading: isCartLoading } = useCartQuery();
 
   const [anchorElementNav, setAnchorElementNav] = useState<null | HTMLElement>(
@@ -113,8 +111,9 @@ function ResponsiveAppBar() {
                   {t("common:navigation.home")}
                 </Typography>
               </MenuItem>
+              
               {!!user?.role &&
-                [RoleEnum.USER, RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
+                [RoleEnum.USER, RoleEnum.ADMIN, RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
                     key="tickets"
                     onClick={handleCloseNavMenu}
@@ -128,7 +127,36 @@ function ResponsiveAppBar() {
                 ]}
                 
               {!!user?.role &&
-                [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
+                [RoleEnum.USER, RoleEnum.ADMIN, RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && [
+                  <MenuItem
+                    key="receipts"
+                    onClick={handleCloseNavMenu}
+                    component={Link}
+                    href="/receipts"
+                  >
+                    <Typography textAlign="center">
+                      {t("common:navigation.receipts")}
+                    </Typography>
+                  </MenuItem>,
+                ]}
+                
+                
+              {!!user?.role &&
+                [RoleEnum.USER, RoleEnum.ADMIN, RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && [
+                  <MenuItem
+                    key="service-desk"
+                    onClick={handleCloseNavMenu}
+                    component={Link}
+                    href="/service-desk"
+                  >
+                    <Typography textAlign="center">
+                      {t("common:navigation.service-desk")}
+                    </Typography>
+                  </MenuItem>,
+                ]}
+                
+              {!!user?.role &&
+                [RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
                     key="vendor-status"
                     onClick={handleCloseNavMenu}
@@ -156,41 +184,28 @@ function ResponsiveAppBar() {
                 ]}
 
               {!!user?.role &&
-                [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
-                  <MenuItem
-                    key="vendors"
-                    onClick={handleCloseNavMenu}
-                    component={Link}
-                    href="/vendors"
-                  >
-                    <Typography textAlign="center">
-                      {t("common:navigation.vendors")}
-                    </Typography>
-                  </MenuItem>,
-                ]}
-
-              {!!user?.role &&
-                [RoleEnum.ADMIN, RoleEnum.VENDOR].includes(
+                [RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(
                   Number(user?.role?.id)
                 ) && [
                   <MenuItem
                     key="addProduct"
                     onClick={handleCloseNavMenu}
                     component={Link}
-                    href="/products/add"
+                    href="/templates"
                   >
                     <Typography textAlign="center">
                       {t("common:navigation.addProduct")}
                     </Typography>
                   </MenuItem>,
                 ]}
+                
               {!!user?.role &&
-                [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && [
+                [RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
                     key="products"
                     onClick={handleCloseNavMenu}
                     component={Link}
-                    href="/products"
+                    href="/product-items"
                   >
                     <Typography textAlign="center">
                       {t("common:navigation.products")}
@@ -199,15 +214,29 @@ function ResponsiveAppBar() {
                 ]}
 
               {!!user?.role &&
-                [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
+                [RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && [
                   <MenuItem
-                    key="products-admin"
+                    key="inventory"
                     onClick={handleCloseNavMenu}
                     component={Link}
-                    href="/products-admin"
+                    href="/inventory"
                   >
                     <Typography textAlign="center">
-                      {t("common:navigation.products-admin")}
+                      {t("common:navigation.inventory")}
+                    </Typography>
+                  </MenuItem>,
+                ]}
+
+              {!!user?.role &&
+                [RoleEnum.ADMIN].includes(Number(user?.role?.id)) && [
+                  <MenuItem
+                    key="service-admin"
+                    onClick={handleCloseNavMenu}
+                    component={Link}
+                    href="/service-admin"
+                  >
+                    <Typography textAlign="center">
+                      {t("common:navigation.service-admin")}
                     </Typography>
                   </MenuItem>,
                 ]}
@@ -310,8 +339,9 @@ function ResponsiveAppBar() {
             >
               {t("common:navigation.home")}
             </Button>
+            
             {!!user?.role &&
-              [RoleEnum.USER,RoleEnum.ADMIN, RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+              [RoleEnum.USER,RoleEnum.ADMIN, RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
@@ -325,7 +355,35 @@ function ResponsiveAppBar() {
               )}
 
             {!!user?.role &&
-              [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+              [RoleEnum.USER,RoleEnum.ADMIN, RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && (
+                <>
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                    component={Link}
+                    href="/receipts"
+                  >
+                    {t("common:navigation.receipts")}
+                  </Button>
+                </>
+              )}
+
+            {!!user?.role &&
+              [RoleEnum.USER,RoleEnum.ADMIN, RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && (
+                <>
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                    component={Link}
+                    href="/service-desk"
+                  >
+                    {t("common:navigation.service-desk")}
+                  </Button>
+                </>
+              )}
+
+            {!!user?.role &&
+              [RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
@@ -353,42 +411,43 @@ function ResponsiveAppBar() {
               )}
 
             {!!user?.role &&
-              [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+              [RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
                     sx={{ my: 2, color: "white", display: "block" }}
                     component={Link}
-                    href="/vendors"
-                  >
-                    {t("common:navigation.vendors")}
-                  </Button>
-                </>
-              )}
-
-            {!!user?.role &&
-              [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
-                <>
-                  <Button
-                    onClick={handleCloseNavMenu}
-                    sx={{ my: 2, color: "white", display: "block" }}
-                    component={Link}
-                    href="/products/add"
+                    href="/templates"
                   >
                     {t("common:navigation.addProduct")}
                   </Button>
                 </>
               )}
+              
             {!!user?.role &&
-              [RoleEnum.VENDOR].includes(Number(user?.role?.id)) && (
+              [RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && (
                 <>
                   <Button
                     onClick={handleCloseNavMenu}
                     sx={{ my: 2, color: "white", display: "block" }}
                     component={Link}
-                    href="/products"
+                    href="/product-items"
                   >
                     {t("common:navigation.products")}
+                  </Button>
+                </>
+              )}
+
+            {!!user?.role &&
+              [RoleEnum.VENDOR, RoleEnum.PREVENDOR].includes(Number(user?.role?.id)) && (
+                <>
+                  <Button
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                    component={Link}
+                    href="/inventory"
+                  >
+                    {t("common:navigation.inventory")}
                   </Button>
                 </>
               )}
@@ -400,9 +459,9 @@ function ResponsiveAppBar() {
                     onClick={handleCloseNavMenu}
                     sx={{ my: 2, color: "white", display: "block" }}
                     component={Link}
-                    href="/products-admin"
+                    href="/service-admin"
                   >
-                    {t("common:navigation.products-admin")}
+                    {t("common:navigation.service-admin")}
                   </Button>
                 </>
               )}
@@ -455,7 +514,7 @@ function ResponsiveAppBar() {
               mr: 1,
             }}
           ></Box>
-          {(user || isGuest) && (
+          {(user) && (
              <Box sx={{ mr: 2 }}>
              <Tooltip title={t("common:navigation.cart")}>
                {isCartLoading ? (
@@ -468,7 +527,7 @@ function ResponsiveAppBar() {
                    data-testid="cart-button"
                  >
                    <Badge
-                     badgeContent={isGuest ? guestCart.length : cartData?.items?.length || 0}
+                     badgeContent={cartData?.items?.length || 0}
                      color="primary"
                      sx={{
                        "& .MuiBadge-badge": {

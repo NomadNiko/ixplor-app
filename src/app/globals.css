@@ -1,1 +1,4 @@
 /* Your global CSS here */
+.mapboxgl-ctrl-logo {
+    display: none !important;
+  }

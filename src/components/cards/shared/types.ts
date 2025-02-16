@@ -5,6 +5,8 @@ import { VendorStatusEnum } from '@/app/[language]/types/vendor';
 import { Vendor } from '@/app/[language]/types/vendor';
 import { PlaceResult } from '@/hooks/use-google-places';
 import { FileEntity } from '@/services/api/types/file-entity';
+import { TemplateStatusEnum } from '@/components/template/types/template.types';
+import { ProductItemStatus } from '@/app/[language]/types/product-item';
 
 export type FieldType = 
   | 'text'
@@ -62,6 +64,7 @@ export interface FieldConfig {
   rows?: number;
   gridWidth?: 1 | 2 | 3 | 4 | 6 | 12;
   prefilled?: boolean;
+  condition?: (formData: FormData) => boolean;
 }
 
 export interface SectionConfig {
@@ -78,11 +81,19 @@ export type ApprovalButtonsConfig = {
   type: 'vendor';
   currentStatus: VendorStatusEnum;
   onStatusChange: (status: VendorStatusEnum) => Promise<void>;
+} | {
+  type: 'template';
+  currentStatus: TemplateStatusEnum;
+  onStatusChange: (status: TemplateStatusEnum) => Promise<void>;
+} | {
+  type: 'productItem';
+  currentStatus: ProductItemStatus;
+  onStatusChange: (status: ProductItemStatus) => Promise<void>;
 };
 
 export interface CardConfig {
   title: string;
-  type: 'vendor' | 'product';
+  type: 'vendor' | 'product' | 'template' | 'productItem';
   sections: SectionConfig[];
   approvalButtons?: ApprovalButtonsConfig;
 }
@@ -90,6 +101,7 @@ export interface CardConfig {
 export interface FormData {
   [key: string]: BaseFieldValue;
 }
+
 
 export interface BaseCardProps {
   config: CardConfig;
@@ -107,6 +119,7 @@ export interface BaseCardProps {
   children?: ReactNode;
 }
 
+
 export interface SharedCardActionsProps {
   onSave: (data: FormData) => Promise<void>;
   onCancel: () => void;
@@ -115,7 +128,7 @@ export interface SharedCardActionsProps {
   methods: UseFormReturn<FormData>;
   customActions?: ReactNode;
   t: (key: string) => string;
-  type: 'vendor' | 'product';
+  type: 'vendor' | 'product' | 'template' | 'productItem';
   mode?: 'edit' | 'create';
 }
 
@@ -144,9 +157,9 @@ export interface AddressFieldProps {
 }
 
 export interface ApprovalButtonsProps {
-  type: 'vendor' | 'product';
-  currentStatus: ProductStatusEnum | VendorStatusEnum;
-  onStatusChange: (status: ProductStatusEnum | VendorStatusEnum) => Promise<void>;
+  type: 'vendor' | 'product'| 'template';
+  currentStatus: ProductStatusEnum | VendorStatusEnum | ProductStatusEnum;
+  onStatusChange: (status: ProductStatusEnum | VendorStatusEnum | ProductStatusEnum) => Promise<void>;
   isSubmitting: boolean;
 }
 
@@ -172,4 +185,5 @@ export interface FormState {
 }
 
 export type Mode = 'edit' | 'create';
-export type EntityType = 'vendor' | 'product';
+
+export type EntityType = 'vendor' | 'product' | 'template' | 'productItem';

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSnackbar } from '@/hooks/use-snackbar';
 
 export interface PlaceResult {
   address: string;
@@ -15,8 +14,7 @@ export const useGooglePlaces = () => {
   const autocompleteService = useRef<google.maps.places.AutocompleteService | null>(null);
   const placesService = useRef<google.maps.places.PlacesService | null>(null);
   const geocoder = useRef<google.maps.Geocoder | null>(null);
-  const { enqueueSnackbar } = useSnackbar();
-
+  
   useEffect(() => {
     // Load Google Maps JavaScript API
     const script = document.createElement('script');
@@ -48,7 +46,6 @@ export const useGooglePlaces = () => {
       return response.predictions;
     } catch (error) {
       console.error('Error fetching place predictions:', error);
-      enqueueSnackbar('Error fetching address suggestions', { variant: 'error' });
       return [];
     }
   };
@@ -105,7 +102,6 @@ export const useGooglePlaces = () => {
       return result;
     } catch (error) {
       console.error('Error fetching place details:', error);
-      enqueueSnackbar('Error fetching address details', { variant: 'error' });
       return null;
     }
   };
