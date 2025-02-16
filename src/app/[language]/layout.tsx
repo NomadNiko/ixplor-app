@@ -39,6 +39,11 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     description: "Discover and book local activities, tours, lessons, rentals and tickets. iXplor connects you with nearby authentic local experiences and outdoor adventures.",
     keywords: "adventure booking, local tours, outdoor activities, travel experiences, adventure marketplace, outdoor lessons, equipment rentals, event tickets, guided tours, local experiences, outdoor adventures, adventure travel, local activities, adventure sports, outdoor recreation",
     metadataBase: new URL('https://ixplor.app/'),
+    icons: {
+      icon: '/favicon.ico',
+      shortcut: '/favicon.ico',
+      apple: '/favicon.ico',
+    },
   };
 }
 
@@ -58,6 +63,7 @@ export default async function RootLayout(props: {
     <html lang={language} dir={dir(language)} suppressHydrationWarning>
       <head>
         <link href='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css' rel='stylesheet' />
+        <link rel="icon" href="/favicon.ico" />
       </head>
       <body suppressHydrationWarning>
         <InitColorSchemeScript />
