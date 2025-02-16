@@ -36,6 +36,9 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const { t } = await getServerTranslation(params.language, "common");
   return {
     title: t("title"),
+    description: "Discover and book local activities, tours, lessons, rentals and tickets. iXplor connects you with nearby authentic local experiences and outdoor adventures.",
+    keywords: "adventure booking, local tours, outdoor activities, travel experiences, adventure marketplace, outdoor lessons, equipment rentals, event tickets, guided tours, local experiences, outdoor adventures, adventure travel, local activities, adventure sports, outdoor recreation",
+    metadataBase: new URL('https://ixplor.app/'),
   };
 }
 
