@@ -27,8 +27,8 @@ export const useStripeCheckout = (cartItems: CartItemType[] | undefined) => {
         // Create payload matching server expectations
         const payload = {
           items: cartItems,
-          currency: 'usd', // You might want to make this configurable
-          returnUrl: `${window.location.origin}/tickets`
+          currency: 'usd',
+          returnUrl: `${window.location.origin}/dashboard`
         };
 
         const response = await fetch(`${API_URL}/stripe/create-payment-intent`, {

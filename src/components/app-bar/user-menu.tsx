@@ -30,25 +30,17 @@ export const UserMenu: React.FC<UserMenuProps> = ({ anchorEl, onClose, onLogout 
       open={Boolean(anchorEl)}
       onClose={onClose}
     >
-      <MenuItem
-        onClick={onClose}
-        component={Link}
-        href="/dashboard"
-        data-testid="user-profile"
-      >
-        <Typography textAlign="center">
-          {t("common:navigation.dashboard")}
-        </Typography>
-      </MenuItem>
+   
       <MenuItem
         onClick={onClose}
         component={Link}
         href="/service-desk"
       >
         <Typography textAlign="center">
-          {t("common:navigation.service-desk")}
+          {t("common:navigation.support")}
         </Typography>
       </MenuItem>
+
       <MenuItem
         onClick={() => {
           onLogout();
