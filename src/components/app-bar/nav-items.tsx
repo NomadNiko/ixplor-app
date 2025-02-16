@@ -21,17 +21,24 @@ const ADMIN_GROUP = {
   ]
 };
 
+const PRODUCT_GROUP = {
+  groupName: 'Products',
+  items: [
+    { key: "addProduct", path: "/templates" },
+    { key: "products", path: "/product-items" },
+    { key: "inventory", path: "/inventory" },
+  ]
+};
+
 export const getNavItems = (user: User | null) => {
   const isAdmin = user?.role && Number(user.role.id) === RoleEnum.ADMIN;
+  const isVendor = user?.role && (Number(user.role.id) === RoleEnum.VENDOR || Number(user.role.id) === RoleEnum.PREVENDOR);
 
   const regularItems = [
     { key: "home", path: "/", roles: [] },
     { key: "dashboard", path: "/dashboard", roles: [RoleEnum.USER, RoleEnum.ADMIN, RoleEnum.VENDOR, RoleEnum.PREVENDOR] },
     { key: "vendor-status", path: "/vendor-status", roles: [RoleEnum.PREVENDOR] },
     { key: "vendor-account", path: "/vendor-account", roles: [RoleEnum.VENDOR] },
-    { key: "addProduct", path: "/templates", roles: [RoleEnum.VENDOR, RoleEnum.PREVENDOR] },
-    { key: "products", path: "/product-items", roles: [RoleEnum.VENDOR, RoleEnum.PREVENDOR] },
-    { key: "inventory", path: "/inventory", roles: [RoleEnum.VENDOR, RoleEnum.PREVENDOR] },
     { key: "service-desk", path: "/service-desk", roles: [RoleEnum.VENDOR, RoleEnum.PREVENDOR, RoleEnum.ADMIN] }
   ];
 
@@ -42,6 +49,7 @@ export const getNavItems = (user: User | null) => {
 
   return {
     regularItems: filteredItems,
+    productGroup: isVendor ? PRODUCT_GROUP : null,
     adminGroup: isAdmin ? ADMIN_GROUP : null
   };
 };
@@ -49,7 +57,7 @@ export const getNavItems = (user: User | null) => {
 export const NavItems: React.FC<NavItemProps> = ({ user, onClose }) => {
   const { t } = useTranslation("common");
   const [openGroup, setOpenGroup] = useState<string | null>(null);
-  const { regularItems, adminGroup } = getNavItems(user);
+  const { regularItems, adminGroup, productGroup } = getNavItems(user);
 
   const handleGroupOpen = (groupName: string) => {
     setOpenGroup(groupName);
@@ -79,6 +87,15 @@ export const NavItems: React.FC<NavItemProps> = ({ user, onClose }) => {
           onClose={handleGroupClose}
           onGroupOpen={handleGroupOpen}
           isOpen={openGroup === adminGroup.groupName}
+        />
+      )}
+      {productGroup && (
+        <GroupedNavItems
+          group={productGroup}
+          t={t}
+          onClose={handleGroupClose}
+          onGroupOpen={handleGroupOpen}
+          isOpen={openGroup === productGroup.groupName}
         />
       )}
     </>
