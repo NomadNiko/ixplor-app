@@ -4,6 +4,7 @@
     "oldTickets": "Past Tickets",
     "noUpcomingTickets": "You don't have any upcoming tickets",
     "noOldTickets": "You don't have any past tickets",
+    "viewAll": "View All",
     "ticketDetails": {
       "title": "Ticket Details",
       "qrCode": "QR Code",
