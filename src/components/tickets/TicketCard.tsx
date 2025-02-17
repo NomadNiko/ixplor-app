@@ -9,6 +9,28 @@ import { format, isValid } from 'date-fns';
 import { styled } from '@mui/material/styles';
 import type { Ticket } from '@/hooks/use-tickets';
 
+// Utility function to wrap text at word boundaries
+const wrapText = (text: string, maxLength: number = 20): string => {
+  if (text.length <= maxLength) return text;
+
+  const words = text.split(' ');
+  const lines: string[] = [];
+  let currentLine = '';
+
+  for (const word of words) {
+    if ((currentLine + word).length <= maxLength) {
+      currentLine += (currentLine ? ' ' : '') + word;
+    } else {
+      if (currentLine) lines.push(currentLine);
+      currentLine = word;
+    }
+  }
+
+  if (currentLine) lines.push(currentLine);
+
+  return lines.join('\n');
+};
+
 const StyledCard = styled(Card)(({ theme }) => ({
   position: 'relative',
   background: theme.palette.background.glass,
@@ -65,8 +87,16 @@ export const TicketCard: React.FC<{
         />
       </Box>
       <CardContent>
-        <Typography variant="h6" gutterBottom noWrap>
-          {ticket.productName}
+        <Typography 
+          variant="h6" 
+          gutterBottom 
+          sx={{ 
+            whiteSpace: 'pre-line', 
+            lineHeight: 1.2,
+            display: 'block' 
+          }}
+        >
+          {wrapText(ticket.productName)}
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
           {ticket.productDate && (

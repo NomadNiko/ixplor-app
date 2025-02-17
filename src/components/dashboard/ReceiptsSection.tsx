@@ -74,7 +74,7 @@ export const ReceiptsSection = () => {
           </Typography>
         ) : (
           <Grid container spacing={3}>
-            {receipts.slice(0, 2).map((receipt) => (
+            {receipts.slice(0, 4).map((receipt) => (
               <Grid item xs={12} key={receipt._id}>
                 <Paper 
                   onClick={() => setSelectedReceipt(receipt)}

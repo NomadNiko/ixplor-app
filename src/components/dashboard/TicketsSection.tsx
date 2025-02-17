@@ -42,7 +42,7 @@ export const TicketsSection = () => {
             </Typography>
           ) : (
             <Grid container spacing={3}>
-              {activeTickets.slice(0, 2).map((ticket) => (
+              {activeTickets.slice(0, 4).map((ticket) => (
                 <Grid item xs={12} key={ticket._id}>
                   <TicketCard
                     ticket={ticket}
