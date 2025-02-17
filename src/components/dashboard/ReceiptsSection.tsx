@@ -89,24 +89,36 @@ export const ReceiptsSection = () => {
                     }
                   }}
                 >
-                  <Typography variant="subtitle1" gutterBottom>
-                    {receipt.vendorName}
-                  </Typography>
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    mb: 1 
-                  }}>
-                    <Typography variant="body2" color="text.secondary">
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography variant="subtitle1">
                       {new Date(receipt.invoiceDate).toLocaleDateString()}
                     </Typography>
-                    <Typography variant="body2" color="primary">
+                    <Typography variant="subtitle1" color="primary">
                       ${receipt.amount.toFixed(2)}
                     </Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+
+                  {receipt.vendorGroups.map(group => (
+                    <Box key={group.vendorId} sx={{ mb: 1 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {group.vendorName}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {group.items.length} items - ${group.subtotal.toFixed(2)}
+                      </Typography>
+                    </Box>
+                  ))}
+
+                  <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between',
+                    mt: 1,
+                    pt: 1,
+                    borderTop: 1,
+                    borderColor: 'divider' 
+                  }}>
                     <Typography variant="caption" color="text.secondary">
-                      {receipt.items.length} {t("itemsCount")}
+                      {receipt.vendorGroups.reduce((sum, g) => sum + g.items.length, 0)} {t("itemsCount")}
                     </Typography>
                     <Typography 
                       variant="caption" 

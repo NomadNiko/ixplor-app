@@ -43,28 +43,9 @@ const ReceiptItem: React.FC<ReceiptItemProps> = ({ receipt, onClick }) => {
         },
       }}
     >
-      <Typography variant="subtitle1" color="text.primary">
-        {receipt.vendorName}
-      </Typography>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
-        <Typography variant="body2" color="text.secondary">
-          <Calendar
-            size={14}
-            style={{ verticalAlign: "middle", marginRight: theme.spacing(0.5) }}
-          />
-          {new Date(receipt.invoiceDate).toLocaleDateString()}
-        </Typography>
-        <Typography variant="body2" color="primary.main">
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
+        <Typography variant="subtitle1" color="text.primary">
           ${receipt.amount.toFixed(2)}
-        </Typography>
-      </Box>
-      <Box sx={{ display: "flex", gap: theme.spacing(2), mt: 0.5 }}>
-        <Typography variant="caption" color="text.secondary">
-          <Clock
-            size={12}
-            style={{ verticalAlign: "middle", marginRight: theme.spacing(0.5) }}
-          />
-          {receipt.items.length} {t('itemsCount')}
         </Typography>
         <Typography 
           variant="caption" 
@@ -73,6 +54,47 @@ const ReceiptItem: React.FC<ReceiptItemProps> = ({ receipt, onClick }) => {
           }}
         >
           {receipt.status}
+        </Typography>
+      </Box>
+
+      {receipt.vendorGroups.map((group, index) => (
+        <Box 
+          key={group.vendorId}
+          sx={{ 
+            mb: index < receipt.vendorGroups.length - 1 ? 1 : 0 
+          }}
+        >
+          <Typography variant="body2">
+            {group.vendorName}
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            {group.items.length} items - ${group.subtotal.toFixed(2)}
+          </Typography>
+        </Box>
+      ))}
+
+      <Box sx={{ 
+        display: "flex", 
+        alignItems: "center",
+        mt: 1,
+        gap: theme.spacing(2)
+      }}>
+        <Typography variant="body2" color="text.secondary">
+          <Calendar
+            size={14}
+            style={{ verticalAlign: "middle", marginRight: theme.spacing(0.5) }}
+          />
+          {new Date(receipt.invoiceDate).toLocaleDateString()}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          <Clock
+            size={12}
+            style={{ verticalAlign: "middle", marginRight: theme.spacing(0.5) }}
+          />
+          {receipt.vendorGroups.reduce((total, group) => 
+            total + group.items.reduce((groupTotal, item) => groupTotal + item.quantity, 0), 
+            0
+          )} {t('itemsCount')}
         </Typography>
       </Box>
     </Button>

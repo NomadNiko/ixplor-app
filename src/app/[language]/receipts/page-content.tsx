@@ -12,11 +12,14 @@ import { useTranslation } from "@/services/i18n/client";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import useAuth from "@/services/auth/use-auth";
-import { InvoiceResponseDto, InvoiceItem } from '@/types/invoice';
+import { InvoiceResponseDto, VendorGroup } from '@/types/invoice';
 import InvoiceDetailModal from '@/components/receipts/InvoiceDetailModal';
 
-const getTotalItemCount = (items: InvoiceItem[]): number => {
-  return items.reduce((total, item) => total + item.quantity, 0);
+const getTotalItemCount = (vendorGroups: VendorGroup[]): number => {
+  return vendorGroups.reduce((total, group) => 
+    total + group.items.reduce((groupTotal, item) => groupTotal + item.quantity, 0), 
+    0
+  );
 };
 
 export default function ReceiptsPage() {
@@ -113,11 +116,23 @@ export default function ReceiptsPage() {
                     </Typography>
                   </Box>
                   
-                  <Typography variant="body2" gutterBottom>
-                    {invoice.vendorName}
-                  </Typography>
+                  {invoice.vendorGroups.map((group, index) => (
+                    <Box 
+                      key={group.vendorId} 
+                      sx={{ 
+                        mb: index < invoice.vendorGroups.length - 1 ? 1 : 0 
+                      }}
+                    >
+                      <Typography variant="body2">
+                        {group.vendorName}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {group.items.length} items - ${group.subtotal.toFixed(2)}
+                      </Typography>
+                    </Box>
+                  ))}
 
-                  <Box sx={{ mb: 2 }}>
+                  <Box sx={{ mt: 2, mb: 1 }}>
                     <Chip 
                       label={invoice.status}
                       size="small"
@@ -125,7 +140,7 @@ export default function ReceiptsPage() {
                       sx={{ mr: 1 }}
                     />
                     <Typography variant="caption" color="text.secondary">
-                      {getTotalItemCount(invoice.items)} {t('itemsCount')}
+                      {getTotalItemCount(invoice.vendorGroups)} {t('itemsCount')}
                     </Typography>
                   </Box>
                   

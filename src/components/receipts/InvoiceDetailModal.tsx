@@ -73,16 +73,15 @@ export default function InvoiceDetailModal({
           </Typography>
         </Box>
       </DialogTitle>
-
       <DialogContent>
         <Box ref={printRef} sx={{ maxWidth: '400px', mx: 'auto' }}>
           {/* Header */}
           <Box sx={{ textAlign: 'center', mb: 4 }}>
             <Typography variant="h6" gutterBottom>
-              {invoice.vendorName}
+              {t('receipt')}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-             {new Date(invoice.invoiceDate).toDateString()}
+              {new Date(invoice.invoiceDate).toLocaleDateString()}
             </Typography>
           </Box>
 
@@ -92,49 +91,57 @@ export default function InvoiceDetailModal({
               {t('billedTo')}
             </Typography>
             <Typography>{invoice.customerName}</Typography>
-            <Typography variant="caption" color="text.secondary">
-              ID: {invoice.customerId}
-            </Typography>
           </Box>
 
           <Divider sx={{ my: 2 }} />
 
-          {/* Items */}
-          <Box sx={{ mb: 3 }}>
-            {invoice.items?.map((item, index) => (
-              <Box key={index} sx={{ mb: 2 }}>
-                <Typography>
-                  {item.quantity}x {item.productName}
-                </Typography>
-                <Box sx={{ 
-                  display: 'flex', 
-                  justifyContent: 'space-between',
-                  pl: 2,
-                  color: 'text.secondary'
-                }}>
-                  <Typography variant="body2">
-                    {format(new Date(item.productDate), 'PP')} at {item.productStartTime}
+          {/* Vendor Groups */}
+          {invoice.vendorGroups.map((group, groupIndex) => (
+            <Box key={group.vendorId} sx={{ mb: 3 }}>
+              <Typography variant="subtitle1" gutterBottom>
+                {group.vendorName}
+              </Typography>
+              
+              {group.items.map((item, itemIndex) => (
+                <Box key={itemIndex} sx={{ mb: 2 }}>
+                  <Typography>
+                    {item.quantity}x {item.productName}
                   </Typography>
-                  <Typography variant="body2">
-                    ${(item.price * item.quantity).toFixed(2)}
-                  </Typography>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between',
+                    pl: 2,
+                    color: 'text.secondary'
+                  }}>
+                    <Typography variant="body2">
+                      {format(new Date(item.productDate), 'PP')} at {item.productStartTime}
+                    </Typography>
+                    <Typography variant="body2">
+                      ${(item.price * item.quantity).toFixed(2)}
+                    </Typography>
+                  </Box>
                 </Box>
+              ))}
+              
+              <Box sx={{ 
+                display: 'flex', 
+                justifyContent: 'space-between',
+                mt: 1,
+                pt: 1,
+                borderTop: '1px dashed',
+                borderColor: 'divider'
+              }}>
+                <Typography variant="subtitle2">{t('subtotal')}</Typography>
+                <Typography variant="subtitle2">
+                  ${group.subtotal.toFixed(2)}
+                </Typography>
               </Box>
-            ))}
-          </Box>
 
-          <Divider sx={{ my: 2 }} />
-
-          {/* Payment Details */}
-          <Box sx={{ mb: 3 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-              <Typography variant="subtitle2">{t('status')}</Typography>
-              <Typography>{invoice.status}</Typography>
+              {groupIndex < invoice.vendorGroups.length - 1 && (
+                <Divider sx={{ my: 2 }} />
+              )}
             </Box>
-            <Typography variant="caption" color="text.secondary" sx={{ wordBreak: 'break-all' }}>
-              {t('transactionId')}: {invoice.stripeCheckoutSessionId}
-            </Typography>
-          </Box>
+          ))}
 
           <Divider sx={{ my: 2 }} />
 
@@ -152,7 +159,6 @@ export default function InvoiceDetailModal({
           </Box>
         </Box>
       </DialogContent>
-
       <DialogActions>
         <Button onClick={onClose}>
           {t('close')}
