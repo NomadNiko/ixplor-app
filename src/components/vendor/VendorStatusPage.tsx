@@ -229,20 +229,23 @@ const VendorStatusPage: React.FC = () => {
         open={isStripeModalOpen}
         onClose={() => setIsStripeModalOpen(false)}
         sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1300
+          display: 'block',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          height: '100%'
         }}
       >
         <Box sx={{
           width: '100%',
-          maxWidth: '100vw',
-          height: '100%',
+          maxWidth: '800px',
+          minHeight: '100%',
+          mx: 'auto',
+          bgcolor: 'background.paper',
+          borderRadius: { xs: 0, sm: 2 },
+          boxShadow: 24,
+          position: 'relative',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          outline: 'none'
+          flexDirection: 'column'
         }}>
           {vendor && (
             <StripeConnectOnboarding 

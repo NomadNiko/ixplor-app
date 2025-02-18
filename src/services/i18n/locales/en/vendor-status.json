@@ -24,6 +24,7 @@
     }
   },
   "createTemplate": "Create New Template",
+  "title": "Vendor Status Page",
   "generateItems": "Generate Items for {{template}}",
   "awaitingApproval": "Your vendor profile setup is complete and is now awaiting final review. We'll notify you once approved.",
   "actionNeeded": "Action Required",
