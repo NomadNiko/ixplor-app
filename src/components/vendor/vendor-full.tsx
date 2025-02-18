@@ -121,6 +121,7 @@ export const VendorFullView = ({ vendor, onClose }: VendorFullViewProps): JSX.El
       backdropFilter: 'blur(8px)',
       zIndex: 200,
       padding: { xs: 1, sm: 2 },
+      pt: {xs: "60px", md:"70px"},
       overflow: 'auto'
     }}>
       <Card sx={{
