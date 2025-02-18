@@ -37,7 +37,7 @@ export const CartButton: React.FC<CartButtonProps> = ({ itemCount, isLoading }) 
                 },
               }}
             >
-              <ShoppingCart size={40} />
+              <ShoppingCart size={32} />
             </Badge>
           </IconButton>
         )}

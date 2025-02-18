@@ -46,7 +46,7 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="fixed">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Logo />
@@ -81,6 +81,7 @@ function ResponsiveAppBar() {
               <CartButton
                 itemCount={cartData?.items?.length || 0}
                 isLoading={isCartLoading}
+                
               />
             )}
 

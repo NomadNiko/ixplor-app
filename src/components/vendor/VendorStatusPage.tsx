@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -8,6 +8,7 @@ import Container from "@mui/material/Container";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
+import Modal from "@mui/material/Modal";
 import { CheckCircle2, Circle, CircleDashed, PlusCircle } from "lucide-react";
 import { useTranslation } from "@/services/i18n/client";
 import useAuth from "@/services/auth/use-auth";
@@ -79,6 +80,7 @@ const VendorStatusPage: React.FC = () => {
   const { t } = useTranslation("vendor-status");
   const { user } = useAuth();
   const { vendor, loading, error } = useVendorStatus(user?.id?.toString() || '');
+  const [isStripeModalOpen, setIsStripeModalOpen] = useState(false);
   const isStripeComplete = vendor?.stripeAccountStatus?.detailsSubmitted === true;
 
   if (loading) {
@@ -115,102 +117,142 @@ const VendorStatusPage: React.FC = () => {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        {t("vendorOnboarding")}
-      </Typography>
+    <>
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Typography variant="h4" gutterBottom>
+          {t("vendorOnboarding")}
+        </Typography>
 
-      <StyledCard>
-        <CardContent>
-          {/* Step 1: Always complete */}
-          <StatusStep 
-            status="complete"
-            title={t("steps.profile.title")}
-            description={t("steps.profile.description")}
-          />
+        <StyledCard>
+          <CardContent>
+            {/* Step 1: Always complete */}
+            <StatusStep 
+              status="complete"
+              title={t("steps.profile.title")}
+              description={t("steps.profile.description")}
+            />
 
-          {/* Step 2: Create Templates */}
-          <StatusStep 
-            status={vendor.hasTemplates ? 'complete' : 'in-progress'}
-            title={t("steps.templates.title")}
-            description={t("steps.templates.description")}
-          >
-            {!vendor.hasTemplates && (
-              <Button
-                variant="contained"
-                startIcon={<PlusCircle />}
-                href="/templates/add"
-                sx={{
-                  background: theme => theme.palette.customGradients.buttonMain,
-                  '&:hover': {
+            {/* Step 2: Create Templates */}
+            <StatusStep 
+              status={vendor.hasTemplates ? 'complete' : 'in-progress'}
+              title={t("steps.templates.title")}
+              description={t("steps.templates.description")}
+            >
+              {!vendor.hasTemplates && (
+                <Button
+                  variant="contained"
+                  startIcon={<PlusCircle />}
+                  href="/templates/add"
+                  sx={{
                     background: theme => theme.palette.customGradients.buttonMain,
-                    filter: 'brightness(0.9)',
-                  }
-                }}
-              >
-                {t("createTemplate")}
-              </Button>
-            )}
-          </StatusStep>
+                    '&:hover': {
+                      background: theme => theme.palette.customGradients.buttonMain,
+                      filter: 'brightness(0.9)',
+                    }
+                  }}
+                >
+                  {t("createTemplate")}
+                </Button>
+              )}
+            </StatusStep>
 
-          {/* Step 3: Generate Items */}
-          <StatusStep 
-            status={vendor.hasProducts ? 'complete' : 
-                   vendor.hasTemplates ? 'in-progress' : 'pending'}
-            title={t("steps.items.title")}
-            description={t("steps.items.description")}
-          >
-            {!vendor.hasProducts && vendor.hasTemplates && vendor.templates?.map((template) => (
-              <Button
-                key={template._id}
-                variant="outlined"
-                startIcon={<PlusCircle />}
-                href={`/templates/${template._id}/generate`}
-                sx={{ mr: 2, mb: 1 }}
-              >
-                {t("generateItems", { template: template.templateName })}
-              </Button>
-            ))}
-          </StatusStep>
+            {/* Step 3: Generate Items */}
+            <StatusStep 
+              status={vendor.hasProducts ? 'complete' : 
+                     vendor.hasTemplates ? 'in-progress' : 'pending'}
+              title={t("steps.items.title")}
+              description={t("steps.items.description")}
+            >
+              {!vendor.hasProducts && vendor.hasTemplates && vendor.templates?.map((template) => (
+                <Button
+                  key={template._id}
+                  variant="outlined"
+                  startIcon={<PlusCircle />}
+                  href={`/templates/${template._id}/generate`}
+                  sx={{ mr: 2, mb: 1 }}
+                >
+                  {t("generateItems", { template: template.templateName })}
+                </Button>
+              ))}
+            </StatusStep>
 
-          {/* Step 4: Stripe Connect */}
-          <StatusStep 
-            status={isStripeComplete ? 'complete' : 
-                   vendor.hasProducts ? 'in-progress' : 'pending'}
-            title={t("steps.stripe.title")}
-            description={t("steps.stripe.description")}
-          >
-            {vendor.hasProducts && !isStripeComplete && (
-              <Box sx={{ mt: 2 }}>
-                <StripeConnectOnboarding vendorId={vendor._id} />
-              </Box>
-            )}
-          </StatusStep>
+            {/* Step 4: Stripe Connect */}
+            <StatusStep 
+              status={isStripeComplete ? 'complete' : 
+                     vendor.hasProducts ? 'in-progress' : 'pending'}
+              title={t("steps.stripe.title")}
+              description={t("steps.stripe.description")}
+            >
+              {vendor.hasProducts && !isStripeComplete && (
+                <Button
+                  variant="contained"
+                  onClick={() => setIsStripeModalOpen(true)}
+                  sx={{
+                    background: theme => theme.palette.customGradients.buttonMain,
+                    '&:hover': {
+                      background: theme => theme.palette.customGradients.buttonMain,
+                      filter: 'brightness(0.9)',
+                    }
+                  }}
+                >
+                  {t("connectStripe")}
+                </Button>
+              )}
+            </StatusStep>
 
-          {/* Step 5: Final Approval */}
-          <StatusStep 
-            status={isStripeComplete ? 'in-progress' : 'pending'}
-            title={t("steps.approval.title")}
-            description={t("steps.approval.description")}
-          >
-            {isStripeComplete && (
-              <Alert severity="info" sx={{ mt: 1 }}>
-                {t("awaitingApproval")}
-              </Alert>
-            )}
-          </StatusStep>
-        </CardContent>
-      </StyledCard>
+            {/* Step 5: Final Approval */}
+            <StatusStep 
+              status={isStripeComplete ? 'in-progress' : 'pending'}
+              title={t("steps.approval.title")}
+              description={t("steps.approval.description")}
+            >
+              {isStripeComplete && (
+                <Alert severity="info" sx={{ mt: 1 }}>
+                  {t("awaitingApproval")}
+                </Alert>
+              )}
+            </StatusStep>
+          </CardContent>
+        </StyledCard>
 
-      {vendor.vendorStatus === 'ACTION_NEEDED' && (
-        <Alert severity="warning" sx={{ mt: 2 }}>
-          <AlertTitle>{t("actionNeeded")}</AlertTitle>
-          <Typography variant="body2">
-            {vendor.actionNeeded}
-          </Typography>
-        </Alert>
-      )}
-    </Container>
+        {vendor.vendorStatus === 'ACTION_NEEDED' && (
+          <Alert severity="warning" sx={{ mt: 2 }}>
+            <AlertTitle>{t("actionNeeded")}</AlertTitle>
+            <Typography variant="body2">
+              {vendor.actionNeeded}
+            </Typography>
+          </Alert>
+        )}
+      </Container>
+
+      <Modal
+        open={isStripeModalOpen}
+        onClose={() => setIsStripeModalOpen(false)}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1300
+        }}
+      >
+        <Box sx={{
+          width: '100%',
+          maxWidth: '100vw',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          outline: 'none'
+        }}>
+          {vendor && (
+            <StripeConnectOnboarding 
+              vendorId={vendor._id} 
+              onClose={() => setIsStripeModalOpen(false)}
+            />
+          )}
+        </Box>
+      </Modal>
+    </>
   );
 };
 

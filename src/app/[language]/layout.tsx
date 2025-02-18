@@ -1,4 +1,4 @@
-import ResponsiveAppBar from "@/components/app-bar";
+import ResponsiveAppBar from "@/components/app-bar/app-bar";
 import AuthProvider from "@/services/auth/auth-provider";
 import "../globals.css";
 import "@fontsource/roboto/300.css";
