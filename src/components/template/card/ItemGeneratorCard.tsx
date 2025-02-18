@@ -9,7 +9,7 @@ import { useSnackbar } from "@/hooks/use-snackbar";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { format } from 'date-fns';
-import { Template } from '../types/template.types';
+import { TemplateGenResponse } from '../types/template.types';
 import { SchedulingSection } from "./SchedulingSection";
 import { AvailabilitySection } from "./AvailabilitySection";
 import { PriceField } from "./PriceField";
@@ -18,7 +18,7 @@ import { FormActions } from "./FormActions";
 import MultiDateSelector from "./MultiDateSelector";
 
 interface ItemGeneratorCardProps {
-  template: Template;
+  template: TemplateGenResponse;
   onSuccess: () => void;
   onCancel: () => void;
 }
@@ -70,7 +70,7 @@ export default function ItemGeneratorCard({
         return;
       }
 
-      const coordinates = template.defaultLocation?.coordinates || [-157.8241926, 21.2758128];
+      const coordinates = template.location?.coordinates || [-157.8241926, 21.2758128];
       const [longitude, latitude] = coordinates;
 
       const datesToProcess = template.productType === 'tickets' 
@@ -88,6 +88,10 @@ export default function ItemGeneratorCard({
           quantityAvailable: Number(data.quantity),
           longitude,
           latitude,
+          location: {
+            type: 'Point',
+            coordinates: [longitude, latitude]
+          },
           instructorName: data.instructorName,
           tourGuide: data.tourGuide,
           equipmentSize: data.equipmentSize,

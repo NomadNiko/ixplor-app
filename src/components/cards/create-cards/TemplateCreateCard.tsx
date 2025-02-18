@@ -13,45 +13,39 @@ export default function TemplateCreateCard() {
   const handleSave = async (formData: FormData) => {
     try {
       setIsSubmitting(true);
+  
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        router.push("/sign-in");
+        router.push('/sign-in');
         return;
       }
-
+  
+      // Extract latitude and longitude from form data
       const submissionData = {
-        templateName: formData.templateName as string,
-        description: formData.description as string,
-        basePrice: Number(formData.basePrice),
-        productType: formData.productType as string,
-        vendorId: formData.vendorId as string,
-        requirements: (formData.requirements as string[]) || [],
-        waiver: (formData.waiver as string) || "",
-        defaultDuration: formData.defaultDuration
-          ? Number(formData.defaultDuration)
-          : undefined,
-        latitude: Number(formData.location_latitude),
-        longitude: Number(formData.location_longitude),
-        imageURL: (formData.imageURL as string) || "",
-        templateStatus: "DRAFT",
+        ...formData,
+        defaultLatitude: formData.latitude,
+        defaultLongitude: formData.longitude,
+        // Remove the individual fields used by AddressField
+        latitude: undefined,
+        longitude: undefined
       };
-
+  
       const response = await fetch(`${API_URL}/product-templates`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${tokensInfo.token}`,
         },
         body: JSON.stringify(submissionData),
       });
-
-      if (response.ok) {
-        router.push("/templates");
-      } else {
-        throw new Error("Failed to create product");
+  
+      if (!response.ok) {
+        throw new Error('Failed to create template');
       }
+  
+      router.push('/templates');
     } catch (error) {
-      console.error("Error creating template:", error);
+      console.error('Error creating template:', error);
     } finally {
       setIsSubmitting(false);
     }
