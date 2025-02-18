@@ -41,7 +41,7 @@ export default function VendorCreateCard() {
       });
 
       if (response.ok) {
-        router.push('/vendor-status');
+        router.push('/vendor-splash');
       } else {
         throw new Error('Failed to create vendor profile');
       }

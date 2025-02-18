@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
+import { VendorOnboardingSection } from '@/components/dashboard/VendorOnboardingSection';
 
 // Dynamically import components with loading states
 const ProfileSection = dynamic(
@@ -60,6 +61,7 @@ export default function DashboardPageContent() {
       <TicketsSection />
       <ReceiptsSection />
       <ServiceDeskPageComponent />
+      <VendorOnboardingSection />
     </Container>
   );
 }

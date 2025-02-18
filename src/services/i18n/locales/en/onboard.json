@@ -39,5 +39,10 @@
   "success": {
       "vendorCreated": "Vendor created, Needs Approval"
     },
+  "dashboard": {
+      "title": "iXplor Onboarding",
+      "subtitle": "Do you own a Tourism Business?  Start Making Adventues Happen!",
+      "button": "Onboard"
+    },
   "error": "There was an error registering your business. Please try again."
 }
