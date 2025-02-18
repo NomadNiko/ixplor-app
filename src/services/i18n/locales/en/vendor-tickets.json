@@ -1,0 +1,21 @@
+{
+    "title": "Ticket Management",
+    "activeTickets": "Active Tickets",
+    "redeemedTickets": "Redeemed Tickets",
+    "customer": "Customer",
+    "quantity": "Quantity",
+    "date": "Date",
+    "price": "Price",
+    "redeem": "Redeem Ticket",
+    "refund": "Refund Ticket",
+    "status": {
+      "active": "Active",
+      "redeemed": "Redeemed",
+      "cancelled": "Cancelled",
+      "revoked": "Revoked"
+    },
+    "errors": {
+      "loadFailed": "Failed to load tickets",
+      "unauthorized": "You are not authorized to view these tickets"
+    }
+  }
