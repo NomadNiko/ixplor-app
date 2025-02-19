@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Alert from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
+import Grid from "@mui/material/Grid";
 import { useTranslation } from "@/services/i18n/client";
 import { TicketWithUserName } from './types';
 import TicketGroup from './TicketGroup';
@@ -126,16 +127,19 @@ export default function TicketValidationList({
             {formatDateHeading(dateKey)}
           </Typography>
           
-          {Object.entries(productGroups).map(([productItemId, group]) => (
-            <TicketGroup
-              key={productItemId}
-              productItemId={productItemId}
-              groupName={group.name}
-              activeTickets={group.activeTickets}
-              redeemedTickets={group.redeemedTickets}
-              onRedeemTicket={onRedeemTicket}
-            />
-          ))}
+          <Grid container spacing={3}>
+            {Object.entries(productGroups).map(([productItemId, group]) => (
+              <Grid item xs={12} md={6} key={productItemId}>
+                <TicketGroup
+                  productItemId={productItemId}
+                  groupName={group.name}
+                  activeTickets={group.activeTickets}
+                  redeemedTickets={group.redeemedTickets}
+                  onRedeemTicket={onRedeemTicket}
+                />
+              </Grid>
+            ))}
+          </Grid>
         </Box>
       ))}
     </Box>

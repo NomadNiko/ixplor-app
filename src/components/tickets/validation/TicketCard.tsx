@@ -4,6 +4,8 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
+import Grid from "@mui/material/Grid";
+import Divider from "@mui/material/Divider";
 import { useTranslation } from "@/services/i18n/client";
 import { format } from 'date-fns';
 import { TicketWithUserName } from './types';
@@ -22,48 +24,81 @@ export default function TicketCard({
   const { t } = useTranslation("vendor-tickets");
 
   return (
-    <Card sx={{ mb: 2 }}>
-      <CardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-          <Typography variant="h6">{ticket.productName}</Typography>
+    <Card 
+      elevation={1} 
+      sx={{ 
+        border: '1px solid',
+        borderColor: 'divider',
+        transition: 'transform 0.2s ease-in-out',
+        '&:hover': {
+          transform: 'translateY(-2px)'
+        }
+      }}
+    >
+      <CardContent sx={{ p: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
+          <Typography variant="subtitle1" fontWeight="medium" noWrap sx={{ maxWidth: '70%' }}>
+            {ticket.userName}
+          </Typography>
           <Chip
+            size="small"
             label={t(`status.${ticket.status.toLowerCase()}`)}
             color={ticket.status === 'ACTIVE' ? 'success' : 'default'}
           />
         </Box>
 
-        <Box sx={{ display: 'grid', gap: 2, mb: 3 }}>
-          <Typography>
-            <strong>{t('customer')}:</strong> {ticket.userName}
-          </Typography>
+        <Divider sx={{ mb: 2 }} />
 
-          <Typography>
-            <strong>{t('quantity')}:</strong> {ticket.quantity}
-          </Typography>
+        <Grid container spacing={1} sx={{ mb: 2 }}>
+          <Grid item xs={6}>
+            <Typography variant="caption" color="text.secondary">
+              {t('quantity')}
+            </Typography>
+            <Typography variant="body2" fontWeight="medium">
+              {ticket.quantity}
+            </Typography>
+          </Grid>
+
+          <Grid item xs={6}>
+            <Typography variant="caption" color="text.secondary">
+              {t('price')}
+            </Typography>
+            <Typography variant="body2" fontWeight="medium">
+              ${ticket.productPrice.toFixed(2)}
+            </Typography>
+          </Grid>
 
           {ticket.productDate && (
-            <Typography>
-              <strong>{t('date')}:</strong>{' '}
-              {format(new Date(ticket.productDate), 'PPP')}
-              {ticket.productStartTime && ` at ${ticket.productStartTime}`}
-            </Typography>
+            <Grid item xs={12}>
+              <Typography variant="caption" color="text.secondary">
+                {t('time')}
+              </Typography>
+              <Typography variant="body2">
+                {ticket.productStartTime 
+                  ? `${format(new Date(ticket.productDate), 'MMM d')} at ${ticket.productStartTime}`
+                  : format(new Date(ticket.productDate), 'PPP')
+                }
+              </Typography>
+            </Grid>
           )}
+        </Grid>
 
-          <Typography>
-            <strong>{t('price')}:</strong> ${ticket.productPrice.toFixed(2)}
-          </Typography>
-        </Box>
-
-        {!readOnly && (
+        {!readOnly && ticket.status === 'ACTIVE' && (
           <Button
             variant="contained"
             color="primary"
             fullWidth
+            size="small"
             onClick={() => onRedeemTicket(ticket._id)}
-            disabled={ticket.status !== 'ACTIVE'}
           >
             {t('redeem')}
           </Button>
+        )}
+
+        {readOnly && (
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', textAlign: 'center' }}>
+            {t('ticketRedeemed')}
+          </Typography>
         )}
       </CardContent>
     </Card>

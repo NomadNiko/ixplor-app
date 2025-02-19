@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
 import { useTranslation } from "@/services/i18n/client";
 import { TicketWithUserName } from './types';
 import TicketCard from './TicketCard';
@@ -13,50 +14,69 @@ interface TicketGroupProps {
 }
 
 export default function TicketGroup({
-  productItemId,
   groupName,
   activeTickets,
   redeemedTickets,
   onRedeemTicket
 }: TicketGroupProps) {
   const { t } = useTranslation("vendor-tickets");
+  const hasTickets = activeTickets.length > 0 || redeemedTickets.length > 0;
 
   return (
-    <Box key={productItemId} sx={{ mb: 4 }}>
-      <Typography variant="h5" gutterBottom>
+    <Paper 
+      elevation={1}
+      sx={{ 
+        height: '100%',
+        p: 2,
+        borderRadius: 2,
+        display: 'flex',
+        flexDirection: 'column'
+      }}
+    >
+      <Typography variant="h6" gutterBottom>
         {groupName}
       </Typography>
 
+      {!hasTickets && (
+        <Typography color="text.secondary" sx={{ py: 2 }}>
+          {t('noTicketsForProduct')}
+        </Typography>
+      )}
+
       {activeTickets.length > 0 && (
-        <>
-          <Typography variant="subtitle1" sx={{ mb: 2 }}>
-            {t('activeTickets')}
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="subtitle2" color="primary" sx={{ mb: 1.5 }}>
+            {t('activeTickets')} ({activeTickets.length})
           </Typography>
-          {activeTickets.map(ticket => (
-            <TicketCard 
-              key={ticket._id} 
-              ticket={ticket} 
-              onRedeemTicket={onRedeemTicket}
-            />
-          ))}
-        </>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {activeTickets.map(ticket => (
+              <TicketCard 
+                key={ticket._id} 
+                ticket={ticket} 
+                onRedeemTicket={onRedeemTicket}
+              />
+            ))}
+          </Box>
+        </Box>
       )}
 
       {redeemedTickets.length > 0 && (
-        <>
-          <Typography variant="subtitle1" sx={{ mt: 4, mb: 2 }}>
-            {t('redeemedTickets')}
+        <Box sx={{ opacity: 0.7 }}>
+          <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1.5 }}>
+            {t('redeemedTickets')} ({redeemedTickets.length})
           </Typography>
-          {redeemedTickets.map(ticket => (
-            <TicketCard 
-              key={ticket._id} 
-              ticket={ticket} 
-              onRedeemTicket={onRedeemTicket}
-              readOnly
-            />
-          ))}
-        </>
-      )} 
-    </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {redeemedTickets.map(ticket => (
+              <TicketCard 
+                key={ticket._id} 
+                ticket={ticket} 
+                onRedeemTicket={onRedeemTicket}
+                readOnly
+              />
+            ))}
+          </Box>
+        </Box>
+      )}
+    </Paper>
   );
 }
