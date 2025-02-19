@@ -39,6 +39,7 @@ export const getNavItems = (user: User | null) => {
     { key: "dashboard", path: "/dashboard", roles: [] },
     { key: "vendor-status", path: "/vendor-status", roles: [RoleEnum.PREVENDOR] },
     { key: "vendor-account", path: "/vendor-account", roles: [RoleEnum.VENDOR] },
+    { key: "ticket-validation", path: "/ticket-validation", roles: [RoleEnum.VENDOR] },
   ];
 
   const filteredItems = regularItems.filter(item => {

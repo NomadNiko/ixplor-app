@@ -1,41 +1,15 @@
-import React, { useState, useEffect, useMemo } from 'react';
+"use client";
+import { useState, useEffect } from 'react';
 import { useTranslation } from "@/services/i18n/client";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import useAuth from "@/services/auth/use-auth";
+import TicketValidationList from '@/components/tickets/validation/TicketValidationList';
+import { TicketWithUserName } from '@/components/tickets/validation/types';
 
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
-import Alert from "@mui/material/Alert";
-import CircularProgress from "@mui/material/CircularProgress";
-
-import { format } from 'date-fns';
-
-interface Ticket {
-  _id: string;
-  userId: string;
-  productItemId: string;
-  productName: string;
-  productDescription: string;
-  productPrice: number;
-  status: 'ACTIVE' | 'CANCELLED' | 'REDEEMED' | 'REVOKED';
-  quantity: number;
-  productDate?: string;
-  productStartTime?: string;
-}
-
-interface TicketWithUserName extends Ticket {
-  userName: string;
-}
-
-const VendorTicketValidation: React.FC = () => {
+export default function VendorTicketValidation() {
   const { t } = useTranslation("vendor-tickets");
   const { user } = useAuth();
-
   const [tickets, setTickets] = useState<TicketWithUserName[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -74,11 +48,11 @@ const VendorTicketValidation: React.FC = () => {
         }
 
         const data = await response.json();
-        const rawTickets = data.data as Ticket[];
+        const rawTickets = data.data;
 
         // Fetch user name for each ticket
         const ticketsWithUserNames = await Promise.all(
-          rawTickets.map(async (ticket) => {
+          rawTickets.map(async (ticket: Omit<TicketWithUserName, 'userName'>) => {
             try {
               const userNameResponse = await fetch(`${API_URL}/v1/users/${ticket.userId}/name`, {
                 headers: { 'Authorization': `Bearer ${tokensInfo.token}` }
@@ -113,7 +87,7 @@ const VendorTicketValidation: React.FC = () => {
     loadTickets();
   }, [user, t]);
 
-  const handleRedeem = async (ticketId: string) => {
+  const handleRedeemTicket = async (ticketId: string) => {
     try {
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
@@ -143,168 +117,12 @@ const VendorTicketValidation: React.FC = () => {
     }
   };
 
-  const groupedTickets = useMemo(() => {
-    return tickets.reduce((acc, ticket) => {
-      if (!acc[ticket.productItemId]) {
-        acc[ticket.productItemId] = {
-          name: ticket.productName,
-          activeTickets: [],
-          redeemedTickets: []
-        };
-      }
-
-      if (ticket.status === 'ACTIVE') {
-        acc[ticket.productItemId].activeTickets.push(ticket);
-      } else if (ticket.status === 'REDEEMED') {
-        acc[ticket.productItemId].redeemedTickets.push(ticket);
-      }
-
-      return acc;
-    }, {} as Record<string, { 
-      name: string, 
-      activeTickets: TicketWithUserName[], 
-      redeemedTickets: TicketWithUserName[] 
-    }>);
-  }, [tickets]);
-
-  if (loading) {
-    return (
-      <Box sx={{ 
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: 'calc(100vh - 64px)'
-      }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box sx={{ p: 3 }}>
-        <Alert severity="error">{error}</Alert>
-      </Box>
-    );
-  }
-
   return (
-    <Box sx={{ p: 3, maxWidth: 'lg', mx: 'auto' }}>
-      <Typography variant="h4" gutterBottom>
-        {t('title')}
-      </Typography>
-
-      {Object.entries(groupedTickets).map(([productItemId, group]) => (
-        <Box key={productItemId} sx={{ mb: 4 }}>
-          <Typography variant="h5" gutterBottom>
-            {group.name}
-          </Typography>
-
-          {group.activeTickets.length > 0 && (
-            <>
-              <Typography variant="subtitle1" sx={{ mb: 2 }}>
-                {t('activeTickets')}
-              </Typography>
-              {group.activeTickets.map(ticket => (
-                <Card key={ticket._id} sx={{ mb: 2 }}>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                      <Typography variant="h6">{ticket.productName}</Typography>
-                      <Chip
-                        label={t(`status.${ticket.status.toLowerCase()}`)}
-                        color={ticket.status === 'ACTIVE' ? 'success' : 'default'}
-                      />
-                    </Box>
-
-                    <Box sx={{ display: 'grid', gap: 2, mb: 3 }}>
-                      <Typography>
-                        <strong>{t('customer')}:</strong> {ticket.userName}
-                      </Typography>
-
-                      <Typography>
-                        <strong>{t('quantity')}:</strong> {ticket.quantity}
-                      </Typography>
-
-                      {ticket.productDate && (
-                        <Typography>
-                          <strong>{t('date')}:</strong>{' '}
-                          {format(new Date(ticket.productDate), 'PPP')}
-                          {ticket.productStartTime && ` at ${ticket.productStartTime}`}
-                        </Typography>
-                      )}
-
-                      <Typography>
-                        <strong>{t('price')}:</strong> ${ticket.productPrice.toFixed(2)}
-                      </Typography>
-                    </Box>
-
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      fullWidth
-                      onClick={() => handleRedeem(ticket._id)}
-                      disabled={ticket.status !== 'ACTIVE'}
-                    >
-                      {t('redeem')}
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </>
-          )}
-
-          {group.redeemedTickets.length > 0 && (
-            <>
-              <Typography variant="subtitle1" sx={{ mt: 4, mb: 2 }}>
-                {t('redeemedTickets')}
-              </Typography>
-              {group.redeemedTickets.map(ticket => (
-                <Card key={ticket._id} sx={{ mb: 2 }}>
-                  <CardContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                      <Typography variant="h6">{ticket.productName}</Typography>
-                      <Chip
-                        label={t(`status.${ticket.status.toLowerCase()}`)}
-                        color={ticket.status === 'ACTIVE' ? 'success' : 'default'}
-                      />
-                    </Box>
-
-                    <Box sx={{ display: 'grid', gap: 2, mb: 3 }}>
-                      <Typography>
-                        <strong>{t('customer')}:</strong> {ticket.userName}
-                      </Typography>
-
-                      <Typography>
-                        <strong>{t('quantity')}:</strong> {ticket.quantity}
-                      </Typography>
-
-                      {ticket.productDate && (
-                        <Typography>
-                          <strong>{t('date')}:</strong>{' '}
-                          {format(new Date(ticket.productDate), 'PPP')}
-                          {ticket.productStartTime && ` at ${ticket.productStartTime}`}
-                        </Typography>
-                      )}
-
-                      <Typography>
-                        <strong>{t('price')}:</strong> ${ticket.productPrice.toFixed(2)}
-                      </Typography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              ))}
-            </>
-          )}
-        </Box>
-      ))}
-
-      {tickets.length === 0 && (
-        <Typography variant="body1" color="text.secondary" align="center" sx={{ mt: 4 }}>
-          {t('noTickets')}
-        </Typography>
-      )}
-    </Box>
+    <TicketValidationList 
+      tickets={tickets}
+      loading={loading}
+      error={error}
+      onRedeemTicket={handleRedeemTicket}
+    />
   );
-};
-
-export default VendorTicketValidation;
+}
