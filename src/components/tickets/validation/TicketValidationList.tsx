@@ -14,13 +14,15 @@ interface TicketValidationListProps {
   loading: boolean;
   error: string | null;
   onRedeemTicket: (ticketId: string) => Promise<void>;
+  onRefundTicket: (ticketId: string) => Promise<void>;
 }
 
 export default function TicketValidationList({
   tickets,
   loading,
   error,
-  onRedeemTicket
+  onRedeemTicket,
+  onRefundTicket
 }: TicketValidationListProps) {
   const { t } = useTranslation("vendor-tickets");
 
@@ -46,7 +48,8 @@ export default function TicketValidationList({
         dateGroups[dateKey][ticket.productItemId] = {
           name: ticket.productName,
           activeTickets: [],
-          redeemedTickets: []
+          redeemedTickets: [],
+          cancelledTickets: []
         };
       }
 
@@ -54,13 +57,16 @@ export default function TicketValidationList({
         dateGroups[dateKey][ticket.productItemId].activeTickets.push(ticket);
       } else if (ticket.status === 'REDEEMED') {
         dateGroups[dateKey][ticket.productItemId].redeemedTickets.push(ticket);
+      } else if (ticket.status === 'CANCELLED' || ticket.status === 'REVOKED') {
+        dateGroups[dateKey][ticket.productItemId].cancelledTickets.push(ticket);
       }
 
       return dateGroups;
     }, {} as Record<string, Record<string, {
       name: string,
       activeTickets: TicketWithUserName[],
-      redeemedTickets: TicketWithUserName[]
+      redeemedTickets: TicketWithUserName[],
+      cancelledTickets: TicketWithUserName[]
     }>>);
   }, [tickets]);
 
@@ -135,7 +141,9 @@ export default function TicketValidationList({
                   groupName={group.name}
                   activeTickets={group.activeTickets}
                   redeemedTickets={group.redeemedTickets}
+                  cancelledTickets={group.cancelledTickets}
                   onRedeemTicket={onRedeemTicket}
+                  onRefundTicket={onRefundTicket}
                 />
               </Grid>
             ))}
