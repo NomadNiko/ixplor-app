@@ -18,6 +18,9 @@ export const VendorOnboardingSection = () => {
         <Typography variant="body1" sx={{ mb: 2 }}>
           {t("dashboard.subtitle")}
         </Typography>
+        <Typography variant="body1" sx={{ mb: 2 }}>
+          {t("dashboard.body")}
+        </Typography>
         <Button 
           variant="contained" 
           color="primary"
