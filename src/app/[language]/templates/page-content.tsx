@@ -108,7 +108,7 @@ export default function TemplatesPageContent() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="md" sx={{ py: 4 }}>
       <Box sx={{
         display: 'flex',
         justifyContent: 'space-between',

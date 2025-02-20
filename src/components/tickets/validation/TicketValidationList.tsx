@@ -108,7 +108,7 @@ export default function TicketValidationList({
   };
 
   return (
-    <Box sx={{ p: 3, maxWidth: 'lg', mx: 'auto' }}>
+    <Box sx={{ p: 3, maxWidth: 'md', mx: 'auto' }}>
       <Typography variant="h4" gutterBottom>
         {t('title')}
       </Typography>

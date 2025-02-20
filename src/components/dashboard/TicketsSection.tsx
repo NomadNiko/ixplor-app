@@ -12,7 +12,7 @@ import TicketCard from '@/components/tickets/TicketCard';
 import { DashboardSection } from './common';
 
 const TicketDetail = dynamic(
-  () => import('@/components/tickets/TicketDetail'),
+  () => import('@/components/tickets/UpcomingTicketDetail'),
   { 
     loading: () => <div>Loading...</div>,
     ssr: false

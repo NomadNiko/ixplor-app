@@ -4,32 +4,10 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import { styled } from '@mui/material/styles';
 import { useTranslation } from "@/services/i18n/client";
 import { useTickets, Ticket } from '@/hooks/use-tickets';
 import TicketCard from './TicketCard';
-import TicketDetail from './TicketDetail';
-
-const StyledModal = styled(Modal)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'flex-start',
-  justifyContent: 'center',
-  overflowY: 'scroll',
-  '& .MuiBox-root': {
-    background: theme.palette.background.paper,
-    borderRadius: theme.shape.borderRadius * 2,
-    border: `1px solid ${theme.palette.divider}`,
-    position: 'relative',
-    width: '95%',
-    maxWidth: '440px',
-    margin: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
-      width: '90%',
-      margin: theme.spacing(1),
-    },
-  },
-}));
+import UpcomingTicketDetail from './UpcomingTicketDetail';
 
 export default function TicketsPage() {
   const { t } = useTranslation("tickets");
@@ -93,20 +71,13 @@ export default function TicketsPage() {
         </Box>
       )}
 
-      {/* Ticket Detail Modal */}
-      <StyledModal
-        open={!!selectedTicket}
-        onClose={() => setSelectedTicket(null)}
-      >
-        <Box sx={{justifyContent: 'center', alignItems: 'center', maxWidth: '350px'}}>
-          {selectedTicket && (
-            <TicketDetail
-              ticket={selectedTicket}
-              onClose={() => setSelectedTicket(null)}
-            />
-          )}
-        </Box>
-      </StyledModal>
+      {/* Ticket Detail */}
+      {selectedTicket && (
+        <UpcomingTicketDetail
+          ticket={selectedTicket}
+          onClose={() => setSelectedTicket(null)}
+        />
+      )}
     </Container>
   );
 }

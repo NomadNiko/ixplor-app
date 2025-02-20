@@ -85,7 +85,7 @@ export default function ReceiptsPage() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="md" sx={{ py: 4 }}>
       <Typography variant="h4" gutterBottom>
         {t('title')}
       </Typography>
