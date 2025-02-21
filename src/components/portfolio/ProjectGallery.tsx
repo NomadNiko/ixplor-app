@@ -4,23 +4,27 @@ import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-//import { useTranslation } from "@/services/i18n/client";
 
 export default function ProjectGallery() {
-  //const { t } = useTranslation("portfolio");
-
   const projects = [
     {
-      title: "Booking System",
-      description: "React/TypeScript booking management system",
+      title: "iXplor Booking Platform",
+      description: "Full-stack booking and marketplace platform for local experiences and activities",
+      technologies: "React, Next.js, TypeScript, Node.js, MongoDB, Stripe",
       image: "/api/placeholder/400/200"
     },
     {
-      title: "Unity Game",
-      description: "3D adventure game built with Unity/C#",
+      title: "Unity Game Project",
+      description: "3D adventure game with procedural generation and exploration mechanics",
+      technologies: "Unity, C#, Procedural Generation, 3D Modeling",
       image: "/api/placeholder/400/200"
     },
-    // Add more projects
+    {
+      title: "DevOps Infrastructure Automation",
+      description: "Comprehensive infrastructure-as-code solution with multi-cloud deployment",
+      technologies: "Terraform, Docker, Kubernetes, AWS, Azure, CI/CD Pipelines",
+      image: "/api/placeholder/400/200"
+    }
   ];
 
   return (
@@ -38,8 +42,11 @@ export default function ProjectGallery() {
               <Typography variant="h6" gutterBottom>
                 {project.title}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" paragraph>
                 {project.description}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Technologies: {project.technologies}
               </Typography>
             </CardContent>
           </Card>

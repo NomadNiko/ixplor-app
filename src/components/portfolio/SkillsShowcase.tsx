@@ -4,7 +4,6 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import LinearProgress from "@mui/material/LinearProgress";
-import { useTranslation } from "@/services/i18n/client";
 
 type Skill = {
   name: string;
@@ -13,14 +12,23 @@ type Skill = {
 };
 
 export default function SkillsShowcase() {
-  const { t } = useTranslation("portfolio");
-  
   const skills: Skill[] = [
-    { name: "Linux/DevOps", level: 95, category: "infrastructure" },
-    { name: "C#/Unity", level: 85, category: "programming" },
-    { name: "React/TypeScript", level: 80, category: "frontend" },
-    { name: "Node.js", level: 75, category: "backend" },
-    // Add more skills
+    { name: "Linux Server Administration", level: 90, category: "Infrastructure" },
+    { name: "Technical Support & Troubleshooting", level: 90, category: "Support" },
+    { name: "Virtualization (VMware)", level: 92, category: "Infrastructure" },
+    { name: "DevOps & Configuration Management", level: 74, category: "Infrastructure" },
+    { name: "CI/CD Pipelines", level: 82, category: "Infrastructure" },
+    { name: "Cloud Services (AWS, Azure)", level: 75, category: "Infrastructure" },
+    { name: "PowerShell/Windows Scripting", level: 70, category: "Scripting" },
+    { name: "Bash/Linux scripting", level: 82, category: "Scripting" },
+    { name: "Python Scripting", level: 60, category: "Scripting" },
+    { name: "Git & Source Control", level: 85, category: "Version Control" },
+    { name: "System Monitoring (Nagios, New Relic)", level: 80, category: "Operations" },
+    { name: "Database Administration", level: 65, category: "Database" },
+    { name: "Jenkins & Deployment Automation", level: 80, category: "DevOps" },
+    { name: "Puppet & Ansible", level: 58, category: "Automation" },
+    { name: "Java Application Management", level: 65, category: "Application" }
+    
   ];
 
   return (
@@ -38,7 +46,7 @@ export default function SkillsShowcase() {
                 sx={{ height: 10, borderRadius: 5 }}
               />
               <Typography variant="caption" sx={{ mt: 1 }}>
-                {t(`skills.categories.${skill.category}`)}
+                {skill.category}
               </Typography>
             </Paper>
           </Grid>

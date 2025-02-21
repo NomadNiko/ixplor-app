@@ -4,30 +4,31 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { useTranslation } from "@/services/i18n/client";
 import ResumeSection from "@/components/portfolio/ResumeSection";
 import SkillsShowcase from "@/components/portfolio/SkillsShowcase";
 import ProjectGallery from "@/components/portfolio/ProjectGallery";
 import Button from '@mui/material/Button';
 
 export default function PortfolioPageContent() {
-  const { t } = useTranslation("portfolio");
   const [selectedSection, setSelectedSection] = useState<string>('resume');
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       <Typography variant="h2" gutterBottom>
-        {t("title")}
+        Niko Halley - Portfolio
       </Typography>
       
       <Grid container spacing={4}>
         <Grid item xs={12} md={8}>
           <Box sx={{ mb: 4 }}>
             <Typography variant="h5" gutterBottom>
-              {t("introduction")}
+              About Me
             </Typography>
             <Typography paragraph>
-              {t("introText")}
+              I am a versatile IT professional with extensive experience in DevOps, cloud engineering, 
+              and system administration. My career spans roles in Site Operations, Cloud Engineering, 
+              and technical support, with a strong focus on infrastructure automation, 
+              performance optimization, and streamlining complex technical environments.
             </Typography>
           </Box>
 
@@ -47,17 +48,17 @@ export default function PortfolioPageContent() {
             borderColor: 'divider'
           }}>
             <Typography variant="h6" gutterBottom>
-              {t("navigation")}
+              Navigation
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {['resume', 'skills', 'demo', 'projects'].map((section) => (
+              {['resume', 'skills', 'projects'].map((section) => (
                 <Button
                   key={section}
                   variant={selectedSection === section ? "contained" : "outlined"}
                   onClick={() => setSelectedSection(section)}
                   fullWidth
                 >
-                  {t(`sections.${section}`)}
+                  {section.charAt(0).toUpperCase() + section.slice(1)}
                 </Button>
               ))}
             </Box>
