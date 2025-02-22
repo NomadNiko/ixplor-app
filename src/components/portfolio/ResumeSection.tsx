@@ -227,16 +227,8 @@ My service in the Air Force Cyber System Operations provided me with invaluable 
   return (
     <Box>
       <Grid container spacing={4}>
-        <Grid item xs={12} md={8}>
-          <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-            Experience
-          </Typography>
-          {experiences.map((exp, index) => (
-            <ExperienceCard key={index} {...exp} />  
-          ))}
-        </Grid>
 
-        <Grid item xs={12} md={4}>
+      <Grid item xs={12} md={4}>
           <Box sx={{ 
             position: 'sticky',
             top: 24,
@@ -277,6 +269,17 @@ My service in the Air Force Cyber System Operations provided me with invaluable 
             ))}
           </Box>
         </Grid>
+
+        <Grid item xs={12} md={8}>
+          <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
+            Experience
+          </Typography>
+          {experiences.map((exp, index) => (
+            <ExperienceCard key={index} {...exp} />  
+          ))}
+        </Grid>
+
+        
       </Grid>
     </Box>
   );

@@ -1,0 +1,88 @@
+{
+    "title": "Booking Items",
+    "subtitle": "Manage your bookable services, classes, and appointments",
+    "createBookingItem": "Create Booking Item",
+    "createSubtitle": "Create a new bookable service or appointment type",
+    "noItems": "No booking items found",
+    "search": "Search booking items",
+    "filterStatus": "Status",
+    "sort": "Sort by",
+    "all": "All",
+    "updated": "Updated",
+    
+    "basicInfo": "Basic Information",
+    "details": "Details",
+    "duration": "Duration",
+    "price": "Price",
+    "vendor": "Vendor",
+  
+    "status": {
+      "published": "Published",
+      "draft": "Draft",
+      "archived": "Archived"
+    },
+  
+    "sortOptions": {
+      "priceAsc": "Price: Low to High",
+      "priceDesc": "Price: High to Low"
+    },
+  
+    "fields": {
+      "productName": "Service Name",
+      "description": "Description",
+      "imageUrl": "Image",
+      "duration": "Duration",
+      "price": "Price"
+    },
+  
+    "validation": {
+      "durationInterval": "Duration must be in 30-minute intervals",
+      "minDuration": "Duration must be at least 30 minutes",
+      "required": "This field is required",
+      "priceFormat": "Please enter a valid price",
+      "imageFormat": "Invalid image format"
+    },
+  
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "publish": "Publish",
+      "archive": "Archive"
+    },
+  
+    "alerts": {
+      "createSuccess": "Booking item created successfully",
+      "createError": "Failed to create booking item",
+      "updateSuccess": "Booking item updated successfully",
+      "updateError": "Failed to update booking item",
+      "deleteSuccess": "Booking item deleted successfully",
+      "deleteError": "Failed to delete booking item"
+    },
+  
+    "confirmDelete": {
+      "title": "Delete Booking Item",
+      "message": "Are you sure you want to delete this booking item? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+  
+    "tooltips": {
+      "duration": "Set the duration in 30-minute intervals",
+      "price": "Set the price for this service",
+      "status": "Change the availability status"
+    },
+  
+    "placeholders": {
+      "searchItems": "Search by name or description",
+      "enterName": "Enter service name",
+      "enterDescription": "Enter service description"
+    },
+  
+    "messages": {
+      "noDescription": "No description available",
+      "noDuration": "Duration not specified",
+      "noPrice": "Price not specified"
+    }
+  }
