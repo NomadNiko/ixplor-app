@@ -1,0 +1,36 @@
+{
+    "title": "Staff Users",
+    "subtitle": "Manage your staff members and their qualifications",
+    "createStaffUser": "Create Staff User",
+    "editStaffUser": "Edit Staff User",
+    "createSubtitle": "Add a new staff member to your team",
+    "editSubtitle": "Update staff member information",
+    "staffName": "Staff Name",
+    "email": "Email",
+    "phone": "Phone",
+    "qualifications": "Qualifications",
+    "shifts": "shifts",
+    "searchPlaceholder": "Search by name, email, or phone",
+    "search": "Search",
+    "filterStatus": "Filter by Status",
+    "sort": "Sort",
+    "all": "All",
+    "updated": "Updated",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "sortOptions": {
+      "nameAsc": "Name (A-Z)",
+      "nameDesc": "Name (Z-A)"
+    },
+    "noStaffUsers": "No staff users found",
+    "staffUserNotFound": "Staff user not found",
+    "deleteConfirm": {
+      "title": "Delete Staff User",
+      "message": "Are you sure you want to delete this staff user?",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    }
+  }
+  
