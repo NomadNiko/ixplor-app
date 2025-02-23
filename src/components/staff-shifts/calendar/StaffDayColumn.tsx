@@ -2,13 +2,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import { format } from 'date-fns';
-import { alpha } from '@mui/material/styles';
-
-interface StaffShift {
-  _id: string;
-  startDateTime: string;
-  endDateTime: string;
-}
+import { alpha, useTheme } from '@mui/material/styles';
+import { StaffShift } from './StaffWeeklyCalendar';
+import { Clock, User } from 'lucide-react';
 
 interface StaffDayColumnProps {
   date: Date;
@@ -23,6 +19,8 @@ export default function StaffDayColumn({
   onShiftClick,
   isToday
 }: StaffDayColumnProps) {
+  const theme = useTheme();
+
   const sortedShifts = [...shifts].sort((a, b) => 
     new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime()
   );
@@ -50,29 +48,103 @@ export default function StaffDayColumn({
           {format(date, 'd')}
         </Typography>
       </Box>
-
-      <Box sx={{ height: 'calc(100% - 70px)', overflow: 'auto', p: 1 }}>
+      <Box sx={{ 
+        height: 'calc(100% - 70px)', 
+        overflow: 'auto', 
+        p: 1,
+        '&::-webkit-scrollbar': {
+          width: '8px',
+        },
+        '&::-webkit-scrollbar-track': {
+          background: theme.palette.background.default,
+        },
+        '&::-webkit-scrollbar-thumb': {
+          background: alpha(theme.palette.text.secondary, 0.3),
+          borderRadius: '4px',
+        },
+        '&::-webkit-scrollbar-thumb:hover': {
+          background: alpha(theme.palette.text.secondary, 0.5),
+        }
+      }}>
         {sortedShifts.map((shift) => (
           <Paper
             key={shift._id}
             onClick={() => onShiftClick(shift)}
             sx={{
-              p: 1,
+              p: 1.5,
               mb: 1,
               cursor: 'pointer',
-              transition: 'transform 0.2s',
+              transition: 'all 0.2s',
+              backgroundColor: theme.palette.background.paper,
+              border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
               '&:hover': {
-                transform: 'translateY(-2px)',
-                boxShadow: 2,
+                transform: 'translateY(-4px)',
+                boxShadow: theme.shadows[4],
+                backgroundColor: alpha(theme.palette.primary.main, 0.05),
               }
             }}
           >
-            <Typography variant="body2">
-              {format(new Date(shift.startDateTime), 'h:mm a')} -
-              {format(new Date(shift.endDateTime), 'h:mm a')}
-            </Typography>
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: 1 
+            }}>
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 1 
+              }}>
+                <Clock 
+                  size={16} 
+                  color={theme.palette.text.secondary} 
+                  style={{ flexShrink: 0 }} 
+                />
+                <Typography 
+                  variant="body2" 
+                  color="text.primary"
+                  sx={{ fontWeight: 500 }}
+                >
+                  {format(new Date(shift.startDateTime), 'h:mm a')} - 
+                  {format(new Date(shift.endDateTime), 'h:mm a')}
+                </Typography>
+              </Box>
+              
+              {shift.staffName && (
+                <Box sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: 1,
+                  pl: '24px' // Align with clock icon
+                }}>
+                  <User 
+                    size={16} 
+                    color={theme.palette.text.secondary} 
+                    style={{ flexShrink: 0 }} 
+                  />
+                  <Typography 
+                    variant="caption" 
+                    color="text.secondary"
+                  >
+                    {shift.staffName}
+                  </Typography>
+                </Box>
+              )}
+            </Box>
           </Paper>
         ))}
+        {sortedShifts.length === 0 && (
+          <Typography 
+            variant="body2" 
+            color="text.secondary" 
+            sx={{ 
+              textAlign: 'center', 
+              p: 2,
+              opacity: 0.7 
+            }}
+          >
+            No shifts
+          </Typography>
+        )}
       </Box>
     </Box>
   );

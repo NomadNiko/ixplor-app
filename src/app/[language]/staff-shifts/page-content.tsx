@@ -12,9 +12,8 @@ import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import useAuth from '@/services/auth/use-auth';
 import { useCalendarNavigation } from '@/hooks/use-calendar-navigation';
-import StaffWeeklyCalendar from '@/components/staff-shifts/calendar/StaffWeeklyCalendar';
+import StaffWeeklyCalendar, { StaffShift } from '@/components/staff-shifts/calendar/StaffWeeklyCalendar';
 import ShiftDetailModal from '@/components/staff-shifts/calendar/ShiftDetailModal';
-import { StaffShift } from '@/hooks/use-staff-shifts';
 
 interface StaffUser {
   _id: string;
@@ -42,37 +41,29 @@ export default function StaffShiftsPageContent() {
         if (!tokensInfo?.token) {
           return;
         }
-
         const vendorResponse = await fetch(`${API_URL}/v1/vendors/user/${user?.id}/owned`, {
           headers: {
             Authorization: `Bearer ${tokensInfo.token}`
           }
         });
-
         if (!vendorResponse.ok) {
           throw new Error('Failed to fetch vendor information');
         }
-
         const vendorData = await vendorResponse.json();
         if (!vendorData.data.length) {
           setShifts([]);
           return;
         }
-
-        // Get all staff users for the vendor
         const staffResponse = await fetch(`${API_URL}/staff-users/vendor/${vendorData.data[0]._id}`, {
           headers: {
             Authorization: `Bearer ${tokensInfo.token}`
           }
         });
-
         if (!staffResponse.ok) {
           throw new Error('Failed to load staff users');
         }
-
         const staffData = await staffResponse.json();
         
-        // Collect all shifts from all staff users
         const allShifts = staffData.data.reduce((acc: StaffShift[], staffUser: StaffUser) => {
           return acc.concat(staffUser.shifts.map(shift => ({
             ...shift,
@@ -80,7 +71,7 @@ export default function StaffShiftsPageContent() {
             staffName: staffUser.name
           })));
         }, []);
-
+        
         setShifts(allShifts);
       } catch (error) {
         console.error('Error loading shifts:', error);
@@ -88,9 +79,12 @@ export default function StaffShiftsPageContent() {
         setLoading(false);
       }
     };
-
     loadShifts();
   }, [user?.id]);
+
+  const handleShiftClick = (shift: StaffShift) => {
+    setSelectedShift(shift);
+  };
 
   if (loading) {
     return (
@@ -141,21 +135,18 @@ export default function StaffShiftsPageContent() {
           </IconButton>
         </Box>
       </Box>
-
       <StaffWeeklyCalendar
         shifts={shifts}
         currentWeek={currentWeek}
-        onShiftClick={setSelectedShift}
+        onShiftClick={handleShiftClick}
       />
-
       <ShiftDetailModal
         shift={selectedShift}
-                staffId={String(user?.id) || ''} 
+        staffId={String(user?.id) || ''} 
         open={!!selectedShift}
         onClose={() => setSelectedShift(null)}
         onUpdate={() => {
           setSelectedShift(null);
-          // Refresh shifts
         }}
       />
     </Container>

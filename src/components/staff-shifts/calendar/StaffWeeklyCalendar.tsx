@@ -4,10 +4,12 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import StaffDayColumn from './StaffDayColumn';
 
-interface StaffShift {
+export interface StaffShift {
   _id: string;
   startDateTime: string;
   endDateTime: string;
+  staffId?: string;
+  staffName?: string;
 }
 
 interface StaffWeeklyCalendarProps {
@@ -24,7 +26,6 @@ export default function StaffWeeklyCalendar({
   currentWeek,
   onShiftClick
 }: StaffWeeklyCalendarProps) {
-
   const weekDays = useMemo(() => 
     eachDayOfInterval({
       start: currentWeek.start,
@@ -43,7 +44,7 @@ export default function StaffWeeklyCalendar({
       }
       shiftMap.get(dateKey)?.push(shift);
     });
-
+    
     return shiftMap;
   }, [shifts]);
 
@@ -69,7 +70,6 @@ export default function StaffWeeklyCalendar({
           {`${format(currentWeek.start, 'MMMM d')} - ${format(currentWeek.end, 'MMMM d, yyyy')}`}
         </Typography>
       </Box>
-
       <Box sx={{ 
         display: 'flex',
         flex: 1,
@@ -79,7 +79,6 @@ export default function StaffWeeklyCalendar({
         {weekDays.map(day => {
           const dateKey = format(day, 'yyyy-MM-dd');
           const dayShifts = groupedShifts.get(dateKey) || [];
-
           return (
             <StaffDayColumn
               key={dateKey}
