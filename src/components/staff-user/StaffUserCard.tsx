@@ -1,7 +1,10 @@
+// src/components/staff-user/StaffUserCard.tsx
+import { useRouter } from 'next/navigation';
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import { Mail, Phone, Calendar, BookOpen } from 'lucide-react';
 import { formatDistance } from 'date-fns';
@@ -15,6 +18,7 @@ interface StaffUserCardProps {
 
 export const StaffUserCard = ({ staffUser, onClick }: StaffUserCardProps) => {
   const { t } = useTranslation("staff-users");
+  const router = useRouter();
 
   const getStatusColor = (status: StaffUserStatusEnum): "success" | "error" | "default" => {
     switch (status) {
@@ -25,6 +29,11 @@ export const StaffUserCard = ({ staffUser, onClick }: StaffUserCardProps) => {
       default:
         return 'default';
     }
+  };
+
+  const handleGenerateShifts = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation(); // Prevent card click event
+    router.push(`/staff-shifts/${staffUser._id}/generate`);
   };
 
   return (
@@ -41,7 +50,8 @@ export const StaffUserCard = ({ staffUser, onClick }: StaffUserCardProps) => {
       }}
       onClick={onClick}
     >
-      <CardContent>
+      <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        {/* Header with name and status */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
           <Typography variant="h6" gutterBottom>
             {staffUser.name}
@@ -53,6 +63,7 @@ export const StaffUserCard = ({ staffUser, onClick }: StaffUserCardProps) => {
           />
         </Box>
 
+        {/* Contact Information */}
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 2 }}>
           {staffUser.email && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -72,25 +83,41 @@ export const StaffUserCard = ({ staffUser, onClick }: StaffUserCardProps) => {
           )}
         </Box>
 
-        <Box sx={{ display: 'flex', gap: 2, mt: 'auto' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <Calendar size={16} />
-            <Typography variant="body2">
-              {staffUser.shifts.length} {t('shifts')}
-            </Typography>
+        {/* Stats and Generate Shifts Button */}
+        <Box sx={{ mt: 'auto' }}>
+          <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Calendar size={16} />
+              <Typography variant="body2">
+                {staffUser.shifts.length} {t('shifts')}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <BookOpen size={16} />
+              <Typography variant="body2">
+                {staffUser.qualifiedProducts.length} {t('qualifications')}
+              </Typography>
+            </Box>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <BookOpen size={16} />
-            <Typography variant="body2">
-              {staffUser.qualifiedProducts.length} {t('qualifications')}
-            </Typography>
-          </Box>
-        </Box>
 
-        <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
-          {t('updated')} {formatDistance(new Date(staffUser.updatedAt), new Date(), { addSuffix: true })}
-        </Typography>
+          <Button
+            variant="outlined"
+            size="small"
+            fullWidth
+            startIcon={<Calendar size={16} />}
+            onClick={handleGenerateShifts}
+            sx={{ mb: 2 }}
+          >
+            {t('generateShifts')}
+          </Button>
+
+          <Typography variant="caption" color="text.secondary" display="block">
+            {t('updated')} {formatDistance(new Date(staffUser.updatedAt), new Date(), { addSuffix: true })}
+          </Typography>
+        </Box>
       </CardContent>
     </Card>
   );
 };
+
+export default StaffUserCard;

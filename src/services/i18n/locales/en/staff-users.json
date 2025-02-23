@@ -1,36 +1,38 @@
 {
-    "title": "Staff Users",
-    "subtitle": "Manage your staff members and their qualifications",
-    "createStaffUser": "Create Staff",
-    "editStaffUser": "Edit Staff",
-    "createSubtitle": "Add a new staff member to your team",
-    "editSubtitle": "Update staff member information",
-    "staffName": "Name",
-    "email": "Email",
-    "phone": "Phone",
-    "qualifications": "Qualifications",
-    "shifts": "Shifts",
-    "searchPlaceholder": "Search by name, email, or phone",
-    "search": "Search",
-    "filterStatus": "Filter by Status",
-    "sort": "Sort",
-    "all": "All",
-    "updated": "Updated",
-    "status": {
+  "title": "Staff Users",
+  "subtitle": "Manage your staff members",
+  "createStaffUser": "Create Staff User",
+  "editStaffUser": "Edit Staff User",
+  "createSubtitle": "Add a new staff member to your team",
+  "editSubtitle": "Update staff member details",
+  "staffName": "Staff Name",
+  "search": "Search",
+  "searchPlaceholder": "Search staff users",
+  "filterStatus": "Status",
+  "sort": "Sort",
+  "all": "All",
+  "status": {
       "active": "Active",
       "inactive": "Inactive"
-    },
-    "sortOptions": {
+  },
+  "sortOptions": {
       "nameAsc": "Name (A-Z)",
       "nameDesc": "Name (Z-A)"
-    },
-    "noStaffUsers": "No staff users found",
-    "staffUserNotFound": "Staff user not found",
-    "deleteConfirm": {
+  },
+  "shifts": "Shifts",
+  "qualifications": "Qualifications",
+  "generateShifts": "Generate Shifts",
+  "updated": "Updated",
+  "noStaffUsers": "No staff users found",
+  "deleteConfirm": {
       "title": "Delete Staff User",
       "message": "Are you sure you want to delete this staff user?",
       "confirm": "Delete",
       "cancel": "Cancel"
-    }
+  },
+  "errors": {
+      "createFailed": "Failed to create staff user",
+      "updateFailed": "Failed to update staff user",
+      "deleteFailed": "Failed to delete staff user"
   }
-  
+}

@@ -1,0 +1,33 @@
+{
+    "title": "Staff Shifts",
+    "today": "Today",
+    "generateShifts": "Generate Shifts",
+    "editShift": "Edit Shift",
+    "selectDates": "Select Dates",
+    "startTime": "Start Time",
+    "endTime": "End Time",
+    "generate": "Generate",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "updated": "Updated",
+    "scheduling": "Scheduling",
+    "date": "Date",
+    "time": "Time",
+    "shifts": "Shifts",
+    "deleteShift": {
+        "title": "Delete Shift",
+        "message": "Are you sure you want to delete this shift?",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+    },
+    "success": {
+        "shiftsCreated": "Shifts successfully created",
+        "shiftUpdated": "Shift successfully updated"
+    },
+    "errors": {
+        "createFailed": "Failed to create shifts",
+        "updateFailed": "Failed to update shift",
+        "deleteFailed": "Failed to delete shift"
+    }
+}
