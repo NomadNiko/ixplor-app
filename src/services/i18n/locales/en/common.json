@@ -26,6 +26,8 @@
       "vendor-status": "Vendor Status",
       "vendor-account": "Vendor Account",
       "vendor-admin": "Vendor Admin",
+      "staff-users": "Staff",
+      "staff-shifts": "Shifts",
       "users": "User Admin",
       "admin": "Admin Tools",
       "vendor": "Vendor Tools",
