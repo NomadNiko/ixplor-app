@@ -154,6 +154,7 @@ export default function StaffUsersContent() {
             <StaffUserCard
               staffUser={staffUser}
               onClick={() => router.push(`/staff-users/${staffUser._id}/edit`)}
+              onUpdate={loadStaffUsers}
             />
           </Grid>
         ))}

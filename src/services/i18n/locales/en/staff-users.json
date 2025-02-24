@@ -12,12 +12,12 @@
   "sort": "Sort",
   "all": "All",
   "status": {
-      "active": "Active",
-      "inactive": "Inactive"
+    "active": "Active",
+    "inactive": "Inactive"
   },
   "sortOptions": {
-      "nameAsc": "Name (A-Z)",
-      "nameDesc": "Name (Z-A)"
+    "nameAsc": "Name (A-Z)",
+    "nameDesc": "Name (Z-A)"
   },
   "shifts": "Shifts",
   "qualifications": "Qualifications",
@@ -25,14 +25,22 @@
   "updated": "Updated",
   "noStaffUsers": "No staff users found",
   "deleteConfirm": {
-      "title": "Delete Staff User",
-      "message": "Are you sure you want to delete this staff user?",
-      "confirm": "Delete",
-      "cancel": "Cancel"
+    "title": "Delete Staff User",
+    "message": "Are you sure you want to delete this staff user?",
+    "confirm": "Delete",
+    "cancel": "Cancel"
   },
   "errors": {
-      "createFailed": "Failed to create staff user",
-      "updateFailed": "Failed to update staff user",
-      "deleteFailed": "Failed to delete staff user"
-  }
+    "createFailed": "Failed to create staff user",
+    "updateFailed": "Failed to update staff user",
+    "deleteFailed": "Failed to delete staff user",
+    "loadItemsFailed": "Failed to load booking items",
+    "updateQualificationFailed": "Failed to update qualification"
+  },
+  "qualifiedItems": "Qualified Items",
+  "success": {
+    "qualificationAdded": "Qualification added successfully",
+    "qualificationRemoved": "Qualification removed successfully"
+  },
+  "close": "Close"
 }
