@@ -1,11 +1,9 @@
-"use client";
-
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
-import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { Plus } from 'lucide-react';
@@ -13,21 +11,20 @@ import { useTranslation } from "@/services/i18n/client";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import useAuth from '@/services/auth/use-auth';
-import { BookingItem, FilterOptions } from '@/components/booking-item/types/booking-item';
-import { BookingItemCard } from '@/components/booking-item/BookingItemCard';
-import { BookingItemFilters } from '@/components/booking-item/BookingItemFilters';
+import { BookingItem, BookingItemStatusEnum } from '@/components/booking-item/types/booking-item';
+import { useSnackbar } from '@/hooks/use-snackbar';
+import { CollapsibleSection } from '@/components/booking-item/CollapsibleSection';
 
 export default function BookingItemsContent() {
   const { user } = useAuth();
   const { t } = useTranslation("booking-items");
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
+  
   const [items, setItems] = useState<BookingItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState<FilterOptions>({
-    searchTerm: '',
-    filterStatus: '',
-    sortOrder: 'desc'
-  });
+  const [updatingItemId, setUpdatingItemId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const loadItems = useCallback(async () => {
     try {
@@ -42,11 +39,11 @@ export default function BookingItemsContent() {
           Authorization: `Bearer ${tokensInfo.token}`,
         },
       });
-      
+
       if (!vendorResponse.ok) {
         throw new Error('Failed to fetch vendor information');
       }
-      
+
       const vendorData = await vendorResponse.json();
       if (!vendorData.data.length) {
         setItems([]);
@@ -67,45 +64,72 @@ export default function BookingItemsContent() {
       setItems(data.data);
     } catch (error) {
       console.error('Error loading items:', error);
+      enqueueSnackbar(t('errors.loadFailed'), { variant: 'error' });
     } finally {
       setLoading(false);
     }
-  }, [user?.id]);
-
-  const handleFilterChange = (field: keyof FilterOptions, value: string) => {
-    setFilters(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
+  }, [user?.id, t, enqueueSnackbar]);
 
   const handleItemClick = (itemId: string) => {
     router.push(`/booking-items/${itemId}/edit`);
+  };
+
+  const handleStatusChange = async (itemId: string, newStatus: BookingItemStatusEnum) => {
+    try {
+      setUpdatingItemId(itemId);
+      const tokensInfo = getTokensInfo();
+      if (!tokensInfo?.token) {
+        return;
+      }
+
+      const response = await fetch(`${API_URL}/booking-items/${itemId}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${tokensInfo.token}`,
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update status');
+      }
+
+      const updatedItem = await response.json();
+      
+      // Update the items list with the new status
+      setItems(prevItems =>
+        prevItems.map(item =>
+          item._id === itemId ? updatedItem.data : item
+        )
+      );
+
+      enqueueSnackbar(t('success.statusUpdated'), { variant: 'success' });
+    } catch (error) {
+      console.error('Error updating status:', error);
+      enqueueSnackbar(t('errors.statusUpdateFailed'), { variant: 'error' });
+    } finally {
+      setUpdatingItemId(null);
+    }
   };
 
   useEffect(() => {
     loadItems();
   }, [loadItems]);
 
-  const filteredAndSortedItems = items
-    .filter(item => {
-      const searchFields = [
-        item.productName || '',
-        item.description || ''
-      ].map(field => field.toLowerCase());
-      
-      const matchesSearch = filters.searchTerm === '' || 
-        searchFields.some(field => field.includes(filters.searchTerm.toLowerCase()));
-      const matchesStatus = !filters.filterStatus || item.status === filters.filterStatus;
-      
-      return matchesSearch && matchesStatus;
-    })
-    .sort((a, b) => {
-      if (filters.sortOrder === 'asc') {
-        return a.price - b.price;
-      }
-      return b.price - a.price;
-    });
+  // Filter and group items by status
+  const filteredItems = useMemo(() => {
+    const filtered = items.filter(item =>
+      item.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    return {
+      published: filtered.filter(item => item.status === BookingItemStatusEnum.PUBLISHED),
+      draft: filtered.filter(item => item.status === BookingItemStatusEnum.DRAFT),
+      archived: filtered.filter(item => item.status === BookingItemStatusEnum.ARCHIVED)
+    };
+  }, [items, searchTerm]);
 
   if (loading) {
     return (
@@ -145,33 +169,43 @@ export default function BookingItemsContent() {
         </Button>
       </Box>
 
-      <BookingItemFilters 
-        filters={filters}
-        onFilterChange={handleFilterChange}
+      <TextField
+        fullWidth
+        placeholder={t('searchPlaceholder')}
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        sx={{ mb: 4 }}
       />
 
-      <Grid container spacing={3}>
-        {filteredAndSortedItems.map((item) => (
-          <Grid item xs={12} sm={6} md={4} key={item._id}>
-            <BookingItemCard
-              item={item}
-              onClick={() => handleItemClick(item._id)}
-            />
-          </Grid>
-        ))}
-        {filteredAndSortedItems.length === 0 && (
-          <Grid item xs={12}>
-            <Typography 
-              variant="h6" 
-              color="text.secondary" 
-              align="center"
-              sx={{ py: 8 }}
-            >
-              {t('noItems')}
-            </Typography>
-          </Grid>
-        )}
-      </Grid>
+      <CollapsibleSection
+        title={t('sections.published')}
+        items={filteredItems.published}
+        defaultOpen={true}
+        badgeColor="success"
+        onItemClick={handleItemClick}
+        onStatusChange={handleStatusChange}
+        updatingItemId={updatingItemId}
+      />
+
+      <CollapsibleSection
+        title={t('sections.draft')}
+        items={filteredItems.draft}
+        defaultOpen={true}
+        badgeColor="warning"
+        onItemClick={handleItemClick}
+        onStatusChange={handleStatusChange}
+        updatingItemId={updatingItemId}
+      />
+
+      <CollapsibleSection
+        title={t('sections.archived')}
+        items={filteredItems.archived}
+        defaultOpen={false}
+        badgeColor="error"
+        onItemClick={handleItemClick}
+        onStatusChange={handleStatusChange}
+        updatingItemId={updatingItemId}
+      />
     </Container>
   );
 }

@@ -1,7 +1,7 @@
 {
     "title": "Booking Items",
     "subtitle": "Manage your bookable services, classes, and appointments",
-    "createBookingItem": "Create Booking Item",
+    "createBookingItem": "Create Item",
     "createSubtitle": "Create a new bookable service or appointment type",
     "noItems": "No booking items found",
     "search": "Search booking items",
@@ -17,6 +17,13 @@
     "vendor": "Vendor",
   
     "status": {
+      "published": "Published",
+      "draft": "Draft",
+      "archived": "Archived"
+    },
+  
+  
+    "sections": {
       "published": "Published",
       "draft": "Draft",
       "archived": "Archived"
