@@ -19,6 +19,7 @@ import { useTheme } from '@mui/material/styles';
 import { BookingItem } from '@/components/booking-item/types/booking-item';
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
+import { useCartQuery, AddBookingToCartData } from '@/hooks/use-cart-query';
 
 interface ExtendedBookingItem extends BookingItem {
   vendorBusinessName?: string;
@@ -29,14 +30,12 @@ interface PublicBookingItemDetailModalProps {
   item: ExtendedBookingItem;
   open: boolean;
   onClose: () => void;
-  onAddToCart: (item: BookingItem, date: Date) => Promise<void>;
 }
 
 const PublicBookingItemDetailModal = ({ 
   item, 
   open, 
-  onClose, 
-  onAddToCart 
+  onClose
 }: PublicBookingItemDetailModalProps) => {
   const theme = useTheme();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -45,6 +44,7 @@ const PublicBookingItemDetailModal = ({
   const [loadingAvailability, setLoadingAvailability] = useState(false);
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const { addBookingItem, refreshCart } = useCartQuery();
   
   const dateOptions = useMemo(() => {
     return Array.from({ length: 14 }, (_, i) => {
@@ -79,7 +79,6 @@ const PublicBookingItemDetailModal = ({
       
       const data = await response.json();
       
-      // Convert UTC timestamps to local time strings for display
       const timeSlots = data.availableTimeSlots.map((slot: string) => {
         const time = new Date(slot);
         return format(time, 'HH:mm');
@@ -87,7 +86,6 @@ const PublicBookingItemDetailModal = ({
       
       setAvailableTimes(timeSlots);
       
-      // If we have available times, select the first one by default
       if (timeSlots.length > 0 && !selectedTime) {
         setSelectedTime(timeSlots[0]);
       } else if (timeSlots.length === 0) {
@@ -108,7 +106,6 @@ const PublicBookingItemDetailModal = ({
     const newDate = dateOptions[index].value;
     setSelectedDate(newDate);
     
-    // Clear selected time when changing date
     setSelectedTime("");
   };
   
@@ -122,28 +119,34 @@ const PublicBookingItemDetailModal = ({
     try {
       setIsLoading(true);
       
-      // Parse the time string and create a full Date object
       const [hours, minutes] = selectedTime.split(':').map(Number);
       const bookingDateTime = new Date(selectedDate);
       bookingDateTime.setHours(hours, minutes, 0, 0);
       
-      await onAddToCart(item, bookingDateTime);
+      const bookingData: AddBookingToCartData = {
+        bookingItemId: item._id,
+        startDateTime: bookingDateTime,
+        duration: item.duration,
+        vendorId: item.vendorId
+      };
+      
+      await addBookingItem(bookingData);
+      refreshCart();
       onClose();
     } catch (error) {
-      console.error('Error adding to cart:', error);
+      console.error('Error adding booking to cart:', error);
+      setError(error instanceof Error ? error.message : 'Failed to add to cart');
     } finally {
       setIsLoading(false);
     }
   };
   
-  // Fetch available time slots when modal opens or date changes
   useEffect(() => {
     if (open && item._id) {
       fetchAvailableTimeSlots(selectedDate);
     }
   }, [open, item._id, selectedDate]);
   
-  // Reset state when modal opens
   useEffect(() => {
     if (open) {
       setSelectedDate(new Date());
@@ -219,6 +222,14 @@ const PublicBookingItemDetailModal = ({
             </Typography>
           </Grid>
           
+          {error && (
+            <Grid item xs={12}>
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {error}
+              </Alert>
+            </Grid>
+          )}
+          
           <Grid item xs={12} sm={6}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
               <Calendar size={18} style={{ marginRight: theme.spacing(1) }} />
@@ -256,10 +267,6 @@ const PublicBookingItemDetailModal = ({
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '56px' }}>
                 <CircularProgress size={24} />
               </Box>
-            ) : error ? (
-              <Alert severity="error" sx={{ fontSize: '0.875rem' }}>
-                {error}
-              </Alert>
             ) : availableTimes.length === 0 ? (
               <Alert severity="info" sx={{ fontSize: '0.875rem' }}>
                 No available time slots for this date

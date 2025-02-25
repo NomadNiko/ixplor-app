@@ -12,15 +12,9 @@ import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import { BookingItem } from '@/components/booking-item/types/booking-item';
 import PublicBookingItemDetailModal from '@/components/calendar/PublicBookingItemDetailModal';
-import { useRouter } from 'next/navigation';
-import { useCartQuery } from '@/hooks/use-cart-query';
-import useAuth from "@/services/auth/use-auth";
-import { useAddToCartService } from "@/services/api/services/cart";
 
-// Extended BookingItem interface to include vendor data
 interface ExtendedBookingItem extends BookingItem {
   vendorBusinessName: string;
-  // Add the properties we're actually seeing in the API response
   latitude?: number;
   longitude?: number;
   location?: {
@@ -63,7 +57,6 @@ const BookingItemCard: React.FC<BookingItemCardProps> = ({
   onClick,
 }) => {
   const theme = useTheme();
-
   const formatDuration = (minutes: number): string => {
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
@@ -71,7 +64,6 @@ const BookingItemCard: React.FC<BookingItemCardProps> = ({
     if (remainingMinutes === 0) return `${hours}hr`;
     return `${hours}hr ${remainingMinutes}min`;
   };
-
   return (
     <Button
       onClick={onClick}
@@ -147,15 +139,11 @@ const NearbyBookings: React.FC<NearbyBookingsProps> = ({
   longitude,
 }) => {
   const theme = useTheme();
-  const router = useRouter();
   const { t } = useTranslation("booking-items");
-  const { user } = useAuth();
   const [bookings, setBookings] = useState<ExtendedBookingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<ExtendedBookingItem | null>(null);
-  const addToCart = useAddToCartService();
-  const { refreshCart } = useCartQuery();
 
   useEffect(() => {
     const fetchNearbyBookings = async () => {
@@ -163,7 +151,6 @@ const NearbyBookings: React.FC<NearbyBookingsProps> = ({
         setLoading(true);
         const tokensInfo = getTokensInfo();
         
-        // Get today and tomorrow's dates
         const today = new Date();
         const tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
@@ -182,20 +169,15 @@ const NearbyBookings: React.FC<NearbyBookingsProps> = ({
         if (!response.ok) throw new Error("Failed to fetch nearby bookings");
         const data = await response.json();
         
-        // Process the data to calculate distances based on actual response structure
         const processedBookings = data.data.map((item: ExtendedBookingItem) => {
-          // First try to get location from direct latitude/longitude properties
           let itemLat = item.latitude;
           let itemLng = item.longitude;
           
-          // If those aren't available, try to get from location.coordinates
           if ((!itemLat || !itemLng) && item.location?.coordinates) {
-            // Note that GeoJSON coordinates are [longitude, latitude]
             itemLng = item.location.coordinates[0];
             itemLat = item.location.coordinates[1];
           }
           
-          // Calculate distance if we have valid coordinates
           let distance = Infinity;
           if (typeof itemLat === 'number' && typeof itemLng === 'number') {
             distance = calculateDistance(
@@ -220,7 +202,6 @@ const NearbyBookings: React.FC<NearbyBookingsProps> = ({
         setLoading(false);
       }
     };
-
     if (isOpen && latitude && longitude) {
       fetchNearbyBookings();
     }
@@ -236,36 +217,14 @@ const NearbyBookings: React.FC<NearbyBookingsProps> = ({
     e.stopPropagation();
   };
 
-  const handleAddToCart = async (item: BookingItem, date: Date): Promise<void> => {
-    try {
-      if (user) {
-        await addToCart({
-          productItemId: item._id,
-          productDate: date,
-          quantity: 1,
-          vendorId: item.vendorId,
-          templateId: item._id
-        });
-        await refreshCart();
-        setSelectedItem(null);
-      } else {
-        router.push("/sign-in");
-        return;
-      }
-    } catch (error) {
-      console.error("Error adding to cart:", error);
-    }
-  };
-
   const sortedBookings = useMemo(() => {
     return [...bookings].sort((a, b) => {
-      // Sort primarily by distance
       return (a.distance || Infinity) - (b.distance || Infinity);
     });
   }, [bookings]);
 
   if (!isOpen) return null;
-
+  
   return (
     <Box
       className="modal-content"
@@ -307,7 +266,6 @@ const NearbyBookings: React.FC<NearbyBookingsProps> = ({
           <X />
         </IconButton>
       </Box>
-
       <Box
         sx={{
           flex: 1,
@@ -342,14 +300,12 @@ const NearbyBookings: React.FC<NearbyBookingsProps> = ({
           ))
         )}
       </Box>
-
       {selectedItem && (
         <Box onClick={(e) => e.stopPropagation()}>
           <PublicBookingItemDetailModal
             item={selectedItem}
             open={true}
             onClose={() => setSelectedItem(null)}
-            onAddToCart={handleAddToCart}
           />
         </Box>
       )}
