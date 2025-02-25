@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
-import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
@@ -17,6 +17,8 @@ import { Clock, Calendar } from 'lucide-react';
 import { format, addDays } from 'date-fns';
 import { useTheme } from '@mui/material/styles';
 import { BookingItem } from '@/components/booking-item/types/booking-item';
+import { API_URL } from "@/services/api/config";
+import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 
 interface ExtendedBookingItem extends BookingItem {
   vendorBusinessName?: string;
@@ -38,10 +40,12 @@ const PublicBookingItemDetailModal = ({
 }: PublicBookingItemDetailModalProps) => {
   const theme = useTheme();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [selectedTime, setSelectedTime] = useState<string>("09:00");
+  const [selectedTime, setSelectedTime] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingAvailability, setLoadingAvailability] = useState(false);
+  const [availableTimes, setAvailableTimes] = useState<string[]>([]);
+  const [error, setError] = useState<string | null>(null);
   
-  // Generate date options
   const dateOptions = useMemo(() => {
     return Array.from({ length: 14 }, (_, i) => {
       const date = addDays(new Date(), i);
@@ -52,29 +56,60 @@ const PublicBookingItemDetailModal = ({
     });
   }, []);
   
-  // Generate time options
-  const timeOptions = useMemo(() => {
-    const options: string[] = [];
-    for (let hour = 6; hour <= 22; hour++) {
-      for (const minute of [0, 30]) {
-        const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-        options.push(time);
+  const fetchAvailableTimeSlots = async (date: Date) => {
+    setLoadingAvailability(true);
+    setError(null);
+    
+    try {
+      const formattedDate = format(date, 'yyyy-MM-dd');
+      const tokensInfo = getTokensInfo();
+      
+      const url = `${API_URL}/booking-availability/${item._id}/date/${formattedDate}`;
+      
+      const headers: HeadersInit = {};
+      if (tokensInfo?.token) {
+        headers['Authorization'] = `Bearer ${tokensInfo.token}`;
       }
+      
+      const response = await fetch(url, { headers });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch availability');
+      }
+      
+      const data = await response.json();
+      
+      // Convert UTC timestamps to local time strings for display
+      const timeSlots = data.availableTimeSlots.map((slot: string) => {
+        const time = new Date(slot);
+        return format(time, 'HH:mm');
+      }).sort();
+      
+      setAvailableTimes(timeSlots);
+      
+      // If we have available times, select the first one by default
+      if (timeSlots.length > 0 && !selectedTime) {
+        setSelectedTime(timeSlots[0]);
+      } else if (timeSlots.length === 0) {
+        setSelectedTime("");
+      }
+    } catch (err) {
+      console.error('Error fetching availability:', err);
+      setError('Failed to load available time slots');
+      setAvailableTimes([]);
+      setSelectedTime("");
+    } finally {
+      setLoadingAvailability(false);
     }
-    return options;
-  }, []);
-  
-  const formatDuration = (minutes: number): string => {
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-    if (hours === 0) return `${remainingMinutes} minutes`;
-    if (remainingMinutes === 0) return hours === 1 ? `${hours} hour` : `${hours} hours`;
-    return `${hours} hour${hours > 1 ? 's' : ''} ${remainingMinutes} minute${remainingMinutes > 1 ? 's' : ''}`;
   };
   
   const handleDateChange = (event: SelectChangeEvent) => {
     const index = parseInt(event.target.value, 10);
-    setSelectedDate(dateOptions[index].value);
+    const newDate = dateOptions[index].value;
+    setSelectedDate(newDate);
+    
+    // Clear selected time when changing date
+    setSelectedTime("");
   };
   
   const handleTimeChange = (event: SelectChangeEvent) => {
@@ -82,10 +117,12 @@ const PublicBookingItemDetailModal = ({
   };
   
   const handleBooking = async () => {
+    if (!selectedDate || !selectedTime) return;
+    
     try {
       setIsLoading(true);
       
-      // Combine date and time
+      // Parse the time string and create a full Date object
       const [hours, minutes] = selectedTime.split(':').map(Number);
       const bookingDateTime = new Date(selectedDate);
       bookingDateTime.setHours(hours, minutes, 0, 0);
@@ -99,13 +136,29 @@ const PublicBookingItemDetailModal = ({
     }
   };
   
+  // Fetch available time slots when modal opens or date changes
+  useEffect(() => {
+    if (open && item._id) {
+      fetchAvailableTimeSlots(selectedDate);
+    }
+  }, [open, item._id, selectedDate]);
+  
+  // Reset state when modal opens
   useEffect(() => {
     if (open) {
-      // Reset to default values when modal opens
       setSelectedDate(new Date());
-      setSelectedTime("09:00");
+      setSelectedTime("");
+      setError(null);
     }
   }, [open]);
+  
+  const formatDuration = (minutes: number): string => {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    if (hours === 0) return `${remainingMinutes} minutes`;
+    if (remainingMinutes === 0) return hours === 1 ? `${hours} hour` : `${hours} hours`;
+    return `${hours} hour${hours > 1 ? 's' : ''} ${remainingMinutes} minute${remainingMinutes > 1 ? 's' : ''}`;
+  };
   
   const isBookingValid = selectedDate && selectedTime;
   
@@ -198,37 +251,51 @@ const PublicBookingItemDetailModal = ({
                 Select Time:
               </Typography>
             </Box>
-            <FormControl fullWidth>
-              <InputLabel>Time</InputLabel>
-              <Select
-                value={selectedTime}
-                onChange={handleTimeChange}
-                label="Time"
-              >
-                {timeOptions.map((time) => (
-                  <MenuItem key={time} value={time}>
-                    {format(new Date(`2000-01-01T${time}`), 'h:mm a')}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            
+            {loadingAvailability ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '56px' }}>
+                <CircularProgress size={24} />
+              </Box>
+            ) : error ? (
+              <Alert severity="error" sx={{ fontSize: '0.875rem' }}>
+                {error}
+              </Alert>
+            ) : availableTimes.length === 0 ? (
+              <Alert severity="info" sx={{ fontSize: '0.875rem' }}>
+                No available time slots for this date
+              </Alert>
+            ) : (
+              <FormControl fullWidth>
+                <InputLabel>Time</InputLabel>
+                <Select
+                  value={selectedTime}
+                  onChange={handleTimeChange}
+                  label="Time"
+                  disabled={availableTimes.length === 0}
+                >
+                  {availableTimes.map((time) => (
+                    <MenuItem key={time} value={time}>
+                      {format(new Date(`2000-01-01T${time}`), 'h:mm a')}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
           </Grid>
           
           <Grid item xs={12}>
-            <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
-              {selectedDate && selectedTime && (
-                <Box sx={{ 
-                  p: 1, 
-                  borderRadius: 1, 
-                  bgcolor: 'action.selected',
-                  display: 'inline-block'
-                }}>
-                  <Typography variant="body2">
-                    Your booking: {format(selectedDate, 'EEEE, MMM d')} at {format(new Date(`2000-01-01T${selectedTime}`), 'h:mm a')}
-                  </Typography>
-                </Box>
-              )}
-            </Stack>
+            {selectedDate && selectedTime && (
+              <Box sx={{ 
+                p: 1.5, 
+                borderRadius: 1, 
+                bgcolor: 'action.selected',
+                mt: 2
+              }}>
+                <Typography variant="body2">
+                  Your booking: {format(selectedDate, 'EEEE, MMM d')} at {format(new Date(`2000-01-01T${selectedTime}`), 'h:mm a')}
+                </Typography>
+              </Box>
+            )}
           </Grid>
         </Grid>
       </DialogContent>
@@ -239,7 +306,7 @@ const PublicBookingItemDetailModal = ({
         <Button 
           onClick={handleBooking} 
           variant="contained" 
-          disabled={!isBookingValid || isLoading}
+          disabled={!isBookingValid || isLoading || loadingAvailability}
           startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : null}
         >
           Add to Cart
