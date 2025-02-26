@@ -5,12 +5,22 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Button from '@mui/material/Button';
+import Avatar from "@mui/material/Avatar";
+import Stack from "@mui/material/Stack";
+import Link from "@mui/material/Link";
 import ResumeSection from "@/components/portfolio/ResumeSection";
 import SkillsShowcase from "@/components/portfolio/SkillsShowcase";
 import ProjectGallery from "@/components/portfolio/ProjectGallery";
 import Paper from "@mui/material/Paper";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { 
+  Mail, 
+  Phone, 
+  Linkedin, 
+  Github, 
+  MapPin 
+} from 'lucide-react';
 
 export default function PortfolioPageContent() {
   const [selectedSection, setSelectedSection] = useState<string>('resume');
@@ -27,22 +37,95 @@ export default function PortfolioPageContent() {
       </Typography>
       
       <Grid container spacing={4}>
-        <Grid item xs={12} md={5} lg={4} order={{ xs: 2, md: 1 }}>
+        <Grid 
+          item 
+          xs={12} 
+          md={5} 
+          lg={4} 
+          order={{ 
+            xs: 1,  
+            md: 1   
+          }}
+        >
           <Box sx={{ mb: 4 }}>
             <Paper elevation={2} sx={{ 
               p: 3,
               borderRadius: 2,
               position: { md: 'sticky' },
               top: { md: 24 },
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center'
             }}>
+              <Avatar
+                alt="Niko Halley"
+                src="https://ixplor-profile-s3-bucket-02.s3.us-east-2.amazonaws.com/c34dbba4868a4611967a3.jpeg"
+                sx={{ 
+                  width: 250, 
+                  height: 250, 
+                  mb: 2, 
+                  border: `4px solid ${theme.palette.primary.main}` 
+                }}
+              />
               <Typography variant="h5" gutterBottom>
-                About Me
+                Niko Halley
               </Typography>
-              <Typography paragraph>
+              <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                DevOps Engineer | Cloud Architect
+              </Typography>
+
+              <Stack 
+                spacing={1.5} 
+                sx={{ 
+                  mt: 2, 
+                  width: '100%', 
+                  alignItems: 'center' 
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Mail size={20} />
+                  <Link 
+                    href="mailto:niko.halley@example.com" 
+                    color="inherit" 
+                    underline="hover"
+                  >
+                    niko.halley@example.com
+                  </Link>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Phone size={20} />
+                  <Typography>(555) 123-4567</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <MapPin size={20} />
+                  <Typography>San Francisco, CA</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
+                  <Link 
+                    href="https://www.linkedin.com/in/nikohalley" 
+                    target="_blank" 
+                    color="inherit"
+                  >
+                    <Linkedin size={24} />
+                  </Link>
+                  <Link 
+                    href="https://github.com/nikohalley" 
+                    target="_blank" 
+                    color="inherit"
+                  >
+                    <Github size={24} />
+                  </Link>
+                </Box>
+              </Stack>
+
+              <Typography variant="body2" paragraph sx={{ mt: 2 }}>
                 I am a versatile IT professional with extensive experience in DevOps, cloud engineering, 
                 and system administration. My career spans roles in Site Operations, Cloud Engineering, 
                 and technical support, with a strong focus on infrastructure automation, 
                 performance optimization, and streamlining complex technical environments.
+                In my free time I enjoy working on personal projects, Hiking, Traveling the Globe and 
+                taking part in GameJams to improve my Game Development skills.
               </Typography>
             </Paper>
           </Box>
@@ -77,7 +160,16 @@ export default function PortfolioPageContent() {
           </Paper>
         </Grid>
         
-        <Grid item xs={12} md={7} lg={8} order={{ xs: 1, md: 2 }}>
+        <Grid 
+          item 
+          xs={12} 
+          md={7} 
+          lg={8} 
+          order={{ 
+            xs: 2,  
+            md: 2   
+          }}
+        >
           <Box sx={{ mb: 3 }}>
             <Typography variant="h4" gutterBottom>
               {selectedSection.charAt(0).toUpperCase() + selectedSection.slice(1)}
