@@ -90,12 +90,12 @@ export default function PortfolioPageContent() {
                     color="inherit" 
                     underline="hover"
                   >
-                    niko.halley@example.com
+                    niko@ixplor.app
                   </Link>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Phone size={20} />
-                  <Typography>(555) 123-4567</Typography>
+                  <Typography>(954) 614-1057</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <MapPin size={20} />
@@ -103,14 +103,14 @@ export default function PortfolioPageContent() {
                 </Box>
                 <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
                   <Link 
-                    href="https://www.linkedin.com/in/nikohalley" 
+                    href="https://www.linkedin.com/in/nhalley3398868" 
                     target="_blank" 
                     color="inherit"
                   >
                     <Linkedin size={24} />
                   </Link>
                   <Link 
-                    href="https://github.com/nikohalley" 
+                    href="https://github.com/NomadNiko/" 
                     target="_blank" 
                     color="inherit"
                   >
