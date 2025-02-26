@@ -1,10 +1,10 @@
 import { useState, useCallback } from 'react';
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 
 interface AvailabilityResponse {
-  availableTimeSlots: Date[];
+  availableTimeSlots: string[]; // ISO string timestamps from API
   totalSlots: number;
   slotsBreakdown: Record<string, number>;
   availableStaffIds?: string[];
@@ -22,6 +22,7 @@ export const useBookingAvailability = () => {
     setError(null);
 
     try {
+      // Format date consistently for API requests
       const formattedDate = format(date, 'yyyy-MM-dd');
       const tokensInfo = getTokensInfo();
       
@@ -45,10 +46,11 @@ export const useBookingAvailability = () => {
 
       const data: AvailabilityResponse = await response.json();
       
-      // Convert the dates to time strings (HH:mm format)
-      const timeSlots = data.availableTimeSlots.map(slot => 
-        format(new Date(slot), 'HH:mm')
-      ).sort();
+      // Parse ISO strings and format to time only (HH:mm format)
+      const timeSlots = data.availableTimeSlots.map(slotString => {
+        const slotDate = parseISO(slotString);
+        return format(slotDate, 'HH:mm');
+      }).sort();
 
       return timeSlots;
     } catch (err) {

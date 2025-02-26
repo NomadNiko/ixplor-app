@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { alpha, useTheme } from '@mui/material/styles';
 import { StaffShift } from './StaffWeeklyCalendar';
 import { Clock, User } from 'lucide-react';
@@ -21,9 +21,12 @@ export default function StaffDayColumn({
 }: StaffDayColumnProps) {
   const theme = useTheme();
 
-  const sortedShifts = [...shifts].sort((a, b) => 
-    new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime()
-  );
+  // Sort shifts by start time
+  const sortedShifts = [...shifts].sort((a, b) => {
+    const dateA = parseISO(a.startDateTime);
+    const dateB = parseISO(b.startDateTime);
+    return dateA.getTime() - dateB.getTime();
+  });
 
   return (
     <Box sx={{
@@ -104,8 +107,8 @@ export default function StaffDayColumn({
                   color="text.primary"
                   sx={{ fontWeight: 500 }}
                 >
-                  {format(new Date(shift.startDateTime), 'h:mm a')} - 
-                  {format(new Date(shift.endDateTime), 'h:mm a')}
+                  {format(parseISO(shift.startDateTime), 'h:mm a')} - 
+                  {format(parseISO(shift.endDateTime), 'h:mm a')}
                 </Typography>
               </Box>
               

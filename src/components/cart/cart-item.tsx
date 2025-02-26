@@ -13,7 +13,7 @@ import {
   useUpdateCartItemService,
   useRemoveFromCartService,
 } from "@/services/api/services/cart";
-import { format } from "date-fns";
+import { parseISO } from "date-fns";
 import { formatDuration } from "@/components/utils/duration-utils";
 
 type CartItemProps = {
@@ -77,6 +77,14 @@ export default function CartItem({
       setLoading(false);
     }
   };
+
+  // Parse the product date once
+  const productDate = parseISO(item.productDate);
+  
+  // Parse the start time properly with timezone consideration
+  const [hours, minutes] = item.productStartTime.split(':').map(Number);
+  const startTime = new Date();
+  startTime.setHours(hours, minutes, 0, 0);
 
   return (
     <Card sx={{ mb: 2 }}>
@@ -149,17 +157,22 @@ export default function CartItem({
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <Calendar size={16} />
               <Typography variant="body2" color="text.secondary">
-                {format(new Date(item.productDate), "PPP")}
+                {productDate.toLocaleDateString(undefined, { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
               </Typography>
             </Box>
 
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <Clock size={16} />
               <Typography variant="body2" color="text.secondary">
-                {format(
-                  new Date(`2000-01-01T${item.productStartTime}`),
-                  "h:mm a"
-                )}
+                {startTime.toLocaleTimeString(undefined, { 
+                  hour: 'numeric', 
+                  minute: '2-digit', 
+                  hour12: true 
+                })}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 ({formatDuration(item.productDuration)})

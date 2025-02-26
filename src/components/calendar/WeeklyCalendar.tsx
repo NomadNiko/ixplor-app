@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { eachDayOfInterval, format, parseISO } from 'date-fns';
+import { eachDayOfInterval, parseISO } from 'date-fns';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import DayColumn from './DayColumn';
@@ -27,7 +27,8 @@ export default function WeeklyCalendar({
     const itemMap = new Map<string, ProductItem[]>();
     
     items.forEach(item => {
-      const dateKey = format(parseISO(item.productDate), 'yyyy-MM-dd');
+      const productDate = parseISO(item.productDate);
+      const dateKey = productDate.toISOString().split('T')[0]; // yyyy-MM-dd format
       
       if (!itemMap.has(dateKey)) {
         itemMap.set(dateKey, []);
@@ -49,6 +50,22 @@ export default function WeeklyCalendar({
     end: currentWeek.end
   });
 
+  // Format the date range display
+  const formatDateRange = () => {
+    const startFormatted = currentWeek.start.toLocaleDateString(undefined, {
+      month: 'long',
+      day: 'numeric'
+    });
+    
+    const endFormatted = currentWeek.end.toLocaleDateString(undefined, {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    });
+    
+    return `${startFormatted} - ${endFormatted}`;
+  };
+
   return (
     <Box sx={{ 
       width: '100%',
@@ -68,7 +85,7 @@ export default function WeeklyCalendar({
         borderColor: 'divider'
       }}>
         <Typography variant="h6">
-          {`${format(currentWeek.start, 'MMMM d')} - ${format(currentWeek.end, 'MMMM d, yyyy')}`}
+          {formatDateRange()}
         </Typography>
       </Box>
 
@@ -90,7 +107,7 @@ export default function WeeklyCalendar({
         }
       }}>
         {weekDays.map(day => {
-          const dateKey = format(day, 'yyyy-MM-dd');
+          const dateKey = day.toISOString().split('T')[0]; // yyyy-MM-dd format
           return (
             <DayColumn
               key={dateKey}

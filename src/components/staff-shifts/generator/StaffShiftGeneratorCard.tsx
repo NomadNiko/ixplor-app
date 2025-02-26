@@ -46,12 +46,25 @@ export default function StaffShiftGeneratorCard({
       }
   
       try {
-        const startTimeString = data.startTime.toTimeString().split(' ')[0];
-        const endTimeString = data.endTime.toTimeString().split(' ')[0];
-        const shifts = data.selectedDates.map(date => ({
-          startDateTime: new Date(`${date.toISOString().split('T')[0]}T${startTimeString}`),
-          endDateTime: new Date(`${date.toISOString().split('T')[0]}T${endTimeString}`)
-        }));
+        // Extract hours and minutes from the time objects
+        const startHours = data.startTime.getHours();
+        const startMinutes = data.startTime.getMinutes();
+        const endHours = data.endTime.getHours();
+        const endMinutes = data.endTime.getMinutes();
+        
+        const shifts = data.selectedDates.map(date => {
+          // Create new Date objects with the correct date and time components
+          const startDateTime = new Date(date);
+          startDateTime.setHours(startHours, startMinutes, 0, 0);
+          
+          const endDateTime = new Date(date);
+          endDateTime.setHours(endHours, endMinutes, 0, 0);
+          
+          return {
+            startDateTime,
+            endDateTime
+          };
+        });
   
         await createShifts(staffId, shifts);
         enqueueSnackbar(t('success.shiftsCreated'), { variant: 'success' });

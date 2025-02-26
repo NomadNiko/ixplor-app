@@ -14,7 +14,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { Clock, Calendar } from 'lucide-react';
-import { format, addDays } from 'date-fns';
+import { addDays } from 'date-fns';
 import { useTheme } from '@mui/material/styles';
 import { BookingItem } from '@/components/booking-item/types/booking-item';
 import { API_URL } from "@/services/api/config";
@@ -51,7 +51,12 @@ const PublicBookingItemDetailModal = ({
       const date = addDays(new Date(), i);
       return {
         value: date,
-        label: format(date, 'EEEE, MMM d, yyyy')
+        label: date.toLocaleDateString(undefined, {
+          weekday: 'long',
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        })
       };
     });
   }, []);
@@ -61,7 +66,7 @@ const PublicBookingItemDetailModal = ({
     setError(null);
     
     try {
-      const formattedDate = format(date, 'yyyy-MM-dd');
+      const formattedDate = date.toISOString().split('T')[0]; // yyyy-MM-dd format
       const tokensInfo = getTokensInfo();
       
       const url = `${API_URL}/booking-availability/${item._id}/date/${formattedDate}`;
@@ -80,8 +85,8 @@ const PublicBookingItemDetailModal = ({
       const data = await response.json();
       
       const timeSlots = data.availableTimeSlots.map((slot: string) => {
-        const time = new Date(slot);
-        return format(time, 'HH:mm');
+        const timeDate = new Date(slot);
+        return `${timeDate.getHours().toString().padStart(2, '0')}:${timeDate.getMinutes().toString().padStart(2, '0')}`;
       }).sort();
       
       setAvailableTimes(timeSlots);
@@ -119,6 +124,7 @@ const PublicBookingItemDetailModal = ({
     try {
       setIsLoading(true);
       
+      // Create bookingDateTime with proper timezone handling
       const [hours, minutes] = selectedTime.split(':').map(Number);
       const bookingDateTime = new Date(selectedDate);
       bookingDateTime.setHours(hours, minutes, 0, 0);
@@ -164,6 +170,19 @@ const PublicBookingItemDetailModal = ({
   };
   
   const isBookingValid = selectedDate && selectedTime;
+  
+  // Function to format time display
+  const formatTimeDisplay = (timeString: string) => {
+    const [hours, minutes] = timeString.split(':').map(Number);
+    const timeObj = new Date();
+    timeObj.setHours(hours, minutes, 0, 0);
+    
+    return timeObj.toLocaleTimeString(undefined, {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
+  };
   
   return (
     <Dialog
@@ -241,7 +260,7 @@ const PublicBookingItemDetailModal = ({
               <InputLabel>Date</InputLabel>
               <Select
                 value={dateOptions.findIndex(option => 
-                  format(option.value, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
+                  option.value.toISOString().split('T')[0] === selectedDate.toISOString().split('T')[0]
                 ).toString()}
                 onChange={handleDateChange}
                 label="Date"
@@ -282,7 +301,7 @@ const PublicBookingItemDetailModal = ({
                 >
                   {availableTimes.map((time) => (
                     <MenuItem key={time} value={time}>
-                      {format(new Date(`2000-01-01T${time}`), 'h:mm a')}
+                      {formatTimeDisplay(time)}
                     </MenuItem>
                   ))}
                 </Select>
@@ -299,7 +318,11 @@ const PublicBookingItemDetailModal = ({
                 mt: 2
               }}>
                 <Typography variant="body2">
-                  Your booking: {format(selectedDate, 'EEEE, MMM d')} at {format(new Date(`2000-01-01T${selectedTime}`), 'h:mm a')}
+                  Your booking: {selectedDate.toLocaleDateString(undefined, {
+                    weekday: 'long',
+                    month: 'short',
+                    day: 'numeric'
+                  })} at {formatTimeDisplay(selectedTime)}
                 </Typography>
               </Box>
             )}

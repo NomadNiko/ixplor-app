@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import { Clock, DollarSign } from 'lucide-react';
-import { formatDistance } from 'date-fns';
+import { formatDistance, parseISO } from 'date-fns';
 import { useTranslation } from "@/services/i18n/client";
 import { BookingItem, BookingItemStatusEnum } from './types/booking-item';
 import BookingItemStatusButtons from "./BookingItemStatusButton";
@@ -118,7 +118,7 @@ export const BookingItemCard = ({
           </Box>
 
           <Typography variant="caption" color="text.secondary">
-            {t('updated')} {formatDistance(new Date(item.updatedAt), new Date(), { addSuffix: true })}
+            {t('updated')} {formatDistance(parseISO(item.updatedAt), new Date(), { addSuffix: true })}
           </Typography>
         </CardContent>
       </Box>

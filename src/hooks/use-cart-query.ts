@@ -4,6 +4,7 @@ import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import useAuth from '@/services/auth/use-auth';
 import { useTranslation } from "@/services/i18n/client";
 import { cartKeys } from '@/src/services/react-query/keys/cart';
+import { parseISO, format } from 'date-fns';
 
 export interface CartItem {
   productItemId: string;
@@ -115,14 +116,22 @@ export function useCartQuery() {
     newItem: { productDate: string; productStartTime: string; productDuration: number },
     existingItems: CartItem[]
   ): ValidationError | null => {
-    const newStart = new Date(`${newItem.productDate}T${newItem.productStartTime}`);
+    // Create a consistent timestamp for the new item
+    const newItemDateStr = `${newItem.productDate}T${newItem.productStartTime}`;
+    const newStart = parseISO(newItemDateStr);
     const newEnd = new Date(newStart.getTime() + (newItem.productDuration * 60 * 1000));
+    
     const hasConflict = existingItems.some(item => {
       if (!item.productDate || !item.productStartTime || !item.productDuration) return false;
-      const itemStart = new Date(`${item.productDate}T${item.productStartTime}`);
+      
+      // Create consistent timestamps for existing items
+      const itemDateStr = `${item.productDate}T${item.productStartTime}`;
+      const itemStart = parseISO(itemDateStr);
       const itemEnd = new Date(itemStart.getTime() + (item.productDuration * 60 * 1000));
+      
       return (newStart < itemEnd && newEnd > itemStart);
     });
+    
     if (hasConflict) {
       return { type: 'TIME_CONFLICT', message: t('errors.timeConflict') };
     }
@@ -150,6 +159,9 @@ export function useCartQuery() {
         }
       }
       
+      // Consistently format dates before sending to API
+      const formattedDate = format(data.productDate, 'yyyy-MM-dd');
+      
       const response = await fetch(`${API_URL}/cart/add`, {
         method: 'POST',
         headers: {
@@ -158,7 +170,7 @@ export function useCartQuery() {
         },
         body: JSON.stringify({
           ...data,
-          productDate: new Date(data.productDate) // Convert to Date object before sending
+          productDate: formattedDate
         }),
       });
       
@@ -185,6 +197,9 @@ export function useCartQuery() {
         throw new Error('No auth token');
       }
       
+      // Always use ISO strings for API communication
+      const startDateTimeISO = data.startDateTime.toISOString();
+      
       // Validate availability first
       const validationResponse = await fetch(`${API_URL}/booking-availability/validate`, {
         method: 'POST',
@@ -194,7 +209,7 @@ export function useCartQuery() {
         },
         body: JSON.stringify({
           bookingItemId: data.bookingItemId,
-          startDateTime: data.startDateTime.toISOString(),
+          startDateTime: startDateTimeISO,
           duration: data.duration
         }),
       });
@@ -213,7 +228,7 @@ export function useCartQuery() {
         },
         body: JSON.stringify({
           bookingItemId: data.bookingItemId,
-          startDateTime: data.startDateTime.toISOString(),
+          startDateTime: startDateTimeISO,
           duration: data.duration,
           vendorId: data.vendorId,
           staffId: data.staffId || undefined // Only include if provided
