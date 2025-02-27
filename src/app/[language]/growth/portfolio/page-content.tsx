@@ -72,7 +72,7 @@ export default function PortfolioPageContent() {
                 Niko Halley
               </Typography>
               <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-                DevOps Engineer | Cloud Architect
+                Tech Support - DevOps - Full Stack Dev - GameDev
               </Typography>
 
               <Stack 
@@ -99,7 +99,7 @@ export default function PortfolioPageContent() {
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <MapPin size={20} />
-                  <Typography>San Francisco, CA</Typography>
+                  <Typography>Honolulu, HI</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
                   <Link 
