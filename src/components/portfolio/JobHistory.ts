@@ -2,6 +2,43 @@ import { ExperienceEntry } from './types';
 
 export const experiences: ExperienceEntry[] = [
   {
+    period: "Jan 2023 - Present",
+    role: "Founder - Head Engineer",
+    company: "iXplor Global",
+    description: "As the Founder and Head Engineer of iXplor Global, I architected and developed a full-stack adventure booking platform that revolutionizes travel experiences through innovative technology. The platform provides a comprehensive solution for vendors and travelers, featuring advanced geospatial discovery, real-time booking management, and seamless vendor onboarding.",
+    skills: [
+      "React.js", 
+      "Next.js",
+      "Node.js", 
+      "TypeScript",
+      "MongoDB",
+      "Stripe Integration",
+      "Mapbox",
+      "Material-UI",
+      "React Hook Form",
+      "i18next",
+      "JWT Authentication",
+      "Geospatial Querying"
+    ],
+    keyPoints: [
+      {
+        title: "Full-Stack Architecture Design",
+        description: "Designed a microservices-inspired architecture using Next.js and Node.js, implementing role-based access control, dynamic routing, and scalable backend services. Created a modular system that supports multiple vendor types including tours, lessons, rentals, and tickets."
+      },
+      {
+        title: "Advanced Booking Management System",
+        description: "Developed a sophisticated booking system with role-based scheduling, dynamic availability tracking, and intelligent staff assignment. Implemented complex logic to manage bookings at the role level, allowing flexible staff management and seamless booking experiences."
+      },
+      {
+        title: "Geospatial Discovery Platform",
+        description: "Created an interactive mapping solution using Mapbox and custom clustering algorithms, enabling users to discover local adventure activities with advanced filtering and real-time location-based search capabilities."
+      },
+      {
+        title: "Payment and Vendor Ecosystem",
+        description: "Integrated Stripe Connect for vendor payouts, built a comprehensive vendor onboarding flow, and implemented a multi-tenant system supporting varied business models across different activity types."
+      }
+    ]
+  },{
     period: "Jun 2017 - Oct 2019",
     role: "Lead Site Operations Engineer",
     company: "SigFig/WikiInvest Inc.",
