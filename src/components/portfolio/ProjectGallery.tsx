@@ -10,20 +10,20 @@ export default function ProjectGallery() {
     {
       title: "iXplor Booking Platform",
       description: "Full-stack booking and marketplace platform for local experiences and activities",
-      technologies: "React, Next.js, TypeScript, Node.js, MongoDB, Stripe",
-      image: "/api/placeholder/400/200"
+      technologies: "React, Next.js, TypeScript, Node.js, MongoDB, Stripe, AWS, Google Places, Mapbox, Material-UI",
+      image: "https://ixplor-profile-s3-bucket-02.s3.us-east-2.amazonaws.com/dbba4868a4611967a34ef.png"
     },
     {
-      title: "Unity Game Project",
-      description: "3D adventure game with procedural generation and exploration mechanics",
-      technologies: "Unity, C#, Procedural Generation, 3D Modeling",
-      image: "/api/placeholder/400/200"
+      title: "Aelyrnathyn - Unity Game Project",
+      description: "Top Down Hex-Tile Based Strategy Game. Tied for 2nd in Game Jame", 
+      technologies: "Unity, C#, JavaScript, Spriter Animations.",
+      image: "https://ixplor-profile-s3-bucket-02.s3.us-east-2.amazonaws.com/bba4868a4611967a34ef4.jpg"
     },
     {
-      title: "DevOps Infrastructure Automation",
-      description: "Comprehensive infrastructure-as-code solution with multi-cloud deployment",
-      technologies: "Terraform, Docker, Kubernetes, AWS, Azure, CI/CD Pipelines",
-      image: "/api/placeholder/400/200"
+      title: "Menteo - Server Menu Training App",
+      description: "Restaurant Server Training App with Gamified Quizzes and Interactive Menu Information",
+      technologies: "Unity, C#, JavaScript",
+      image: "https://ixplor-profile-s3-bucket-02.s3.us-east-2.amazonaws.com/ba4868a4611967a34ef4f.jpg" 
     }
   ];
 
