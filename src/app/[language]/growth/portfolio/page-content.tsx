@@ -28,10 +28,11 @@ export default function PortfolioPageContent() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
       <Typography variant="h2" gutterBottom sx={{ 
-        fontSize: { xs: '2rem', md: '3rem' },
-        textAlign: { xs: 'center', md: 'left' }
+        fontSize: { xs: '1.5rem', md: '2.5rem' },
+        textAlign: { xs: 'center', md: 'left' },
+        color: theme.palette.primary.main
       }}>
         Niko Halley - Portfolio
       </Typography>

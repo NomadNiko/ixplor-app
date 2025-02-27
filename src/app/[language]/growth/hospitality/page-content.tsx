@@ -32,13 +32,13 @@ export default function HospitalityPortfolioPageContent() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
       <Typography variant="h2" gutterBottom sx={{ 
         fontSize: { xs: '2rem', md: '3rem' },
         textAlign: { xs: 'center', md: 'left' },
         color: theme.palette.primary.main
       }}>
-        Niko Halley - Hospitality Portfolio
+        Niko Halley - Resume & Portfolio
       </Typography>
       
       <Grid container spacing={4}>
