@@ -73,7 +73,10 @@ export default function PortfolioPageContent() {
                 Niko Halley
               </Typography>
               <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-                Tech Support - DevOps - Full Stack Dev - GameDev
+                Tech Support - DevOps
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                Full Stack - GameDev
               </Typography>
 
               <Stack 
@@ -121,9 +124,9 @@ export default function PortfolioPageContent() {
               </Stack>
 
               <Typography variant="body2" paragraph sx={{ mt: 2 }}>
-                I am a versatile IT professional with extensive experience in DevOps, cloud engineering, 
-                and system administration. My career spans roles in Site Operations, Cloud Engineering, 
-                and technical support, with a strong focus on infrastructure automation, 
+                I am a versatile IT professional with extensive experience in IT systems support, cloud engineering, 
+                and system administration. My career spans roles in Site Operations, Cloud Engineering, DevOps, SysAdmin, Cyber Systems Operations
+                and Technical Support. I have worked in range of roles, but most have had a strong focus on infrastructure automation, 
                 performance optimization, and streamlining complex technical environments.
                 In my free time I enjoy working on personal projects, Hiking, Traveling the Globe and 
                 taking part in GameJams to improve my Game Development skills.
