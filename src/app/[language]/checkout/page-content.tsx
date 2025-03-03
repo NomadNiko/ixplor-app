@@ -104,7 +104,7 @@ export default function CheckoutPageContent() {
             body: JSON.stringify({
               items: cartData.items,
               currency: "usd",
-              returnUrl: `${window.location.origin}/tickets`,
+              returnUrl: `${window.location.origin}/dashboard`,
             }),
           }
         );

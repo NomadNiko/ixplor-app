@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { Store, FerrisWheel, Ticket, Receipt } from "lucide-react";
+import { Store, FerrisWheel, Ticket, Receipt, CalendarDays } from "lucide-react";
 import Box from "@mui/material/Box";
 import { NavButton } from "./styled-components";
 import NearbyActivities from "@/components/product-item/NearbyActivities";
+import NearbyBookings from "@/components/booking-item/NearbyBookings";
 import NearbyVendors from "../vendor/NearbyVendors";
 import { Vendor } from "@/app/[language]/types/vendor";
 import UpcomingTicketsPanel from "../tickets/UpcomingTickets";
 import PastReceipts from "../receipts/PastReceipts";
 
-type ActiveWindow = "activities" | "vendors" | "tickets" | "receipts" | null;
+type ActiveWindow = "activities" | "bookings" | "vendors" | "tickets" | "receipts" | null;
 
 interface BottomNavProps {
   currentLocation: {
@@ -83,6 +84,12 @@ export const BottomNav = ({
             <FerrisWheel />
           </NavButton>
           <NavButton
+            onClick={() => handleNavClick("bookings")}
+            selected={activeWindow === "bookings"}
+          >
+            <CalendarDays />
+          </NavButton>
+          <NavButton
             onClick={() => handleNavClick("vendors")}
             selected={activeWindow === "vendors"}
           >
@@ -106,6 +113,12 @@ export const BottomNav = ({
       <Box onClick={handleOutsideClick}>
         <NearbyActivities
           isOpen={activeWindow === "activities"}
+          onClose={handleClose}
+          latitude={currentLocation.latitude}
+          longitude={currentLocation.longitude}
+        />
+        <NearbyBookings
+          isOpen={activeWindow === "bookings"}
           onClose={handleClose}
           latitude={currentLocation.latitude}
           longitude={currentLocation.longitude}

@@ -46,7 +46,7 @@ export interface EditCardConfig {
   title: string;
   sections: SectionConfig[];
   approvalButtons?: {
-    type: 'vendor' | 'product' | 'template';
+    type: 'vendor' | 'product' | 'template' | 'staff-user';
     currentStatus: ProductStatusEnum | VendorStatusEnum;
     onStatusChange: (status: ProductStatusEnum | VendorStatusEnum) => Promise<void>;
   };

@@ -208,9 +208,13 @@ const [selectedLocation, setSelectedLocation] = useState<{latitude: number; long
   }
 
   return (
+    
+
+    
     <Box
       sx={{ height: "calc(100vh - 64px)", width: "100%", position: "relative" }}
     >
+
       <Map
         key={mapKey}
         {...viewState}
@@ -249,6 +253,7 @@ const [selectedLocation, setSelectedLocation] = useState<{latitude: number; long
     }}
   />
 )}
+
         <Container
           maxWidth="sm"
           sx={{

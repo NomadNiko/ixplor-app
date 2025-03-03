@@ -17,6 +17,7 @@
   "status": {
     "active": "Active",
     "published": "Active",
+    "archived": "Expired",
     "completed": "Completed",
     "draft": "Draft",
     "cancelled": "Cancelled"

@@ -7,11 +7,14 @@ import { PlaceResult } from '@/hooks/use-google-places';
 import { FileEntity } from '@/services/api/types/file-entity';
 import { TemplateStatusEnum } from '@/components/template/types/template.types';
 import { ProductItemStatus } from '@/app/[language]/types/product-item';
+import { BookingItemStatusEnum } from '@/components/booking-item/types/booking-item';
+import { StaffUserStatusEnum } from '@/components/staff-user/types/staff-user';
 
 export type FieldType = 
   | 'text'
   | 'number' 
   | 'price' 
+  | 'shifts'
   | 'email'
   | 'tel'
   | 'url'
@@ -89,11 +92,19 @@ export type ApprovalButtonsConfig = {
   type: 'productItem';
   currentStatus: ProductItemStatus;
   onStatusChange: (status: ProductItemStatus) => Promise<void>;
+} | {
+  type: 'booking-item';
+  currentStatus: BookingItemStatusEnum;
+  onStatusChange: (status: BookingItemStatusEnum) => Promise<void>;
+}| {
+  type: 'staff-user';
+  currentStatus: StaffUserStatusEnum;
+  onStatusChange: (status: StaffUserStatusEnum) => Promise<void>;
 };
 
 export interface CardConfig {
   title: string;
-  type: 'vendor' | 'product' | 'template' | 'productItem';
+  type: 'vendor' | 'product' | 'template' | 'productItem' | 'booking-item' | 'staff-user';
   sections: SectionConfig[];
   approvalButtons?: ApprovalButtonsConfig;
 }
@@ -128,7 +139,7 @@ export interface SharedCardActionsProps {
   methods: UseFormReturn<FormData>;
   customActions?: ReactNode;
   t: (key: string) => string;
-  type: 'vendor' | 'product' | 'template' | 'productItem';
+  type: 'vendor' | 'product' | 'template' | 'productItem' | 'booking-item' | 'staff-user';
   mode?: 'edit' | 'create';
 }
 
@@ -157,8 +168,8 @@ export interface AddressFieldProps {
 }
 
 export interface ApprovalButtonsProps {
-  type: 'vendor' | 'product'| 'template';
-  currentStatus: ProductStatusEnum | VendorStatusEnum | ProductStatusEnum;
+  type: 'vendor' | 'product'| 'template' | 'booking-item';
+  currentStatus: ProductStatusEnum | VendorStatusEnum | ProductStatusEnum | BookingItemStatusEnum;
   onStatusChange: (status: ProductStatusEnum | VendorStatusEnum | ProductStatusEnum) => Promise<void>;
   isSubmitting: boolean;
 }
@@ -186,4 +197,4 @@ export interface FormState {
 
 export type Mode = 'edit' | 'create';
 
-export type EntityType = 'vendor' | 'product' | 'template' | 'productItem';
+export type EntityType = 'vendor' | 'product' | 'template' | 'productItem' | 'booking-item' | 'staff-user';

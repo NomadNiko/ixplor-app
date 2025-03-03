@@ -1,5 +1,5 @@
 "use client";
-import { format } from 'date-fns';
+import { parseISO } from 'date-fns';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -51,6 +51,14 @@ export default function ProductItemDetailModal({
     router.push(`/product-items/${item._id}/edit`);
   };
 
+  // Parse the product date
+  const productDate = parseISO(item.productDate);
+  
+  // Parse the start time properly
+  const [hours, minutes] = item.startTime.split(':').map(Number);
+  const startTime = new Date();
+  startTime.setHours(hours, minutes, 0, 0);
+
   return (
     <Dialog 
       open={open} 
@@ -93,14 +101,22 @@ export default function ProductItemDetailModal({
           <Grid item xs={6}>
             <Typography variant="subtitle2">{t('date')}</Typography>
             <Typography>
-              {format(new Date(item.productDate), 'PPP')}
+              {productDate.toLocaleDateString(undefined, { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric'
+              })}
             </Typography>
           </Grid>
 
           <Grid item xs={6}>
             <Typography variant="subtitle2">{t('time')}</Typography>
             <Typography>
-              {format(new Date(`2000-01-01T${item.startTime}`), 'h:mm a')}
+              {startTime.toLocaleTimeString(undefined, { 
+                hour: 'numeric', 
+                minute: '2-digit', 
+                hour12: true 
+              })}
             </Typography>
           </Grid>
 

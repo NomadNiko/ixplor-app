@@ -41,13 +41,9 @@ interface DurationPickerProps {
 }
 
 const LIMITS = {
-  weeks: 4,
-  days: 6,
-  hours: 23,
-  minutes: 59
+  hours: 48,
+  minutes: 30 // We'll use this for the step size
 };
-
-const MINUTE_STEP = 5;
 
 const DurationPicker = ({ name, label, control, required = false, error }: DurationPickerProps) => {
   const {
@@ -58,42 +54,29 @@ const DurationPicker = ({ name, label, control, required = false, error }: Durat
     rules: { required }
   });
 
-  // Convert total minutes to weeks, days, hours, minutes
+  // Convert total minutes to hours and minutes
   const totalMinutes = Number(value) || 0;
-  const weeks = Math.floor(totalMinutes / (7 * 24 * 60));
-  const remainingDays = Math.floor((totalMinutes % (7 * 24 * 60)) / (24 * 60));
-  const remainingHours = Math.floor((totalMinutes % (24 * 60)) / 60);
+  const hours = Math.floor(totalMinutes / 60);
   const remainingMinutes = totalMinutes % 60;
 
-  const handleChange = (unit: 'weeks' | 'days' | 'hours' | 'minutes', delta: number) => {
-    let newWeeks = weeks;
-    let newDays = remainingDays;
-    let newHours = remainingHours;
+  const handleChange = (unit: 'hours' | 'minutes', delta: number) => {
+    let newHours = hours;
     let newMinutes = remainingMinutes;
 
     switch (unit) {
-      case 'weeks':
-        newWeeks = (weeks + delta + LIMITS.weeks + 1) % (LIMITS.weeks + 1);
-        break;
-      case 'days':
-        newDays = (remainingDays + delta + LIMITS.days + 1) % (LIMITS.days + 1);
-        break;
       case 'hours':
-        newHours = (remainingHours + delta + LIMITS.hours + 1) % (LIMITS.hours + 1);
+        newHours = Math.min(Math.max(hours + delta, 0), LIMITS.hours);
         break;
       case 'minutes':
-        newMinutes = (remainingMinutes + (delta * MINUTE_STEP) + LIMITS.minutes + 1) % (LIMITS.minutes + 1);
-        // Round to nearest MINUTE_STEP
-        newMinutes = Math.round(newMinutes / MINUTE_STEP) * MINUTE_STEP;
+        newMinutes = delta > 0 
+          ? (remainingMinutes + LIMITS.minutes) % 60
+          : remainingMinutes === 0 
+            ? 30 
+            : 0;
         break;
     }
 
-    const newTotalMinutes = 
-      (newWeeks * 7 * 24 * 60) + 
-      (newDays * 24 * 60) + 
-      (newHours * 60) + 
-      newMinutes;
-
+    const newTotalMinutes = (newHours * 60) + newMinutes;
     onChange(newTotalMinutes);
   };
 
@@ -108,55 +91,23 @@ const DurationPicker = ({ name, label, control, required = false, error }: Durat
       </Typography>
       
       <StyledContainer>
-        {/* Weeks */}
-        <UnitContainer>
-          <StyledIconButton onClick={() => handleChange('weeks', 1)}>
-            <ChevronUp size={20} />
-          </StyledIconButton>
-          
-          <Typography variant="h6" sx={{ my: 1 }}>
-            {weeks.toString().padStart(2, '0')}
-          </Typography>
-          
-          <StyledIconButton onClick={() => handleChange('weeks', -1)}>
-            <ChevronDown size={20} />
-          </StyledIconButton>
-          
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5 }}>
-            Wks
-          </Typography>
-        </UnitContainer>
-
-        {/* Days */}
-        <UnitContainer>
-          <StyledIconButton onClick={() => handleChange('days', 1)}>
-            <ChevronUp size={20} />
-          </StyledIconButton>
-          
-          <Typography variant="h6" sx={{ my: 1 }}>
-            {remainingDays.toString().padStart(2, '0')}
-          </Typography>
-          
-          <StyledIconButton onClick={() => handleChange('days', -1)}>
-            <ChevronDown size={20} />
-          </StyledIconButton>
-          
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5 }}>
-            Days
-          </Typography>
-        </UnitContainer>
-
         {/* Hours */}
         <UnitContainer>
-          <StyledIconButton onClick={() => handleChange('hours', 1)}>
+          <StyledIconButton 
+            onClick={() => handleChange('hours', 1)}
+            disabled={hours >= LIMITS.hours}
+          >
             <ChevronUp size={20} />
           </StyledIconButton>
           
           <Typography variant="h6" sx={{ my: 1 }}>
-            {remainingHours.toString().padStart(2, '0')}
+            {hours.toString().padStart(2, '0')}
           </Typography>
           
-          <StyledIconButton onClick={() => handleChange('hours', -1)}>
+          <StyledIconButton 
+            onClick={() => handleChange('hours', -1)}
+            disabled={hours <= 0}
+          >
             <ChevronDown size={20} />
           </StyledIconButton>
           

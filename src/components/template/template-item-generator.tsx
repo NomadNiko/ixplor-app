@@ -26,12 +26,11 @@ interface Template {
   productType: string;
   vendorId: string;
   defaultDuration?: number;
-  defaultLocation?: {
-    type: 'Point';
-    coordinates: [number, number];
-  };
+  defaultLongitude?: number;  // These are the actual fields
+  defaultLatitude?: number;   // from template creation
   equipmentSizes?: string[];
 }
+
 
 interface TemplateItemGeneratorProps {
   template: Template;
@@ -77,16 +76,12 @@ export default function TemplateItemGenerator({
 
   const handleSubmit = async () => {
     try {
-      if (!formData.productDate || !formData.startTime) {
-        return;
-      }
-
+      if (!formData.productDate || !formData.startTime) return;
+  
       setIsSubmitting(true);
       const tokensInfo = getTokensInfo();
-      if (!tokensInfo?.token) {
-        return;
-      }
-
+      if (!tokensInfo?.token) return;
+  
       const submissionData = {
         templateId: template._id,
         vendorId: template.vendorId,
@@ -95,14 +90,16 @@ export default function TemplateItemGenerator({
         duration: formData.duration,
         price: formData.price,
         quantityAvailable: formData.quantity,
-        longitude: template.defaultLocation?.coordinates[0],
-        latitude: template.defaultLocation?.coordinates[1],
+        location: {
+          type: 'Point',
+          coordinates: [template.defaultLongitude || 0, template.defaultLatitude || 0]
+        },
         instructorName: formData.instructorName,
         tourGuide: formData.tourGuide,
         equipmentSize: formData.equipmentSize,
         notes: formData.notes
       };
-
+  
       const response = await fetch(`${API_URL}/product-items/generate/${template._id}`, {
         method: 'POST',
         headers: {
@@ -111,10 +108,8 @@ export default function TemplateItemGenerator({
         },
         body: JSON.stringify(submissionData)
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to generate items');
-      }
+  
+      if (!response.ok) throw new Error('Failed to generate items');
       onSuccess();
     } catch (error) {
       console.error('Error generating items:', error);
@@ -122,7 +117,7 @@ export default function TemplateItemGenerator({
       setIsSubmitting(false);
     }
   };
-
+  
   return (
     <Card>
       <CardContent>

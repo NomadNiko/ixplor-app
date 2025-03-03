@@ -98,7 +98,7 @@ export default function VendorAccountPage() {
 
   if (error) {
     return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Container maxWidth="md" sx={{ py: 4 }}>
         <Alert severity="error">
           <AlertTitle>{t('errors.title')}</AlertTitle>
           {error}
@@ -109,7 +109,7 @@ export default function VendorAccountPage() {
 
   if (!vendor) {
     return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Container maxWidth="md" sx={{ py: 4 }}>
         <Alert severity="info">
           <AlertTitle>{t('noVendor.title')}</AlertTitle>
           {t('noVendor.message')}
@@ -119,7 +119,7 @@ export default function VendorAccountPage() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="md" sx={{ py: 4 }}>
       <Typography variant="h4" gutterBottom>
         {t('title')}
       </Typography>

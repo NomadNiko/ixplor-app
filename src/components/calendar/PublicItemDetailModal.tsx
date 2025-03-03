@@ -9,7 +9,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
 import { X, MapPin, Calendar, Clock } from 'lucide-react';
-import { format } from 'date-fns';
+import { parseISO } from 'date-fns';
 import { ProductItem } from '@/app/[language]/types/product-item';
 import { useTranslation } from "@/services/i18n/client";
 import { formatDuration } from '@/components/utils/duration-utils';
@@ -25,8 +25,6 @@ interface PublicItemDetailModalProps {
   isAddingToCart: boolean;
 }
 
-
-
 export default function PublicItemDetailModal({
   item,
   open,
@@ -39,6 +37,14 @@ export default function PublicItemDetailModal({
   const router = useRouter();
 
   if (!item) return null;
+
+  // Parse the product date
+  const productDate = parseISO(item.productDate);
+  
+  // Parse the start time properly
+  const [hours, minutes] = item.startTime.split(':').map(Number);
+  const startTime = new Date();
+  startTime.setHours(hours, minutes, 0, 0);
 
   const handleAddToCart = () => {
     if (!user) {
@@ -101,14 +107,23 @@ export default function PublicItemDetailModal({
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Calendar size={16} />
             <Typography variant="body2">
-              {format(new Date(item.productDate), 'PPPP')}
+              {productDate.toLocaleDateString(undefined, { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              })}
             </Typography>
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Clock size={16} />
             <Typography variant="body2">
-              {format(new Date(`2000-01-01T${item.startTime}`), 'h:mm a')} ({formatDuration(item.duration)})
+              {startTime.toLocaleTimeString(undefined, { 
+                hour: 'numeric', 
+                minute: '2-digit', 
+                hour12: true 
+              })} ({formatDuration(item.duration)})
             </Typography>
           </Box>
 
@@ -171,14 +186,14 @@ export default function PublicItemDetailModal({
           {t('close')}
         </Button>
         <Button
-      variant="contained"
-      size="small"
-      onClick={handleAddToCart}  // Update this to use the new handler
-      disabled={isAddingToCart || item.quantityAvailable === 0}
-      startIcon={isAddingToCart ? <CircularProgress size={16} /> : null}
-    >
-      {isAddingToCart ? t('addingToCart') : t('addToCart')}
-    </Button>
+          variant="contained"
+          size="small"
+          onClick={handleAddToCart}
+          disabled={isAddingToCart || item.quantityAvailable === 0}
+          startIcon={isAddingToCart ? <CircularProgress size={16} /> : null}
+        >
+          {isAddingToCart ? t('addingToCart') : t('addToCart')}
+        </Button>
       </DialogActions>
     </Dialog>
   );

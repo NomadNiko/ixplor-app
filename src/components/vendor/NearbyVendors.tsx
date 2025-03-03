@@ -210,14 +210,14 @@ const NearbyVendors: React.FC<NearbyVendorsProps> = ({
         onClick={handleModalClick}
         sx={{
           position: "fixed",
-          bottom: { xs: 70, md: 82 },
-          left: { xs: 0, md: '50%' },
-          right: { xs: 0, md: 'auto' },
+          bottom: { xs: 70, sm: 82 },
+          left: { xs: 0, sm: '50%' },
+          right: { xs: 0, sm: 'auto' },
           height: "75%",
           backgroundColor: "background.paper",
           borderTopLeftRadius: theme.spacing(2),
           borderTopRightRadius: theme.spacing(2),
-          transform: { xs: 'none', md: 'translateX(-50%)' },
+          transform: { xs: 'none', sm: 'translateX(-50%)' },
           width: { xs: '100%', sm: '600px' },
           boxShadow: 3,
           zIndex: 75,
@@ -227,7 +227,7 @@ const NearbyVendors: React.FC<NearbyVendorsProps> = ({
           background: "rgba(17, 25, 40, 0.75)",
           backdropFilter: "blur(16px)",
           border: "1px solid rgba(255, 255, 255, 0.125)",
-          borderRadius: { xs: "12px 12px 0 0", md: 2 },
+          borderRadius: { xs: "12px 12px 0 0", sm: 2 },
         }}
       >
         <Box

@@ -44,7 +44,7 @@ export interface SectionConfig {
 export interface CreateCardConfig {
   title: string;
   sections: SectionConfig[];
-  type: 'vendor' | 'product' | 'template';
+  type: 'vendor' | 'product' | 'template'| 'staff-user';
 }
 
 export interface FormData {

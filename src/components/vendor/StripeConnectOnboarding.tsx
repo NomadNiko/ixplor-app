@@ -26,6 +26,7 @@ interface StripeAccountResponse {
 
 interface StripeConnectOnboardingProps {
   vendorId: string;
+  onClose?: () => void;
 }
 
 export const StripeConnectOnboarding: React.FC<StripeConnectOnboardingProps> = ({ 

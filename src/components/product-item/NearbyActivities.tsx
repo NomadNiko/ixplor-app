@@ -233,14 +233,14 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
       onClick={handleModalClick} // Add click handler
       sx={{
         position: "fixed",
-        bottom: { xs: 70, md: 82 },
-        left: { xs: 0, md: "50%" },
-        right: { xs: 0, md: "auto" },
+        bottom: { xs: 70, sm: 82 },
+        left: { xs: 0, sm: "50%" },
+        right: { xs: 0, sm: "auto" },
         height: "75%",
         backgroundColor: "background.paper",
         borderTopLeftRadius: theme.spacing(2),
         borderTopRightRadius: theme.spacing(2),
-        transform: { xs: "none", md: "translateX(-50%)" },
+        transform: { xs: "none", sm: "translateX(-50%)" },
         width: { xs: "100%", sm: "600px" },
         boxShadow: 3,
         zIndex: 75,
@@ -250,7 +250,7 @@ const NearbyActivities: React.FC<NearbyActivitiesProps> = ({
         background: "rgba(17, 25, 40, 0.75)", // Added matching background
         backdropFilter: "blur(16px)", // Added matching blur effect
         border: "1px solid rgba(255, 255, 255, 0.125)", // Added matching border
-        borderRadius: { xs: "12px 12px 0 0", md: 2 }, // Added matching border radius
+        borderRadius: { xs: "12px 12px 0 0", sm: 2 }, // Added matching border radius
       }}
     >
       <Box

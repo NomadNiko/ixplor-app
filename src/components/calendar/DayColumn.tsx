@@ -1,4 +1,4 @@
-import { format, isToday, isSameDay } from "date-fns";
+import { isToday, isSameDay, parseISO } from "date-fns";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
@@ -25,7 +25,7 @@ export default function DayColumn({
 
   // Filter items for this specific day
   const dayItems = items.filter((item) =>
-    isSameDay(new Date(item.productDate), date)
+    isSameDay(parseISO(item.productDate), date)
   );
 
   // Sort items by start time
@@ -58,12 +58,14 @@ export default function DayColumn({
           borderColor: "divider",
         }}
       >
-        <Typography variant="subtitle2">{format(date, "EEE")}</Typography>
+        <Typography variant="subtitle2">
+          {date.toLocaleDateString(undefined, { weekday: 'short' })}
+        </Typography>
         <Typography
           variant="h6"
           color={isCurrentDay ? "primary" : "text.primary"}
         >
-          {format(date, "d")}
+          {date.getDate()}
         </Typography>
       </Box>
       <Box
@@ -73,61 +75,72 @@ export default function DayColumn({
           p: 1,
         }}
       >
-        {sortedItems.map((item) => (
-          <Paper
-            key={item._id}
-            onClick={() => onItemClick(item)}
-            sx={{
-              p: 1,
-              mb: 1,
-              cursor: "pointer",
-              transition: "transform 0.2s, box-shadow 0.2s",
-              "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: 2,
-                bgcolor: "action.hover",
-              },
-            }}
-          >
-            <Typography
-              variant="subtitle2"
+        {sortedItems.map((item) => {
+          // Parse the time properly
+          const [hours, minutes] = item.startTime.split(':').map(Number);
+          const startTime = new Date();
+          startTime.setHours(hours, minutes, 0, 0);
+          
+          return (
+            <Paper
+              key={item._id}
+              onClick={() => onItemClick(item)}
               sx={{
-                wordBreak: "break-word",
-                mb: 0.5,
+                p: 1,
+                mb: 1,
+                cursor: "pointer",
+                transition: "transform 0.2s, box-shadow 0.2s",
+                "&:hover": {
+                  transform: "translateY(-2px)",
+                  boxShadow: 2,
+                  bgcolor: "action.hover",
+                },
               }}
             >
-              {item.templateName}
-            </Typography>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{ display: "block" }}
-            >
-              {t("startTime")} :{" "}
-              {format(new Date(`2000-01-01T${item.startTime}`), "h:mm a")}
-            </Typography>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{ display: "block" }}
-            >
-              {t("duration")} : {formatDuration(item.duration)}
-            </Typography>
-
-            {isVendorView && (
               <Typography
-                variant="caption"
+                variant="subtitle2"
                 sx={{
-                  display: "block",
-                  color:
-                    item.quantityAvailable > 0 ? "success.main" : "error.main",
+                  wordBreak: "break-word",
+                  mb: 0.5,
                 }}
               >
-                {item.quantityAvailable} {t("available")}
+                {item.templateName}
               </Typography>
-            )}
-          </Paper>
-        ))}
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ display: "block" }}
+              >
+                {t("startTime")} :{" "}
+                {startTime.toLocaleTimeString(undefined, { 
+                  hour: 'numeric', 
+                  minute: '2-digit', 
+                  hour12: true 
+                })}
+              </Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ display: "block" }}
+              >
+                {t("duration")} : {formatDuration(item.duration)}
+              </Typography>
+
+              {isVendorView && (
+                <Typography
+                  variant="caption"
+                  sx={{
+                    display: "block",
+                    color:
+                      item.quantityAvailable > 0 ? "success.main" : "error.main",
+                  }}
+                >
+                  {item.quantityAvailable} {t("available")}
+                </Typography>
+              )}
+            </Paper>
+          );
+        })}
       </Box>
     </Box>
   );

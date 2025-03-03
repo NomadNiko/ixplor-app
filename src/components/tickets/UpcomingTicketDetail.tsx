@@ -7,6 +7,7 @@ import Paper from "@mui/material/Paper";
 import { Download, Ticket as TicketIcon, ExternalLink } from "lucide-react";
 import { format, isValid } from 'date-fns';
 import type { Ticket } from '@/hooks/use-tickets';
+import { useTranslation } from "@/services/i18n/client";
 import QRGenerator from "./QRGenerator";
 import html2canvas from 'html2canvas';
 
@@ -16,10 +17,12 @@ interface TicketDetailProps {
 }
 
 export const UpcomingTicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose }) => {
+  const { t } = useTranslation("tickets");
+  
   const formatDate = (dateString?: string) => {
-    if (!dateString) return 'N/A';
+    if (!dateString) return t('notAvailable');
     const date = new Date(dateString);
-    return isValid(date) ? format(date, "dd MMM ''yy") : 'N/A';
+    return isValid(date) ? format(date, "dd MMM ''yy") : t('notAvailable');
   };
 
   const getStatusColor = (status: string): "success" | "error" | "warning" | "info" => {
@@ -41,8 +44,8 @@ export const UpcomingTicketDetail: React.FC<TicketDetailProps> = ({ ticket, onCl
         scale: 2,
         useCORS: true,
         backgroundColor: null,
-        windowWidth: 330, // Reduced from 440
-        windowHeight: 1012 // Reduced from 1350
+        windowWidth: 330,
+        windowHeight: 1012
       });
       
       const blob = await new Promise<Blob>((resolve) => {
@@ -60,14 +63,14 @@ export const UpcomingTicketDetail: React.FC<TicketDetailProps> = ({ ticket, onCl
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Error exporting ticket:', error);
+      console.error(t('errors.exportFailed'), error);
     }
   };
 
   const formatDuration = (minutes?: number) => {
-    if (!minutes) return 'N/A';
+    if (!minutes) return t('notAvailable');
     const hours = minutes / 60;
-    return `${hours}h`;
+    return `${hours}${t('hourUnit')}`;
   };
   
   const handleOpenMap = () => {
@@ -94,16 +97,16 @@ export const UpcomingTicketDetail: React.FC<TicketDetailProps> = ({ ticket, onCl
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        p: 1.5 // Reduced from 2
+        p: 1.5
       }}
       onClick={onClose}
     >
       <Paper 
         sx={{ 
-          maxWidth: 375, // Reduced from 500
+          maxWidth: 375,
           width: '100%', 
           mx: 'auto', 
-          p: 2, // Reduced from 3
+          p: 2,
           backgroundColor: 'background.paper',
           position: 'relative'
         }}
@@ -112,38 +115,38 @@ export const UpcomingTicketDetail: React.FC<TicketDetailProps> = ({ ticket, onCl
         <Box id="ticket-content" sx={{ 
           bgcolor: 'background.paper',
           borderRadius: 1,
-          p: 2, // Reduced from 3
+          p: 2,
           position: 'relative'
         }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
-            <TicketIcon size={18} /> {/* Reduced from 24 */}
-            <Typography variant="subtitle1">{ticket.productName}</Typography> {/* Changed from h6 */}
+            <TicketIcon size={18} />
+            <Typography variant="subtitle1">{ticket.productName}</Typography>
           </Box>
 
           <Alert severity={getStatusColor(ticket.status)} sx={{ mb: 2, py: 0.75, px: 1 }}>
-            Ticket Status: {ticket.status}
+            {t('ticketStatus')}: {t(`status.${ticket.status.toLowerCase()}`)}
           </Alert>
 
           <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
             <QRGenerator ticketId={ticket._id} transactionId={ticket.transactionId} />
           </Box>
 
-          <Grid container spacing={1.5} sx={{ mb: 1.5 }}> {/* Reduced spacing */}
+          <Grid container spacing={1.5} sx={{ mb: 1.5 }}>
             <Grid item xs={6} sm={6}>
               <Typography color="text.secondary" variant="caption" display="block">
-                Date
+                {t('date')}
               </Typography>
               <Typography variant="body2">{formatDate(ticket.productDate)}</Typography>
             </Grid>
             <Grid item xs={6} sm={6}>
               <Typography color="text.secondary" variant="caption" display="block">
-                Time
+                {t('time')}
               </Typography>
-              <Typography variant="body2">{ticket.productStartTime || 'N/A'}</Typography>
+              <Typography variant="body2">{ticket.productStartTime || t('notAvailable')}</Typography>
             </Grid>
             <Grid item xs={6} sm={6}>
               <Typography color="text.secondary" variant="caption" display="block">
-                Duration
+                {t('duration')}
               </Typography>
               <Typography variant="body2">
                 {ticket.productDuration && formatDuration(ticket.productDuration)}
@@ -151,7 +154,7 @@ export const UpcomingTicketDetail: React.FC<TicketDetailProps> = ({ ticket, onCl
             </Grid>
             <Grid item xs={6} sm={6}>
               <Typography color="text.secondary" variant="caption" display="block">
-                Quantity
+                {t('quantity')}
               </Typography>
               <Typography variant="body2">{ticket.quantity}</Typography>
             </Grid>
@@ -165,7 +168,7 @@ export const UpcomingTicketDetail: React.FC<TicketDetailProps> = ({ ticket, onCl
                 onClick={handleOpenMap}
                 endIcon={<ExternalLink size={12} />}
               >
-                View Location
+                {t('viewLocation')}
               </Button>
             </Box>
           )}
@@ -178,14 +181,14 @@ export const UpcomingTicketDetail: React.FC<TicketDetailProps> = ({ ticket, onCl
             startIcon={<Download size={12} />}
             onClick={handleExportTicket}
           >
-            Export
+            {t('export')}
           </Button>
           <Button 
             variant="contained"
             size="small"
             onClick={onClose}
           >
-            Close
+            {t('close')}
           </Button>
         </Box>
       </Paper>
