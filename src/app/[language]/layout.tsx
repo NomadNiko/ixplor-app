@@ -37,9 +37,9 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   return {
     title: t("title"),
     description:
-      "Discover and book local activities, tours, lessons, rentals and tickets. iXplor connects you with nearby authentic local experiences and outdoor adventures. Find your next adventure today!",
+      "Tickets, Tours and More! Discover and Book Local Activities, Guided Tours, Activity Lessons, Equipment Rental and Event Tickets. iXplor connects you with nearby authentic local experiences. Find your next adventure today!",
     keywords:
-      "find adventure, adventure, adventure booking, local tours, outdoor activities, travel experiences, adventure marketplace, outdoor lessons, equipment rentals, event tickets, guided tours, local experiences, outdoor adventures, adventure travel, local activities, adventure sports, outdoor recreation",
+      "find adventure, adventure, adventure booking, local tours, outdoor activities, travel experiences, ixplor, ixplor awaits, ixplor global, outdoor lessons, equipment rentals, event tickets, guided tours, local experiences, outdoor adventures, adventure travel, local activities, adventure sports, outdoor recreation, adventure booking platform, adventure booking app, adventure booking website, adventure booking service, adventure booking system, adventure booking software, adventure booking online, adventure booking platform, adventure booking marketplace, adventure booking website, adventure booking app, adventure booking service, adventure booking system, adventure booking software, adventure booking online, adventure booking platform, adventure booking marketplace, adventure booking website, adventure booking app, adventure booking service, adventure booking system, adventure booking software, adventure booking online, adventure booking platform, adventure booking marketplace, adventure booking website, adventure booking app, adventure booking service, adventure booking system, adventure booking software, adventure booking online",
     metadataBase: new URL("https://ixplor.app/"),
     icons: {
       icon: "/favicon.ico",
