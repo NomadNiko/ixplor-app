@@ -44,9 +44,18 @@ export function middleware(req: NextRequest) {
     );
     const response = NextResponse.next();
     if (languageInReferer) response.cookies.set(cookieName, languageInReferer);
-
+    
+    // Add headers to prevent in-app browsing
+    response.headers.set('X-Frame-Options', 'DENY');
+    response.headers.set('Content-Security-Policy', "frame-ancestors 'none'");
+    
     return response;
   }
 
-  return NextResponse.next();
+  // If no referer, still add the headers to prevent in-app browsing
+  const response = NextResponse.next();
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('Content-Security-Policy', "frame-ancestors 'none'");
+  
+  return response;
 }
