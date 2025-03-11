@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 import { useState } from 'react';
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -7,10 +7,11 @@ import Grid from "@mui/material/Grid";
 import Button from '@mui/material/Button';
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
+import Chip from '@mui/material/Chip';
 import Link from "@mui/material/Link";
-import ResumeSection from "@/components/portfolio/ResumeSection";
-import SkillsShowcase from "@/components/portfolio/SkillsShowcase";
-import ProjectGallery from "@/components/portfolio/ProjectGallery";
+import HospitalityResumeSection from "@/components/hospitality/HospitalityResumeSection";
+import HospitalitySkillsShowcase from "@/components/hospitality/HospitalitySkillsShowcase";
+import HospitalityGallery from "@/components/hospitality/HospitalityGallery";
 import Paper from "@mui/material/Paper";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -18,11 +19,14 @@ import {
   Mail, 
   Phone, 
   Linkedin, 
-  Github, 
-  MapPin 
+  MapPin,
+  Utensils,
+  Hotel,
+  Plane,
+  Snowflake
 } from 'lucide-react';
 
-export default function PortfolioPageContent() {
+export default function HospitalityPortfolioPageContent() {
   const [selectedSection, setSelectedSection] = useState<string>('resume');
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -30,11 +34,11 @@ export default function PortfolioPageContent() {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Typography variant="h2" gutterBottom sx={{ 
-        fontSize: { xs: '1.5rem', md: '2.5rem' },
+        fontSize: { xs: '2rem', md: '3rem' },
         textAlign: { xs: 'center', md: 'left' },
         color: theme.palette.primary.main
       }}>
-        Niko Halley - Portfolio
+        Niko Halley - Resume & Portfolio
       </Typography>
       
       <Grid container spacing={4}>
@@ -73,11 +77,44 @@ export default function PortfolioPageContent() {
                 Niko Halley
               </Typography>
               <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-                Tech Support - DevOps
+                Hospitality Professional
               </Typography>
-              <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-                Full Stack - GameDev
-              </Typography>
+              <Box sx={{ 
+                display: 'flex', 
+                flexWrap: 'wrap', 
+                justifyContent: 'center',
+                gap: 1,
+                mb: 2
+              }}>
+                <Chip 
+                  icon={<Hotel size={16} />} 
+                  label="Front Desk" 
+                  size="small" 
+                  color="primary" 
+                  variant="outlined" 
+                />
+                <Chip 
+                  icon={<Utensils size={16} />} 
+                  label="Fine Dining" 
+                  size="small" 
+                  color="primary" 
+                  variant="outlined" 
+                />
+                <Chip 
+                  icon={<Plane size={16} />} 
+                  label="International" 
+                  size="small" 
+                  color="primary" 
+                  variant="outlined" 
+                />
+                <Chip 
+                  icon={<Snowflake size={16} />} 
+                  label="Resort Experience" 
+                  size="small" 
+                  color="primary" 
+                  variant="outlined" 
+                />
+              </Box>
 
               <Stack 
                 spacing={1.5} 
@@ -90,11 +127,11 @@ export default function PortfolioPageContent() {
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Mail size={20} />
                   <Link 
-                    href="mailto:niko.halley@example.com" 
+                    href="mailto:nomad.niko.inc@gmail.com" 
                     color="inherit" 
                     underline="hover"
                   >
-                    niko@ixplor.app
+                    nomad.niko.inc@gmail.com
                   </Link>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -113,23 +150,16 @@ export default function PortfolioPageContent() {
                   >
                     <Linkedin size={24} />
                   </Link>
-                  <Link 
-                    href="https://github.com/NomadNiko/" 
-                    target="_blank" 
-                    color="inherit"
-                  >
-                    <Github size={24} />
-                  </Link>
                 </Box>
               </Stack>
 
               <Typography variant="body2" paragraph sx={{ mt: 2 }}>
-                I am a versatile IT professional with extensive experience in IT systems support, cloud engineering, 
-                and system administration. My career spans roles in Site Operations, Cloud Engineering, DevOps, SysAdmin, Cyber Systems Operations
-                and Technical Support. I have worked in range of roles, but most have had a strong focus on infrastructure automation, 
-                performance optimization, and streamlining complex technical environments.
-                In my free time I enjoy working on personal projects, Hiking, Traveling the Globe and 
-                taking part in GameJams to improve my Game Development skills.
+                Versatile hospitality professional with extensive experience in customer service, 
+                hotel operations, and dining management across multiple countries and hospitality settings. 
+                My diverse background spans hostels, fine dining restaurants, ski resorts, and national parks, 
+                combining exceptional guest service with strong operational capabilities. I excel at creating 
+                memorable experiences for guests while efficiently managing the operational details that ensure 
+                smooth service delivery.
               </Typography>
             </Paper>
           </Box>
@@ -149,15 +179,19 @@ export default function PortfolioPageContent() {
               gap: 2,
               flexWrap: isMobile ? 'wrap' : 'nowrap'
             }}>
-              {['resume', 'skills', 'projects'].map((section) => (
+              {[
+                { id: 'resume', label: 'Experience' },
+                { id: 'skills', label: 'Skills' },
+                { id: 'gallery', label: 'Locations' },
+              ].map((section) => (
                 <Button
-                  key={section}
-                  variant={selectedSection === section ? "contained" : "outlined"}
-                  onClick={() => setSelectedSection(section)}
+                  key={section.id}
+                  variant={selectedSection === section.id ? "contained" : "outlined"}
+                  onClick={() => setSelectedSection(section.id)}
                   fullWidth={!isMobile}
                   sx={{ flex: isMobile ? '1 0 calc(50% - 8px)' : '1' }}
                 >
-                  {section.charAt(0).toUpperCase() + section.slice(1)}
+                  {section.label}
                 </Button>
               ))}
             </Box>
@@ -176,13 +210,15 @@ export default function PortfolioPageContent() {
         >
           <Box sx={{ mb: 3 }}>
             <Typography variant="h4" gutterBottom>
-              {selectedSection.charAt(0).toUpperCase() + selectedSection.slice(1)}
+              {selectedSection === 'resume' && 'Professional Experience'}
+              {selectedSection === 'skills' && 'Hospitality Skills'}
+              {selectedSection === 'gallery' && 'Global Experience'}
             </Typography>
           </Box>
           
-          {selectedSection === 'resume' && <ResumeSection />}
-          {selectedSection === 'skills' && <SkillsShowcase />}
-          {selectedSection === 'projects' && <ProjectGallery />}
+          {selectedSection === 'resume' && <HospitalityResumeSection />}
+          {selectedSection === 'skills' && <HospitalitySkillsShowcase />}
+          {selectedSection === 'gallery' && <HospitalityGallery />}
         </Grid>
       </Grid>
     </Container>
