@@ -12,7 +12,7 @@ import { useTranslation } from "@/services/i18n/client";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
 import FormTextInput from "@/components/form/text-input/form-text-input";
-import FormSelectInput from "@/components/form/select/form-select";
+import FormCategorySelect from "@/components/form/category-select/form-category-select";
 import {
   CreateTicketDto,
   createTicketSchema,
@@ -33,18 +33,10 @@ export const CreateTicketForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth();
 
-  const categoryOptions = [
-    { value: TicketCategory.TICKETS, label: t("categories.tickets") },
-    { value: TicketCategory.PAYMENTS, label: t("categories.payments") },
-    { value: TicketCategory.VENDORS, label: t("categories.vendors") },
-    { value: TicketCategory.TECHNICAL, label: t("categories.technical") },
-    { value: TicketCategory.FEEDBACK, label: t("categories.feedback") },
-  ];
-
   const methods = useForm<CreateTicketDto>({
     resolver: zodResolver(createTicketSchema),
     defaultValues: {
-      ticketCategory: TicketCategory.TICKETS, // Set default value to prevent validation error
+      ticketCategory: TicketCategory.TICKETS,
       ticketTitle: "",
       ticketDescription: "",
     },
@@ -89,13 +81,12 @@ export const CreateTicketForm = ({
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               <Box sx={{ width: "50%" }}>
-                <FormSelectInput
+                <FormCategorySelect
                   name="ticketCategory"
                   label={t("fields.category")}
-                  options={categoryOptions}
-                  keyValue="value"
-                  renderOption={(option) => option.label}
                   testId="ticket-category"
+                  size="small"
+                  defaultValue={TicketCategory.TICKETS}
                 />
               </Box>
               <FormTextInput name="ticketTitle" label={t("fields.title")} />

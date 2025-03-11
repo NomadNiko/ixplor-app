@@ -1,3 +1,4 @@
+// src/types/support-ticket.ts
 import { z } from "zod";
 
 export enum TicketStatus {
