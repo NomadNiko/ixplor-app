@@ -48,7 +48,6 @@ export default function TicketCard({
       setIsProcessing(true);
       await onRefundTicket(ticket._id);
       setRefundDialogOpen(false);
-      enqueueSnackbar(t('refundInitiated'), { variant: 'success' });
     } catch (error) {
       console.error('Failed to refund ticket:', error);
       enqueueSnackbar(
