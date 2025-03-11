@@ -1,37 +1,53 @@
-import { useState } from 'react';
-import { useForm, FormProvider } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
-import { useTranslation } from '@/services/i18n/client';
-import { API_URL } from '@/services/api/config';
-import { getTokensInfo } from '@/services/auth/auth-tokens-info';
-import FormTextInput from '@/components/form/text-input/form-text-input';
-import { CreateTicketDto, createTicketSchema } from '../../types/support-ticket';
-import useAuth from '@/services/auth/use-auth';
+import { useState } from "react";
+import { useForm, FormProvider } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useTranslation } from "@/services/i18n/client";
+import { API_URL } from "@/services/api/config";
+import { getTokensInfo } from "@/services/auth/auth-tokens-info";
+import FormTextInput from "@/components/form/text-input/form-text-input";
+import FormSelectInput from "@/components/form/select/form-select";
+import {
+  CreateTicketDto,
+  createTicketSchema,
+  TicketCategory,
+} from "../../types/support-ticket";
+import useAuth from "@/services/auth/use-auth";
 
 interface CreateTicketFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
 }
 
-export const CreateTicketForm = ({ onSuccess, onCancel }: CreateTicketFormProps) => {
-  const { t } = useTranslation('support-tickets');
+export const CreateTicketForm = ({
+  onSuccess,
+  onCancel,
+}: CreateTicketFormProps) => {
+  const { t } = useTranslation("support-tickets");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth();
+
+  const categoryOptions = [
+    { value: TicketCategory.TICKETS, label: t("categories.tickets") },
+    { value: TicketCategory.PAYMENTS, label: t("categories.payments") },
+    { value: TicketCategory.VENDORS, label: t("categories.vendors") },
+    { value: TicketCategory.TECHNICAL, label: t("categories.technical") },
+    { value: TicketCategory.FEEDBACK, label: t("categories.feedback") },
+  ];
 
   const methods = useForm<CreateTicketDto>({
     resolver: zodResolver(createTicketSchema),
     defaultValues: {
-      ticketCategory: '',
-      ticketTitle: '',
-      ticketDescription: ''
-    }
+      ticketCategory: TicketCategory.TICKETS, // Set default value to prevent validation error
+      ticketTitle: "",
+      ticketDescription: "",
+    },
   });
 
   const onSubmit = async (data: CreateTicketDto) => {
@@ -39,27 +55,25 @@ export const CreateTicketForm = ({ onSuccess, onCancel }: CreateTicketFormProps)
       setIsSubmitting(true);
       const tokensInfo = getTokensInfo();
       if (!tokensInfo?.token) {
-        throw new Error('No auth token');
+        throw new Error("No auth token");
       }
-
       const response = await fetch(`${API_URL}/support-tickets`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${tokensInfo.token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${tokensInfo.token}`,
         },
         body: JSON.stringify({
           ...data,
-          createdBy: user?.id
-        })
+          createdBy: user?.id,
+        }),
       });
-
       if (!response.ok) {
-        throw new Error('Failed to create ticket');
+        throw new Error("Failed to create ticket");
       }
       onSuccess?.();
     } catch (error) {
-      console.error('Error creating ticket:', error);
+      console.error("Error creating ticket:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -71,34 +85,32 @@ export const CreateTicketForm = ({ onSuccess, onCancel }: CreateTicketFormProps)
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <CardContent>
             <Typography variant="h6" gutterBottom>
-              {t('createTicket.title')}
+              {t("createTicket.title")}
             </Typography>
-
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <FormTextInput
-                name="ticketCategory"
-                label={t('fields.category')}
-              />
-
-              <FormTextInput
-                name="ticketTitle"
-                label={t('fields.title')}
-              />
-
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <Box sx={{ width: "50%" }}>
+                <FormSelectInput
+                  name="ticketCategory"
+                  label={t("fields.category")}
+                  options={categoryOptions}
+                  keyValue="value"
+                  renderOption={(option) => option.label}
+                  testId="ticket-category"
+                />
+              </Box>
+              <FormTextInput name="ticketTitle" label={t("fields.title")} />
               <FormTextInput
                 name="ticketDescription"
-                label={t('fields.description')}
+                label={t("fields.description")}
+                multiline
+                minRows={3}
               />
             </Box>
           </CardContent>
-
-          <CardActions sx={{ justifyContent: 'flex-end', p: 2 }}>
+          <CardActions sx={{ justifyContent: "flex-end", p: 2 }}>
             {onCancel && (
-              <Button
-                onClick={onCancel}
-                disabled={isSubmitting}
-              >
-                {t('actions.cancel')}
+              <Button onClick={onCancel} disabled={isSubmitting}>
+                {t("actions.cancel")}
               </Button>
             )}
             <Button
@@ -107,7 +119,7 @@ export const CreateTicketForm = ({ onSuccess, onCancel }: CreateTicketFormProps)
               disabled={isSubmitting}
               startIcon={isSubmitting ? <CircularProgress size={20} /> : null}
             >
-              {t('actions.submit')}
+              {t("actions.submit")}
             </Button>
           </CardActions>
         </form>

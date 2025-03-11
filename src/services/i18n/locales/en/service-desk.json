@@ -7,7 +7,7 @@
     "ticket": "Ticket",
     "latestUpdate": "Latest Update",
     "updates": "Updates History",
-  
+    "noUpdates": "No updates yet",
     "filters": {
       "search": "Search tickets",
       "status": "Filter by Status",
@@ -44,7 +44,9 @@
       "assign": "Assign",
       "updateStatus": "Update Status",
       "edit": "Edit Ticket",
-      "viewDetails": "View Details"
+      "viewDetails": "View Details",
+      "resolve": "Resolve Ticket",
+      "close": "Close"
     },
   
     "status": {

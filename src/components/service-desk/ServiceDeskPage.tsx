@@ -8,9 +8,10 @@ import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
 import Chip from "@mui/material/Chip";
 import Alert from "@mui/material/Alert";
-import { MessageCircle, Plus, Clock, LifeBuoy } from "lucide-react";
+import { MessageCircle, Plus, Clock, LifeBuoy, Eye } from "lucide-react";
 import { useTranslation } from "@/services/i18n/client";
 import { API_URL } from "@/services/api/config";
 import { getTokensInfo } from "@/services/auth/auth-tokens-info";
@@ -20,6 +21,7 @@ import UpdateTicketForm from "./UpdateTicketForm";
 import { SupportTicket } from '../../types/support-ticket';
 import { RoleEnum } from "@/services/api/types/role";
 import TicketUserInfo from './TicketUserInfo';
+import TicketDetailView from './TicketDetailView';
 
 export default function ServiceDeskPage() {
   const { t } = useTranslation("service-desk");
@@ -29,9 +31,9 @@ export default function ServiceDeskPage() {
   const [error, setError] = useState<string | null>(null);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<SupportTicket | null>(null);
-
+  const [selectedUpdateTicket, setSelectedUpdateTicket] = useState<SupportTicket | null>(null);
   const isAdmin = user?.role?.id === RoleEnum.ADMIN;
-
+  
   const loadTickets = useCallback(async () => {
     if (!user?.id) return;
     
@@ -42,21 +44,17 @@ export default function ServiceDeskPage() {
       if (!tokensInfo?.token) {
         throw new Error('No auth token');
       }
-
       const endpoint = isAdmin ? 
         `${API_URL}/support-tickets` : 
         `${API_URL}/support-tickets?userId=${user.id}`;
-
       const response = await fetch(endpoint, {
         headers: {
           Authorization: `Bearer ${tokensInfo.token}`
         }
       });
-
       if (!response.ok) {
         throw new Error('Failed to fetch tickets');
       }
-
       const data = await response.json();
       setTickets(data.tickets);
     } catch (error) {
@@ -77,7 +75,11 @@ export default function ServiceDeskPage() {
   };
 
   const handleUpdateSuccess = () => {
-    setSelectedTicket(null);
+    setSelectedUpdateTicket(null);
+    loadTickets();
+  };
+
+  const handleTicketSuccess = () => {
     loadTickets();
   };
 
@@ -145,7 +147,7 @@ export default function ServiceDeskPage() {
       <Typography variant="h5" gutterBottom sx={{ mt: 6, mb: 3 }}>
         {isAdmin ? t('allTickets') : t('yourTickets')}
       </Typography>
-
+      
       <Grid container spacing={3}>
         {tickets.length === 0 ? (
           <Grid item xs={12}>
@@ -180,7 +182,7 @@ export default function ServiceDeskPage() {
                       />
                     </Box>
                   </Box>
-
+                  
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, mb: 2 }}>
                     <TicketUserInfo 
                       userId={ticket.createdBy} 
@@ -191,7 +193,7 @@ export default function ServiceDeskPage() {
                       {t('ticket')} #{ticket.ticketId}
                     </Typography>
                   </Box>
-
+                  
                   {ticket.assignedTo && (
                     <Box sx={{ mb: 2 }}>
                       <Typography variant="caption" color="text.secondary">
@@ -204,7 +206,7 @@ export default function ServiceDeskPage() {
                       />
                     </Box>
                   )}
-
+                  
                   {ticket.updates.length > 0 && (
                     <Box 
                       sx={{ 
@@ -230,14 +232,21 @@ export default function ServiceDeskPage() {
                       </Box>
                     </Box>
                   )}
-
-                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+                    {ticket.status !== 'CLOSED' && (
+                      <Button
+                        startIcon={<MessageCircle />}
+                        onClick={() => setSelectedUpdateTicket(ticket)}
+                      >
+                        {t('actions.addUpdate')}
+                      </Button>
+                    )}
                     <Button
-                      startIcon={<MessageCircle />}
+                      startIcon={<Eye />}
                       onClick={() => setSelectedTicket(ticket)}
-                      disabled={ticket.status === 'CLOSED'}
                     >
-                      {t('actions.addUpdate')}
+                      {t('actions.viewDetails')}
                     </Button>
                   </Box>
                 </CardContent>
@@ -247,6 +256,7 @@ export default function ServiceDeskPage() {
         )}
       </Grid>
 
+      {/* Create Ticket Dialog */}
       <Dialog
         open={createDialogOpen}
         onClose={() => setCreateDialogOpen(false)}
@@ -259,19 +269,40 @@ export default function ServiceDeskPage() {
         />
       </Dialog>
 
+      {/* Update Ticket Dialog */}
       <Dialog
-        open={!!selectedTicket}
-        onClose={() => setSelectedTicket(null)}
+        open={!!selectedUpdateTicket}
+        onClose={() => setSelectedUpdateTicket(null)}
         maxWidth="sm"
         fullWidth
       >
-        {selectedTicket && (
-          <UpdateTicketForm
-            ticket={selectedTicket}
-            onSuccess={handleUpdateSuccess}
-            onCancel={() => setSelectedTicket(null)}
-          />
-        )}
+        <DialogContent>
+          {selectedUpdateTicket && (
+            <UpdateTicketForm
+              ticket={selectedUpdateTicket}
+              onSuccess={handleUpdateSuccess}
+              onCancel={() => setSelectedUpdateTicket(null)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Ticket Detail View Dialog */}
+      <Dialog
+        open={!!selectedTicket}
+        onClose={() => setSelectedTicket(null)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogContent>
+          {selectedTicket && (
+            <TicketDetailView
+              ticket={selectedTicket}
+              onSuccess={handleTicketSuccess}
+              onClose={() => setSelectedTicket(null)}
+            />
+          )}
+        </DialogContent>
       </Dialog>
     </Container>
   );
