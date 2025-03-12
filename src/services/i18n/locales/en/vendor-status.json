@@ -44,6 +44,7 @@
       }
     }
   },
+  "connectStripe": "Connect Stripe Account",
   "stripe": {
     "title": "Stripe Connect Account Setup",
     "description": "Complete your Stripe account setup to enable payments and transactions.",
