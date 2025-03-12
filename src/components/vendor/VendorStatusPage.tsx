@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -12,33 +12,38 @@ import Modal from "@mui/material/Modal";
 import { CheckCircle2, Circle, CircleDashed, PlusCircle } from "lucide-react";
 import { useTranslation } from "@/services/i18n/client";
 import useAuth from "@/services/auth/use-auth";
-import { useVendorStatus } from '@/hooks/use-vendor-status';
-import { styled } from '@mui/material/styles';
-import StripeConnectOnboarding from '@/components/vendor/StripeConnectOnboarding';
+import { useVendorStatus } from "@/hooks/use-vendor-status";
+import { styled } from "@mui/material/styles";
+import StripeConnectOnboarding from "@/components/vendor/StripeConnectOnboarding";
 
 const StyledCard = styled(Card)(({ theme }) => ({
   backgroundColor: theme.palette.background.glass,
-  backdropFilter: 'blur(10px)',
+  backdropFilter: "blur(10px)",
   border: `1px solid ${theme.palette.divider}`,
-  transition: 'transform 0.2s ease-in-out',
-  '&:hover': {
-    transform: 'translateY(-2px)',
-  }
+  transition: "transform 0.2s ease-in-out",
+  "&:hover": {
+    transform: "translateY(-2px)",
+  },
 }));
 
 interface StatusStepProps {
-  status: 'complete' | 'in-progress' | 'pending';
+  status: "complete" | "in-progress" | "pending";
   title: string;
   description: string;
   children?: React.ReactNode;
 }
 
-const StatusStep: React.FC<StatusStepProps> = ({ status, title, description, children }) => {
+const StatusStep: React.FC<StatusStepProps> = ({
+  status,
+  title,
+  description,
+  children,
+}) => {
   const getIcon = () => {
     switch (status) {
-      case 'complete':
+      case "complete":
         return <CheckCircle2 className="text-green-500" />;
-      case 'in-progress':
+      case "in-progress":
         return <CircleDashed className="text-blue-500 animate-spin" />;
       default:
         return <Circle className="text-gray-300" />;
@@ -46,19 +51,19 @@ const StatusStep: React.FC<StatusStepProps> = ({ status, title, description, chi
   };
 
   return (
-    <Box sx={{
-      display: 'flex',
-      alignItems: 'flex-start',
-      gap: 2,
-      p: 2,
-      bgcolor: 'background.glass',
-      backdropFilter: 'blur(10px)',
-      borderRadius: 1,
-      mb: 2
-    }}>
-      <Box sx={{ pt: 1 }}>
-        {getIcon()}
-      </Box>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "flex-start",
+        gap: 2,
+        p: 2,
+        bgcolor: "background.glass",
+        backdropFilter: "blur(10px)",
+        borderRadius: 1,
+        mb: 2,
+      }}
+    >
+      <Box sx={{ pt: 1 }}>{getIcon()}</Box>
       <Box sx={{ flex: 1 }}>
         <Typography variant="h6" gutterBottom>
           {title}
@@ -66,11 +71,7 @@ const StatusStep: React.FC<StatusStepProps> = ({ status, title, description, chi
         <Typography variant="body2" color="text.secondary" gutterBottom>
           {description}
         </Typography>
-        {children && (
-          <Box sx={{ mt: 2 }}>
-            {children}
-          </Box>
-        )}
+        {children && <Box sx={{ mt: 2 }}>{children}</Box>}
       </Box>
     </Box>
   );
@@ -79,18 +80,31 @@ const StatusStep: React.FC<StatusStepProps> = ({ status, title, description, chi
 const VendorStatusPage: React.FC = () => {
   const { t } = useTranslation("vendor-status");
   const { user } = useAuth();
-  const { vendor, loading, error } = useVendorStatus(user?.id?.toString() || '');
+  const { vendor, loading, error, refreshStatus } = useVendorStatus(
+    user?.id?.toString() || ""
+  );
   const [isStripeModalOpen, setIsStripeModalOpen] = useState(false);
-  const isStripeComplete = vendor?.stripeAccountStatus?.detailsSubmitted === true;
+
+  // Use the new isStripeSetupComplete field instead of checking detailsSubmitted
+  const isStripeComplete = vendor?.isStripeSetupComplete === true;
+
+  // Refresh status when modal closes
+  const handleModalClose = () => {
+    setIsStripeModalOpen(false);
+    refreshStatus();
+  };
 
   if (loading) {
     return (
-      <Container maxWidth="lg" sx={{ 
-        height: 'calc(100vh - 64px)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
+      <Container
+        maxWidth="lg"
+        sx={{
+          height: "calc(100vh - 64px)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <CircularProgress />
       </Container>
     );
@@ -99,9 +113,7 @@ const VendorStatusPage: React.FC = () => {
   if (error) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Alert severity="error">
-          {error}
-        </Alert>
+        <Alert severity="error">{error}</Alert>
       </Container>
     );
   }
@@ -109,9 +121,7 @@ const VendorStatusPage: React.FC = () => {
   if (!vendor) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Alert severity="info">
-          {t("noVendorFound")}
-        </Alert>
+        <Alert severity="info">{t("noVendorFound")}</Alert>
       </Container>
     );
   }
@@ -126,15 +136,15 @@ const VendorStatusPage: React.FC = () => {
         <StyledCard>
           <CardContent>
             {/* Step 1: Always complete */}
-            <StatusStep 
+            <StatusStep
               status="complete"
               title={t("steps.profile.title")}
               description={t("steps.profile.description")}
             />
 
             {/* Step 2: Create Templates */}
-            <StatusStep 
-              status={vendor.hasTemplates ? 'complete' : 'in-progress'}
+            <StatusStep
+              status={vendor.hasTemplates ? "complete" : "in-progress"}
               title={t("steps.templates.title")}
               description={t("steps.templates.description")}
             >
@@ -144,11 +154,13 @@ const VendorStatusPage: React.FC = () => {
                   startIcon={<PlusCircle />}
                   href="/templates/add"
                   sx={{
-                    background: theme => theme.palette.customGradients.buttonMain,
-                    '&:hover': {
-                      background: theme => theme.palette.customGradients.buttonMain,
-                      filter: 'brightness(0.9)',
-                    }
+                    background: (theme) =>
+                      theme.palette.customGradients.buttonMain,
+                    "&:hover": {
+                      background: (theme) =>
+                        theme.palette.customGradients.buttonMain,
+                      filter: "brightness(0.9)",
+                    },
                   }}
                 >
                   {t("createTemplate")}
@@ -157,29 +169,41 @@ const VendorStatusPage: React.FC = () => {
             </StatusStep>
 
             {/* Step 3: Generate Items */}
-            <StatusStep 
-              status={vendor.hasProducts ? 'complete' : 
-                     vendor.hasTemplates ? 'in-progress' : 'pending'}
+            <StatusStep
+              status={
+                vendor.hasProducts
+                  ? "complete"
+                  : vendor.hasTemplates
+                  ? "in-progress"
+                  : "pending"
+              }
               title={t("steps.items.title")}
               description={t("steps.items.description")}
             >
-              {!vendor.hasProducts && vendor.hasTemplates && vendor.templates?.map((template) => (
-                <Button
-                  key={template._id}
-                  variant="outlined"
-                  startIcon={<PlusCircle />}
-                  href={`/templates/${template._id}/generate`}
-                  sx={{ mr: 2, mb: 1 }}
-                >
-                  {t("generateItems", { template: template.templateName })}
-                </Button>
-              ))}
+              {!vendor.hasProducts &&
+                vendor.hasTemplates &&
+                vendor.templates?.map((template) => (
+                  <Button
+                    key={template._id}
+                    variant="outlined"
+                    startIcon={<PlusCircle />}
+                    href={`/templates/${template._id}/generate`}
+                    sx={{ mr: 2, mb: 1 }}
+                  >
+                    {t("generateItems", { template: template.templateName })}
+                  </Button>
+                ))}
             </StatusStep>
 
             {/* Step 4: Stripe Connect */}
-            <StatusStep 
-              status={isStripeComplete ? 'complete' : 
-                     vendor.hasProducts ? 'in-progress' : 'pending'}
+            <StatusStep
+              status={
+                isStripeComplete
+                  ? "complete"
+                  : vendor.hasProducts
+                  ? "in-progress"
+                  : "pending"
+              }
               title={t("steps.stripe.title")}
               description={t("steps.stripe.description")}
             >
@@ -188,11 +212,13 @@ const VendorStatusPage: React.FC = () => {
                   variant="contained"
                   onClick={() => setIsStripeModalOpen(true)}
                   sx={{
-                    background: theme => theme.palette.customGradients.buttonMain,
-                    '&:hover': {
-                      background: theme => theme.palette.customGradients.buttonMain,
-                      filter: 'brightness(0.9)',
-                    }
+                    background: (theme) =>
+                      theme.palette.customGradients.buttonMain,
+                    "&:hover": {
+                      background: (theme) =>
+                        theme.palette.customGradients.buttonMain,
+                      filter: "brightness(0.9)",
+                    },
                   }}
                 >
                   {t("connectStripe")}
@@ -201,8 +227,8 @@ const VendorStatusPage: React.FC = () => {
             </StatusStep>
 
             {/* Step 5: Final Approval */}
-            <StatusStep 
-              status={isStripeComplete ? 'in-progress' : 'pending'}
+            <StatusStep
+              status={isStripeComplete ? "in-progress" : "pending"}
               title={t("steps.approval.title")}
               description={t("steps.approval.description")}
             >
@@ -215,42 +241,42 @@ const VendorStatusPage: React.FC = () => {
           </CardContent>
         </StyledCard>
 
-        {vendor.vendorStatus === 'ACTION_NEEDED' && (
+        {vendor.vendorStatus === "ACTION_NEEDED" && (
           <Alert severity="warning" sx={{ mt: 2 }}>
             <AlertTitle>{t("actionNeeded")}</AlertTitle>
-            <Typography variant="body2">
-              {vendor.actionNeeded}
-            </Typography>
+            <Typography variant="body2">{vendor.actionNeeded}</Typography>
           </Alert>
         )}
       </Container>
 
       <Modal
         open={isStripeModalOpen}
-        onClose={() => setIsStripeModalOpen(false)}
+        onClose={handleModalClose}
         sx={{
-          display: 'block',
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          height: '100%'
+          display: "block",
+          overflowY: "auto",
+          overflowX: "hidden",
+          height: "100%",
         }}
       >
-        <Box sx={{
-          width: '100%',
-          maxWidth: '800px',
-          minHeight: '100%',
-          mx: 'auto',
-          bgcolor: 'background.paper',
-          borderRadius: { xs: 0, sm: 2 },
-          boxShadow: 24,
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column'
-        }}>
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: "800px",
+            minHeight: "100%",
+            mx: "auto",
+            bgcolor: "background.paper",
+            borderRadius: { xs: 0, sm: 2 },
+            boxShadow: 24,
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           {vendor && (
-            <StripeConnectOnboarding 
-              vendorId={vendor._id} 
-              onClose={() => setIsStripeModalOpen(false)}
+            <StripeConnectOnboarding
+              vendorId={vendor._id}
+              onClose={handleModalClose}
             />
           )}
         </Box>
