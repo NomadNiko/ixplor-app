@@ -900,6 +900,14 @@
     "@babel/helper-string-parser" "^7.25.9"
     "@babel/helper-validator-identifier" "^7.25.9"
 
+"@babel/types@^7.19.0":
+  version "7.26.10"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.26.10.tgz#396382f6335bd4feb65741eacfc808218f859259"
+  integrity sha512-emqcG3vHrpxUKTrxcblR36dcrcoRDvKmnL/dCL6ZsHaShW80qxCAcNhzQZrpeM765VzEos+xOi4s+r4IXzTwdQ==
+  dependencies:
+    "@babel/helper-string-parser" "^7.25.9"
+    "@babel/helper-validator-identifier" "^7.25.9"
+
 "@chromatic-com/storybook@^3.0.0":
   version "3.2.3"
   resolved "https://registry.yarnpkg.com/@chromatic-com/storybook/-/storybook-3.2.3.tgz#0f4d167ac80fcb38293a92c230c43446049b6758"
@@ -5400,6 +5408,13 @@ babel-plugin-polyfill-regenerator@^0.6.1:
   integrity sha512-LiWSbl4CRSIa5x/JAU6jZiG9eit9w6mz+yVMFwDE83LAWvt0AfGBoZ7HS/mkhrKuh2ZlzfVZYKoLjXdqw6Yt7Q==
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.6.3"
+
+babel-plugin-react-compiler@^19.0.0-beta-bafa41b-20250307:
+  version "19.0.0-beta-bafa41b-20250307"
+  resolved "https://registry.yarnpkg.com/babel-plugin-react-compiler/-/babel-plugin-react-compiler-19.0.0-beta-bafa41b-20250307.tgz#294033e54b734a0f067beec001192aa071d7139d"
+  integrity sha512-nh3pEhufqf3mu5l10RgzBL1cQY4zGG94bYsdOQlQsefUExs+DZfUH9RDs1g08bCVfFscKOXpGlOkcHVuAGQqug==
+  dependencies:
+    "@babel/types" "^7.19.0"
 
 balanced-match@^1.0.0:
   version "1.0.2"
