@@ -121,7 +121,7 @@
     "itemsCount": "items",
     "total": "Total",
     "status": {
-      "succeeded": "Succeeded",
+      "succeeded": "Complete",
       "pending": "Pending",
       "failed": "Failed"
     }

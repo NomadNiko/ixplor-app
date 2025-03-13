@@ -134,7 +134,7 @@ export default function ReceiptsPage() {
 
                   <Box sx={{ mt: 2, mb: 1 }}>
                     <Chip 
-                      label={invoice.status}
+                      label={t(`status.${invoice.status.toLowerCase()}`)}
                       size="small"
                       color={getStatusColor(invoice.status)}
                       sx={{ mr: 1 }}

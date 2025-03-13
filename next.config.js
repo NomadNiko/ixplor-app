@@ -4,11 +4,11 @@ const nextConfig = {
   //   dirs: ["src", "playwright-tests"],
   // },
 
-  experimental: {
-    swcPlugins: [
-      ['babel-plugin-react-compiler', {}]
-    ]
-  }
+  // experimental: {
+  //   swcPlugins: [
+  //     ['babel-plugin-react-compiler', {}]
+  //   ]
+  // }
 };
 
 module.exports = nextConfig;
